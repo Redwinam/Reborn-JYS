@@ -26,6 +26,9 @@ interface State {
   round: number
   totalRounds: number
   attributes: Attributes
+  weak: boolean
+  girlfriend: string | null
+  flirtCount: number
   achievements: string[]
   songs: string[]
   specialEvents: string[]
@@ -48,9 +51,14 @@ const state: State = {
       freestyle: 0,
       gaming: 0,
     },
-    energy: 0,
+    energy: 100,
     mood: 0,
   },
+
+  weak: false,
+  girlfriend: null,
+  flirtCount: 0,
+
   achievements: [],
   songs: [],
   specialEvents: [],
@@ -83,6 +91,19 @@ const mutations = {
   },
   unlockAchievement(state: State, achievement: string) {
     state.achievements.push(achievement)
+  },
+  
+  setWeak(state: State, payload: boolean) {
+    state.weak = payload
+  },
+  setGirlfriend(state: State, payload: string | null) {
+    state.girlfriend = payload
+  },
+  incrementFlirtCount(state: State) {
+    state.flirtCount += 1
+  },
+  resetFlirtCount(state: State) {
+    state.flirtCount = 0
   },
 }
 

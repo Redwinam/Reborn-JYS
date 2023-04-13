@@ -33,7 +33,7 @@
     
     <!-- Textbox for the text-based game -->
     <div class="textbox">
-      <p>这里是文字游戏的文字框，您可以根据游戏进程显示相应的文本。</p>
+      <p>{{ textBoxMessage }}</p>
     </div>
 
 
@@ -42,6 +42,8 @@
       <button v-for="action in actions" :key="action" @click="performAction(action)">
         {{ action }}
       </button>
+      <button v-if="store.state.girlfriend" @click="accompanyGirlfriend">陪女朋友</button>
+
     </div>
 
     
@@ -141,6 +143,9 @@ const attributes = computed(() => store.state.attributes)
 const achievements = computed(() => store.state.achievements)
 const specialEvents = computed(() => store.state.specialEvents)
 
+const textBoxMessage = ref('这里是文字游戏的文字框，您可以根据游戏进程显示相应的文本。')
+
+
 const locations = ['餐馆吃饭', '商场买衣服', '上山修行', '去比赛Battle']
 const showGoingOutLayer = ref(false)
 
@@ -165,12 +170,69 @@ function performAction(action: string) {
     if (action === '外出') {
       showGoingOutLayer.value = true
     } else {
-      store.dispatch('performAction', { action })
+      const energy = store.state.attributes.energy
+      if (energy >= 10) {
+        store.dispatch('performAction', { action })
+        store.commit('updateAttribute', { attribute: 'energy', value: - 10 }) // 修改这一行
+        switch (action) {
+          case '上课':
+            store.commit('updateAttribute', { attribute: 'talent', value: 1 })
+            textBoxMessage.value = '你参加了一堂课，才华+1。'
+            break
+          case '赚钱':
+            store.commit('updateAttribute', { attribute: 'money', value: 100 })
+            textBoxMessage.value = '你努力工作，赚到了100金钱。'
+            break
+          case '把妹':
+            if (!store.state.girlfriend) {
+              store.commit('updateAttribute', { attribute: 'charm', value: 1 })
+              if (store.state.flirtCount) {
+                textBoxMessage.value = '你又成功地搭讪了一个姑娘，魅力+1。'
+              } else {
+                textBoxMessage.value = '你成功地搭讪了一个姑娘，魅力+1。'
+              }
+
+              store.commit('incrementFlirtCount')
+              if (store.state.flirtCount >= 3) {
+                store.commit('setGirlfriend', '女朋友')
+                store.commit('resetFlirtCount')
+                textBoxMessage.value += '恭喜！你交到了一个女朋友。'
+              } else {
+
+              }
+            } else {
+              textBoxMessage.value = '你已经有女朋友了，不能再把妹。'
+            }
+            break
+          case '休息':
+            store.commit('updateAttribute', { attribute: 'energy', value: 60 })
+            textBoxMessage.value = '你休息了一天，体力+60。'
+            break
+
+        }
+      } else {
+        textBoxMessage.value = '体力不足，你已进入虚弱状态，无法执行行动。'
+      }
+    }
+  }
+
+  function accompanyGirlfriend() {
+    const energy = store.state.attributes.energy
+    if (energy >= 50) {
+      store.commit('updateAttribute', { attribute: 'energy', value: - 50 })
+      textBoxMessage.value = '你陪了女朋友，消耗了50点体力。'
+      if (energy - 50 < 30) {
+        store.commit('setWeak', true)
+        textBoxMessage.value += '你已进入虚弱状态。'
+
+      }
+    } else {
+      textBoxMessage.value = '体力不足，无法陪女朋友。'
     }
   }
 
 function goToLocation(location: string) {
-  console.log('正在前往:', location)
+  textBoxMessage.value = '正在前往：' + location
 }
 
 // Add refs for character, items and skills pop-ups
