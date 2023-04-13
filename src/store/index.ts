@@ -28,10 +28,15 @@ interface State {
   attributes: Attributes
   weak: boolean
   girlfriend: string | null
+  girlfriendTypes: { type: string; effect: keyof Attributes }[]
   flirtCount: number
-  achievements: string[]
+  accompanyCount: number
+  achievements: { name: string; desc: string }[]
   songs: string[]
   specialEvents: string[]
+
+  gameEnded: boolean
+  specialEndingAchievement: string
 }
 
 const state: State = {
@@ -61,15 +66,18 @@ const state: State = {
   girlfriendTypes: [
     { type: '有才华的女朋友', effect: 'talent' },
     { type: '长得超级好看的女朋友', effect: 'charm' },
-    { type: '让你伤心的女朋友', effect: 'mood' },
+    { type: '让你牵肠挂肚的女朋友', effect: 'mood' },
     { type: '身材火辣的女朋友', effect: 'energy' },
     { type: '会理财的女朋友', effect: 'money' },
   ],
-
+  accompanyCount: 0,
 
   achievements: [],
   songs: [],
   specialEvents: [],
+
+  gameEnded: false,
+  specialEndingAchievement: '',
 }
 
 type UpdateAttributePayload = {
@@ -97,7 +105,7 @@ const mutations = {
   updatePopularity(state: State, payload: { type: keyof Popularity; value: number }) {
     state.attributes.popularity[payload.type] += payload.value
   },
-  unlockAchievement(state: State, achievement: string) {
+  unlockAchievement(state: State, achievement: { name: string; desc: string }) {
     state.achievements.push(achievement)
   },
   
@@ -112,6 +120,42 @@ const mutations = {
   },
   resetFlirtCount(state: State) {
     state.flirtCount = 0
+  },
+  incrementAccompanyCount(state: State) {
+    state.accompanyCount++
+  },
+  resetAccompanyCount(state: State) {
+    state.accompanyCount = 0
+  },
+
+  setGameEnded(state: State, payload: { gameEnded: boolean; specialEndingAchievement: string }) {
+    state.gameEnded = payload.gameEnded
+    state.specialEndingAchievement = payload.specialEndingAchievement
+  },
+
+  resetGameState(state: State) {
+    state.round = 1
+    state.gameEnded = false
+    state.specialEndingAchievement = ''
+    state.accompanyCount = 0
+    state.attributes = {
+      divine: 0,
+      talent: 0,
+      charm: 0,
+      popularity: {
+        red: 0,
+        black: 0,
+      },
+      money: 0,
+      skill: {
+        freestyle: 0,
+        gaming: 0,
+      },
+      energy: 100,
+      mood: 0,
+    }
+    state.achievements = []
+    state.specialEvents = []
   },
 }
 
