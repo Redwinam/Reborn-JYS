@@ -3,33 +3,39 @@
     <div class="header">
       <h1>重生之我是姜云升</h1>
       <div class="round-info">
+        当前时间: {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }}
+        <br />
         轮次: {{ currentRound }} / {{ totalRounds }}
       </div>
     </div>
 
     <div class="attributes">
-      <div class="attribute" v-for="(value, attribute) in attributes" :key="attribute">
-        {{ attributeNames[attribute] }}: {{ value }}
+      <div
+        class="attribute"
+        v-for="(value, attribute) in attributes"
+        :key="attribute"
+      >
+        <div
+          v-if="
+            attribute === 'popularity' ||
+            attribute === 'money' ||
+            attribute === 'energy' ||
+            attribute === 'mood'
+          "
+        >
+          {{ attributeNames[attribute] }}: {{ value }}
+        </div>
       </div>
     </div>
 
-    <!-- Separate pop-up for values -->
-    <div class="values-popup" v-if="showValuesPopup">
-      <h2>数值</h2>
-      <div class="attribute" v-for="(value, attribute) in attributes" :key="attribute">
-        {{ attribute }}: {{ value }}
-      </div>
-      <button @click="showValuesPopup = false">关闭</button>
+
+
+    
+    <!-- Textbox for the text-based game -->
+    <div class="textbox">
+      <p>这里是文字游戏的文字框，您可以根据游戏进程显示相应的文本。</p>
     </div>
 
-    <!-- Separate pop-up for achievements -->
-    <div class="achievements-popup" v-if="showAchievementsPopup">
-      <h2>成就</h2>
-      <ul>
-        <li v-for="achievement in achievements" :key="achievement">{{ achievement }}</li>
-      </ul>
-      <button @click="showAchievementsPopup = false">关闭</button>
-    </div>
 
     <div class="actions">
       <h2>选择行动</h2>
@@ -38,18 +44,27 @@
       </button>
     </div>
 
-    <!-- Button to show values pop-up -->
-    <button class="show-values-button" @click="showValuesPopup = true">显示数值</button>
+    
+    <!-- Separate layer for the "going out" action -->
+    <transition name="fade">
+      <div class="going-out-layer" v-if="showGoingOutLayer">
+        <h2>外出</h2>
+        <button v-for="location in locations" :key="location" @click="goToLocation(location)">
+          {{ location }}
+        </button>
+        <button @click="showGoingOutLayer = false">返回</button>
+      </div>
+    </transition>
 
     <div class="achievements">
       <h2>成就</h2>
       <ul>
-        <li v-for="achievement in achievements" :key="achievement">{{ achievement }}</li>
+        <li v-for="achievement in achievements" :key="achievement">
+          {{ achievement }}
+        </li>
       </ul>
     </div>
 
-    <!-- Button to show achievements pop-up -->
-    <button class="show-achievements-button" @click="showAchievementsPopup = true">显示成就</button>
 
     <div class="events">
       <h2>特殊事件</h2>
@@ -59,81 +74,119 @@
     </div>
   </div>
 
-  <div class="values">
-        <button class="button" @click="showValuesPopup = true">数值说明</button>
-        <transition name="fade">
-          <div class="popup" v-if="showValuesPopup" @click.self="showValuesPopup = false">
-            <h3 class="title">数值说明：</h3>
-            <ul>
-              <li><strong>才华：</strong>决定你的学习能力和创造力。</li>
-              <li><strong>魅力：</strong>决定你的人缘和交际能力。</li>
-              <li><strong>人气：</strong>决定你的知名度和影响力，分为红色人气和黑色人气。</li>
-              <li><strong>金钱：</strong>决定你的经济实力。</li>
-              <li><strong>Freestyle：</strong>决定你的说唱Freestyle实力。</li>
-              <li><strong>电竞：</strong>决定你的电竞实力。</li>
-              <li><strong>体力：</strong>决定你的身体素质和耐力。</li>
-              <li><strong>心情：</strong>决定你的情绪和心态。</li>
-              <li><strong>神性：</strong>决定你的神秘能力和超自然力量。</li>
-            </ul>
-          </div>
-        </transition>
-      </div>
 
-      <footer class="footer">
-      <p>制作人：xxx</p>
-    </footer>
+<footer class="footer">
+  <button class="button" @click="showCharacterPopup = true">角色</button>
+  <button class="button" @click="showItemsPopup = true">物品</button>
+  <button class="button" @click="showSkillsPopup = true">技能</button>
+  <button class="button" @click="showAchievementsPopup = true">成就</button>
+  <p>制作人：@千啾略</p>
+</footer>
+
+<!-- Separate pop-up for values -->
+<div class="values-popup" v-if="showCharacterPopup">
+  <h2>数值</h2>
+  <div
+    class="attribute"
+    v-for="(value, attribute) in attributes"
+    :key="attribute"
+  >
+    {{ attributeNames[attribute] }}: {{ value }}
+  </div>
+
+  <h3 class="title">数值说明：</h3>
+  <ul>
+    <li><strong>才华：</strong>决定你的学习能力和创造力。</li>
+    <li><strong>魅力：</strong>决定你的人缘和交际能力。</li>
+    <li><strong>人气：</strong>决定你的知名度和影响力，分为红色人气和黑色人气。</li>
+    <li><strong>金钱：</strong>决定你的经济实力。</li>
+    <li><strong>Freestyle：</strong>决定你的说唱Freestyle实力。</li>
+    <li><strong>电竞：</strong>决定你的电竞实力。</li>
+    <li><strong>体力：</strong>决定你的身体素质和耐力。</li>
+    <li><strong>心情：</strong>决定你的情绪和心态。</li>
+    <li><strong>神性：</strong>决定你的神秘能力和超自然力量。</li>
+  </ul>
+
+  <button @click="showCharacterPopup = false">关闭</button>
+</div>
+
+<!-- Separate pop-up for achievements -->
+<div class="achievements-popup" v-if="showAchievementsPopup">
+  <h2>成就</h2>
+  <ul>
+    <li v-for="achievement in achievements" :key="achievement">
+      {{ achievement }}
+    </li>
+  </ul>
+  <button @click="showAchievementsPopup = false">关闭</button>
+</div>
+
+
 
 </template>
-
-<script lang="ts">
-import { defineComponent, computed, ref } from 'vue'
+<script setup lang="ts">
 import { useStore } from 'vuex'
+import { computed, ref } from 'vue'
 
-export default defineComponent({
-  setup() {
-    const store = useStore()
+interface AttributeNames {
+  [key: string]: string;
+}
 
-    const currentRound = computed(() => store.state.round)
-    const totalRounds = computed(() => store.state.totalRounds)
-    const attributes = computed(() => store.state.attributes)
-    const achievements = computed(() => store.state.achievements)
-    const specialEvents = computed(() => store.state.specialEvents)
+const store = useStore()
 
-    const actions = ['行动1', '行动2', '行动3', '行动4']
+const currentYear = computed(() => store.state.year)
+const currentRound = computed(() => store.state.round)
+const totalRounds = computed(() => store.state.totalRounds)
+const attributes = computed(() => store.state.attributes)
+const achievements = computed(() => store.state.achievements)
+const specialEvents = computed(() => store.state.specialEvents)
 
-    const attributeNames = {
-      talent: '才华',
-      charm: '魅力',
-      popularity: '人气',
-      money: '金钱',
-      freestyleskill: 'Freestyle',
-      gamingSkill: '电竞',
-      energy: '体力',
-      mood: '心情',
-      divine: '神性',
-    }
+const locations = ['餐馆吃饭', '商场买衣服', '上山修行', '去比赛Battle']
+const showGoingOutLayer = ref(false)
 
-    function performAction(action: string) {
+const actions = ['上课', '赚钱', '把妹', '休息', '外出']
+
+
+const attributeNames: AttributeNames = {
+  talent: '才华',
+  charm: '魅力',
+  popularity: '人气',
+  money: '金钱',
+  skill: '技能',
+  freestyleskill: 'Freestyle',
+  gamingSkill: '电竞',
+  energy: '体力',
+  mood: '心情',
+  divine: '神性',
+}
+
+
+function performAction(action: string) {
+    if (action === '外出') {
+      showGoingOutLayer.value = true
+    } else {
       store.dispatch('performAction', { action })
     }
+  }
 
-    // Use refs to control pop-up visibility
-    const showValuesPopup = ref(false)
-    const showAchievementsPopup = ref(false)
+function goToLocation(location: string) {
+  console.log('正在前往:', location)
+}
 
-    return {
-      currentRound,
-      totalRounds,
-      attributes,
-      achievements,
-      specialEvents,
-      actions,
-      performAction,
-      attributeNames,
-      showValuesPopup,
-      showAchievementsPopup,
-    }
-  },
+// Add refs for character, items and skills pop-ups
+const showCharacterPopup = ref(false)
+const showItemsPopup = ref(false)
+const showSkillsPopup = ref(false)
+
+// Use refs to control pop-up visibility
+const showValuesPopup = ref(false)
+const showAchievementsPopup = ref(false)
+
+// Calculate the current month and period
+const currentMonth = computed(() => Math.ceil((currentRound.value % 36) / 3) || 12)
+const currentPeriod = computed(() => {
+  const period = (currentRound.value - 1) % 3
+  return ['上旬', '中旬', '下旬'][period]
 })
 </script>
 
