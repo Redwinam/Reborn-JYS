@@ -221,11 +221,8 @@ function performAction(action: string) {
     if (energy >= 50) {
       store.commit('updateAttribute', { attribute: 'energy', value: - 50 })
       textBoxMessage.value = '你陪了女朋友，消耗了50点体力。'
-      if (energy - 50 < 30) {
-        store.commit('setWeak', true)
-        textBoxMessage.value += '你已进入虚弱状态。'
-
-      }
+      store.commit('setWeak', true)
+      textBoxMessage.value += '你已进入虚弱状态。'
     } else {
       textBoxMessage.value = '体力不足，无法陪女朋友。'
     }
