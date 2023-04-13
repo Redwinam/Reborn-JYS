@@ -56,8 +56,16 @@ const state: State = {
   },
 
   weak: false,
-  girlfriend: null,
   flirtCount: 0,
+  girlfriend: null,
+  girlfriendTypes: [
+    { type: '有才华的女朋友', effect: 'talent' },
+    { type: '长得超级好看的女朋友', effect: 'charm' },
+    { type: '让你伤心的女朋友', effect: 'mood' },
+    { type: '身材火辣的女朋友', effect: 'energy' },
+    { type: '会理财的女朋友', effect: 'money' },
+  ],
+
 
   achievements: [],
   songs: [],
