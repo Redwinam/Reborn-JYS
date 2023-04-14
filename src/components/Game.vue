@@ -68,7 +68,6 @@
       </ul>
     </div>
 
-
     <div class="events">
       <h2>特殊事件</h2>
       <ul>
@@ -126,7 +125,7 @@
 
 <div v-if="showBreakupDialog" class="breakup-dialog">
   <h2>女朋友想和你分手</h2>
-  <p>你的女朋友想和你分手，你要如何应对？</p>
+  <p>{{ randomBreakupReason() }}</p>
   <button @click="handleBreakup('挽回')">挽回</button>
   <button @click="handleBreakup('沉默')">沉默</button>
   <button @click="handleBreakup('拜拜就拜拜')">拜拜就拜拜</button>
@@ -169,7 +168,7 @@ const locations = ['餐馆吃饭', '商场买衣服', '上山修行', '去比赛
 const showGoingOutLayer = ref(false)
 const showBreakupDialog = ref(false)
 
-const actions = ['上课', '赚钱', '把妹', '休息', '外出']
+const actions = ['上课', '赚钱', '出去鬼混', '休息', '外出']
 
 
 const attributeNames: AttributeNames = {
@@ -210,7 +209,7 @@ function performAction(action: string) {
         store.commit('updateAttribute', { attribute: 'money', value: 100 })
         textBoxMessage.value = '你努力工作，赚到了100金钱。'
         break
-      case '把妹':
+      case '出去鬼混':
         if (!store.state.girlfriend) {
           store.commit('updateAttribute', { attribute: 'charm', value: 1 })
           if (store.state.flirtCount) {
@@ -227,7 +226,7 @@ function performAction(action: string) {
             textBoxMessage.value = `恭喜！你交到了一个${randomGirlfriend.type}。`
           }
         } else {
-          textBoxMessage.value = '你已经有女朋友了，不能再把妹。'
+          textBoxMessage.value = '你已经有女朋友了，不能再出来鬼混把妹了。快去陪陪你的女朋友吧！'
         }
         break
       case '休息':
@@ -248,7 +247,7 @@ function performAction(action: string) {
 
 
   function accompanyGirlfriend() {
-    if (store.state.accompanyCount < 14) {
+    if (store.state.accompanyCount < 8) {
       const energy = store.state.attributes.energy
 
       const girlfriendType = store.state.girlfriend.type
@@ -262,7 +261,7 @@ function performAction(action: string) {
       } else {
         textBoxMessage.value = '体力不足，无法陪女朋友。'
       }
-
+      store.commit('updateAttribute', { attribute: 'energy', value: -20 })
       store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 11) - 5 })
       store.commit('incrementAccompanyCount')
 
@@ -271,6 +270,16 @@ function performAction(action: string) {
       showBreakupDialog.value = true
     }
   }
+
+const randomBreakupReason = () =>
+{
+  const currentGirlfriend = store.state.girlfriend;
+  if (!currentGirlfriend) {
+    return '';
+  }
+  const reasonIndex = Math.floor(Math.random() * currentGirlfriend.breakupReasons.length);
+  return `你的女朋友想和你分手，因为${currentGirlfriend.breakupReasons[reasonIndex]}。你选择？`;
+}
 
 function goToLocation(location: string) {
   textBoxMessage.value = '正在前往：' + location
@@ -295,23 +304,24 @@ const currentPeriod = computed(() => {
 function handleBreakup(choice: string) {
     switch (choice) {
       case '挽回':
-        // 添加挽回成功的概率较低的逻辑
-        if (Math.random() < 0.3) {
+        if (Math.random() < 0.520) {
           store.commit('resetAccompanyCount')
-          textBoxMessage.value = '经过努力，你成功挽回了你们的感情。'
+          store.commit('updateAttribute', { attribute: 'charm', value: 5 })
+          textBoxMessage.value = '经过努力，你成功挽回了你们的感情。姜云升魅力+5！'
         } else {
           store.commit('setGirlfriend', null)
-          textBoxMessage.value = '尽管你努力挽回，但你们最终还是分手了。'
+          store.commit('updateAttribute', { attribute: 'charm', value: -5 })
+          textBoxMessage.value = '尽管你努力挽回，但你们最终还是分手了。你的魅力-5！'
         }
         break
       case '沉默':
         // 添加随机选择是否挽回感情的逻辑
         if (Math.random() < 0.5) {
           store.commit('resetAccompanyCount')
-          textBoxMessage.value = '你的沉默让你们的感情得以修复。'
+          textBoxMessage.value = '你的沉默让你们的感情得以修复。在命运的指引下，你们重新在了一起。'
         } else {
           store.commit('setGirlfriend', null)
-          textBoxMessage.value = '你的沉默让你们之间的感情破裂。'
+          textBoxMessage.value = '你的沉默让你们之间的感情破裂。在命运的指引下，你们最终分手了。'
         }
         break
       case '拜拜就拜拜':
