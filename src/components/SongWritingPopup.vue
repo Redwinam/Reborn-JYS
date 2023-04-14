@@ -1,22 +1,20 @@
 <template>
-  <div v-if="showSongWritingDialog" class="song-writing-dialog popup">
 
-    <p>{{ textBoxMessage }}</p>
+<p>{{ textBoxMessage }}</p>
 
-    <h2>写歌</h2>
-    <div v-for="song in availableSongs" :key="song.id" class="song">
-      <h3>{{ song.title }}</h3>
-      <p>条件：</p>
-      <ul>
-        <li v-for="(value, key) in song.conditions" :key="key">{{ key }}: {{ value }}</li>
-      </ul>
-      <p>阶段：</p>
-      <button @click="writeSong('demo', song)" :disabled="!song.isAvailable">Demo</button>
-      <button @click="writeSong('record', song)" :disabled="!song.isAvailable">录歌</button>
-      <button @click="writeSong('release', song)" :disabled="!song.isAvailable">上线</button>
-    </div>
-    <button @click="closeDialog()">关闭</button>
-  </div>
+<h2>写歌</h2>
+<div v-for="song in availableSongs" :key="song.id" class="song">
+  <h3>{{ song.title }}</h3>
+  <p>条件：</p>
+  <ul>
+    <li v-for="(value, key) in song.conditions" :key="key">{{ key }}: {{ value }}</li>
+  </ul>
+  <p>阶段：</p>
+  <button @click="writeSong('demo', song)" :disabled="!song.isAvailable">Demo</button>
+  <button @click="writeSong('record', song)" :disabled="!song.isAvailable">录歌</button>
+  <button @click="writeSong('release', song)" :disabled="!song.isAvailable">上线</button>
+</div>
+
 </template>
 
 <script setup lang="ts">
@@ -24,12 +22,7 @@ import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import { songLibrary } from '../store/songs'
 // 声明 props showSongWritingDialog
-const props = defineProps({
-  showSongWritingDialog: {
-    type: Boolean,
-    required: true,
-  },
-})
+
 
 let songStages = {}
 
@@ -95,11 +88,6 @@ function writeSong(stage: string, song: any) {
     // 无法执行当前阶段的提示
     textBoxMessage.value = '无法执行当前阶段，请按顺序完成写歌任务。'
   }
-}
-
-const emit = defineEmits(['closeDialog'])
-const closeDialog = () => {
-  emit('closeDialog')
 }
 
 </script>

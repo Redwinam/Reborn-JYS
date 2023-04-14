@@ -3,26 +3,8 @@ import { createStore, Store, Commit } from 'vuex'
 import { achievementLibrary, AchievementLibrary } from '../store/achievements'
 import { songLibrary, SongLibrary } from '../store/songs'
 
-interface Skill {
-  freestyle: number
-  gaming: number
-}
+import { Attributes, Popularity } from '../store/attributes'
 
-interface Popularity {
-  red: number
-  black: number
-}
-
-interface Attributes {
-  divine: number
-  talent: number
-  charm: number
-  popularity: Popularity
-  money: number
-  skill: Skill
-  energy: number
-  mood: number
-}
 
 interface State {
   year: number
@@ -100,7 +82,7 @@ const state: State = {
   
   songs: [],
   songLibrary,
-  
+
   specialEvents: [],
 
   gameEnded: false,
