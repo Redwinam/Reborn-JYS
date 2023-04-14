@@ -1,5 +1,8 @@
 import { createStore, Store, Commit } from 'vuex'
 
+import { achievementLibrary, AchievementLibrary } from '../store/achievements'
+import { songLibrary, SongLibrary } from '../store/songs'
+
 interface Skill {
   freestyle: number
   gaming: number
@@ -31,12 +34,17 @@ interface State {
   girlfriendTypes: { type: string; effect: keyof Attributes; breakupReasons: string[] }[]
   flirtCount: number
   accompanyCount: number
+
   achievements: { name: string; desc: string }[]
+  achievementLibrary: AchievementLibrary[]
+
   songs: string[]
+  songLibrary: SongLibrary[]
+
   specialEvents: string[]
 
   gameEnded: boolean
-  specialEndingAchievement: string
+  specialEndingAchievement: { name: string; desc: string } | null
 }
 
 const state: State = {
@@ -82,17 +90,21 @@ const state: State = {
     },
     { 
       type: '会理财的女朋友', effect: 'money',
-      breakupReasons: ['你父母给了她500万让她离开你', '你父母给了她1000万让她离开你', '你父母给了她2000万让她离开你', '你父母给了她5000万让她离开你', '你父母给了她10000万让她离开你'],
+      breakupReasons: ['你父母给了她500万让她离开你', '你父母给了她1000万让她离开你', '你父母给了她2000万让她离开你', '你父母给了她5000万让她离开你', '你父母给了她一个亿让她离开你'],
     },
   ],
   accompanyCount: 0,
 
   achievements: [],
+  achievementLibrary,
+  
   songs: [],
+  songLibrary,
+  
   specialEvents: [],
 
   gameEnded: false,
-  specialEndingAchievement: '',
+  specialEndingAchievement: null,
 }
 
 type UpdateAttributePayload = {
@@ -120,9 +132,7 @@ const mutations = {
   updatePopularity(state: State, payload: { type: keyof Popularity; value: number }) {
     state.attributes.popularity[payload.type] += payload.value
   },
-  unlockAchievement(state: State, achievement: { name: string; desc: string }) {
-    state.achievements.push(achievement)
-  },
+
   
   setWeak(state: State, payload: boolean) {
     state.weak = payload
@@ -143,15 +153,27 @@ const mutations = {
     state.accompanyCount = 0
   },
 
-  setGameEnded(state: State, payload: { gameEnded: boolean; specialEndingAchievement: string }) {
+  unlockAchievement(state: State, achievementId: string) {
+    const achievement = state.achievementLibrary.find(
+      (ach) => ach.id === achievementId
+    )
+    if (achievement) {
+      state.achievements.push(achievement)
+    }
+  },
+
+  setGameEnded(state: State, payload: { gameEnded: boolean; specialEndingAchievementId: string }) {
     state.gameEnded = payload.gameEnded
-    state.specialEndingAchievement = payload.specialEndingAchievement
+    const specialEndingAchievement = state.achievementLibrary.find(
+      (ach) => ach.id === payload.specialEndingAchievementId && ach.ending
+    )
+    state.specialEndingAchievement = specialEndingAchievement || null
   },
 
   resetGameState(state: State) {
     state.round = 1
     state.gameEnded = false
-    state.specialEndingAchievement = ''
+    state.specialEndingAchievement = null
     state.accompanyCount = 0
     state.attributes = {
       divine: 0,
@@ -169,7 +191,6 @@ const mutations = {
       energy: 100,
       mood: 0,
     }
-    state.achievements = []
     state.specialEvents = []
   },
 }

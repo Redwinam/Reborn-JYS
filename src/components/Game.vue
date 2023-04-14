@@ -29,9 +29,6 @@
       </div>
     </div>
 
-
-
-    
     <!-- Textbox for the text-based game -->
     <div class="textbox">
       <p>{{ textBoxMessage }}</p>
@@ -59,15 +56,6 @@
       </div>
     </transition>
 
-    <div class="achievements">
-      <h2>成就</h2>
-      <ul>
-        <li v-for="achievement in achievements" :key="achievement">
-          {{ achievement }}
-        </li>
-      </ul>
-    </div>
-
     <div class="events">
       <h2>特殊事件</h2>
       <ul>
@@ -75,7 +63,6 @@
       </ul>
     </div>
   </div>
-
 
 <footer class="footer">
   <button class="button" @click="showCharacterPopup = true">角色</button>
@@ -86,7 +73,7 @@
 </footer>
 
 <!-- Separate pop-up for values -->
-<div class="values-popup" v-if="showCharacterPopup">
+<div class="values-popup popup" v-if="showCharacterPopup">
   <h2>数值</h2>
   <div
     class="attribute"
@@ -112,8 +99,10 @@
   <button @click="showCharacterPopup = false">关闭</button>
 </div>
 
+<song-writing-dialog :showSongWritingDialog="showSongWritingDialog" @closeDialog="showSongWritingDialog = false" />
+
 <!-- Separate pop-up for achievements -->
-<div class="achievements-popup" v-if="showAchievementsPopup">
+<div class="achievements-popup popup" v-if="showAchievementsPopup">
   <h2>成就</h2>
   <ul>
     <li v-for="achievement in achievements" :key="achievement">
@@ -131,13 +120,13 @@
   <button @click="handleBreakup('拜拜就拜拜')">拜拜就拜拜</button>
 </div>
 
-<div v-if="gameEnded">
+<div class="popup" v-if="gameEnded" >
   <h2>游戏结束</h2>
   <p>{{ specialEndingAchievement.desc }}</p>
   <p>您已获得结局成就：{{ specialEndingAchievement.name }}</p>
   <button @click="restartGame">重新开始</button>
+  <p>（重启后保留已获得的成就）</p>
 </div>
-
 
 </div>
 
@@ -146,6 +135,7 @@
 <script setup lang="ts">
 import { useStore } from 'vuex'
 import { computed, ref } from 'vue'
+import SongWritingDialog from '../components/SongWritingDialog.vue'
 
 interface AttributeNames {
   [key: string]: string;
@@ -167,8 +157,11 @@ const locations = ['餐馆吃饭', '商场买衣服', '上山修行', '去比赛
 
 const showGoingOutLayer = ref(false)
 const showBreakupDialog = ref(false)
+const showSongWritingDialog = ref(false)
 
-const actions = ['上课', '赚钱', '出去鬼混', '休息', '外出']
+
+
+const actions = ['上课', '赚钱', '出去鬼混', '休息', '外出', '写歌']
 
 
 const attributeNames: AttributeNames = {
@@ -233,15 +226,15 @@ function performAction(action: string) {
         store.commit('updateAttribute', { attribute: 'energy', value: 60 })
         textBoxMessage.value = '你休息了一天，体力+60。'
         break
+      case '写歌':
+        showSongWritingDialog.value = true
+        break
     }
   }
 
   if (store.state.attributes.energy <= -100) {
-    store.commit('setGameEnded', { gameEnded: true, specialEndingAchievement: '姜云升虚弱' })
-    store.commit('unlockAchievement', { 
-      name: '姜云升虚弱', 
-      desc: "你的体力被透支到了极限，由于极度虚弱，你不得不结束游戏。" 
-    })
+    store.commit('setGameEnded', { gameEnded: true, specialEndingAchievementId: 'jiangyunsheng-weak' })
+    store.commit('unlockAchievement', 'jiangyunsheng-weak')
   }
 }
 
@@ -382,8 +375,7 @@ function handleBreakup(choice: string) {
 }
 
 /* Styling for pop-ups */
-.values-popup,
-.achievements-popup {
+.popup {
   position: fixed;
   top: 50%;
   left: 50%;
