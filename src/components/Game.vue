@@ -57,7 +57,6 @@
   <button class="button" @click="showItemsPopup = true">物品</button>
   <button class="button" @click="showSkillsPopup = true">技能</button>
   <button class="button" @click="showAchievementsPopup = true">成就</button>
-  <p>制作人：@千啾略</p>
 </footer>
 
 <Popup title="写歌" :visible="showSongWritingDialog" @close="showSongWritingDialog = false">
@@ -244,6 +243,7 @@ const addTextBoxMessage = (message: string) => {
   align-items: center;
   padding: 16px;
   font-family: 'Arial', sans-serif;
+  background-color: #ede7dd;
 }
 
 .header {
@@ -315,5 +315,18 @@ const addTextBoxMessage = (message: string) => {
 .show-values-button,
 .show-achievements-button {
   margin-bottom: 16px;
+}
+footer {
+  width: 100%;
+  background: url('src/assets/menu.png') no-repeat center/cover;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+footer button {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
 }
 </style>

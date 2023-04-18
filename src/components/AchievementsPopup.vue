@@ -4,6 +4,8 @@
       {{ achievement }}
     </li>
   </ul>
+  <p style="display: none;">制作人：@千啾略</p>
+
 </template>
 
 <script setup lang="ts">
