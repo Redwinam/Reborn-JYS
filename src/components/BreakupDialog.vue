@@ -73,7 +73,7 @@ function handleBreakup(choice: string) {
     case '拜拜就拜拜':
       store.commit('setGirlfriend', null)
       store.commit('resetAccompanyCount')
-      addTextBoxMessage('你放手了，选择了拜拜就拜拜。')
+      addTextBoxMessage('你放手了，选择了拜拜就拜拜。你现在没有女朋友了。')
       break
   }
   closeDialog()

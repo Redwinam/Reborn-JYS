@@ -4,15 +4,13 @@
       <div class="popup">
         <h2>{{ title }}</h2>
         <slot></slot>
-        <button v-if="showCloseButton" @click="$emit('close')">关闭</button>
+        <button v-if="showCloseButton" @click="$emit('close')" class="close-button">关闭</button>
       </div>
     </div>
   </transition>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
-
 const props = defineProps({
   title: String,
   visible: Boolean,
@@ -38,6 +36,7 @@ const props = defineProps({
 }
 
 .popup {
+  position: relative;
   background-color: white;
   border-radius: 5px;
   padding: 20px;
@@ -45,6 +44,15 @@ const props = defineProps({
   max-width: 500px;
   border: 1px solid black;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
 
 .fade-enter-active,

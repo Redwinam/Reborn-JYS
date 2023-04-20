@@ -1,8 +1,6 @@
 <template>
 
 <p>{{ textBoxMessage }}</p>
-
-<h2>写歌</h2>
 <div v-for="song in availableSongs" :key="song.id" class="song">
   <h3>{{ song.title }}</h3>
   <p>条件：</p>

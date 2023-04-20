@@ -1,8 +1,8 @@
 <template>
-<div class="game-container">
+<div id="game-container" class="game-container">
   <div v-if="!gameEnded">
   <div class="header">
-    <h1>重生之我是姜云升</h1>
+    <h1>重生<small>之我是姜云升</small></h1>
     <div class="round-info">
       当前时间: {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }}
       <br />
@@ -237,19 +237,32 @@ const addTextBoxMessage = (message: string) => {
 </script>
 
 <style scoped>
+#game-container {
+  position: relative;
+  width: 50vh; /* 保持 1:2 的宽高比，宽度设置为 50vh */
+  height: 100vh; /* 高度设置为 100vh */
+  background-image: url('src/assets/bg.png');
+  background-size: cover;
+  background-position: center;
+  margin: 0 auto; /* 水平居中 */
+}
+
 .game-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px;
   font-family: 'Arial', sans-serif;
-  background-color: #ede7dd;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+.round-info {
+  background-color: #eae7e3;
+  border: 1px solid #bdb2ad;
+  padding: 8px;
 }
 
 .attributes {
@@ -265,6 +278,15 @@ const addTextBoxMessage = (message: string) => {
   margin-bottom: 8px;
 }
 
+.textbox {
+  width: 100%;
+  height:64px;
+  margin-bottom: 16px;
+  border: 2px solid #262525;
+  border-radius: 8px;
+  background-color: #fcfcfc;
+}
+
 .actions {
   margin-bottom: 16px;
 }
@@ -272,6 +294,9 @@ const addTextBoxMessage = (message: string) => {
 .events,
 .achievements {
   width: 100%;
+
+
+  display: none;
 }
 
 .events ul,
@@ -318,13 +343,16 @@ const addTextBoxMessage = (message: string) => {
 }
 footer {
   width: 100%;
-  background: url('src/assets/menu.png') no-repeat center/cover;
+  /* background: url('src/assets/menu.png') no-repeat center/cover; */
   /* display: flex; */
   /* justify-content: center; */
   /* align-items: center; */
+  background-color: #1e2228;
 }
 footer button {
-  background: transparent;
+  /* background-color: #1e2228  191c22; */
+  background-color: #1e2228;
+  color: #d3c6c4;
   border: none;
   outline: none;
   cursor: pointer;
