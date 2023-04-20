@@ -1,5 +1,5 @@
 <template>
-<div id="game-container" class="game-container">
+<div id="game-container" class="game-container" :class="{ 'at-home': isAtHome }">
   <div v-if="!gameEnded">
 
   <div class="header">
@@ -29,10 +29,12 @@
     <!-- <button v-for="action in actions" :key="action" @click="performAction(action)">
       {{ action }}
     </button> -->
-    <button @click="performAction('回家')" class="action-back-home"></button>
-    <button @click="performAction('出去鬼混')" class="action-hang-out"></button>
-    <button @click="performAction('外出')" class="action-go-out"></button>
-    <button v-if="store.state.girlfriend" @click="accompanyGirlfriend">陪女朋友</button>
+    
+    <button @click="performAction('回家')" class="action-back-home" v-if="!isAtHome"></button>
+    <button @click="performAction('出去鬼混')" class="action-hang-out" v-if="!isAtHome"></button>
+    <button @click="performAction('外出')" class="action-go-out" v-if="!isAtHome"></button>
+    <button v-if="isAtHome" @click="isAtHome = false" class="action-back"></button>
+    <button v-if="store.state.girlfriend" @click="accompanyGirlfriend" class="action-accompany-girlfriend">陪女朋友</button>
 
   </div>
 
@@ -127,6 +129,8 @@ const showSongWritingDialog = ref(false)
 
 const actions = ['上课', '赚钱', '出去鬼混', '休息', '回家', '外出', '写歌']
 
+const isAtHome = ref(false)
+
 const gameEnded = computed(() => store.state.gameEnded)
 const specialEndingAchievement = computed(() => store.state.specialEndingAchievement)
 
@@ -170,6 +174,9 @@ function performAction(action: string) {
         } else {
           textBoxMessage.value = '你已经有女朋友了，不能再出来鬼混把妹了。快去陪陪你的女朋友吧！'
         }
+        break
+      case '回家':
+        isAtHome.value = true
         break
       case '休息':
         store.commit('updateAttribute', { attribute: 'energy', value: 60 })
@@ -245,7 +252,6 @@ const addTextBoxMessage = (message: string) => {
 #game-container {
   position: relative;
   height: 100vh; /* 高度设置为 100vh */
-  background-image: url('src/assets/bg_just.png');
   background-size: cover;
   background-position: top center;
   margin: 0 auto; /* 水平居中 */
@@ -256,6 +262,11 @@ const addTextBoxMessage = (message: string) => {
   flex-direction: column;
   align-items: center;
   font-family: 'Arial', sans-serif;
+  background-image: url('src/assets/bg_just.png');
+
+}
+.game-container.at-home {
+  background-image: url('src/assets/bg_sleep.png');
 }
 
 .header {
@@ -354,6 +365,19 @@ const addTextBoxMessage = (message: string) => {
   position: absolute;
   top: 68%;
   left: 16%;
+}
+.action-back {
+  background: url('src/assets/back.png') no-repeat;
+  width: 50px;
+  height: 136px;
+  /* background-image: url('~@/assets/go_out.png'); */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  position: absolute;
+  top: 68%;
+  left: 76%;
 }
 
 .events,
