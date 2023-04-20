@@ -1,5 +1,9 @@
 <template>
-<div id="game-container" class="game-container" :class="{ 'at-home': isAtHome }">
+<div id="game-container" class="game-container">
+  <transition name="fade">
+    <div class="home-background" v-if="isAtHome"></div>
+  </transition>
+
   <div v-if="!gameEnded">
 
   <div class="header">
@@ -265,8 +269,25 @@ const addTextBoxMessage = (message: string) => {
   background-image: url('src/assets/bg_just.png');
 
 }
-.game-container.at-home {
+.home-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-image: url('src/assets/bg_sleep.png');
+  background-size: cover;
+  background-position: top center;
+  /* z-index: -1; */
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 
 .header {
@@ -277,6 +298,7 @@ const addTextBoxMessage = (message: string) => {
   background-size: contain;
   background-position: top center;
   padding: 0.6vh 0.6vh 1.2vh;
+  position: relative;
 }
 .round-info {
   color: #f7f6f6;
@@ -368,8 +390,8 @@ const addTextBoxMessage = (message: string) => {
 }
 .action-back {
   background: url('src/assets/back.png') no-repeat;
-  width: 50px;
-  height: 136px;
+  width: 44px;
+  height: 105px;
   /* background-image: url('~@/assets/go_out.png'); */
   background-size: contain;
   background-repeat: no-repeat;
