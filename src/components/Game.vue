@@ -18,10 +18,10 @@
 
   <div class="attributes">
 
-    <div>{{ attributeNames['popularity'] }}: {{ attributes['popularity'] }}</div>
-    <div>{{ attributeNames['money'] }}: {{ attributes['money'] }}</div>
-    <div>{{ attributeNames['energy'] }}: {{ attributes['energy'] }}</div>
-    <div>{{ attributeNames['mood'] }}: {{ attributes['mood'] }}</div>
+    <div><span>{{ attributeNames['popularity'] }}</span>: {{ attributes['popularity'] }}</div>
+    <div><span>{{ attributeNames['money'] }}</span>: {{ attributes['money'] }}</div>
+    <div><span>{{ attributeNames['energy'] }}</span>: {{ attributes['energy'] }}</div>
+    <div><span>{{ attributeNames['mood'] }}</span>: {{ attributes['mood'] }}</div>
   </div>
 
   <!-- Textbox for the text-based game -->
@@ -37,6 +37,8 @@
     <button @click="performAction('回家')" class="action-back-home" v-if="!isAtHome"></button>
     <button @click="performAction('出去鬼混')" class="action-hang-out" v-if="!isAtHome"></button>
     <button @click="performAction('外出')" class="action-go-out" v-if="!isAtHome"></button>
+    <button @click="performAction('赚钱')" class="action-make-money" v-if="!isAtHome">赚钱</button>
+    <button @click="performAction('写歌')" class="action-write-song" v-if="!isAtHome">写歌</button>
     <button v-if="isAtHome" @click="isAtHome = false" class="action-back"></button>
     <button v-if="store.state.girlfriend" @click="accompanyGirlfriend" class="action-accompany-girlfriend">陪女朋友</button>
 
@@ -318,6 +320,11 @@ const addTextBoxMessage = (message: string) => {
   font-weight: 500;
 
 }
+.attributes span {
+  background-color: #433e41;
+  color: #fcfcfc;
+  padding: 0.1rem;
+}
 
 .attribute {
   /* flex: 0 0 calc(50% - 8px); */
@@ -328,7 +335,7 @@ const addTextBoxMessage = (message: string) => {
 .textbox {
   position: relative;
   top: 36vh;
-  width: 100%;
+  width: 45vh;
   /* height:10vh; */
   margin-bottom: 16px;
   border: 2px solid #262525;
@@ -358,6 +365,18 @@ const addTextBoxMessage = (message: string) => {
   position: absolute;
   top: 57%;
   left: 20%;
+}
+
+
+.action-write-song {
+  position: absolute;
+  top: 80%;
+}
+
+.action-make-money {
+  position: absolute;
+  top: 70%;
+  left: 35%;
 }
 
 
