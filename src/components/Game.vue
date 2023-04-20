@@ -34,13 +34,13 @@
       {{ action }}
     </button> -->
     
-    <button @click="performAction('回家')" class="action-back-home" v-if="!isAtHome"></button>
-    <button @click="performAction('出去鬼混')" class="action-hang-out" v-if="!isAtHome"></button>
-    <button @click="performAction('外出')" class="action-go-out" v-if="!isAtHome"></button>
-    <button @click="performAction('赚钱')" class="action-make-money" v-if="!isAtHome">赚钱</button>
-    <button @click="performAction('写歌')" class="action-write-song" v-if="!isAtHome">写歌</button>
-    <button v-if="isAtHome" @click="isAtHome = false" class="action-back"></button>
-    <button v-if="store.state.girlfriend" @click="accompanyGirlfriend" class="action-accompany-girlfriend"></button>
+    <button @click="performAction('回家')" class="action-button action-back-home" v-if="!isAtHome"></button>
+    <button @click="performAction('出去鬼混')" class="action-button action-hang-out" v-if="!isAtHome"></button>
+    <button @click="performAction('外出')" class="action-button action-go-out" v-if="!isAtHome"></button>
+    <button @click="performAction('赚钱')" class="action-button action-make-money" v-if="!isAtHome"></button>
+    <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome"></button>
+    <button v-if="isAtHome" @click="isAtHome = false" class="action-button action-back"></button>
+    <button v-if="store.state.girlfriend" @click="accompanyGirlfriend" class="action-button action-accompany-girlfriend"></button>
 
   </div>
 
@@ -338,6 +338,7 @@ const addTextBoxMessage = (message: string) => {
   width: 45vh;
   /* height:10vh; */
   margin-bottom: 16px;
+  margin: 6vh 6vh;
   border: 2px solid #262525;
   border-radius: 8px;
   background-color: #fcfcfc;
@@ -352,85 +353,63 @@ const addTextBoxMessage = (message: string) => {
   margin-bottom: 16px;
 }
 
-
-.action-back-home {
-  background: url('src/assets/back-home.png') no-repeat;
-  width: 46.5px;
-  height: 78.5px;
-  /* background-image: url('~@/assets/go_out.png'); */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+.action-button {
   cursor: pointer;
   position: absolute;
+}
+
+.action-back-home {
+  background: url('src/assets/back-home.png') center / contain no-repeat;
+  width: 46.5px;
+  height: 78.5px;
   top: 57%;
   left: 20%;
 }
 
-
-.action-write-song {
-  position: absolute;
-  top: 80%;
-}
-
-.action-make-money {
-  position: absolute;
-  top: 70%;
-  left: 35%;
-}
-
-
 .action-go-out {
-  background: url('src/assets/go-out.png') no-repeat;
+  background: url('src/assets/go-out.png') center / contain no-repeat;
   width: 50px;
   height: 123px;
-  /* background-image: url('~@/assets/go_out.png'); */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  cursor: pointer;
-  position: absolute;
   top: 70%;
   left: 72%;
 }
 
 .action-hang-out {
-  background: url('src/assets/hang-out.png') no-repeat;
+  background: url('src/assets/hang-out.png') center / contain no-repeat;
   width: 50px;
   height: 136px;
-  /* background-image: url('~@/assets/go_out.png'); */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  cursor: pointer;
-  position: absolute;
-  top: 68%;
-  left: 12%;
+  top: 69%;
+  left: 11%;
 }
+
+.action-write-song {
+  background: url('src/assets/write-song.png') center / contain no-repeat;
+  width: 47px;
+  height: 111px;
+  top: 64%;
+  left: 36%;
+}
+
+.action-make-money {
+  background: url('src/assets/make-money.png') center / contain no-repeat;
+  width: 47px;
+  height: 96.5px;
+  top: 58%;
+  left: 55%;
+}
+
 .action-back {
-  background: url('src/assets/back.png') no-repeat;
+  background: url('src/assets/back.png') center / contain no-repeat;
   width: 44px;
   height: 105px;
-  /* background-image: url('~@/assets/go_out.png'); */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  cursor: pointer;
-  position: absolute;
   top: 68%;
   left: 76%;
 }
 
 .action-accompany-girlfriend {
-  background: url('src/assets/accompany-girlfriend.png') no-repeat;
+  background: url('src/assets/accompany-girlfriend.png') center / contain no-repeat;
   width: 50px;
   height: 159px;
-  /* background-image: url('~@/assets/go_out.png'); */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  cursor: pointer;
-  position: absolute;
   top: 72%;
   left: 21%;
 }
