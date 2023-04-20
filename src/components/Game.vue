@@ -1,21 +1,23 @@
 <template>
 <div id="game-container" class="game-container">
   <div v-if="!gameEnded">
+
   <div class="header">
+
     <!-- <h1>重生<small>之我是姜云升</small></h1> -->
     <div class="round-info">
-      当前时间: {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }}
-      <br />
-      轮次: {{ currentRound }} / {{ totalRounds }}
+      {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }} · 轮次: {{ currentRound }} / {{ totalRounds }}
     </div>
+
   </div>
+    <!-- <h1>重生<small>之我是姜云升</small>之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升</h1> -->
 
   <div class="attributes">
 
-    {{ attributeNames['popularity'] }}: {{ attributes['popularity'] }}
-    {{ attributeNames['money'] }}: {{ attributes['money'] }}
-    {{ attributeNames['energy'] }}: {{ attributes['energy'] }}
-    {{ attributeNames['mood'] }}: {{ attributes['mood'] }}
+    <div>{{ attributeNames['popularity'] }}: {{ attributes['popularity'] }}</div>
+    <div>{{ attributeNames['money'] }}: {{ attributes['money'] }}</div>
+    <div>{{ attributeNames['energy'] }}: {{ attributes['energy'] }}</div>
+    <div>{{ attributeNames['mood'] }}: {{ attributes['mood'] }}</div>
   </div>
 
   <!-- Textbox for the text-based game -->
@@ -24,10 +26,12 @@
   </div>
 
   <div class="actions">
-    <h2>选择行动</h2>
-    <button v-for="action in actions" :key="action" @click="performAction(action)">
+    <!-- <button v-for="action in actions" :key="action" @click="performAction(action)">
       {{ action }}
-    </button>
+    </button> -->
+    <button @click="performAction('回家')" class="action-back-home"></button>
+    <button @click="performAction('出去鬼混')" class="action-hang-out"></button>
+    <button @click="performAction('外出')" class="action-go-out"></button>
     <button v-if="store.state.girlfriend" @click="accompanyGirlfriend">陪女朋友</button>
 
   </div>
@@ -50,8 +54,7 @@
     </ul>
   </div>
 
-</div>
-
+  
 <footer class="footer">
   <button class="button" @click="showCharacterPopup = true">角色</button>
   <button class="button" @click="showItemsPopup = true">物品</button>
@@ -73,6 +76,9 @@
   <achievements-popup />
 </Popup>
 
+
+
+</div>
 
 <div class="popup" v-if="gameEnded" >
   <h2>游戏结束</h2>
@@ -207,7 +213,6 @@ function accompanyGirlfriend() {
   }
 }
 
-
 function goToLocation(location: string) {
   textBoxMessage.value = '正在前往：' + location
 }
@@ -239,11 +244,10 @@ const addTextBoxMessage = (message: string) => {
 <style scoped>
 #game-container {
   position: relative;
-  width: 50vh; /* 保持 1:2 的宽高比，宽度设置为 50vh */
   height: 100vh; /* 高度设置为 100vh */
-  background-image: url('src/assets/bg_cleaned.png');
+  background-image: url('src/assets/bg_just.png');
   background-size: cover;
-  background-position: center;
+  background-position: top center;
   margin: 0 auto; /* 水平居中 */
 }
 
@@ -255,40 +259,101 @@ const addTextBoxMessage = (message: string) => {
 }
 
 .header {
-  display: flex;
+  /* display: flex;
   justify-content: space-between;
-  width: 100%;
+  width: 100%; */
+  background: url('src/assets/header.png') no-repeat;
+  background-size: contain;
+  background-position: top center;
+  padding: 0.6vh 0.6vh 1.2vh;
 }
 .round-info {
-  background-color: #eae7e3;
-  border: 1px solid #bdb2ad;
-  padding: 8px;
+  color: #f7f6f6;
+  text-align: center;
+  margin: 0 auto;
+  line-height: 2;
 }
 
 .attributes {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 16px;
+  display: block;
+  position: absolute;
+  top: 22%;
+  left: 79%;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #94847d;
+  font-weight: 500;
+
 }
 
 .attribute {
-  flex: 0 0 calc(50% - 8px);
+  /* flex: 0 0 calc(50% - 8px); */
   margin-bottom: 8px;
+
 }
 
 .textbox {
+  position: relative;
+  top: 36vh;
   width: 100%;
-  height:64px;
+  /* height:10vh; */
   margin-bottom: 16px;
   border: 2px solid #262525;
   border-radius: 8px;
   background-color: #fcfcfc;
+  /* padding: 1rem */
+}
+
+.textbox p {
+  margin: 1rem;
 }
 
 .actions {
   margin-bottom: 16px;
+}
+
+
+.action-back-home {
+  background: url('src/assets/back-home.png') no-repeat;
+  width: 46.5px;
+  height: 78.5px;
+  /* background-image: url('~@/assets/go_out.png'); */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  position: absolute;
+  top: 57%;
+  left: 20%;
+}
+
+
+.action-go-out {
+  background: url('src/assets/go-out.png') no-repeat;
+  width: 50px;
+  height: 123px;
+  /* background-image: url('~@/assets/go_out.png'); */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  position: absolute;
+  top: 70%;
+  left: 72%;
+}
+
+.action-hang-out {
+  background: url('src/assets/hang-out.png') no-repeat;
+  width: 50px;
+  height: 136px;
+  /* background-image: url('~@/assets/go_out.png'); */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  position: absolute;
+  top: 68%;
+  left: 16%;
 }
 
 .events,
@@ -342,6 +407,8 @@ const addTextBoxMessage = (message: string) => {
   margin-bottom: 16px;
 }
 footer {
+  position: absolute;
+  bottom: 0;
   width: 100%;
   /* background: url('src/assets/menu.png') no-repeat center/cover; */
   /* display: flex; */
