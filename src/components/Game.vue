@@ -18,7 +18,7 @@
 
   <div class="attributes">
 
-    <div><span>{{ attributeNames['popularity'] }}</span>: {{ attributes['popularity'] }}</div>
+    <div><span>{{ attributeNames['popularity'] }}</span>: 红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</div>
     <div><span>{{ attributeNames['money'] }}</span>: {{ attributes['money'] }}</div>
     <div><span>{{ attributeNames['energy'] }}</span>: {{ attributes['energy'] }}</div>
     <div><span>{{ attributeNames['mood'] }}</span>: {{ attributes['mood'] }}</div>

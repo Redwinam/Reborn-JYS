@@ -8,7 +8,6 @@
 ![游戏主页](https://redwinam.coding.net/p/jysx/shared-depot/reborn-as-jiangyunsheng/git/raw/master/src/assets/demo-1.png)
 ![回家](https://redwinam.coding.net/p/jysx/shared-depot/reborn-as-jiangyunsheng/git/raw/master/src/assets/demo-home.png)
 
-
 ## 机制设计
 - [x] 人物属性机制
 - [x] 金钱机制
