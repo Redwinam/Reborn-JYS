@@ -2,7 +2,7 @@
 <div id="game-container" class="game-container">
   <div v-if="!gameEnded">
   <div class="header">
-    <h1>重生<small>之我是姜云升</small></h1>
+    <!-- <h1>重生<small>之我是姜云升</small></h1> -->
     <div class="round-info">
       当前时间: {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }}
       <br />
@@ -241,7 +241,7 @@ const addTextBoxMessage = (message: string) => {
   position: relative;
   width: 50vh; /* 保持 1:2 的宽高比，宽度设置为 50vh */
   height: 100vh; /* 高度设置为 100vh */
-  background-image: url('src/assets/bg.png');
+  background-image: url('src/assets/bg_cleaned.png');
   background-size: cover;
   background-position: center;
   margin: 0 auto; /* 水平居中 */
