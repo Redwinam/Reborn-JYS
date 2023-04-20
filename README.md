@@ -5,8 +5,8 @@
 
 ## 界面截图
 
-![游戏主页](https://redwinam.coding.net/p/jysx/shared-depot/reborn-as-jiangyunsheng/git/raw/master/src/assets/demo-1.png)
-![回家](https://redwinam.coding.net/p/jysx/shared-depot/reborn-as-jiangyunsheng/git/raw/master/src/assets/demo-home.png)
+<img src="https://redwinam.coding.net/p/jysx/shared-depot/reborn-as-jiangyunsheng/git/raw/master/src/assets/demo-1.png" alt="游戏主页" width="40%" />
+<img src="https://redwinam.coding.net/p/jysx/shared-depot/reborn-as-jiangyunsheng/git/raw/master/src/assets/demo-home.png" alt="回家" width="40%" />
 
 ## 机制设计
 - [x] 人物属性机制
