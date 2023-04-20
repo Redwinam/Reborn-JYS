@@ -40,7 +40,7 @@
     <button @click="performAction('赚钱')" class="action-make-money" v-if="!isAtHome">赚钱</button>
     <button @click="performAction('写歌')" class="action-write-song" v-if="!isAtHome">写歌</button>
     <button v-if="isAtHome" @click="isAtHome = false" class="action-back"></button>
-    <button v-if="store.state.girlfriend" @click="accompanyGirlfriend" class="action-accompany-girlfriend">陪女朋友</button>
+    <button v-if="store.state.girlfriend" @click="accompanyGirlfriend" class="action-accompany-girlfriend"></button>
 
   </div>
 
@@ -405,7 +405,7 @@ const addTextBoxMessage = (message: string) => {
   cursor: pointer;
   position: absolute;
   top: 68%;
-  left: 16%;
+  left: 12%;
 }
 .action-back {
   background: url('src/assets/back.png') no-repeat;
@@ -419,6 +419,20 @@ const addTextBoxMessage = (message: string) => {
   position: absolute;
   top: 68%;
   left: 76%;
+}
+
+.action-accompany-girlfriend {
+  background: url('src/assets/accompany-girlfriend.png') no-repeat;
+  width: 50px;
+  height: 159px;
+  /* background-image: url('~@/assets/go_out.png'); */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  position: absolute;
+  top: 72%;
+  left: 21%;
 }
 
 .events,
