@@ -18,17 +18,17 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
-import { songLibrary } from '../store/songs'
+import { Song, songLibrary } from '../store/songs'
 // 声明 props showSongWritingDialog
 
 
-let songStages = {}
+let songStages = {} as Record<string, { completedStage: string | null }>
 
 const textBoxMessage = ref('')
 
 const store = useStore()
 
-function isSongAvailable(song) {
+function isSongAvailable(song: Song) {
   for (const [key, value] of Object.entries(song.conditions)) {
     if (store.state.attributes[key] < value) {
       return false
@@ -46,7 +46,7 @@ const availableSongs = computed(() => {
   })
 })
 
-function writeSong(stage: string, song: any) {
+function writeSong(stage: string, song: Song) {
   if (!songStages[song.id]) {
     songStages[song.id] = {
       completedStage: null,

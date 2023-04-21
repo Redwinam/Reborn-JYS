@@ -1,7 +1,7 @@
 import { createStore, Store, Commit } from 'vuex'
 
 import { achievementLibrary, AchievementLibrary } from '../store/achievements'
-import { songLibrary, SongLibrary } from '../store/songs'
+import { songLibrary, Song } from '../store/songs'
 
 import { Attributes, Popularity } from '../store/attributes'
 
@@ -21,7 +21,7 @@ interface State {
   achievementLibrary: AchievementLibrary[]
 
   songs: string[]
-  songLibrary: SongLibrary[]
+  songLibrary: Song[]
 
   specialEvents: string[]
 

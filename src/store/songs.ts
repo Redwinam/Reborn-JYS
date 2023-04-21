@@ -1,4 +1,4 @@
-export interface SongLibrary {
+export interface Song {
   id: string
   title: string
   conditions: {
@@ -10,7 +10,7 @@ export interface SongLibrary {
   }
 }
 
-export const songLibrary: SongLibrary[] = [
+export const songLibrary: Song[] = [
     {
       id: 'romanticism',
       title: '浪漫主义',

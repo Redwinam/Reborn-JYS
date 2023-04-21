@@ -26,7 +26,7 @@
 
   <!-- Textbox for the text-based game -->
   <div class="textbox">
-    <p>{{ textBoxMessage }}</p>
+    <p id="textboxText"></p>
   </div>
 
   <div class="actions">
@@ -38,6 +38,8 @@
     <button @click="performAction('出去鬼混')" class="action-button action-hang-out" v-if="!isAtHome"></button>
     <button @click="performAction('外出')" class="action-button action-go-out" v-if="!isAtHome"></button>
     <button @click="performAction('赚钱')" class="action-button action-make-money" v-if="!isAtHome"></button>
+
+    <button @click="performAction('睡觉休息')" class="action-button action-sleep-rest" v-if="isAtHome"></button>
     <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome"></button>
     <button v-if="isAtHome" @click="isAtHome = false" class="action-button action-back"></button>
     <button v-if="store.state.girlfriend" @click="accompanyGirlfriend" class="action-button action-accompany-girlfriend"></button>
@@ -74,7 +76,7 @@
   <song-writing-popup />
 </Popup>
 
-<breakup-dialog :showDialog="showBreakupDialog" @closeDialog="showBreakupDialog = false"  @addTextBoxMessage="addTextBoxMessage" />
+<breakup-dialog :showDialog="showBreakupDialog" @closeDialog="showBreakupDialog = false"  @typewriter="typewriter" />
 
 <Popup title="角色" :visible="showCharacterPopup" @close="showCharacterPopup = false">
   <character-popup />
@@ -103,6 +105,7 @@
 <script setup lang="ts">
 import { useStore } from 'vuex'
 import { computed, ref } from 'vue'
+import TypeIt from 'typeit';
 
 import Popup from '../components/Popup.vue'
 import AchievementsPopup from '../components/AchievementsPopup.vue'
@@ -122,7 +125,8 @@ const totalRounds = computed(() => store.state.totalRounds)
 const attributes = computed(() => store.state.attributes)
 const specialEvents = computed(() => store.state.specialEvents)
 
-const textBoxMessage = ref('这里是文字游戏的文字框，您可以根据游戏进程显示相应的文本。')
+const textBoxMessageHistory = ref([] as string[])
+const textBoxMessage = ref("")
 
 
 const locations = ['餐馆吃饭', '商场买衣服', '上山修行', '去比赛Battle']
@@ -133,19 +137,50 @@ const showSongWritingDialog = ref(false)
 
 
 
-const actions = ['上课', '赚钱', '出去鬼混', '休息', '回家', '外出', '写歌']
+// const actions = ['上课', '赚钱', '出去鬼混', '休息', '回家', '外出', '写歌']
 
 const isAtHome = ref(false)
 
 const gameEnded = computed(() => store.state.gameEnded)
 const specialEndingAchievement = computed(() => store.state.specialEndingAchievement)
 
+
+const typewriter = (message: string | string[]) => {
+  console.log('typewriter', message)
+  const typewriter = new TypeIt('#textboxText', {
+    strings: message,
+    speed: 25,
+    loop: false,
+    cursorSpeed: 1000,
+    cursorChar: '▐',
+    deleteSpeed: 0,
+    startDelete: true,
+    startDelay: 0,
+    breakLines: true,
+    afterComplete: (instance: { options: { cursor: boolean; }; destroy: () => void; }) => {
+      instance.options.cursor = false;
+      instance.destroy();
+    },
+  }).go();
+
+  if (typeof message === 'string') {
+    textBoxMessageHistory.value.push(message)
+  } else {
+    message.forEach((m) => textBoxMessageHistory.value.push(m))
+  }
+  
+}
+
+function loadGame() {
+  typewriter('今天你打算……')
+}
+
 function performAction(action: string) {
   if (action === '外出') {
     if (store.state.attributes.energy >= 0) {
       showGoingOutLayer.value = true
     } else {
-      textBoxMessage.value = '体力小于零，无法外出。'
+      typewriter('体力小于零，无法外出。')
     }
   } else {
     store.dispatch('performAction', { action })
@@ -155,19 +190,19 @@ function performAction(action: string) {
     switch (action) {
       case '上课':
         store.commit('updateAttribute', { attribute: 'talent', value: 1 })
-        textBoxMessage.value = '你参加了一堂课，才华+1。'
+        typewriter('姜云升参加了一堂课，才华+1。')
         break
       case '赚钱':
         store.commit('updateAttribute', { attribute: 'money', value: 100 })
-        textBoxMessage.value = '你努力工作，赚到了100金钱。'
+        typewriter('姜云升努力工作，赚到了100金钱。')
         break
       case '出去鬼混':
         if (!store.state.girlfriend) {
           store.commit('updateAttribute', { attribute: 'charm', value: 1 })
           if (store.state.flirtCount) {
-            textBoxMessage.value = '你又成功地搭讪了一个姑娘，魅力+1。'
+            typewriter('姜云升又成功地搭讪了一个姑娘，魅力+1。')
           } else {
-            textBoxMessage.value = '你成功地搭讪了一个姑娘，魅力+1。'
+            typewriter('姜云升成功地搭讪了一个姑娘，魅力+1。')
           }
 
           store.commit('incrementFlirtCount')
@@ -175,18 +210,19 @@ function performAction(action: string) {
             const randomGirlfriend = store.state.girlfriendTypes[Math.floor(Math.random() * store.state.girlfriendTypes.length)]
             store.commit('setGirlfriend', randomGirlfriend)
             store.commit('resetFlirtCount')
-            textBoxMessage.value = `恭喜！你交到了一个${randomGirlfriend.type}。`
+            typewriter(`恭喜！姜云升交到了一个${randomGirlfriend.type}。`)
           }
         } else {
-          textBoxMessage.value = '你已经有女朋友了，不能再出来鬼混把妹了。快去陪陪你的女朋友吧！'
+          typewriter('姜云升已经有女朋友了，不能再出来鬼混把妹了。快去陪陪你的女朋友吧！')
         }
         break
       case '回家':
         isAtHome.value = true
+        typewriter('姜云升回到了家。')
         break
-      case '休息':
+      case '睡觉休息':
         store.commit('updateAttribute', { attribute: 'energy', value: 60 })
-        textBoxMessage.value = '你休息了一天，体力+60。'
+        typewriter('姜云升睡了17个小时，体力+60。')
         break
       case '写歌':
         showSongWritingDialog.value = true
@@ -207,27 +243,65 @@ function accompanyGirlfriend() {
 
     const girlfriendType = store.state.girlfriend.type
     const girlfriendEffect = store.state.girlfriend.effect
-    
-    if (energy >= 50) {
-      store.commit('updateAttribute', { attribute: 'energy', value: - 50 })
-      textBoxMessage.value = `你陪了${girlfriendType}，消耗了50点体力。`
-      store.commit('setWeak', true)
-      textBoxMessage.value += '你已进入虚弱状态。'
-    } else {
-      textBoxMessage.value = '体力不足，无法陪女朋友。'
-    }
-    store.commit('updateAttribute', { attribute: 'energy', value: -20 })
-    store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 11) - 5 })
-    store.commit('incrementAccompanyCount')
 
-    textBoxMessage.value = `你陪了${girlfriendType}，你的${attributeNames[girlfriendEffect]}发生了变化。`
+    const toMessage = ref([] as string[])
+
+    if (store.state.isWeak) {
+      toMessage.value.push(`姜云升处于虚弱状态，无法陪女朋友。`)
+      typewriter(toMessage.value)
+      return
+    }
+
+    console.log(store.state.accompanyCount)
+
+    if (store.state.accompanyCount < 1) {
+      store.commit('updateAttribute', { attribute: 'energy', value: - 50 })
+      toMessage.value.push(`姜云升陪了${girlfriendType}，消耗了50点体力。`)
+      
+      store.commit('setWeak', true)
+      toMessage.value.push('姜云升已进入虚弱状态。')
+
+      store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 11) })
+      toMessage.value.push(`姜云升的${attributeNames[girlfriendEffect]}属性上升了。`)
+
+      typewriter(toMessage.value)
+
+    } else {
+      
+      if (energy >= 50) {
+        store.commit('updateAttribute', { attribute: 'energy', value: - 50 })
+        store.commit('incrementAccompanyCount')
+        toMessage.value.push(`姜云升陪了${girlfriendType}，消耗了50点体力。`)
+        
+        store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 11) })
+        toMessage.value.push(`姜云升的${attributeNames[girlfriendEffect]}属性上升了。`)
+
+        typewriter(toMessage.value)
+
+      } else if (energy >= 20) {
+        store.commit('updateAttribute', { attribute: 'energy', value: -20 })
+        store.commit('incrementAccompanyCount')
+        toMessage.value.push(`姜云升陪了${girlfriendType}，消耗了20点体力。`)
+
+        store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 6) })
+        toMessage.value.push(`姜云升的${attributeNames[girlfriendEffect]}属性上升了。`)
+
+        typewriter(toMessage.value)
+
+      } else {
+        toMessage.value.push(`姜云升体力不足，无法陪女朋友。`)
+        typewriter(toMessage.value)
+        return
+      }
+    }
+
   } else {
     showBreakupDialog.value = true
   }
 }
 
 function goToLocation(location: string) {
-  textBoxMessage.value = '正在前往：' + location
+  typewriter('正在前往：' + location)
 }
 
 // Add refs for character, items and skills pop-ups
@@ -243,12 +317,8 @@ const currentPeriod = computed(() => {
   return ['上旬', '中旬', '下旬'][period]
 })
 
-const addTextBoxMessage = (message: string) => {
-  textBoxMessage.value = message
-}
 
-
-  function restartGame() {
+function restartGame() {
   store.commit('resetGameState')
 }
 
@@ -382,6 +452,14 @@ const addTextBoxMessage = (message: string) => {
   left: 11%;
 }
 
+.action-sleep-rest {
+  background: url('src/assets/sleep-rest.png') center / contain no-repeat;
+  width: 46px;
+  height: 135px;
+  top: 24%;
+  left: 18%;
+}
+
 .action-write-song {
   background: url('src/assets/write-song.png') center / contain no-repeat;
   width: 47px;
@@ -394,8 +472,8 @@ const addTextBoxMessage = (message: string) => {
   background: url('src/assets/make-money.png') center / contain no-repeat;
   width: 47px;
   height: 96.5px;
-  top: 58%;
-  left: 55%;
+  top: 60%;
+  left: 36%;
 }
 
 .action-back {
@@ -417,7 +495,6 @@ const addTextBoxMessage = (message: string) => {
 .events,
 .achievements {
   width: 100%;
-
 
   display: none;
 }
