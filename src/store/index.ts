@@ -1,4 +1,5 @@
 import { createStore, Store, Commit } from 'vuex'
+import TypeIt from 'typeit';
 
 import { achievementLibrary, AchievementLibrary } from '../store/achievements'
 import { songLibrary, Song } from '../store/songs'
@@ -27,6 +28,8 @@ interface State {
 
   gameEnded: boolean
   specialEndingAchievement: { name: string; desc: string } | null
+
+  textHistory: string[]
 }
 
 const state: State = {
@@ -47,6 +50,7 @@ const state: State = {
       gaming: 0,
     },
     energy: 100,
+    maxEnergy: 100,
     mood: 0,
   },
 
@@ -87,6 +91,8 @@ const state: State = {
 
   gameEnded: false,
   specialEndingAchievement: null,
+
+  textHistory: [],
 }
 
 type UpdateAttributePayload = {
@@ -109,6 +115,27 @@ const mutations = {
       console.error('Cannot update popularity directly, update red or black instead')
     } else {
       (state.attributes[attribute] as number) += value
+      
+      if (attribute === 'energy') {
+        if (state.attributes.energy > state.attributes.maxEnergy) {
+          state.attributes.energy = state.attributes.maxEnergy
+        }
+
+        if (state.attributes.energy < 0 && !state.weak) {
+          state.weak = true
+          // if (!state.weak) {
+            
+          //   // store.dispatch('typeWriterBreak', '体力<0，姜云升进入了虚弱状态。')
+          // } else {
+          //   // store.dispatch('typeWriterBreak', '体力<0，姜云升正处于虚弱状态。')
+          // }
+          
+        } else if (state.attributes.energy > 0 && state.weak) {
+          state.weak = false
+          // store.dispatch('typeWriterBreak', '体力>0，姜云升从虚弱状态恢复啦。')
+        }
+
+      }
     }
   },
   updatePopularity(state: State, payload: { type: keyof Popularity; value: number }) {
@@ -171,10 +198,12 @@ const mutations = {
         gaming: 0,
       },
       energy: 100,
+      maxEnergy: 100,
       mood: 0,
     }
     state.specialEvents = []
   },
+
 }
 
 const actions = {
@@ -182,6 +211,30 @@ const actions = {
     // 在这里根据用户选择的行为，执行相应操作
     // 例如：修改数值、解锁成就、触发事件等
   },
+  typeWriter (context: { commit: Commit }, message: string | string[]) {
+    new TypeIt('#textboxText', {
+      strings: message,
+      speed: 25,
+      loop: false,
+      cursorSpeed: 1000,
+      cursorChar: '▐',
+      deleteSpeed: 0,
+      startDelete: true,
+      startDelay: 0,
+      breakLines: true,
+      afterComplete: (instance: { options: { cursor: boolean; }; destroy: () => void; }) => {
+        instance.options.cursor = false;
+        instance.destroy();
+      },
+    }).go();
+    
+    if (typeof message === 'string') {
+      store.state.textHistory.push(message)
+    } else {
+      message.forEach((m) => store.state.textHistory.push(m))
+    }
+  },
+
 }
 
 const getters = {

@@ -18,6 +18,7 @@ export interface Attributes {
   money: number
   skill: Skill
   energy: number
+  maxEnergy: number
   mood: number
 }
 

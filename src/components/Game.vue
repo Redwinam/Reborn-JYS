@@ -26,7 +26,7 @@
 
   <!-- Textbox for the text-based game -->
   <div class="textbox">
-    <p id="textboxText"></p>
+    <p id="textboxText">今天你打算……</p>
   </div>
 
   <div class="actions">
@@ -41,7 +41,9 @@
 
     <button @click="performAction('睡觉休息')" class="action-button action-sleep-rest" v-if="isAtHome"></button>
     <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome"></button>
-    <button v-if="isAtHome" @click="isAtHome = false" class="action-button action-back"></button>
+
+    <button v-if="isAtHome" @click="isAtHome = false; typewriter('今天你打算……')" class="action-button action-back"></button>
+
     <button v-if="store.state.girlfriend" @click="accompanyGirlfriend" class="action-button action-accompany-girlfriend"></button>
 
   </div>
@@ -53,7 +55,7 @@
       <button v-for="location in locations" :key="location" @click="goToLocation(location)">
         {{ location }}
       </button>
-      <button @click="showGoingOutLayer = false">返回</button>
+      <button @click="showGoingOutLayer = false; typewriter('今天你打算……')">返回</button>
     </div>
   </transition>
 
@@ -104,8 +106,9 @@
 </template>
 <script setup lang="ts">
 import { useStore } from 'vuex'
+import { mapActions } from 'vuex';
+
 import { computed, ref } from 'vue'
-import TypeIt from 'typeit';
 
 import Popup from '../components/Popup.vue'
 import AchievementsPopup from '../components/AchievementsPopup.vue'
@@ -125,10 +128,6 @@ const totalRounds = computed(() => store.state.totalRounds)
 const attributes = computed(() => store.state.attributes)
 const specialEvents = computed(() => store.state.specialEvents)
 
-const textBoxMessageHistory = ref([] as string[])
-const textBoxMessage = ref("")
-
-
 const locations = ['餐馆吃饭', '商场买衣服', '上山修行', '去比赛Battle']
 
 const showGoingOutLayer = ref(false)
@@ -144,31 +143,10 @@ const isAtHome = ref(false)
 const gameEnded = computed(() => store.state.gameEnded)
 const specialEndingAchievement = computed(() => store.state.specialEndingAchievement)
 
+mapActions(['performAction', 'typeWriter'])
 
 const typewriter = (message: string | string[]) => {
-  console.log('typewriter', message)
-  const typewriter = new TypeIt('#textboxText', {
-    strings: message,
-    speed: 25,
-    loop: false,
-    cursorSpeed: 1000,
-    cursorChar: '▐',
-    deleteSpeed: 0,
-    startDelete: true,
-    startDelay: 0,
-    breakLines: true,
-    afterComplete: (instance: { options: { cursor: boolean; }; destroy: () => void; }) => {
-      instance.options.cursor = false;
-      instance.destroy();
-    },
-  }).go();
-
-  if (typeof message === 'string') {
-    textBoxMessageHistory.value.push(message)
-  } else {
-    message.forEach((m) => textBoxMessageHistory.value.push(m))
-  }
-  
+  store.dispatch('typeWriter', message)
 }
 
 function loadGame() {
@@ -179,6 +157,7 @@ function performAction(action: string) {
   if (action === '外出') {
     if (store.state.attributes.energy >= 0) {
       showGoingOutLayer.value = true
+      typewriter('打算出发去……')
     } else {
       typewriter('体力小于零，无法外出。')
     }
@@ -196,13 +175,15 @@ function performAction(action: string) {
         store.commit('updateAttribute', { attribute: 'money', value: 100 })
         typewriter('姜云升努力工作，赚到了100金钱。')
         break
+        
       case '出去鬼混':
         if (!store.state.girlfriend) {
           store.commit('updateAttribute', { attribute: 'charm', value: 1 })
+          const toMessage = ref([] as string[])
           if (store.state.flirtCount) {
-            typewriter('姜云升又成功地搭讪了一个姑娘，魅力+1。')
+            toMessage.value.push('姜云升又成功地搭讪了一个姑娘，魅力+1。')
           } else {
-            typewriter('姜云升成功地搭讪了一个姑娘，魅力+1。')
+            toMessage.value.push('姜云升成功地搭讪了一个姑娘，魅力+1。')
           }
 
           store.commit('incrementFlirtCount')
@@ -210,12 +191,16 @@ function performAction(action: string) {
             const randomGirlfriend = store.state.girlfriendTypes[Math.floor(Math.random() * store.state.girlfriendTypes.length)]
             store.commit('setGirlfriend', randomGirlfriend)
             store.commit('resetFlirtCount')
-            typewriter(`恭喜！姜云升交到了一个${randomGirlfriend.type}。`)
+
+            toMessage.value.push(`恭喜！姜云升交到了一个${randomGirlfriend.type}。`)
           }
+
+          typewriter(toMessage.value)
         } else {
           typewriter('姜云升已经有女朋友了，不能再出来鬼混把妹了。快去陪陪你的女朋友吧！')
         }
         break
+
       case '回家':
         isAtHome.value = true
         typewriter('姜云升回到了家。')
@@ -256,6 +241,7 @@ function accompanyGirlfriend() {
 
     if (store.state.accompanyCount < 1) {
       store.commit('updateAttribute', { attribute: 'energy', value: - 50 })
+      store.commit('incrementAccompanyCount')
       toMessage.value.push(`姜云升陪了${girlfriendType}，消耗了50点体力。`)
       
       store.commit('setWeak', true)
@@ -317,6 +303,7 @@ const currentPeriod = computed(() => {
   return ['上旬', '中旬', '下旬'][period]
 })
 
+// loadGame();
 
 function restartGame() {
   store.commit('resetGameState')
