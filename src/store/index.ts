@@ -130,7 +130,7 @@ const mutations = {
           //   // store.dispatch('typeWriterBreak', '体力<0，姜云升正处于虚弱状态。')
           // }
           
-        } else if (state.attributes.energy > 0 && state.weak) {
+        } else if (state.attributes.energy >= 0 && state.weak) {
           state.weak = false
           // store.dispatch('typeWriterBreak', '体力>0，姜云升从虚弱状态恢复啦。')
         }

@@ -20,7 +20,8 @@
 
     <div><span>{{ attributeNames['popularity'] }}</span> 红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</div>
     <div><span>{{ attributeNames['money'] }}</span> {{ attributes['money'] }}</div>
-    <div><span>{{ attributeNames['energy'] }}</span> {{ attributes['energy'] }}</div>
+    <div v-if="attributes['energy'] >= 0"><span> {{ attributeNames['energy'] }}</span> {{ attributes['energy'] }}</div>
+    <div v-else><span class="weak">体力透支</span> {{ attributes['energy'] }}（虚弱！）</div>
     <div><span>{{ attributeNames['mood'] }}</span> {{ attributes['mood'] }}</div>
   </div>
 
@@ -206,8 +207,14 @@ function performAction(action: string) {
         typewriter('姜云升回到了家。')
         break
       case '睡觉休息':
-        store.commit('updateAttribute', { attribute: 'energy', value: 60 })
-        typewriter('姜云升睡了17个小时，体力+60。')
+        if (store.state.weak) {
+          store.commit('updateAttribute', { attribute: 'energy', value: 60 - store.state.attributes.energy })
+          typewriter(['姜云升睡了17个小时，体力+60。', '姜云升不虚弱啦！'])
+        } else {
+          store.commit('updateAttribute', { attribute: 'energy', value: 60 })
+          typewriter('姜云升睡了17个小时，体力+60。')
+        }
+        
         break
       case '写歌':
         showSongWritingDialog.value = true
@@ -370,7 +377,7 @@ function restartGame() {
   display: block;
   position: absolute;
   top: 22%;
-  left: 79%;
+  left: 70%;
   text-align: left;
   font-size: 0.9rem;
   color: #94847d;
@@ -381,6 +388,10 @@ function restartGame() {
   background-color: #433e41;
   color: #fcfcfc;
   padding: 0.1rem;
+}
+
+.attributes span.weak {
+  background-color: #9d4842;
 }
 
 .attribute {
