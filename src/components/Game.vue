@@ -7,12 +7,9 @@
   <div v-if="!gameEnded">
 
   <div class="header">
-
-    <!-- <h1>重生<small>之我是姜云升</small></h1> -->
     <div class="round-info">
       {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }} · 轮次: {{ currentRound }} / {{ totalRounds }}
     </div>
-
   </div>
     <!-- <h1>重生<small>之我是姜云升</small>之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升</h1> -->
 
@@ -31,9 +28,6 @@
   </div>
 
   <div class="actions">
-    <!-- <button v-for="action in actions" :key="action" @click="performAction(action)">
-      {{ action }}
-    </button> -->
     
     <button @click="performAction('回家')" class="action-button action-back-home" v-if="!isAtHome && !isGoingOut"></button>
     <button @click="performAction('出去鬼混')" class="action-button action-hang-out" v-if="!isAtHome && !isGoingOut"></button>
@@ -127,97 +121,18 @@ const totalRounds = computed(() => store.state.totalRounds)
 const attributes = computed(() => store.state.attributes)
 const specialEvents = computed(() => store.state.specialEvents)
 
-
-
-
-// const actions = ['上课', '赚钱', '出去鬼混', '休息', '回家', '外出', '写歌']
-
-
 const gameEnded = computed(() => store.state.gameEnded)
 const specialEndingAchievement = computed(() => store.state.specialEndingAchievement)
 
-mapActions(['performAction', 'typeWriter'])
+mapActions(['accompanyGirlfriend', 'goToLocation', 'performAction',  'typeWriter'])
 
-const typewriter = (message: string | string[]) => {
-  store.dispatch('typeWriter', message)
-}
-
-const performAction = (action: string) => {
-  store.dispatch('performAction', action)
-}
+const accompanyGirlfriend = () => { store.dispatch('accompanyGirlfriend') }
+const goToLocation = (location: string) => { store.dispatch('goToLocation', location) }
+const performAction = (action: string) => { store.dispatch('performAction', action) }
+const typewriter = (message: string | string[]) => { store.dispatch('typeWriter', message) }
 
 function loadGame() {
   typewriter('今天你打算……')
-}
-
-
-
-function accompanyGirlfriend() {
-  if (store.state.accompanyCount < 8) {
-    const energy = store.state.attributes.energy
-
-    const girlfriendType = store.state.girlfriend.type
-    const girlfriendEffect = store.state.girlfriend.effect
-
-    const toMessage = ref([] as string[])
-
-    if (store.state.isWeak) {
-      toMessage.value.push(`姜云升处于虚弱状态，无法陪女朋友。`)
-      typewriter(toMessage.value)
-      return
-    }
-
-    console.log(store.state.accompanyCount)
-
-    if (store.state.accompanyCount < 1) {
-      store.commit('updateAttribute', { attribute: 'energy', value: - 50 })
-      store.commit('incrementAccompanyCount')
-      toMessage.value.push(`姜云升陪了${girlfriendType}，消耗了50点体力。`)
-      
-      store.commit('setWeak', true)
-      toMessage.value.push('姜云升已进入虚弱状态。')
-
-      store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 11) })
-      toMessage.value.push(`姜云升的${attributeNames[girlfriendEffect]}属性上升了。`)
-
-      typewriter(toMessage.value)
-
-    } else {
-      
-      if (energy >= 50) {
-        store.commit('updateAttribute', { attribute: 'energy', value: - 50 })
-        store.commit('incrementAccompanyCount')
-        toMessage.value.push(`姜云升陪了${girlfriendType}，消耗了50点体力。`)
-        
-        store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 11) })
-        toMessage.value.push(`姜云升的${attributeNames[girlfriendEffect]}属性上升了。`)
-
-        typewriter(toMessage.value)
-
-      } else if (energy >= 20) {
-        store.commit('updateAttribute', { attribute: 'energy', value: -20 })
-        store.commit('incrementAccompanyCount')
-        toMessage.value.push(`姜云升陪了${girlfriendType}，消耗了20点体力。`)
-
-        store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 6) })
-        toMessage.value.push(`姜云升的${attributeNames[girlfriendEffect]}属性上升了。`)
-
-        typewriter(toMessage.value)
-
-      } else {
-        toMessage.value.push(`姜云升体力不足，无法陪女朋友。`)
-        typewriter(toMessage.value)
-        return
-      }
-    }
-
-  } else {
-    showBreakupDialog.value = true
-  }
-}
-
-function goToLocation(location: string) {
-  typewriter('正在前往：' + location)
 }
 
 // Add refs for character, items and skills pop-ups
