@@ -55,10 +55,10 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         break;
       case '睡觉休息':
         if (store.state.weak) {
-          context.commit('updateAttribute', { attribute: 'energy', value: 60 - store.state.attributes.energy });
+          context.commit('updateAttribute', { attribute: 'energy', value: Math.ceil(0.6 * store.state.attributes.maxEnergy) + Math.max(0, 0-store.state.attributes.energy) });
           await context.dispatch('typeWriter', ['姜云升睡了17个小时，体力+60。', '姜云升不虚弱啦！']);
         } else {
-          context.commit('updateAttribute', { attribute: 'energy', value: 60 });
+          context.commit('updateAttribute', { attribute: 'energy', value: Math.ceil(0.6 * store.state.attributes.maxEnergy) + Math.max(0, 0-store.state.attributes.energy) });
           await context.dispatch('typeWriter', '姜云升睡了17个小时，体力+60。');
         }
         break;

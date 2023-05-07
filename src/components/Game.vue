@@ -67,6 +67,11 @@
   <button class="button" @click="showAchievementsPopup = true">成就</button>
 </footer>
 
+<Popup title="客官今天打算吃点什么？" :visible="showFoodPopup" @close="showFoodPopup = false; store.commit('incrementRound');
+">
+  <popup-food />
+</Popup>
+
 <Popup title="写歌" :visible="showSongWritingDialog" @close="showSongWritingDialog = false">
   <popup-song-writing />
 </Popup>
@@ -103,7 +108,9 @@ import { computed, ref } from 'vue'
 import Popup from '../components/Popup.vue'
 import PopupAchievements from '../components/PopupAchievements.vue'
 import PopupCharacter from '../components/PopupCharacter.vue'
-import PopupSongWriting from './PopupSongWriting.vue'
+import PopupSongWriting from '../components/PopupSongWriting.vue'
+
+import PopupFood from '../components/PopupFood.vue'
 
 import Dialog from '../components/Dialog.vue'
 import DialogBreakup from '../components/DialogBreakup.vue'
@@ -111,7 +118,10 @@ import DialogEvent from '../components/DialogEvent.vue'
 
 import { attributeNames } from '../store/attributes'
 
-import { isAtHome, isGoingOut, showBreakupDialog, showEventDialog, showSongWritingDialog } from './composables/gameRefs';
+import { isAtHome, isGoingOut, 
+  showBreakupDialog, showEventDialog, showSongWritingDialog,
+  showFoodPopup, showDrinkPopup
+} from './composables/gameRefs';
 
 
 const store = useStore()
@@ -131,6 +141,7 @@ const accompanyGirlfriend = () => { store.dispatch('accompanyGirlfriend') }
 const goToLocation = (location: string) => { store.dispatch('goToLocation', location) }
 const performAction = (action: string) => { store.dispatch('performAction', action) }
 const typewriter = (message: string | string[]) => { store.dispatch('typeWriter', message) }
+
 
 function loadGame() {
   typewriter('今天你打算……')

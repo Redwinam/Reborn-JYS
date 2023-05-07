@@ -1,5 +1,6 @@
 import { createStore, Store, Commit } from 'vuex'
 
+import { Food, selectFood } from '../store/foods'
 import { achievementLibrary, AchievementLibrary } from '../store/achievements'
 import { songLibrary, Song } from '../store/songs'
 
@@ -9,7 +10,7 @@ import { accompanyGirlfriend } from './actions/accompanyGirlfriend';
 import { goToLocation } from './actions/goToLocation';
 import { specialEvent, specialEventOptionChosen } from './actions/specialEvent';
 import { performAction } from './actions/performActions';
-import { typeWriter } from './actions/typewriter';
+import { typeWriter, typeWriterPopup } from './actions/typewriter';
 
 interface State {
   term: number
@@ -22,6 +23,8 @@ interface State {
   girlfriendTypes: { type: string; effect: keyof Attributes; breakupReasons: string[] }[]
   flirtCount: number
   accompanyCount: number
+
+  unlockedFoods: Food[]
 
   achievements: { achievement: AchievementLibrary; term: number }[]
   achievementLibrary: AchievementLibrary[]
@@ -60,7 +63,6 @@ const state: State = {
     maxEnergy: 100,
     mood: 0,
   },
-
   weak: false,
   flirtCount: 0,
   girlfriend: null,
@@ -87,6 +89,8 @@ const state: State = {
     },
   ],
   accompanyCount: 0,
+
+  unlockedFoods: [],
 
   achievements: [],
   achievementLibrary,
@@ -174,6 +178,11 @@ const mutations = {
     state.specialEventDetails = specialEventDetails;
   },
 
+  unlockFood(state: State, food: Food) {
+    state.unlockedFoods.push(food);
+    state.attributes.maxEnergy += Math.ceil(food.energy / 10);
+  },
+
   unlockAchievement(state: State, achievementName: string) {
     const achievement = state.achievementLibrary.find(
       (ach) => ach.name === achievementName
@@ -235,9 +244,11 @@ const actions = {
   accompanyGirlfriend,
   goToLocation,
   performAction,
+  selectFood,
   specialEvent,
   specialEventOptionChosen,
-  typeWriter
+  typeWriter,
+  typeWriterPopup
 
 }
 
