@@ -6,7 +6,7 @@ import { isAtHome, isGoingOut, showBreakupDialog, showSongWritingDialog } from '
 export async function performAction(context: { commit: Commit, dispatch: Function }, action: string) {
   if (action === '外出') {
     if (store.state.attributes.energy >= 0) {
-      context.commit('setIsGoingOut', true);
+      isGoingOut.value = true;
       await context.dispatch('typeWriter', '打算出发去……');
     } else {
       await context.dispatch('typeWriter', '体力小于零，无法外出。');

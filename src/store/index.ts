@@ -233,6 +233,7 @@ const mutations = {
 
 const actions = {
   accompanyGirlfriend,
+  goToLocation,
   performAction,
   specialEvent,
   specialEventOptionChosen,
