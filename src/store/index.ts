@@ -1,5 +1,4 @@
 import { createStore, Store, Commit } from 'vuex'
-import TypeIt from 'typeit';
 
 import { achievementLibrary, AchievementLibrary } from '../store/achievements'
 import { songLibrary, Song } from '../store/songs'
@@ -8,9 +7,9 @@ import { Attributes, Popularity } from '../store/attributes'
 
 import { accompanyGirlfriend } from './actions/accompanyGirlfriend';
 import { goToLocation } from './actions/goToLocation';
-import { specialEvent } from './actions/specialEvent';
+import { specialEvent, specialEventOptionChosen } from './actions/specialEvent';
 import { performAction } from './actions/performActions';
-
+import { typeWriter } from './actions/typewriter';
 
 interface State {
   term: number
@@ -31,7 +30,7 @@ interface State {
   songLibrary: Song[]
 
   specialEvents: string[]
-  eventDetails: { name: string, intro: string, options: string[] } | null
+  specialEventDetails: { name: string, intro: string, options: string[] } | null
 
   gameEnded: boolean
   specialEndingAchievement: { name: string; desc: string } | null
@@ -96,7 +95,7 @@ const state: State = {
   songLibrary,
 
   specialEvents: [],
-  eventDetails: null,
+  specialEventDetails: null,
 
   gameEnded: false,
   specialEndingAchievement: null,
@@ -118,7 +117,7 @@ const mutations = {
     }
   },
   // ...其他mutations保持不变
-  updateAttribute(state: State, payload: UpdateAttributePayload) {
+  async updateAttribute(state: State, payload: UpdateAttributePayload) {
     const { attribute, value } = payload
     if (attribute === 'popularity') {
       console.error('Cannot update popularity directly, update red or black instead')
@@ -134,14 +133,14 @@ const mutations = {
           state.weak = true
           // if (!state.weak) {
             
-          //   // store.dispatch('typeWriterBreak', '体力<0，姜云升进入了虚弱状态。')
+          //   await store.dispatch('typeWriter', '体力<0，姜云升进入了虚弱状态。')
           // } else {
-          //   // store.dispatch('typeWriterBreak', '体力<0，姜云升正处于虚弱状态。')
+          //   await store.dispatch('typeWriter', '体力<0，姜云升正处于虚弱状态。')
           // }
           
         } else if (state.attributes.energy >= 0 && state.weak) {
           state.weak = false
-          // store.dispatch('typeWriterBreak', '体力>0，姜云升从虚弱状态恢复啦。')
+          // await store.dispatch('typeWriter', '体力>0，姜云升从虚弱状态恢复啦。')
         }
 
       }
@@ -171,8 +170,8 @@ const mutations = {
     state.accompanyCount = 0
   },
 
-  setEventDetails(state: State, eventDetails: { name: string; intro: string; options: string[]; }) {
-    state.eventDetails = eventDetails;
+  setSpecialEventDetails(state: State, specialEventDetails: { name: string; intro: string; options: string[]; }) {
+    state.specialEventDetails = specialEventDetails;
   },
 
   unlockAchievement(state: State, achievementName: string) {
@@ -184,6 +183,14 @@ const mutations = {
         achievement: achievement,
         term: state.term
       })
+    }
+  },
+
+  addTextToHistory(state: State, message: string | string[]) {
+    if (typeof message === 'string') {
+      state.textHistory.push(message);
+    } else {
+      message.forEach((m) => state.textHistory.push(m));
     }
   },
 
@@ -219,7 +226,7 @@ const mutations = {
       mood: 0,
     }
     state.specialEvents = []
-    state.eventDetails = null
+    state.specialEventDetails = null
   },
 
 }
@@ -228,29 +235,8 @@ const actions = {
   accompanyGirlfriend,
   performAction,
   specialEvent,
-  typeWriter (context: { commit: Commit }, message: string | string[]) {
-    new TypeIt('#textboxText', {
-      strings: message,
-      speed: 25,
-      loop: false,
-      cursorSpeed: 1000,
-      cursorChar: '▐',
-      deleteSpeed: 0,
-      startDelete: true,
-      startDelay: 0,
-      breakLines: true,
-      afterComplete: (instance: { options: { cursor: boolean; }; destroy: () => void; }) => {
-        instance.options.cursor = false;
-        instance.destroy();
-      },
-    }).go();
-    
-    if (typeof message === 'string') {
-      state.textHistory.push(message)
-    } else {
-      message.forEach((m) => state.textHistory.push(m))
-    }
-  },
+  specialEventOptionChosen,
+  typeWriter
 
 }
 

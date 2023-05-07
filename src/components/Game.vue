@@ -17,8 +17,8 @@
 
     <div><span>{{ attributeNames['popularity'] }}</span> 红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</div>
     <div><span>{{ attributeNames['money'] }}</span> {{ attributes['money'] }}</div>
-    <div v-if="attributes['energy'] >= 0"><span> {{ attributeNames['energy'] }}</span> {{ attributes['energy'] }}</div>
-    <div v-else><span class="weak">体力透支</span> {{ attributes['energy'] }}（虚弱！）</div>
+    <div v-if="attributes['energy'] >= 0"><span> {{ attributeNames['energy'] }}</span> {{ attributes['energy'] }}<template v-if="weak">（虚弱！）</template></div>
+    <div v-else><span class="weak">体力透支</span> {{ attributes['energy'] }} <template v-if="weak">（虚弱！）</template> </div>
     <div><span>{{ attributeNames['mood'] }}</span> {{ attributes['mood'] }}</div>
   </div>
 
@@ -51,8 +51,14 @@
 
   </div>
 
-<event-dialog :showDialog="showEventDialog" @closeDialog="showEventDialog = false"  @typewriter="typewriter" />
 
+<Dialog :visible="showEventDialog" @close="showEventDialog = false">
+  <dialog-event />
+</Dialog>
+
+<Dialog :visible="showBreakupDialog" @close="showBreakupDialog = false">
+  <dialog-breakup />
+</Dialog>
   
 <footer class="footer">
   <button class="button" @click="showCharacterPopup = true">角色</button>
@@ -62,17 +68,16 @@
 </footer>
 
 <Popup title="写歌" :visible="showSongWritingDialog" @close="showSongWritingDialog = false">
-  <song-writing-popup />
+  <popup-song-writing />
 </Popup>
 
-<breakup-dialog :showDialog="showBreakupDialog" @closeDialog="showBreakupDialog = false"  @typewriter="typewriter" />
 
 <Popup title="角色" :visible="showCharacterPopup" @close="showCharacterPopup = false">
-  <character-popup />
+  <popup-character />
 </Popup>
 
 <Popup title="成就" :visible="showAchievementsPopup" @close="showAchievementsPopup = false">
-  <achievements-popup />
+  <popup-achievements />
 </Popup>
 
 
@@ -96,12 +101,13 @@ import { useStore } from 'vuex'
 import { computed, ref } from 'vue'
 
 import Popup from '../components/Popup.vue'
-import AchievementsPopup from '../components/AchievementsPopup.vue'
-import CharacterPopup from '../components/CharacterPopup.vue'
+import PopupAchievements from '../components/PopupAchievements.vue'
+import PopupCharacter from '../components/PopupCharacter.vue'
+import PopupSongWriting from './PopupSongWriting.vue'
 
-import SongWritingPopup from './SongWritingPopup.vue'
-import BreakupDialog from '../components/BreakupDialog.vue'
-import EventDialog from '../components/EventDialog.vue'
+import Dialog from '../components/Dialog.vue'
+import DialogBreakup from '../components/DialogBreakup.vue'
+import DialogEvent from '../components/DialogEvent.vue'
 
 import { attributeNames } from '../store/attributes'
 
@@ -116,6 +122,7 @@ const currentRound = computed(() => store.state.round)
 const totalRounds = computed(() => store.state.totalRounds)
 const attributes = computed(() => store.state.attributes)
 const specialEvents = computed(() => store.state.specialEvents)
+const weak = computed(() => store.state.weak)
 
 const gameEnded = computed(() => store.state.gameEnded)
 const specialEndingAchievement = computed(() => store.state.specialEndingAchievement)

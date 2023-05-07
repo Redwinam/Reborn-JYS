@@ -11,21 +11,26 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
     } else {
       await context.dispatch('typeWriter', '体力小于零，无法外出。');
     }
+  } else if (action === '回家') {
+    isAtHome.value = true;
+    await context.dispatch('typeWriter', '姜云升回到了家。');
+  } else if (action === '写歌') {
+    showSongWritingDialog.value = true;
   } else {
-    context.commit('updateAttribute', { attribute: 'energy', value: -10 });
-    context.commit('incrementRound');
-
     switch (action) {
       case '上课':
+        context.commit('updateAttribute', { attribute: 'energy', value: -10 });
         context.commit('updateAttribute', { attribute: 'talent', value: 1 });
         await context.dispatch('typeWriter', '姜云升参加了一堂课，才华+1。');
         break;
       case '赚钱':
+        context.commit('updateAttribute', { attribute: 'energy', value: -10 });
         context.commit('updateAttribute', { attribute: 'money', value: 100 });
         await context.dispatch('typeWriter', '姜云升努力工作，赚到了100金钱。');
         break;
       case '出去鬼混':
         if (!store.state.girlfriend) {
+          context.commit('updateAttribute', { attribute: 'energy', value: -10 });
           context.commit('updateAttribute', { attribute: 'charm', value: 1 });
           const toMessage = [];
           if (store.state.flirtCount) {
@@ -48,10 +53,6 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           await context.dispatch('typeWriter', '姜云升已经有女朋友了，不能再出来鬼混把妹了。快去陪陪你的女朋友吧！');
         }
         break;
-      case '回家':
-        isAtHome.value = true;
-        await context.dispatch('typeWriter', '姜云升回到了家。');
-        break;
       case '睡觉休息':
         if (store.state.weak) {
           context.commit('updateAttribute', { attribute: 'energy', value: 60 - store.state.attributes.energy });
@@ -61,10 +62,6 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           await context.dispatch('typeWriter', '姜云升睡了17个小时，体力+60。');
         }
         break;
-      case '写歌':
-        context.commit('setShowSongWritingDialog', true);
-        break;
-        // 其他情况的代码
       default:
         await context.dispatch('typeWriter', '姜云升执行了未知操作：${action}。');
         break;
@@ -74,5 +71,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
       context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '姜云升虚弱' });
       context.commit('unlockAchievement', '姜云升虚弱');
     }
+
+    context.commit('incrementRound');
   }
 }  
