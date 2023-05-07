@@ -4,9 +4,7 @@
       <div class="popup">
         <h2>{{ title }}</h2>
         <slot></slot>
-
-        <p id="textboxPopup">吃点什么呢……</p>
-
+        <p id="textboxPopup" v-if="title ==='客官今天打算吃点什么？'">吃点什么呢……</p>
         <button v-if="showCloseButton" @click="$emit('close')" class="close-button">关闭</button>
       </div>
     </div>

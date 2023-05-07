@@ -27,7 +27,7 @@ export async function specialEventOptionChosen(context: {
     if (payload.option !== '【除了姜云升，叫什么都行】') {
       context.commit('unlockAchievement', payload.event);
       const achievements = Object.keys(context.rootState.achievements).filter((achievement) => context.rootState.achievements[achievement]);
-      await context.dispatch('typeWriter', ['片刻后，外卖小哥咚咚咚敲了敲门，送了外卖，留下了一句“姜哥，玩挺好”','恭喜，姜云升解锁了第' + achievements.length + '个成就【' + payload.event + '】。']);
+      await context.dispatch('typeWriter', ['片刻后，外卖小哥咚咚咚敲了敲门，送了外卖，看到你开门，笑了笑，留下了一句“姜哥，玩挺好”。','恭喜，姜云升解锁了第' + achievements.length + '个成就【' + payload.event + '】。']);
     }
   }
 }

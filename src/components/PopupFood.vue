@@ -1,9 +1,13 @@
 <template>
   <div class="food-list">
     <div class="food-item" v-for="food in unlockedFoods" :key="food.id">
-      <p>{{ food.name }} <span>¥ {{ food.cost }}</span></p>
+      <p>{{ food.name }}</p>
+      <span>¥ {{ food.cost }}</span>
       <span class="food-note">饱食度：{{ food.energy }}</span>
-      <button @click="selectFood(food.name)">点菜</button>
+      <div class="select-buttons">
+        <button @click="selectFood(food.name)">堂食</button>
+        <button @click="selectFood(food.name)">打包</button>
+      </div>
     </div>
   </div>
 </template>
@@ -18,7 +22,6 @@ const unlockedFoods = computed(() => store.state.unlockedFoods);
 
 const selectFood = (food: string) => {
   store.dispatch('selectFood', food);
-
 }
 </script>
 
@@ -57,14 +60,16 @@ const selectFood = (food: string) => {
   font-size: 0.8rem;
 }
 
-.food-item button {
+.food-item .select-buttons {
+  display: flex;
+  justify-content: space-around;
   width: 100%;
-  height: 30%;
-  border-radius: 10px;
-  background-color: #f0f0f0;
-  border: 1px solid black;
-  cursor: pointer;
-  padding: 5px;
+  margin-top: 10px;
+}
+
+.food-item .select-buttons button {
+  padding: 2px 10px;
+  font-size: 0.9rem;
 }
 
 </style>
