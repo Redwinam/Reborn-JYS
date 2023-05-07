@@ -7,10 +7,13 @@ import { songLibrary, Song } from '../store/songs'
 import { Attributes, Popularity } from '../store/attributes'
 
 import { accompanyGirlfriend } from './actions/accompanyGirlfriend';
+import { goToLocation } from './actions/goToLocation';
+import { specialEvent } from './actions/specialEvent';
 import { performAction } from './actions/performActions';
 
 
 interface State {
+  term: number
   year: number
   round: number
   totalRounds: number
@@ -21,13 +24,14 @@ interface State {
   flirtCount: number
   accompanyCount: number
 
-  achievements: { name: string; desc: string }[]
+  achievements: { achievement: AchievementLibrary; term: number }[]
   achievementLibrary: AchievementLibrary[]
 
   songs: string[]
   songLibrary: Song[]
 
   specialEvents: string[]
+  eventDetails: { name: string, intro: string, options: string[] } | null
 
   gameEnded: boolean
   specialEndingAchievement: { name: string; desc: string } | null
@@ -36,6 +40,7 @@ interface State {
 }
 
 const state: State = {
+  term: 1,
   year: 2012,
   round: 1,
   totalRounds: 432,
@@ -91,6 +96,7 @@ const state: State = {
   songLibrary,
 
   specialEvents: [],
+  eventDetails: null,
 
   gameEnded: false,
   specialEndingAchievement: null,
@@ -165,24 +171,32 @@ const mutations = {
     state.accompanyCount = 0
   },
 
-  unlockAchievement(state: State, achievementId: string) {
+  setEventDetails(state: State, eventDetails: { name: string; intro: string; options: string[]; }) {
+    state.eventDetails = eventDetails;
+  },
+
+  unlockAchievement(state: State, achievementName: string) {
     const achievement = state.achievementLibrary.find(
-      (ach) => ach.id === achievementId
+      (ach) => ach.name === achievementName
     )
     if (achievement) {
-      state.achievements.push(achievement)
+      state.achievements.push({
+        achievement: achievement,
+        term: state.term
+      })
     }
   },
 
-  setGameEnded(state: State, payload: { gameEnded: boolean; specialEndingAchievementId: string }) {
+  setGameEnded(state: State, payload: { gameEnded: boolean; specialEndingAchievementName: string }) {
     state.gameEnded = payload.gameEnded
     const specialEndingAchievement = state.achievementLibrary.find(
-      (ach) => ach.id === payload.specialEndingAchievementId && ach.ending
+      (ach) => ach.name === payload.specialEndingAchievementName && ach.ending
     )
     state.specialEndingAchievement = specialEndingAchievement || null
   },
 
   resetGameState(state: State) {
+    state.term ++
     state.round = 1
     state.gameEnded = false
     state.specialEndingAchievement = null
@@ -205,6 +219,7 @@ const mutations = {
       mood: 0,
     }
     state.specialEvents = []
+    state.eventDetails = null
   },
 
 }
@@ -212,6 +227,7 @@ const mutations = {
 const actions = {
   accompanyGirlfriend,
   performAction,
+  specialEvent,
   typeWriter (context: { commit: Commit }, message: string | string[]) {
     new TypeIt('#textboxText', {
       strings: message,

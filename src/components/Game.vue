@@ -8,7 +8,7 @@
 
   <div class="header">
     <div class="round-info">
-      {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }} · 轮次: {{ currentRound }} / {{ totalRounds }}
+      {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }} · 轮次: {{ currentRound }} / {{ totalRounds }}<template v-if="currentTerm>1"> · 第{{ arabicToChinese(currentTerm) }}周目</template>
     </div>
   </div>
     <!-- <h1>重生<small>之我是姜云升</small>之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升</h1> -->
@@ -35,6 +35,7 @@
     <button @click="performAction('赚钱')" class="action-button action-make-money" v-if="!isAtHome && !isGoingOut"></button>
 
     <button @click="performAction('睡觉休息')" class="action-button action-sleep-rest" v-if="isAtHome"></button>
+    <button @click="performAction('开直播')" class="action-button action-onlineshow" v-if="isAtHome">开直播</button>
     <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome"></button>
     <button v-if="isAtHome" @click="isAtHome = false; typewriter('今天你打算……')" class="action-button action-back"></button>
 
@@ -50,12 +51,7 @@
 
   </div>
 
-  <div class="events">
-    <h2>特殊事件</h2>
-    <ul>
-      <li v-for="event in specialEvents" :key="event">{{ event }}</li>
-    </ul>
-  </div>
+<event-dialog :showDialog="showEventDialog" @closeDialog="showEventDialog = false"  @typewriter="typewriter" />
 
   
 <footer class="footer">
@@ -97,8 +93,6 @@
 </template>
 <script setup lang="ts">
 import { useStore } from 'vuex'
-import { mapActions } from 'vuex';
-
 import { computed, ref } from 'vue'
 
 import Popup from '../components/Popup.vue'
@@ -107,14 +101,16 @@ import CharacterPopup from '../components/CharacterPopup.vue'
 
 import SongWritingPopup from './SongWritingPopup.vue'
 import BreakupDialog from '../components/BreakupDialog.vue'
+import EventDialog from '../components/EventDialog.vue'
 
 import { attributeNames } from '../store/attributes'
 
-import { isAtHome, isGoingOut, showBreakupDialog, showSongWritingDialog } from './composables/gameRefs';
+import { isAtHome, isGoingOut, showBreakupDialog, showEventDialog, showSongWritingDialog } from './composables/gameRefs';
 
 
 const store = useStore()
 
+const currentTerm = computed(() => store.state.term)
 const currentYear = computed(() => store.state.year)
 const currentRound = computed(() => store.state.round)
 const totalRounds = computed(() => store.state.totalRounds)
@@ -123,8 +119,6 @@ const specialEvents = computed(() => store.state.specialEvents)
 
 const gameEnded = computed(() => store.state.gameEnded)
 const specialEndingAchievement = computed(() => store.state.specialEndingAchievement)
-
-mapActions(['accompanyGirlfriend', 'goToLocation', 'performAction',  'typeWriter'])
 
 const accompanyGirlfriend = () => { store.dispatch('accompanyGirlfriend') }
 const goToLocation = (location: string) => { store.dispatch('goToLocation', location) }
@@ -149,6 +143,27 @@ const currentPeriod = computed(() => {
 })
 
 // loadGame();
+
+function arabicToChinese(number: number): string {
+  const chineseNumbers = [
+    '零',
+    '一',
+    '二',
+    '三',
+    '四',
+    '五',
+    '六',
+    '七',
+    '八',
+    '九',
+    '十',
+  ];
+  if (number <= 10) {
+    return chineseNumbers[number];
+  } else {
+    return number.toString();
+  }
+}
 
 function restartGame() {
   store.commit('resetGameState')

@@ -71,8 +71,8 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
     } 
 
     if (store.state.attributes.energy <= -100) {
-      context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementId: 'jiangyunsheng-weak' });
-      context.commit('unlockAchievement', 'jiangyunsheng-weak');
+      context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '姜云升虚弱' });
+      context.commit('unlockAchievement', '姜云升虚弱');
     }
   }
 }  

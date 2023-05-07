@@ -22,8 +22,6 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
         return
       }
 
-      console.log(store.state.accompanyCount)
-
       if (store.state.accompanyCount < 1) {
         store.commit('updateAttribute', { attribute: 'energy', value: - 50 })
         store.commit('incrementAccompanyCount')
@@ -51,7 +49,17 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
           await context.dispatch('typeWriter', toMessage.value);
 
           if (isAtHome) {
-            context.dispatch('specialEvent', '【姜哥，玩挺好】')
+            const existingAchievement = store.state.achievements.find(
+              (ach) => ach.achievement.name === '姜哥，玩挺好' && ach.term === store.state.term
+            );
+
+            if (!existingAchievement) {
+              const eventProbability = 1;
+              if (Math.random() < eventProbability) {
+                console.log('wantinghao')
+                context.dispatch('specialEvent', '姜哥，玩挺好');
+              }
+            }
           }
           
 

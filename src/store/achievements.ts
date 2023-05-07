@@ -1,16 +1,22 @@
 export interface AchievementLibrary { 
-  id: string; 
   name: string; 
   desc: string; 
-  ending?: boolean
+  event?: boolean;
+  ending?: boolean;
 }
 
 export const achievementLibrary: AchievementLibrary[] = [
   {
-    id: 'jiangyunsheng-weak',
     name: '姜云升虚弱',
     desc: '姜云升的体力被透支到了极限，由于极度虚弱，不得不结束游戏。',
+    event: false,
     ending: true,
   },
-  // 其他成就
+
+  {
+    name: '姜哥，玩挺好',
+    desc: '从此，姜云升记住了点外卖不留名。',
+    event: true,
+    ending: false,
+  }
 ]
