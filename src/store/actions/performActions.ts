@@ -51,6 +51,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           await context.dispatch('typeWriter', toMessage);
         } else {
           await context.dispatch('typeWriter', '姜云升已经有女朋友了，不能再出来鬼混把妹了。快去陪陪你的女朋友吧！');
+          return;
         }
         break;
       case '睡觉休息':
@@ -61,6 +62,23 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           context.commit('updateAttribute', { attribute: 'energy', value: Math.ceil(0.6 * store.state.attributes.maxEnergy) + Math.max(0, 0-store.state.attributes.energy) });
           await context.dispatch('typeWriter', '姜云升睡了17个小时，体力+60。');
         }
+        break;
+      case '打游戏':
+        const gamingIntros = [
+          '姜云升一回家就开了一把《永劫有间》！',
+          '姜云升今天在游戏里被一个人干翻了，那人昵称叫“不如姜云升”！',
+          '姜云升在家，内心忽然有个声音和他说，“打会儿游戏吧”！',
+          '工作太累了，来把游戏吧！',
+          '姜云升今天想和粉丝一起玩，在游戏里开了个房间。',
+          '姜云升今天要让粉丝见识见识自己的游戏水平，开了个房间。',
+          '今天游戏版本更新啦，姜云升要去看看。',
+          '姜云升今天单排赢了游戏，但他总感觉自己输了人生。',
+        ];
+        
+        const randomGamingIntro = gamingIntros[Math.floor(Math.random() * gamingIntros.length)];
+        context.commit('updateAttribute', { attribute: 'energy', value: -10 });
+        context.commit('updateAttribute', { attribute: 'game', value: 1 });
+        await context.dispatch('typeWriter', [randomGamingIntro, '姜云升打了一局游戏，游戏技术+1。']);
         break;
       default:
         await context.dispatch('typeWriter', '姜云升执行了未知操作：${action}。');

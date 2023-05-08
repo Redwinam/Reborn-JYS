@@ -36,6 +36,7 @@
 
     <button @click="performAction('睡觉休息')" class="action-button action-sleep-rest" v-if="isAtHome"></button>
     <button @click="performAction('开直播')" class="action-button action-onlineshow" v-if="isAtHome">开直播</button>
+    <button @click="performAction('打游戏')" class="action-button action-gaming" v-if="isAtHome">打游戏</button>
     <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome"></button>
     <button v-if="isAtHome" @click="isAtHome = false; typewriter('今天你打算……')" class="action-button action-back"></button>
 

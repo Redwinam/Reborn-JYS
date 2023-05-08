@@ -54,7 +54,7 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
             );
 
             if (!existingAchievement) {
-              const eventProbability = 1;
+              const eventProbability = 0.1;
               if (Math.random() < eventProbability) {
                 context.dispatch('specialEvent', '姜哥，玩挺好');
               }

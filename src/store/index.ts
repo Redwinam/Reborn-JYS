@@ -58,6 +58,7 @@ const state: State = {
     skill: {
       freestyle: 0,
       gaming: 0,
+      gamingLevel: 'D',
     },
     energy: 100,
     maxEnergy: 100,
@@ -108,7 +109,8 @@ const state: State = {
 }
 
 type UpdateAttributePayload = {
-  attribute: keyof Attributes
+  attribute: keyof Attributes | "gaming"
+  // attribute: string
   value: number
 }
 
@@ -125,7 +127,31 @@ const mutations = {
     const { attribute, value } = payload
     if (attribute === 'popularity') {
       console.error('Cannot update popularity directly, update red or black instead')
-    } else {
+    } else if (attribute === 'gaming') {
+      state.attributes.skill.gaming += value;
+
+      if (state.attributes.skill.gaming > 28) {
+        state.attributes.skill.gaming = 28;
+      }
+
+      const levelMapping = [
+        { level: 'D', min: 0, max: 3 },
+        { level: 'C', min: 4, max: 8 },
+        { level: 'B', min: 9, max: 14 },
+        { level: 'A', min: 15, max: 20 },
+        { level: 'S', min: 21, max: 24 },
+        { level: 'SS', min: 25, max: 27 },
+        { level: 'SSS', min: 28, max: 28 },
+      ];
+
+      for (const level of levelMapping) {
+        if (state.attributes.skill.gaming >= level.min && state.attributes.skill.gaming <= level.max) {
+          state.attributes.skill.gamingLevel = level.level;
+          break;
+        }
+      }
+    }
+    else {
       (state.attributes[attribute] as number) += value
       
       if (attribute === 'energy') {
@@ -229,6 +255,7 @@ const mutations = {
       skill: {
         freestyle: 0,
         gaming: 0,
+        gamingLevel: 'D'
       },
       energy: 100,
       maxEnergy: 100,
