@@ -108,7 +108,7 @@
 }
 
 .action-back-home {
-  background: url('@/assets/back-home.png') center / contain no-repeat;
+  background: url('@/assets/button_back-home.png') center / contain no-repeat;
   width: 4.65vh;
   height: 7.85vh;
   top: 57%;
@@ -116,7 +116,7 @@
 }
 
 .action-go-out {
-  background: url('@/assets/go-out.png') center / contain no-repeat;
+  background: url('@/assets/button_go-out.png') center / contain no-repeat;
   width: 5vh;
   height: 12.3vh;
   top: 70%;
@@ -124,7 +124,7 @@
 }
 
 .action-hang-out {
-  background: url('@/assets/hang-out.png') center / contain no-repeat;
+  background: url('@/assets/button_hang-out.png') center / contain no-repeat;
   width: 5vh;
   height: 13.6vh;
   top: 69%;
@@ -132,15 +132,23 @@
 }
 
 .action-sleep-rest {
-  background: url('@/assets/sleep-rest.png') center / contain no-repeat;
+  background: url('@/assets/button_sleep-rest.png') center / contain no-repeat;
   width: 4.6vh;
   height: 13.5vh;
   top: 24%;
   left: 18%;
 }
 
+.action-gaming {
+  background: url('@/assets/button_gaming.png') center / contain no-repeat;
+  width: 4.5vh;
+  height: 13.35vh;
+  top: 60%;
+  left: 45%;
+}
+
 .action-write-song {
-  background: url('@/assets/write-song.png') center / contain no-repeat;
+  background: url('@/assets/button_write-song.png') center / contain no-repeat;
   width: 4.6vh;
   height: 11.1vh;
   top: 64%;
@@ -148,7 +156,7 @@
 }
 
 .action-make-money {
-  background: url('@/assets/make-money.png') center / contain no-repeat;
+  background: url('@/assets/button_make-money.png') center / contain no-repeat;
   width: 4.7vh;
   height: 9.65vh;
   top: 60%;
@@ -156,7 +164,7 @@
 }
 
 .action-back {
-  background: url('@/assets/back.png') center / contain no-repeat;
+  background: url('@/assets/button_back.png') center / contain no-repeat;
   width: 4.4vh;
   height: 10.5vh;
   top: 68%;
@@ -164,7 +172,7 @@
 }
 
 .action-accompany-girlfriend {
-  background: url('@/assets/accompany-girlfriend.png') center / contain no-repeat;
+  background: url('@/assets/button_accompany-girlfriend.png') center / contain no-repeat;
   width: 5vh;
   height: 15.9vh;
   top: 72%;
