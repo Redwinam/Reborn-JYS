@@ -120,3 +120,17 @@ Freestyle 技能（共计28点）：
 - 【姜哥，玩挺好】陪女朋友时随机触发。
 - 【时间很长】指的是姜云升的睡眠时间很长，在一轮游戏中累计睡眠时间达到500个小时。
 - 【十年】游戏进程达到10年。
+
+
+## 编译部署
+
+```
+yarn build
+docker build -t reborn-jysx-image .
+docker save -o reborn-jysx-image.tar reborn-jysx-image
+docker load -i /mnt/JYSX/Reborn/reborn-jysx-image.tar
+docker run -d --name reborn-jysx-container -p 9147:80 reborn-jysx-image
+
+docker stop reborn-jysx-container
+docker rm reborn-jysx-container
+```

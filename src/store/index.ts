@@ -10,7 +10,7 @@ import { accompanyGirlfriend } from './actions/accompanyGirlfriend';
 import { goToLocation } from './actions/goToLocation';
 import { specialEvent, specialEventOptionChosen } from './actions/specialEvent';
 import { performAction } from './actions/performActions';
-import { typeWriter, typeWriterPopup } from './actions/typewriter';
+import { typeWriter, typeWriterPopup } from './actions/typeWriter';
 
 interface State {
   term: number
