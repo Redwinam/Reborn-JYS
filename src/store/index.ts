@@ -121,6 +121,13 @@ type UpdateAttributePayload = {
 }
 
 const mutations = {
+  incrementRound(state: State) {
+    state.round++
+    if (state.round % 36 === 0) {
+      state.year++
+    }
+    state.attributes.money += Math.ceil(state.attributes.gold * 0.06 * 360);
+  },
   async updateAttribute(state: State, payload: UpdateAttributePayload) {
     const { attribute, value } = payload
     if (attribute === 'popularity') {
@@ -293,13 +300,7 @@ const actions = {
   typeWriter,
   typeWriterPopup,
 
-  incrementRound(context: { commit: Commit; state: State }) {
-    state.round++
-    if (state.round % 36 === 0) {
-      state.year++
-    }
-    state.attributes.money += Math.ceil(state.attributes.gold * 0.06 * 360);
-
+  gameEndCheck(context: { commit: Commit; state: State }) {
     if (state.round > state.totalRounds) {
       context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '无法定义的结局' });
       context.commit('unlockAchievement', '无法定义的结局');

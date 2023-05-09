@@ -91,6 +91,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
       context.commit('unlockAchievement', '姜云升虚弱');
     }
 
-    context.dispatch('incrementRound');
+    context.commit('incrementRound');
+    context.dispatch('gameEndCheck');
   }
 }  
