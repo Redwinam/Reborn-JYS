@@ -3,6 +3,9 @@
   <transition name="fade">
     <div class="home-background" v-if="isAtHome"></div>
   </transition>
+  <transition name="fade">
+    <div class="going-out-background" v-if="isGoingOut"></div>
+  </transition>
 
   <div v-if="!gameEnded">
 
@@ -13,7 +16,7 @@
   </div>
     <!-- <h1>重生<small>之我是姜云升</small>之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升</h1> -->
 
-  <div class="attributes">
+  <div class="attributes" :class="isGoingOut? 'going-out-attributes' : ''">
 
     <div><span>{{ attributeNames['popularity'] }}</span> 红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</div>
     <div><span>{{ attributeNames['money'] }}</span> {{ attributes['money'] }}</div>
