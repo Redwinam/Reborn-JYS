@@ -3,6 +3,7 @@ export interface Skill {
   freestyle: number
   gaming: number
   gamingLevel: string
+  freestyleLevel: string
 }
 
 export interface Popularity {

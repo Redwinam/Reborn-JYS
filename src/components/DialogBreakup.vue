@@ -12,20 +12,9 @@
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 
+import { showBreakupDialog } from '../components/composables/gameRefs'
+
 const store = useStore()
-
-const emit = defineEmits<{
-  (event: 'closeDialog'): void
-  (event: 'addTextBoxMessage', message: string): void
-}>()
-
-const closeDialog = () => {
-  emit('closeDialog')
-}
-
-const addTextBoxMessage = (message: string) => {
-  emit('addTextBoxMessage', message)
-}
 
 const randomBreakupReason = computed(() => {
   const currentGirlfriend = store.state.girlfriend
@@ -66,7 +55,7 @@ async function handleBreakup(choice: string) {
       await store.dispatch('typeWriter', '你放手了，选择了拜拜就拜拜。你现在没有女朋友了。')
       break
   }
-  closeDialog()
+  showBreakupDialog.value = false
 }
 
 </script>

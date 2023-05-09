@@ -59,6 +59,7 @@ const state: State = {
       freestyle: 0,
       gaming: 0,
       gamingLevel: 'D',
+      freestyleLevel: 'D'
     },
     energy: 100,
     maxEnergy: 100,
@@ -255,7 +256,8 @@ const mutations = {
       skill: {
         freestyle: 0,
         gaming: 0,
-        gamingLevel: 'D'
+        gamingLevel: 'D',
+        freestyleLevel: 'D'
       },
       energy: 100,
       maxEnergy: 100,
