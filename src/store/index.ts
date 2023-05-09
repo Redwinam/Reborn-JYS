@@ -298,6 +298,8 @@ const actions = {
     if (state.round % 36 === 0) {
       state.year++
     }
+    state.attributes.money += Math.ceil(state.attributes.gold * 0.06 * 360);
+
     if (state.round > state.totalRounds) {
       context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '无法定义的结局' });
       context.commit('unlockAchievement', '无法定义的结局');
