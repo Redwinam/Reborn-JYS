@@ -14,6 +14,13 @@ export const achievementLibrary: AchievementLibrary[] = [
   },
 
   {
+    name: '无法定义的结局',
+    desc: '“你们可以像看一个电视剧一样观看我的人生……”',
+    event: false,
+    ending: true,
+  },
+
+  {
     name: '姜哥，玩挺好',
     desc: '从此，姜云升记住了点外卖不留名。',
     event: true,

@@ -35,16 +35,16 @@
     <button @click="performAction('赚钱')" class="action-button action-make-money" v-if="!isAtHome && !isGoingOut"></button>
 
     <button @click="performAction('睡觉休息')" class="action-button action-sleep-rest" v-if="isAtHome"></button>
-    <button @click="performAction('开直播')" class="action-button action-onlineshow" v-if="isAtHome">开直播</button>
+    <button @click="performAction('开直播')" class="action-button action-onlive" v-if="isAtHome"></button>
     <button @click="performAction('打游戏')" class="action-button action-gaming" v-if="isAtHome"></button>
     <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome"></button>
     <button v-if="isAtHome" @click="isAtHome = false; typewriter('今天你打算……')" class="action-button action-back"></button>
 
-    <button @click="goToLocation('去吃点东西')" class="action-button action-eat" v-if="isGoingOut">去吃点东西</button>
-    <button @click="goToLocation('去喝点东西')" class="action-button action-drink" v-if="isGoingOut">去喝点东西</button>
-    <button @click="goToLocation('去逛逛商场')" class="action-button action-shopping" v-if="isGoingOut">去逛逛商场</button>
-    <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut">上山修行</button>
-    <button @click="goToLocation('Underground')" class="action-button action-underground" v-if="isGoingOut">Underground</button>
+    <button @click="goToLocation('去吃点东西')" class="action-button action-eat" v-if="isGoingOut"></button>
+    <button @click="goToLocation('去喝点东西')" class="action-button action-drink" v-if="isGoingOut"></button>
+    <button @click="goToLocation('去逛街')" class="action-button action-shopping" v-if="isGoingOut"></button>
+    <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut"></button>
+    <button @click="goToLocation('Underground')" class="action-button action-underground" v-if="isGoingOut"></button>
     <!-- <button @click="performAction('去吃点东西')" class="action-button action-eat" v-if="isGoingOut">去吃点东西</button> -->
     <button v-if="isGoingOut" @click="isGoingOut = false; typewriter('今天你打算……')" class="action-button action-back"></button>
 

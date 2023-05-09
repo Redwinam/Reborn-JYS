@@ -18,6 +18,7 @@ export interface Attributes {
   charm: number
   popularity: Popularity
   money: number
+  gold: number
   skill: Skill
   energy: number
   maxEnergy: number

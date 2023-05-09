@@ -29,6 +29,8 @@ interface State {
   achievements: { achievement: AchievementLibrary; term: number }[]
   achievementLibrary: AchievementLibrary[]
 
+  undergroundCount: number
+
   songs: string[]
   songLibrary: Song[]
 
@@ -55,6 +57,7 @@ const state: State = {
       black: 0,
     },
     money: 0,
+    gold: 0,
     skill: {
       freestyle: 0,
       gaming: 0,
@@ -96,6 +99,8 @@ const state: State = {
 
   achievements: [],
   achievementLibrary,
+
+  undergroundCount: 0,
   
   songs: [],
   songLibrary,
@@ -110,24 +115,23 @@ const state: State = {
 }
 
 type UpdateAttributePayload = {
-  attribute: keyof Attributes | "gaming"
+  attribute: keyof Attributes | "red" | "black" | "gaming"
   // attribute: string
   value: number
 }
 
 const mutations = {
-  incrementRound(state: State) {
-    state.round++
-    if (state.round > state.totalRounds) {
-      state.year++
-      state.round = 1
-    }
-  },
-  // ...其他mutations保持不变
   async updateAttribute(state: State, payload: UpdateAttributePayload) {
     const { attribute, value } = payload
     if (attribute === 'popularity') {
       console.error('Cannot update popularity directly, update red or black instead')
+    } else if (attribute === 'red') {
+      state.attributes.popularity.red += value
+      // if (state.attributes.popularity.red > 100) {
+      //   state.attributes.popularity.red = 100
+      // }
+    } else if (attribute === 'black') {
+      state.attributes.popularity.black += value
     } else if (attribute === 'gaming') {
       state.attributes.skill.gaming += value;
 
@@ -200,6 +204,14 @@ const mutations = {
   resetAccompanyCount(state: State) {
     state.accompanyCount = 0
   },
+  incrementUndergroundCount(state: State) {
+    state.undergroundCount++
+  },
+
+  buyGold(state: State, payload: number) {
+    state.attributes.gold += payload
+    state.attributes.money -= 360 * payload
+  },
 
   setSpecialEventDetails(state: State, specialEventDetails: { name: string; intro: string; options: string[]; }) {
     state.specialEventDetails = specialEventDetails;
@@ -253,6 +265,7 @@ const mutations = {
         black: 0,
       },
       money: 0,
+      gold: 0,
       skill: {
         freestyle: 0,
         gaming: 0,
@@ -263,6 +276,7 @@ const mutations = {
       maxEnergy: 100,
       mood: 0,
     }
+    state.undergroundCount = 0
     state.specialEvents = []
     state.specialEventDetails = null
   },
@@ -277,7 +291,18 @@ const actions = {
   specialEvent,
   specialEventOptionChosen,
   typeWriter,
-  typeWriterPopup
+  typeWriterPopup,
+
+  incrementRound(context: { commit: Commit; state: State }) {
+    state.round++
+    if (state.round % 36 === 0) {
+      state.year++
+    }
+    if (state.round > state.totalRounds) {
+      context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '无法定义的结局' });
+      context.commit('unlockAchievement', '无法定义的结局');
+    }
+  },
 
 }
 
