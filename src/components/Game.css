@@ -114,6 +114,7 @@
   border: 2px solid #262525;
   border-radius: 8px;
   background-color: #fcfcfc;
+  z-index: 1;
   /* padding: 1rem */
 }
 
