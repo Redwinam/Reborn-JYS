@@ -42,13 +42,16 @@ export async function goToLocation(context: {
     case 'Underground':
       switch (context.state.undergroundCount) {
         case 0 :
-          await context.dispatch('typeWriter', '这是姜云升第一次来到地下Underground，他在这里感受到了不一样的力量，彼时的他是否已经在这里看到了自己的未来了呢？')
+          await context.dispatch('typeWriter', '这是姜云升第一次来到这个世界，他在这里感受到了不一样的力量，彼时的他是否已经在这里看到了自己的未来了呢？')
           // 黑红属性各增加1
           context.commit('updateAttribute', { attribute: 'red', value: 1 })
           context.commit('updateAttribute', { attribute: 'black', value: 1 })
           break;
 
         case 1 :
+          await context.dispatch('typeWriter', '咦？又走到了这里。姜云升再次被这里的力量吸引，忽然……')
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          context.dispatch('specialEvent', '上去看看');
 
       }
       context.commit('incrementUndergroundCount');

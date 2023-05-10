@@ -12,6 +12,8 @@ import { specialEvent, specialEventOptionChosen } from './actions/specialEvent';
 import { performAction } from './actions/performActions';
 import { typeWriter, typeWriterPopup } from './actions/typeWriter';
 
+import { showBreakupDialog } from '../components/composables/gameRefs';
+
 interface State {
   term: number
   year: number
@@ -23,6 +25,7 @@ interface State {
   girlfriendTypes: { type: string; effect: keyof Attributes; breakupReasons: string[] }[]
   flirtCount: number
   accompanyCount: number
+  relationRound: number
 
   unlockedFoods: Food[]
 
@@ -93,6 +96,7 @@ const state: State = {
     },
   ],
   accompanyCount: 0,
+  relationRound: 0,
 
   unlockedFoods: [],
 
@@ -113,7 +117,7 @@ const state: State = {
 }
 
 type UpdateAttributePayload = {
-  attribute: keyof Attributes | "red" | "black" | "gaming"
+  attribute: keyof Attributes | "red" | "black" | "gaming" | "freestyle"
   // attribute: string
   value: number
 }
@@ -121,13 +125,22 @@ type UpdateAttributePayload = {
 const mutations = {
   incrementRound(state: State) {
     state.round++
-    if (state.round % 36 === 0) {
-      state.year++
-    }
+    if (state.round % 36 === 0) { state.year++ }
     state.attributes.money += Math.ceil(state.attributes.gold * 0.06 * 360);
+    if (state.girlfriend) { state.relationRound++; }
   },
   async updateAttribute(state: State, payload: UpdateAttributePayload) {
     const { attribute, value } = payload
+    const levelMapping = [
+      { level: 'D', min: 0, max: 3 },
+      { level: 'C', min: 4, max: 8 },
+      { level: 'B', min: 9, max: 14 },
+      { level: 'A', min: 15, max: 20 },
+      { level: 'S', min: 21, max: 24 },
+      { level: 'SS', min: 25, max: 27 },
+      { level: 'SSS', min: 28, max: 28 },
+    ];
+
     if (attribute === 'popularity') {
       console.error('Cannot update popularity directly, update red or black instead')
     } else if (attribute === 'red') {
@@ -144,19 +157,22 @@ const mutations = {
         state.attributes.skill.gaming = 28;
       }
 
-      const levelMapping = [
-        { level: 'D', min: 0, max: 3 },
-        { level: 'C', min: 4, max: 8 },
-        { level: 'B', min: 9, max: 14 },
-        { level: 'A', min: 15, max: 20 },
-        { level: 'S', min: 21, max: 24 },
-        { level: 'SS', min: 25, max: 27 },
-        { level: 'SSS', min: 28, max: 28 },
-      ];
-
       for (const level of levelMapping) {
         if (state.attributes.skill.gaming >= level.min && state.attributes.skill.gaming <= level.max) {
           state.attributes.skill.gamingLevel = level.level;
+          break;
+        }
+      }
+    } else if (attribute === 'freestyle') {
+      state.attributes.skill.freestyle += value;
+
+      if (state.attributes.skill.freestyle > 28) {
+        state.attributes.skill.freestyle = 28;
+      }
+
+      for (const level of levelMapping) {
+        if (state.attributes.skill.freestyle >= level.min && state.attributes.skill.freestyle <= level.max) {
+          state.attributes.skill.freestyleLevel = level.level;
           break;
         }
       }
@@ -202,6 +218,9 @@ const mutations = {
   },
   resetFlirtCount(state: State) {
     state.flirtCount = 0
+  },
+  resetRelationRound(state: State) {
+    state.relationRound = 0
   },
   incrementAccompanyCount(state: State) {
     state.accompanyCount++
@@ -257,7 +276,10 @@ const mutations = {
     state.round = 1
     state.gameEnded = false
     state.specialEndingAchievement = null
+    state.girlfriend = null
+    state.flirtCount = 0
     state.accompanyCount = 0
+    state.relationRound = 0
     state.attributes = {
       divine: 0,
       talent: 0,
@@ -296,15 +318,20 @@ const actions = {
   typeWriterPopup,
 
   incrementRound(context: { commit: Commit; state: State; dispatch: Function }) {
+    context.commit('incrementRound');
     if ( !Math.floor((store.state.round - 16) % 36) ) {
       context.dispatch('specialEvent', '生日快乐');
     }
 
-
-
     if (state.round > state.totalRounds) {
       context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '无法定义的结局' });
       context.commit('unlockAchievement', '无法定义的结局');
+    }
+
+    if ( state.relationRound > 15) {
+      if (Math.random() < 0.52) {
+        showBreakupDialog.value = true
+      }
     }
   },
 

@@ -10,7 +10,6 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
       intro: '这天，姜云升在家陪女朋友，心情很好，忽然想玩点不一样的。决定外卖买个黑丝，外卖订单留哪一个名字呢？',
       options: [
         '【就叫姜云升！】',
-        '【叫姜挣钱】',
         '【叫姜云升要谦虚】',
         '【叫姜云升很行】',
         '【叫不如姜云升】',
@@ -19,7 +18,8 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
     };
     context.commit('setSpecialEventDetails', specialEventDetails);
     showEventDialog.value = true;
-  }  
+  }
+
   else if (event === '生日快乐') {
     const age = Math.floor((context.rootState.round - 16) / 36) + 16
     const specialEventDetails = {
@@ -28,6 +28,19 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
       options: [
         '【祝他生日快乐！！】',
       ],
+    };
+    context.commit('setSpecialEventDetails', specialEventDetails);
+    showEventDialog.value = true;
+  }
+
+  else if (event === '上去看看') {
+    const specialEventDetails = {
+      title: '上去看看',
+      intro: '忽然姜云升听见远处一阵热闹，姜云升决定……”',
+      options: [
+        '【上去看看】',
+        '【不感兴趣】',
+      ]
     };
     context.commit('setSpecialEventDetails', specialEventDetails);
     showEventDialog.value = true;
@@ -43,6 +56,7 @@ export async function specialEventOptionChosen(context: {
       await context.dispatch('typeWriter', ['片刻后，外卖小哥咚咚咚敲了敲门，送了外卖，看到你开门就笑了，留下了一句“姜哥，玩挺好”。','恭喜，姜云升解锁了第' + context.rootState.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【' + payload.event + '】。']);
     }
   }
+
   else if (payload.event === '生日快乐') {
     if (context.rootState.round === 16) {
       context.commit('unlockAchievement', payload.event);
@@ -62,5 +76,17 @@ export async function specialEventOptionChosen(context: {
     context.commit('updateAttribute', { attribute: 'mood', value: 100 });
     await new Promise(resolve => setTimeout(resolve, 1000));
     await context.dispatch('typeWriter', ['祝姜云升生日快乐！']);
+  }
+
+  else if (payload.event === '上去看看') {
+    if (payload.option === '【上去看看】') {
+      await context.dispatch('typeWriter', ['明明是几个人在那互骂，姜云升却越听越觉得有意思，开心极了，甚至还想加入他们！', '这是他第一次在现场看到什么叫说唱Battle。', '你选择的路，和他一样吗？']);
+      context.commit('updateAttribute', { attribute: 'mood', value: 100 });
+      context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await context.dispatch('typeWriter', ['姜云升的freestyle技能值+1，当前freestyle技能等级为【' + context.rootState.attributes.skill.freestyleLevel + '】']);
+    } else {
+      await context.dispatch('typeWriter', ['姜云升对此不感兴趣，错过了一次说唱Battle，但是也没有什么大不了的。']);
+    }
   }
 }

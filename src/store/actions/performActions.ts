@@ -18,8 +18,6 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
   } else if (action === '写歌') {
     showSongWritingDialog.value = true;
   } else {
-    
-    context.commit('incrementRound');
     switch (action) {
       case '上课':
         context.commit('updateAttribute', { attribute: 'energy', value: -10 });
@@ -47,6 +45,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
             const randomGirlfriend = store.state.girlfriendTypes[Math.floor(Math.random() * store.state.girlfriendTypes.length)];
             context.commit('setGirlfriend', randomGirlfriend);
             context.commit('resetFlirtCount');
+            context.commit('resetRelationRound');
 
             toMessage.push(`恭喜！姜云升交到了一个${randomGirlfriend.type}。`);
           }
@@ -88,12 +87,11 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         await context.dispatch('typeWriter', '姜云升执行了未知操作：${action}。');
         break;
     } 
+    context.dispatch('incrementRound');
 
     if (store.state.attributes.energy <= -100) {
       context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '姜云升虚弱' });
       context.commit('unlockAchievement', '姜云升虚弱');
     }
-
-    context.dispatch('incrementRound');
   }
 }  

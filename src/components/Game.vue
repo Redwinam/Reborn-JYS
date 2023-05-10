@@ -71,15 +71,13 @@
   <button class="button" @click="showAchievementsPopup = true">成就</button>
 </footer>
 
-<Popup title="客官今天打算吃点什么？" :visible="showFoodPopup" @close="showFoodPopup = false; store.commit('incrementRound');
-">
+<Popup title="客官今天打算吃点什么？" :visible="showFoodPopup" @close="showFoodPopup = false; store.dispatch('incrementRound');">
   <popup-food />
 </Popup>
 
 <Popup title="写歌" :visible="showSongWritingDialog" @close="showSongWritingDialog = false">
   <popup-song-writing />
 </Popup>
-
 
 <Popup title="角色" :visible="showCharacterPopup" @close="showCharacterPopup = false">
   <popup-character />
