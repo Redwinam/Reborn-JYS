@@ -2,6 +2,11 @@
 
   <template>
     <div class="attributes-container">
+      <div><span>姓名</span>姜云升</div>
+      <div><span>国籍</span>中国</div>
+      <div><span>生日</span>1996年6月1日 / 四月十六</div>
+      <div><span>年龄</span>{{ Math.floor((store.state.round - 16) / 36) + 16 }}岁</div>
+      <div><span>身高</span> 182cm</div>
 
       <div><span>{{ attributeNames['talent'] }}</span> {{ attributes['talent'] }}</div>
       <div><span>{{ attributeNames['charm'] }}</span> {{ attributes['charm'] }}</div>

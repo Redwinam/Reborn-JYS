@@ -49,7 +49,7 @@
     <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut"></button>
     <button @click="goToLocation('Underground')" class="action-button action-underground" v-if="isGoingOut"></button>
     <!-- <button @click="performAction('去吃点东西')" class="action-button action-eat" v-if="isGoingOut">去吃点东西</button> -->
-    <button v-if="isGoingOut" @click="isGoingOut = false; typewriter('今天你打算……')" class="action-button action-back"></button>
+    <button v-if="isGoingOut" @click="isGoingOut = false; typewriter('今天你打算……')" class="action-button action-back going-out-back"></button>
 
     <button v-if="store.state.girlfriend && !isGoingOut" @click="accompanyGirlfriend" class="action-button action-accompany-girlfriend"></button>
 

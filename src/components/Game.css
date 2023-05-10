@@ -93,11 +93,8 @@
 }
 
 .going-out-attributes {
-  display: block;
-  position: absolute;
-  top: 12%;
-  left: 62%;
-  text-align: left;
+  top: 9%;
+  left: 61%;
   font-size: 0.9rem;
   color: #302824;
   font-weight: 500;
@@ -168,15 +165,15 @@
   width: 4.6vh;
   height: 12.05vh;
   top: 56%;
-  left: 18%;
+  left: 17%;
 }
 
 .action-gaming {
   background: url('@/assets/button_gaming.png') center / contain no-repeat;
   width: 4.5vh;
   height: 13.35vh;
-  top: 63.5%;
-  left: 45%;
+  top: 63%;
+  left: 46%;
 }
 
 .action-write-song {
@@ -203,6 +200,12 @@
   left: 76%;
 }
 
+.going-out-back {
+  top: 68%;
+  left: auto;
+  right: 5%;
+}
+
 .action-accompany-girlfriend {
   background: url('@/assets/button_accompany-girlfriend.png') center / contain no-repeat;
   width: 5vh;
@@ -216,7 +219,7 @@
   width: 4.4vh;
   height: 15.4vh;
   top: 24%;
-  left: 21%;
+  left: 18%;
 }
 
 .action-drink {
@@ -248,7 +251,7 @@
   width: 5.3vh;
   height: 13.6vh;
   top: 72%;
-  left: 21%;
+  left: 12%;
 }
 
 

@@ -4,6 +4,7 @@ import { store } from '../index';
 import { isAtHome, isGoingOut, showBreakupDialog, showSongWritingDialog } from '../../components/composables/gameRefs';
 
 export async function performAction(context: { commit: Commit, dispatch: Function }, action: string) {
+
   if (action === '外出') {
     if (store.state.attributes.energy >= 0) {
       isGoingOut.value = true;
@@ -17,6 +18,8 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
   } else if (action === '写歌') {
     showSongWritingDialog.value = true;
   } else {
+    
+    context.commit('incrementRound');
     switch (action) {
       case '上课':
         context.commit('updateAttribute', { attribute: 'energy', value: -10 });
@@ -91,7 +94,6 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
       context.commit('unlockAchievement', '姜云升虚弱');
     }
 
-    context.commit('incrementRound');
-    context.dispatch('gameEndCheck');
+    context.dispatch('incrementRound');
   }
 }  

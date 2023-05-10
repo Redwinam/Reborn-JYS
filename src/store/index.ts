@@ -1,7 +1,7 @@
 import { createStore, Store, Commit } from 'vuex'
 
 import { Food, selectFood } from '../store/foods'
-import { achievementLibrary, AchievementLibrary } from '../store/achievements'
+import { achievements, Achievement } from '../store/achievements'
 import { songLibrary, Song } from '../store/songs'
 
 import { Attributes, Popularity } from '../store/attributes'
@@ -26,8 +26,7 @@ interface State {
 
   unlockedFoods: Food[]
 
-  achievements: { achievement: AchievementLibrary; term: number }[]
-  achievementLibrary: AchievementLibrary[]
+  achievements: Achievement[]
 
   undergroundCount: number
 
@@ -97,8 +96,7 @@ const state: State = {
 
   unlockedFoods: [],
 
-  achievements: [],
-  achievementLibrary,
+  achievements: achievements,
 
   undergroundCount: 0,
   
@@ -230,17 +228,14 @@ const mutations = {
   },
 
   unlockAchievement(state: State, achievementName: string) {
-    const achievement = state.achievementLibrary.find(
+    const achievement = state.achievements.find(
       (ach) => ach.name === achievementName
     )
     if (achievement) {
-      state.achievements.push({
-        achievement: achievement,
-        term: state.term
-      })
+      achievement.unlocked = true;
+      achievement.unlockTerm = state.term;
     }
   },
-
   addTextToHistory(state: State, message: string | string[]) {
     if (typeof message === 'string') {
       state.textHistory.push(message);
@@ -251,7 +246,7 @@ const mutations = {
 
   setGameEnded(state: State, payload: { gameEnded: boolean; specialEndingAchievementName: string }) {
     state.gameEnded = payload.gameEnded
-    const specialEndingAchievement = state.achievementLibrary.find(
+    const specialEndingAchievement = state.achievements.find(
       (ach) => ach.name === payload.specialEndingAchievementName && ach.ending
     )
     state.specialEndingAchievement = specialEndingAchievement || null
@@ -300,7 +295,13 @@ const actions = {
   typeWriter,
   typeWriterPopup,
 
-  gameEndCheck(context: { commit: Commit; state: State }) {
+  incrementRound(context: { commit: Commit; state: State; dispatch: Function }) {
+    if ( !Math.floor((store.state.round - 16) % 36) ) {
+      context.dispatch('specialEvent', '生日快乐');
+    }
+
+
+
     if (state.round > state.totalRounds) {
       context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '无法定义的结局' });
       context.commit('unlockAchievement', '无法定义的结局');
