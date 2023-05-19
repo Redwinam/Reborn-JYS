@@ -147,7 +147,7 @@ const mutations = {
 
       const currentLevel = SkillLevelMapping.find(level => level.level === state.attributes.skill[`${skill}Level`]);
       const currentLevelMax = currentLevel ? currentLevel.max : 0;
-      state.attributes.skill[skill] = Math.max(state.attributes.skill[skill] + value, currentLevelMax);
+      state.attributes.skill[skill] = Math.min(state.attributes.skill[skill] + value, currentLevelMax);
     } else {
       (state.attributes[attribute] as number) += value
       

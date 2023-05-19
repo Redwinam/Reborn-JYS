@@ -85,12 +85,11 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
 
         const skill = 'gaming';
         for (const level of SkillLevelMapping) {
-          if (store.state.attributes.skill[skill] === level.max) {
+          if (store.state.attributes.skill.gaming === level.max) {
             await context.dispatch('upgradeSkill', { skill, level: level.level });
             break;
           } 
         }
-
         await context.dispatch('typeWriter', [randomGamingIntro, '姜云升的电竞技能值+1，当前电竞技能等级为【' + store.state.attributes.skill.gamingLevel + '】']);
         break;
         
