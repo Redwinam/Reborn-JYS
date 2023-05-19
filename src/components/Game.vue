@@ -63,6 +63,10 @@
 <Dialog :visible="showBreakupDialog" @close="showBreakupDialog = false">
   <dialog-breakup />
 </Dialog>
+
+<Dialog :visible="showUpgradeSkillDialog" @close="showUpgradeSkillDialog = false">
+  <dialog-upgrade-skill />
+</Dialog>
   
 <footer class="footer">
   <button class="button" @click="showCharacterPopup = true">角色</button>
@@ -122,12 +126,13 @@ import PopupFood from '../components/PopupFood.vue'
 import Dialog from '../components/Dialog.vue'
 import DialogBreakup from '../components/DialogBreakup.vue'
 import DialogEvent from '../components/DialogEvent.vue'
+import DialogUpgradeSkill from '../components/DialogUpgradeSkill.vue'
 
 import { attributeNames } from '../store/attributes'
 
 import { isAtHome, isGoingOut, 
   showBreakupDialog, showEventDialog, showSongWritingDialog,
-  showFoodPopup, showDrinkPopup
+  showFoodPopup, showDrinkPopup, showUpgradeSkillDialog
 } from './composables/gameRefs';
 
 

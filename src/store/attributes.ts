@@ -1,4 +1,3 @@
-
 export interface Skill {
   freestyle: number
   gaming: number

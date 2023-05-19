@@ -4,12 +4,13 @@ import { Food, selectFood } from '../store/foods'
 import { achievements, Achievement } from '../store/achievements'
 import { songLibrary, Song } from '../store/songs'
 
-import { Attributes, Popularity } from '../store/attributes'
+import { Attributes, Popularity, Skill } from '../store/attributes'
 
 import { accompanyGirlfriend } from './actions/accompanyGirlfriend';
 import { goToLocation } from './actions/goToLocation';
 import { specialEvent, specialEventOptionChosen } from './actions/specialEvent';
 import { performAction } from './actions/performActions';
+import { upgradeSkill, SkillLevelMapping } from './actions/upgradeSkill';
 import { typeWriter, typeWriterPopup } from './actions/typeWriter';
 
 import { showBreakupDialog } from '../components/composables/gameRefs';
@@ -118,7 +119,6 @@ const state: State = {
 
 type UpdateAttributePayload = {
   attribute: keyof Attributes | "red" | "black" | "gaming" | "freestyle"
-  // attribute: string
   value: number
 }
 
@@ -129,17 +129,9 @@ const mutations = {
     state.attributes.money += Math.ceil(state.attributes.gold * 0.06 * 360);
     if (state.girlfriend) { state.relationRound++; }
   },
+  
   async updateAttribute(state: State, payload: UpdateAttributePayload) {
     const { attribute, value } = payload
-    const levelMapping = [
-      { level: 'D', min: 0, max: 3 },
-      { level: 'C', min: 4, max: 8 },
-      { level: 'B', min: 9, max: 14 },
-      { level: 'A', min: 15, max: 20 },
-      { level: 'S', min: 21, max: 24 },
-      { level: 'SS', min: 25, max: 27 },
-      { level: 'SSS', min: 28, max: 28 },
-    ];
 
     if (attribute === 'popularity') {
       console.error('Cannot update popularity directly, update red or black instead')
@@ -150,34 +142,13 @@ const mutations = {
       // }
     } else if (attribute === 'black') {
       state.attributes.popularity.black += value
-    } else if (attribute === 'gaming') {
-      state.attributes.skill.gaming += value;
+    } else if (attribute === 'gaming' || attribute === 'freestyle') {
+      const skill = attribute;
 
-      if (state.attributes.skill.gaming > 28) {
-        state.attributes.skill.gaming = 28;
-      }
-
-      for (const level of levelMapping) {
-        if (state.attributes.skill.gaming >= level.min && state.attributes.skill.gaming <= level.max) {
-          state.attributes.skill.gamingLevel = level.level;
-          break;
-        }
-      }
-    } else if (attribute === 'freestyle') {
-      state.attributes.skill.freestyle += value;
-
-      if (state.attributes.skill.freestyle > 28) {
-        state.attributes.skill.freestyle = 28;
-      }
-
-      for (const level of levelMapping) {
-        if (state.attributes.skill.freestyle >= level.min && state.attributes.skill.freestyle <= level.max) {
-          state.attributes.skill.freestyleLevel = level.level;
-          break;
-        }
-      }
-    }
-    else {
+      const currentLevel = SkillLevelMapping.find(level => level.level === state.attributes.skill[`${skill}Level`]);
+      const currentLevelMax = currentLevel ? currentLevel.max : 0;
+      state.attributes.skill[skill] = Math.max(state.attributes.skill[skill] + value, currentLevelMax);
+    } else {
       (state.attributes[attribute] as number) += value
       
       if (attribute === 'energy') {
@@ -202,10 +173,13 @@ const mutations = {
       }
     }
   },
-  updatePopularity(state: State, payload: { type: keyof Popularity; value: number }) {
-    state.attributes.popularity[payload.type] += payload.value
-  },
 
+  upgradeSkillLevel(state: State, { skill, level }: { skill: keyof Skill; level: string }) {
+    state.attributes.skill = {
+      ...state.attributes.skill,
+      [skill]: level,
+    };
+  },
   
   setWeak(state: State, payload: boolean) {
     state.weak = payload
@@ -316,6 +290,7 @@ const actions = {
   specialEventOptionChosen,
   typeWriter,
   typeWriterPopup,
+  upgradeSkill,
 
   incrementRound(context: { commit: Commit; state: State; dispatch: Function }) {
     context.commit('incrementRound');

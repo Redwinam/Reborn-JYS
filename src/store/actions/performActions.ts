@@ -2,6 +2,7 @@ import { Commit } from 'vuex';
 import { store } from '../index';
 
 import { isAtHome, isGoingOut, showBreakupDialog, showSongWritingDialog } from '../../components/composables/gameRefs';
+import { SkillLevelMapping } from './upgradeSkill';
 
 export async function performAction(context: { commit: Commit, dispatch: Function }, action: string) {
 
@@ -81,8 +82,18 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         const randomGamingIntro = gamingIntros[Math.floor(Math.random() * gamingIntros.length)];
         context.commit('updateAttribute', { attribute: 'energy', value: -10 });
         context.commit('updateAttribute', { attribute: 'gaming', value: 1 });
+
+        const skill = 'gaming';
+        for (const level of SkillLevelMapping) {
+          if (store.state.attributes.skill[skill] === level.max) {
+            await context.dispatch('upgradeSkill', { skill, level: level.level });
+            break;
+          } 
+        }
+
         await context.dispatch('typeWriter', [randomGamingIntro, '姜云升的电竞技能值+1，当前电竞技能等级为【' + store.state.attributes.skill.gamingLevel + '】']);
         break;
+        
       default:
         await context.dispatch('typeWriter', '姜云升执行了未知操作：${action}。');
         break;
