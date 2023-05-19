@@ -20,16 +20,19 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
     showSongWritingDialog.value = true;
   } else {
     switch (action) {
+
       case '上课':
         context.commit('updateAttribute', { attribute: 'energy', value: -10 });
         context.commit('updateAttribute', { attribute: 'talent', value: 1 });
         await context.dispatch('typeWriter', '姜云升参加了一堂课，才华+1。');
         break;
+
       case '赚钱':
         context.commit('updateAttribute', { attribute: 'energy', value: -10 });
         context.commit('updateAttribute', { attribute: 'money', value: 100 });
         await context.dispatch('typeWriter', '姜云升努力工作，赚到了100金钱。');
         break;
+
       case '出去鬼混':
         if (!store.state.girlfriend) {
           context.commit('updateAttribute', { attribute: 'energy', value: -10 });
@@ -57,6 +60,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           return;
         }
         break;
+
       case '睡觉休息':
         const addEnergy = Math.ceil(0.6 * store.state.attributes.maxEnergy) + Math.max(0, 0-store.state.attributes.energy);
         if (store.state.weak) {
@@ -67,6 +71,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           await context.dispatch('typeWriter', '姜云升睡了17个小时，体力+' + addEnergy +'。');
         }
         break;
+
       case '打游戏':
         const gamingIntros = [
           '姜云升一回家就开了一把《永劫有间》！',
@@ -78,7 +83,6 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           '今天游戏版本更新啦，姜云升要去看看。',
           '姜云升今天单排赢了游戏，但他总感觉自己输了人生。',
         ];
-        
         const randomGamingIntro = gamingIntros[Math.floor(Math.random() * gamingIntros.length)];
         context.commit('updateAttribute', { attribute: 'energy', value: -10 });
         context.commit('updateAttribute', { attribute: 'gaming', value: 1 });
@@ -92,9 +96,29 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         }
         await context.dispatch('typeWriter', [randomGamingIntro, '姜云升的电竞技能值+1，当前电竞技能等级为【' + store.state.attributes.skill.gamingLevel + '】']);
         break;
+
+      case '开直播':
+        const liveStreamingIntros = [
+          '姜云升今天开直播啦！',
+          '姜云升今天要在练刀房暴虐粉丝，开直播啦！',
+          '姜云升今天要给粉丝们讲讲前任们的故事，开直播啦！',
+          '姜云升今天蟒爷上身，开直播啦！',
+          '姜云升刚刚下班，开直播啦！',
+          '姜云升今天受伤了，要和粉丝说说，开直播啦！',
+          '姜云升今天要补直播时长，开直播啦！',
+          '姜云升今天在等开饭，顺便开直播啦！',
+        ];
+        const randomLiveStreamingIntro = liveStreamingIntros[Math.floor(Math.random() * liveStreamingIntros.length)];
+        context.commit('updateAttribute', { attribute: 'energy', value: -10 });
+        const redValue = 5 + Math.floor(Math.random() * 0.2 * store.state.attributes.popularity.red);
+        const blackValue = 2 + Math.floor(Math.random() * 0.08 * store.state.attributes.popularity.black);
+        context.commit('updateAttribute', { attribute: 'red', value: redValue });
+        context.commit('updateAttribute', { attribute: 'black', value: blackValue });
+        await context.dispatch('typeWriter', [randomLiveStreamingIntro, '姜云升的人气红值+' + redValue + '，黑值+' + blackValue]);
+        break;
         
       default:
-        await context.dispatch('typeWriter', '姜云升执行了未知操作：${action}。');
+        await context.dispatch('typeWriter', `姜云升执行了未知操作：${action}。`);
         break;
     } 
     context.dispatch('incrementRound');
