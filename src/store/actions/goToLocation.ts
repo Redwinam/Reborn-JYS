@@ -1,6 +1,7 @@
 import { Commit } from 'vuex';
 import { Food, allFoods } from '../eats';
 import { showFoodPopup, showDrinkPopup, showShopPopup } from '../../components/composables/gameRefs';
+import { Achievement } from '../achievements';
 
 export async function goToLocation(context: {
   state: any; commit: Commit, dispatch: Function 
@@ -58,11 +59,38 @@ export async function goToLocation(context: {
       context.commit('incrementUndergroundCount');
       break;
 
-    case '去剪头发':
-      await context.dispatch('typeWriter', '姜云升出门去剪了个新发型，魅力-10。')
-      context.commit('updateAttribute', { attribute: 'charm', value: -10 })
-      context.commit('incrementRound');
-      break;
+      case '去剪头发':
+        const haircutCost = 100; // 剪头发的花费
+        
+        // 检查用户是否有足够的金钱进行剪头发
+        if (context.state.attributes.money < haircutCost) {
+          await context.dispatch('typeWriter', '剪发费用需要100元。幸好，姜云升没有足够的钱来剪头发。');
+          break; // 如果没有足够的金钱，就结束这个 case
+        }
+      
+        // 扣除剪头发的花费
+        context.commit('updateAttribute', { attribute: 'money', value: - haircutCost });
+        
+        const hasSunglasses = context.state.inventory['墨镜'];
+        const hasAchievement = context.state.achievements.find(
+          (ach: Achievement) => ach.name === '小学升戴墨镜' && ach.unlockTerm === context.state.term
+        );
+      
+        if (hasSunglasses && !hasAchievement) {
+          await context.dispatch('typeWriter', '姜云升戴着墨镜去剪了个新发型，花费100元，魅力-100。解锁成就【小学升戴墨镜】（不建议戴）。')
+          context.commit('updateAttribute', { attribute: 'charm', value: -100 })
+          context.commit('unlockAchievement', '小学升戴墨镜');
+        } else if (hasSunglasses && hasAchievement) {
+          await context.dispatch('typeWriter', '姜云升再次戴着墨镜去剪了个新发型，花费100元，魅力-20。')
+          context.commit('updateAttribute', { attribute: 'charm', value: -20 })
+        } else {
+          await context.dispatch('typeWriter', '姜云升出门去剪了个新发型，花费100元，魅力-10。')
+          context.commit('updateAttribute', { attribute: 'charm', value: -10 })
+        }
+      
+        context.commit('incrementRound');
+        break;
+      
       
     case '买东西':
       showShopPopup.value = true;

@@ -46,4 +46,13 @@ export const achievements: Achievement[] = [
     ending: false,
     unlocked: false,
   },
+
+  {
+    name: '小学升戴墨镜',
+    desc: '不建议戴',
+    event: true,
+    ending: false,
+    unlocked: false,
+  },
+
 ]

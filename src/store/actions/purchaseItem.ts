@@ -1,3 +1,4 @@
+import { ref } from 'vue';
 import { Commit } from 'vuex';
 import { store } from '../index';
 
@@ -54,5 +55,13 @@ export async function purchaseItem(context: { commit: Commit, dispatch: Function
   context.commit('updateAttribute', { attribute: 'money', value: -item.price * quantity });
   store.state.inventory[itemName] = (store.state.inventory[itemName] || 0) + quantity;
 
-  await context.dispatch('typeWriterPopup', `姜云升购买了${quantity}个"${itemName}"`);
+  const toMessage = ref("")
+
+  if (itemName === '墨镜') {
+    context.commit('updateAttribute', { attribute: 'charm', value: -10  * quantity });
+    toMessage.value = "，魅力-"+10 * quantity+"。"
+  }
+
+  await context.dispatch('typeWriterPopup', `姜云升购买了${quantity}个"${itemName}"${toMessage.value}`);
+
 };
