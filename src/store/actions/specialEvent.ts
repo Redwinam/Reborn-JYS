@@ -45,6 +45,19 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
     context.commit('setSpecialEventDetails', specialEventDetails);
     showEventDialog.value = true;
   }
+
+  else if (event === '放松，呼吸') {
+    const specialEventDetails = {
+      title: '放松，呼吸',
+      intro: '春暖花开，万物复苏，你的好朋友约你出门旅游，要去散散心吗？',
+      options: [
+        '【去丽江旅游】',
+        '【打死不去】',
+      ],
+    };
+    context.commit('setSpecialEventDetails', specialEventDetails);
+    showEventDialog.value = true;
+  }
 }  
 
 export async function specialEventOptionChosen(context: {
@@ -87,6 +100,26 @@ export async function specialEventOptionChosen(context: {
       await context.dispatch('typeWriter', ['姜云升的freestyle技能值+1，当前freestyle技能等级为【' + context.rootState.attributes.skill.freestyleLevel + '】']);
     } else {
       await context.dispatch('typeWriter', ['姜云升对此不感兴趣，错过了一次说唱Battle，但是也没有什么大不了的。']);
+    }
+  }
+
+  else if (payload.event === '放松，呼吸') {
+    if (payload.option === '【去丽江旅游】') {
+      await context.dispatch('typeWriter', ['姜云升开心地出门去玩啦！但在旅游的时候，你忽然有一种奇怪的预感，于是你给女朋友打了许多电话，她都没有接。果不其然，姜云升被绿了。在姜云升和女朋友分手之后，没想到，你女朋友还找人打了你一顿。']);
+      // 和女朋友和平分手
+      context.rootState.hasGirlfriend = false;
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // 她女朋友还找人打他，姜云升体力-60，心情-99
+      context.commit('updateAttribute', { attribute: 'energy', value: Math.max(context.rootState.attribute.energy - 60, -90) });
+      context.commit('updateAttribute', { attribute: 'mood', value: Math.max(context.rootState.attribute.mood - 99, -99) });
+      await context.dispatch('typeWriter', ['姜云升体力-60，心情-99。']);
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      context.commit('unlockAchievement', payload.event);
+      await context.dispatch('typeWriter', ['姜云升解锁了成就【放松，呼吸】。']);
+    } else {
+      await context.dispatch('typeWriter', ['姜云升选择了不去丽江旅游，避免了一次巨大的伤害。']);
     }
   }
 }

@@ -10,6 +10,25 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
     if (store.state.attributes.energy >= 0) {
       isGoingOut.value = true;
       await context.dispatch('typeWriter', '打算出发去……');
+
+      // 第二年之后，并且姜云升有女朋友时，可能触发特殊事件
+      if (store.state.year > 1 && store.state.girlfriend) {
+        const existingAchievement = store.state.achievements.find(
+          (ach) => ach.name === '放松，呼吸' && ach.unlockTerm === store.state.term
+        );
+        
+        if (!existingAchievement) {
+          const currentRoundInYear = store.state.round % 36;
+          const isSpring = currentRoundInYear >= 3 && currentRoundInYear < 15; // 假设一年36轮，4-15轮为春天
+
+          if (isSpring) {
+            if (Math.random() < 0.3) {
+              context.dispatch('specialEvent', '放松，呼吸');
+            }
+          }
+        }
+      }
+
     } else {
       await context.dispatch('typeWriter', '体力小于零，无法外出。');
     }
