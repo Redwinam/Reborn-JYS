@@ -1,6 +1,6 @@
 import { Commit } from 'vuex';
 import { Food, allFoods } from '../eats';
-import { showFoodPopup } from '../../components/composables/gameRefs';
+import { showFoodPopup, showDrinkPopup, showShopPopup } from '../../components/composables/gameRefs';
 
 export async function goToLocation(context: {
   state: any; commit: Commit, dispatch: Function 
@@ -35,8 +35,9 @@ export async function goToLocation(context: {
 
     case '去喝点东西':
       // 椰奶咖啡
-      await context.dispatch('typeWriter', '姜云升去了酒吧，喝了一顿酒。')
-      context.commit('updateAttribute', { attribute: 'energy', value: 10 })
+      // await context.dispatch('typeWriter', '姜云升去了酒吧，喝了一顿酒。')
+      // context.commit('updateAttribute', { attribute: 'energy', value: 10 })
+      showDrinkPopup.value = true;
       break;
 
     case 'Underground':
@@ -55,7 +56,18 @@ export async function goToLocation(context: {
 
       }
       context.commit('incrementUndergroundCount');
+      break;
 
+    case '去剪头发':
+      await context.dispatch('typeWriter', '姜云升出门去剪了个新发型，魅力-10。')
+      context.commit('updateAttribute', { attribute: 'charm', value: -10 })
+      context.commit('incrementRound');
+      break;
+      
+    case '买东西':
+      showShopPopup.value = true;
+      break;
+      
   }
 }  
 

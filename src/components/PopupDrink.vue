@@ -1,10 +1,8 @@
 <template>
   <div class="drink-list">
-    <div class="drink-item" v-for="drink in unlockedDrinks" :key="drink.id">
-      <p>{{ drink.name }}</p>
-      <span>¥ {{ drink.cost }}</span>
-      <span class="drink-note">能量+{{ drink.energy }}</span>
-      <span class="drink-note">心情+{{ drink.mood }}</span>
+    <div class="drink-item" v-for="drink in allDrinks" :key="drink.name">
+      <p>{{ drink.name }} <span>¥ {{ drink.cost }}</span></p>
+      <span class="drink-note">能量 {{ drink.energy }} | 心情 {{ drink.mood }}</span>
       <div class="select-buttons">
         <button @click="selectDrink(drink.name, 1)">买一杯</button>
         <button @click="selectDrink(drink.name, 2)">第二杯半价</button>
@@ -17,9 +15,9 @@
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 
-const store = useStore()
+import { allDrinks } from '../store/eats'
 
-const unlockedDrinks = computed(() => store.state.unlockedDrinks);
+const store = useStore()
 
 const selectDrink = (drink: string, amount: number) => {
   store.dispatch('selectDrink', {drink, amount});
@@ -41,7 +39,7 @@ const selectDrink = (drink: string, amount: number) => {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  width: 30%;
+  width: 40%;
   height: 30%;
   border: 1px solid black;
   border-radius: 10px;

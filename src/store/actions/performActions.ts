@@ -104,15 +104,18 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         ];
         const randomGamingIntro = gamingIntros[Math.floor(Math.random() * gamingIntros.length)];
         context.commit('updateAttribute', { attribute: 'energy', value: -10 });
-        context.commit('updateAttribute', { attribute: 'gaming', value: 1 });
 
         const skill = 'gaming';
         for (const level of SkillLevelMapping) {
           if (store.state.attributes.skill.gaming === level.max) {
+            await context.dispatch('typeWriter', [randomGamingIntro, '姜云升的电竞技能进入了瓶颈期，需要通过考验才能升级！']);
+            await new Promise(resolve => setTimeout(resolve, 1000));
             await context.dispatch('upgradeSkill', { skill, level: level.level });
             break;
           } 
         }
+
+        context.commit('updateAttribute', { attribute: 'gaming', value: 1 });
         await context.dispatch('typeWriter', [randomGamingIntro, '姜云升的电竞技能值+1，当前电竞技能等级为【' + store.state.attributes.skill.gamingLevel + '】']);
         break;
 

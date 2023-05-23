@@ -69,8 +69,8 @@ export function upgradeSkill(context: { commit: Commit, dispatch: Function }, { 
 }
 
 export function handleUpgrade() {
-  const { skill, level } = currentQuestionsAndAnswers.value!;
-  store.commit('upgradeSkillLevel', { skill, level });
+  const { skill } = currentQuestionsAndAnswers.value!;
+  store.commit('upgradeSkillLevel', { skill: 'gaming'});
   currentQuestionsAndAnswers.value = null;
   showUpgradeSkillDialog.value = false;
   const skillLevel = store.state.attributes.skill[`${skill}Level` as keyof typeof store.state.attributes.skill];

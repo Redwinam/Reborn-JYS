@@ -9,3 +9,4 @@ export const showUpgradeSkillDialog = ref(false);
 
 export const showFoodPopup = ref(false);
 export const showDrinkPopup = ref(false);
+export const showShopPopup = ref(false);

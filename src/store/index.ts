@@ -1,6 +1,6 @@
 import { createStore, Store, Commit } from 'vuex'
 
-import { Food, selectFood } from './eats'
+import { Food, selectFood, selectDrink } from './eats'
 import { achievements, Achievement } from '../store/achievements'
 import { songLibrary, Song } from '../store/songs'
 
@@ -10,6 +10,7 @@ import { accompanyGirlfriend } from './actions/accompanyGirlfriend';
 import { goToLocation } from './actions/goToLocation';
 import { specialEvent, specialEventOptionChosen } from './actions/specialEvent';
 import { performAction } from './actions/performActions';
+import { purchaseItem, Inventory } from './actions/purchaseItem';
 import { upgradeSkill, SkillLevelMapping } from './actions/upgradeSkill';
 import { typeWriter, typeWriterPopup } from './actions/typeWriter';
 
@@ -29,6 +30,7 @@ interface State {
   relationRound: number
 
   unlockedFoods: Food[]
+  inventory: Inventory
 
   achievements: Achievement[]
 
@@ -43,7 +45,8 @@ interface State {
   gameEnded: boolean
   specialEndingAchievement: { name: string; desc: string } | null
 
-  textHistory: string[]
+  textHistory: string[],
+
 }
 
 const state: State = {
@@ -100,6 +103,7 @@ const state: State = {
   relationRound: 0,
 
   unlockedFoods: [],
+  inventory: {},
 
   achievements: achievements,
 
@@ -115,6 +119,7 @@ const state: State = {
   specialEndingAchievement: null,
 
   textHistory: [],
+
 }
 
 type UpdateAttributePayload = {
@@ -174,11 +179,16 @@ const mutations = {
     }
   },
 
-  upgradeSkillLevel(state: State, { skill, level }: { skill: keyof Skill; level: string }) {
-    state.attributes.skill = {
-      ...state.attributes.skill,
-      [skill]: level,
-    };
+  upgradeSkillLevel(state: State, { skill }: { skill: keyof Skill }) {
+    if ( skill === 'gaming' || skill === 'freestyle' ) {
+      state.attributes.skill[skill] = (state.attributes.skill[skill] as number) + 1;
+      for (const level of SkillLevelMapping) {
+        if (state.attributes.skill.gaming >= level.min && state.attributes.skill.gaming <= level.max) {
+          state.attributes.skill.gamingLevel = level.level;
+          break;
+        }
+      }
+    }
   },
   
   setWeak(state: State, payload: boolean) {
@@ -285,7 +295,9 @@ const actions = {
   accompanyGirlfriend,
   goToLocation,
   performAction,
+  purchaseItem, 
   selectFood,
+  selectDrink, 
   specialEvent,
   specialEventOptionChosen,
   typeWriter,

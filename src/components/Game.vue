@@ -45,7 +45,8 @@
 
     <button @click="goToLocation('去吃点东西')" class="action-button action-eat" v-if="isGoingOut"></button>
     <button @click="goToLocation('去喝点东西')" class="action-button action-drink" v-if="isGoingOut"></button>
-    <button @click="goToLocation('去逛街')" class="action-button action-shopping" v-if="isGoingOut"></button>
+    <button @click="goToLocation('买东西')" class="action-button action-shopping" v-if="isGoingOut"></button>
+    <button @click="goToLocation('去剪头发')" class="action-button action-cut-hair" v-if="isGoingOut">去剪头发</button>
     <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut"></button>
     <button @click="goToLocation('Underground')" class="action-button action-underground" v-if="isGoingOut"></button>
     <!-- <button @click="performAction('去吃点东西')" class="action-button action-eat" v-if="isGoingOut">去吃点东西</button> -->
@@ -56,17 +57,9 @@
   </div>
 
 
-<Dialog :visible="showEventDialog" @close="showEventDialog = false">
-  <dialog-event />
-</Dialog>
-
-<Dialog :visible="showBreakupDialog" @close="showBreakupDialog = false">
-  <dialog-breakup />
-</Dialog>
-
-<Dialog :visible="showUpgradeSkillDialog" @close="showUpgradeSkillDialog = false">
-  <dialog-upgrade-skill />
-</Dialog>
+<Dialog :visible="showEventDialog" @close="showEventDialog = false"><dialog-event /></Dialog>
+<Dialog :visible="showBreakupDialog" @close="showBreakupDialog = false"><dialog-breakup /></Dialog>
+<Dialog :visible="showUpgradeSkillDialog" @close="showUpgradeSkillDialog = false"><dialog-upgrade-skill /></Dialog>
   
 <footer class="footer">
   <button class="button" @click="showCharacterPopup = true">角色</button>
@@ -75,25 +68,14 @@
   <button class="button" @click="showAchievementsPopup = true">成就</button>
 </footer>
 
-<Popup title="客官今天打算吃点什么？" :visible="showFoodPopup" @close="showFoodPopup = false; store.dispatch('incrementRound');">
-  <popup-food />
-</Popup>
+<Popup title="客官今天打算吃点什么？" :visible="showFoodPopup" @close="showFoodPopup = false; store.dispatch('incrementRound');"><popup-food /></Popup>
+<Popup title="买喝的！" :visible="showDrinkPopup" @close="showDrinkPopup = false; store.dispatch('incrementRound'); "><popup-drink /></Popup>
+<Popup title="买东西！" :visible="showShopPopup" @close="showShopPopup = false; store.dispatch('incrementRound');"><popup-shop /></Popup>
 
-<Popup title="写歌" :visible="showSongWritingDialog" @close="showSongWritingDialog = false">
-  <popup-song-writing />
-</Popup>
-
-<Popup title="角色" :visible="showCharacterPopup" @close="showCharacterPopup = false">
-  <popup-character />
-</Popup>
-
-<Popup title="技能" :visible="showSkillsPopup" @close="showSkillsPopup = false">
-  <popup-skills />
-</Popup>
-
-<Popup title="成就" :visible="showAchievementsPopup" @close="showAchievementsPopup = false">
-  <popup-achievements />
-</Popup>
+<Popup title="写歌" :visible="showSongWritingDialog" @close="showSongWritingDialog = false"><popup-song-writing /></Popup>
+<Popup title="角色" :visible="showCharacterPopup" @close="showCharacterPopup = false"><popup-character /></Popup>
+<Popup title="技能" :visible="showSkillsPopup" @close="showSkillsPopup = false"><popup-skills /></Popup>
+<Popup title="成就" :visible="showAchievementsPopup" @close="showAchievementsPopup = false"><popup-achievements /></Popup>
 
 
 
@@ -122,6 +104,8 @@ import PopupSkills from '../components/PopupSkills.vue'
 import PopupSongWriting from '../components/PopupSongWriting.vue'
 
 import PopupFood from '../components/PopupFood.vue'
+import PopupDrink from '../components/PopupDrink.vue'
+import PopupShop from '../components/PopupShop.vue'
 
 import Dialog from '../components/Dialog.vue'
 import DialogBreakup from '../components/DialogBreakup.vue'
@@ -132,7 +116,7 @@ import { attributeNames } from '../store/attributes'
 
 import { isAtHome, isGoingOut, 
   showBreakupDialog, showEventDialog, showSongWritingDialog,
-  showFoodPopup, showDrinkPopup, showUpgradeSkillDialog
+  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog
 } from './composables/gameRefs';
 
 

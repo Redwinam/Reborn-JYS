@@ -48,6 +48,7 @@ export async function selectFood(context: {
 export const allDrinks: Drink[] = [
   { name: '生椰拿铁', cost: 20, energy: 50, mood: 20, taste: 'sweet' },
   { name: '可乐', cost: 5, energy: 12, mood:10, taste: 'sweet' },
+  { name: '啤酒', cost: 15, energy: 30, mood:-10, taste: 'sweet' },
 
 ];
 
@@ -64,7 +65,7 @@ export async function selectDrink(context: {
   state: any; commit: Commit, dispatch: Function 
 }, payload: {drink: string, amount: number}) {
   const {drink, amount} = payload;
-  const selectedDrink = context.state.unlockedDrinks.find((unlockedDrink: Drink) => unlockedDrink.name === drink);
+  const selectedDrink = allDrinks.find((drinkItem: Drink) => drinkItem.name === drink);
   if (selectedDrink) {
     let totalCost = selectedDrink.cost * amount;
     if (amount == 2) {
