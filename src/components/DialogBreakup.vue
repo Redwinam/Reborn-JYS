@@ -26,6 +26,7 @@ const randomBreakupReason = computed(() => {
 })
 
 async function handleBreakup(choice: string) {
+  showBreakupDialog.value = false
   switch (choice) {
     case '挽回':
       if (Math.random() < 0.520) {
@@ -61,9 +62,7 @@ async function handleBreakup(choice: string) {
       await store.dispatch('typeWriter', '你放手了，选择了拜拜就拜拜。你现在没有女朋友了。')
       break
   }
-  showBreakupDialog.value = false
 }
-
 </script>
 
 <style scoped>

@@ -111,8 +111,8 @@ export async function specialEventOptionChosen(context: {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // 她女朋友还找人打他，姜云升体力-60，心情-99
-      context.commit('updateAttribute', { attribute: 'energy', value: Math.max(context.rootState.attribute.energy - 60, -90) });
-      context.commit('updateAttribute', { attribute: 'mood', value: Math.max(context.rootState.attribute.mood - 99, -99) });
+      context.commit('updateAttribute', { attribute: 'energy', value: Math.max(context.rootState.attributes.energy - 60, -90) });
+      context.commit('updateAttribute', { attribute: 'mood', value: Math.max(context.rootState.attributes.mood - 99, -99) });
       await context.dispatch('typeWriter', ['姜云升体力-60，心情-99。']);
 
       await new Promise(resolve => setTimeout(resolve, 1000));

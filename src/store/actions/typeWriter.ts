@@ -3,6 +3,7 @@ import TypeIt from 'typeit';
 
 export async function typeWriter(context: { commit: Commit }, message: string | string[]) {
   return new Promise<void>((resolve) => {
+    context.commit('addTextToHistory', message);
     new TypeIt("#textboxText", {
       strings: message,
       speed: 25,
@@ -21,7 +22,6 @@ export async function typeWriter(context: { commit: Commit }, message: string | 
       afterComplete: async (instance: { options: { cursor: boolean; }; destroy: () => void; }) => {
         instance.options.cursor = false;
         instance.destroy();
-        context.commit('addTextToHistory', message);
         resolve();
       },
     }).go();
@@ -30,6 +30,7 @@ export async function typeWriter(context: { commit: Commit }, message: string | 
 
 export async function typeWriterPopup(context: { commit: Commit }, message: string | string[]) {
   return new Promise<void>((resolve) => {
+    context.commit('addTextToHistory', message);
     new TypeIt("#textboxPopup", {
       strings: message,
       speed: 25,
@@ -48,7 +49,6 @@ export async function typeWriterPopup(context: { commit: Commit }, message: stri
       afterComplete: async (instance: { options: { cursor: boolean; }; destroy: () => void; }) => {
         instance.options.cursor = false;
         instance.destroy();
-        context.commit('addTextToHistory', message);
         resolve();
       },
     }).go();

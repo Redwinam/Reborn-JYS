@@ -23,6 +23,12 @@ export const itemsList = [
   // Add more special items...
   { name: '玫瑰花', price: 10, isSpecial: false, desc: '虽然她送了我玫瑰花！……' },
   { name: '皮卡丘玩偶', price: 15, isSpecial: false, desc: '黄皮耗子 + 1' },
+  // 发带、手铐、煊赫门、书、墨镜
+  // { name: '发带', price: 20, isSpecial: false, desc: '姜云升的发带，可以用来打人，也可以用来扎马尾' },
+  // { name: '手铐', price: 30, isSpecial: false, desc: '姜云升的手铐，可以用来打人，也可以用来扣人' },
+  { name: '煊赫门', price: 50, isSpecial: false, desc: '我总在抽烟，我知道伤肺' },
+  { name: '书', price: 100, isSpecial: false, desc: '可以不上学，但不能不读书' },
+  { name: '墨镜', price: 150, isSpecial: false, desc: '买了墨镜记得再去剪头发噢！' },
   // Add more normal items...
 ];
 

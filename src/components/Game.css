@@ -119,6 +119,18 @@
   margin: 1rem;
 }
 
+.textbox .text-history-button {
+  position: absolute;
+  padding: 3px 4px 2px 8px;
+  border-radius: 0;
+  border-top-left-radius: 4px;
+  color: #d3c6c4;
+  font-size: 70%;
+  background-color: #4c4d55;
+  bottom: 0;
+  right: 0;
+}
+
 .actions {
   margin-bottom: 16px;
 }
@@ -212,4 +224,10 @@ footer button {
   border: none;
   outline: none;
   cursor: pointer;
+}
+
+.textHistory {
+  font-size: 0.9rem;
+  height: 75vh;
+  overflow-y: scroll;
 }

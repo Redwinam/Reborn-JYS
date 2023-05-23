@@ -1,17 +1,20 @@
 <template>
+  <h2>特殊装备</h2>
   <div class="shop-list">
-    <h2>特殊装备</h2>
     <div class="shop-item" v-for="item in specialItems" :key="item.name">
       <p>{{ item.name }}</p>
       <span>¥ {{ item.price }}</span>
       <span class="item-note">{{ item.desc }}</span>
       <button @click="purchaseItem(item.name, 1)" :disabled="inventory[item.name]">{{ inventory[item.name] ? '已拥有' : '购买' }}</button>
     </div>
-    <h2>普通物品</h2>
+  </div>
+
+  <h2>普通物品</h2>
+  <div class="shop-list">
     <div class="shop-item" v-for="item in normalItems" :key="item.name">
       <p>{{ item.name }}</p>
       <span>¥ {{ item.price }}</span>
-      <span class="item-note">效果: {{ item.desc }}</span>
+      <span class="item-note">{{ item.desc }}</span>
       <button @click="purchaseItem(item.name, 1)">购买</button>
     </div>
   </div>

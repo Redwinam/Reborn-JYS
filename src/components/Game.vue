@@ -28,7 +28,9 @@
   <!-- Textbox for the text-based game -->
   <div class="textbox">
     <p id="textboxText">今天你打算……</p>
+    <button @click="showTextHistoryPopup = true" class="text-history-button">文本记录</button>
   </div>
+  
 
   <div class="actions">
     
@@ -77,7 +79,11 @@
 <Popup title="技能" :visible="showSkillsPopup" @close="showSkillsPopup = false"><popup-skills /></Popup>
 <Popup title="成就" :visible="showAchievementsPopup" @close="showAchievementsPopup = false"><popup-achievements /></Popup>
 
-
+<Popup title="历史记录" :visible="showTextHistoryPopup" @close="showTextHistoryPopup = false">
+  <div class="textHistory" ref="textHistoryContainer">
+    <div v-for="text in textHistory" :key="text">{{ text }}</div>
+  </div>
+</Popup>
 
 </div>
 
@@ -95,7 +101,8 @@
 </template>
 <script setup lang="ts">
 import { useStore } from 'vuex'
-import { computed, ref } from 'vue'
+import { computed, ref, nextTick, watch } from 'vue'
+// import { onUpdated, ref,  } from 'vue'
 
 import Popup from '../components/Popup.vue'
 import PopupAchievements from '../components/PopupAchievements.vue'
@@ -129,6 +136,22 @@ const totalRounds = computed(() => store.state.totalRounds)
 const attributes = computed(() => store.state.attributes)
 const specialEvents = computed(() => store.state.specialEvents)
 const weak = computed(() => store.state.weak)
+
+const textHistory = computed(() => {
+  const history = store.state.textHistory
+  return history.length > 99 ? history.slice(-99) : history
+})
+const showTextHistoryPopup = ref(false)
+const textHistoryContainer = ref<HTMLDivElement | null>(null)
+
+watch(showTextHistoryPopup, async (newValue) => {
+  if (newValue) {
+    await nextTick()
+    if (textHistoryContainer.value) {
+      textHistoryContainer.value.scrollTop = textHistoryContainer.value.scrollHeight
+    }
+  }
+})
 
 const gameEnded = computed(() => store.state.gameEnded)
 const specialEndingAchievement = computed(() => store.state.specialEndingAchievement)
