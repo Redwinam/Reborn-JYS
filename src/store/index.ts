@@ -1,6 +1,6 @@
 import { createStore, Store, Commit } from 'vuex'
 
-import { Food, selectFood } from '../store/foods'
+import { Food, selectFood } from './eats'
 import { achievements, Achievement } from '../store/achievements'
 import { songLibrary, Song } from '../store/songs'
 

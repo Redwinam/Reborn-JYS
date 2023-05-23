@@ -37,9 +37,53 @@ export async function selectFood(context: {
     if (context.state.attributes.money >= selectedFood.cost) {
       context.commit('updateAttribute', { attribute: 'money', value: -selectedFood.cost });
       context.commit('updateAttribute', { attribute: 'energy', value: selectedFood.energy });
-      await context.dispatch('typeWriterPopup', '姜云升吃了一顿' + selectedFood.name + '，拍了拍肚子。');
+      await context.dispatch('typeWriterPopup', '姜云升吃了一顿' + selectedFood.name + '，摸了摸肚子。');
     } else {
       await context.dispatch('typeWriterPopup', '抱歉，姜云升的钱不够，吃不起' + selectedFood.name + '。');
+    }
+  }
+}
+
+
+export const allDrinks: Drink[] = [
+  { name: '生椰拿铁', cost: 20, energy: 50, mood: 20, taste: 'sweet' },
+  { name: '可乐', cost: 5, energy: 12, mood:10, taste: 'sweet' },
+
+];
+
+// Food类型
+export interface Drink {
+  name: string;
+  cost: number;
+  energy: number;
+  mood: number;
+  taste: 'spicy' | 'savory' | 'sweet';
+}
+
+export async function selectDrink(context: {
+  state: any; commit: Commit, dispatch: Function 
+}, payload: {drink: string, amount: number}) {
+  const {drink, amount} = payload;
+  const selectedDrink = context.state.unlockedDrinks.find((unlockedDrink: Drink) => unlockedDrink.name === drink);
+  if (selectedDrink) {
+    let totalCost = selectedDrink.cost * amount;
+    if (amount == 2) {
+      totalCost -= selectedDrink.cost / 2; // 第二杯半价
+    }
+    
+    if (context.state.attributes.money >= totalCost) {
+      context.commit('updateAttribute', { attribute: 'money', value: -totalCost });
+      context.commit('updateAttribute', { attribute: 'energy', value: selectedDrink.energy * amount });
+      context.commit('updateAttribute', { attribute: 'mood', value: selectedDrink.mood * amount });
+      
+      let message = '姜云升喝了' + amount + '杯' + selectedDrink.name;
+      if (amount == 2) {
+        message += '，享受了第二杯半价的优惠';
+      }
+      message += '，摸了摸肚子。';
+      await context.dispatch('typeWriterPopup', message);
+    } else {
+      await context.dispatch('typeWriterPopup', '抱歉，姜云升的钱不够，喝不起' + amount + '杯' + selectedDrink.name + '。');
     }
   }
 }

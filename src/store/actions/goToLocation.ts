@@ -1,5 +1,5 @@
 import { Commit } from 'vuex';
-import { Food, allFoods } from '../foods';
+import { Food, allFoods } from '../eats';
 import { showFoodPopup } from '../../components/composables/gameRefs';
 
 export async function goToLocation(context: {

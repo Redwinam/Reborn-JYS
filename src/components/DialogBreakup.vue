@@ -38,7 +38,6 @@ async function handleBreakup(choice: string) {
         store.commit('resetAccompanyCount');
         store.commit('resetRelationRound');
         store.commit('updateAttribute', { attribute: 'charm', value: -5 })
-        // addTextBoxMessage('尽管你努力挽回，但你们最终还是分手了。你的魅力-5！')
         await store.dispatch('typeWriter', '尽管你努力挽回，但你们最终还是分手了。姜云升魅力-5！')
       }
       break
