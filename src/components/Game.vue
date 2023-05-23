@@ -46,7 +46,7 @@
     <button @click="goToLocation('去吃点东西')" class="action-button action-eat" v-if="isGoingOut"></button>
     <button @click="goToLocation('去喝点东西')" class="action-button action-drink" v-if="isGoingOut"></button>
     <button @click="goToLocation('买东西')" class="action-button action-shopping" v-if="isGoingOut"></button>
-    <button @click="goToLocation('去剪头发')" class="action-button action-cut-hair" v-if="isGoingOut">去剪头发</button>
+    <button @click="goToLocation('去剪头发')" class="action-button action-cut-hair" v-if="isGoingOut"></button>
     <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut"></button>
     <button @click="goToLocation('Underground')" class="action-button action-underground" v-if="isGoingOut"></button>
     <!-- <button @click="performAction('去吃点东西')" class="action-button action-eat" v-if="isGoingOut">去吃点东西</button> -->

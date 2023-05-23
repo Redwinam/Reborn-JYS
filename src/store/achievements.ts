@@ -37,5 +37,13 @@ export const achievements: Achievement[] = [
     event: true,
     ending: false,
     unlocked: false,
-  }
+  },
+
+  {
+    name: '放松，呼吸',
+    desc: '山里有位老神仙，他对我说……',
+    event: true,
+    ending: false,
+    unlocked: false,
+  },
 ]

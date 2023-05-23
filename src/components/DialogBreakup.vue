@@ -31,14 +31,14 @@ async function handleBreakup(choice: string) {
       if (Math.random() < 0.520) {
         store.commit('resetAccompanyCount');
         store.commit('resetRelationRound');
-        store.commit('updateAttribute', { attribute: 'charm', value: 5 })
-        await store.dispatch('typeWriter', '经过努力，你成功挽回了你们的感情。姜云升魅力+5！')
+        store.commit('updateAttribute', { attribute: 'charm', value: 20 })
+        await store.dispatch('typeWriter', '经过努力，你成功挽回了你们的感情。姜云升魅力+20！')
       } else {
         store.commit('setGirlfriend', null);
         store.commit('resetAccompanyCount');
         store.commit('resetRelationRound');
-        store.commit('updateAttribute', { attribute: 'charm', value: -5 })
-        await store.dispatch('typeWriter', '尽管你努力挽回，但你们最终还是分手了。姜云升魅力-5！')
+        store.commit('updateAttribute', { attribute: 'charm', value: -20 })
+        await store.dispatch('typeWriter', '尽管你努力挽回，但姜云升最终还是被甩了。姜云升魅力-20。')
       }
       break
     case '沉默':
@@ -51,7 +51,7 @@ async function handleBreakup(choice: string) {
         store.commit('setGirlfriend', null)
         store.commit('resetAccompanyCount')
         store.commit('resetRelationRound');
-        await store.dispatch('typeWriter', '你的沉默让你们之间的感情破裂。在命运的指引下，你被甩了。')
+        await store.dispatch('typeWriter', '你的沉默让你们之间的感情破裂。在命运的指引下，姜云升被甩了。')
       }
       break
     case '拜拜就拜拜':

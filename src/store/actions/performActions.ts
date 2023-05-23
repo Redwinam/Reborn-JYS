@@ -43,7 +43,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
       case '上课':
         context.commit('updateAttribute', { attribute: 'energy', value: -10 });
         context.commit('updateAttribute', { attribute: 'talent', value: 1 });
-        await context.dispatch('typeWriter', '姜云升参加了一堂课，才华+1。');
+        await context.dispatch('typeWriter', '姜云升参加了一堂课，才华+10。');
         break;
 
       case '赚钱':
@@ -58,9 +58,9 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           context.commit('updateAttribute', { attribute: 'charm', value: 1 });
           const toMessage = [];
           if (store.state.flirtCount) {
-            toMessage.push('姜云升又成功地搭讪了一个姑娘，魅力+1。');
+            toMessage.push('姜云升又成功地搭讪了一个姑娘，魅力+10。');
           } else {
-            toMessage.push('姜云升成功地搭讪了一个姑娘，魅力+1。');
+            toMessage.push('姜云升成功地搭讪了一个姑娘，魅力+10。');
           }
 
           context.commit('incrementFlirtCount');
