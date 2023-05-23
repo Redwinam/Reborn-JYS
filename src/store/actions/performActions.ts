@@ -12,7 +12,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
       await context.dispatch('typeWriter', '打算出发去……');
 
       // 第二年之后，并且姜云升有女朋友时，可能触发特殊事件
-      if (store.state.year > 1 && store.state.girlfriend) {
+      if (store.state.year > 2012 && store.state.girlfriend) {
         const existingAchievement = store.state.achievements.find(
           (ach) => ach.name === '放松，呼吸' && ach.unlockTerm === store.state.term
         );
