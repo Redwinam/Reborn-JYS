@@ -76,6 +76,7 @@
 
 <Popup title="写歌" :visible="showSongWritingDialog" @close="showSongWritingDialog = false"><popup-song-writing /></Popup>
 <Popup title="角色" :visible="showCharacterPopup" @close="showCharacterPopup = false"><popup-character /></Popup>
+<Popup title="物品" :visible="showItemsPopup" @close="showItemsPopup = false"><popup-items /></Popup>
 <Popup title="技能" :visible="showSkillsPopup" @close="showSkillsPopup = false"><popup-skills /></Popup>
 <Popup title="成就" :visible="showAchievementsPopup" @close="showAchievementsPopup = false"><popup-achievements /></Popup>
 
@@ -107,6 +108,7 @@ import { computed, ref, nextTick, watch } from 'vue'
 import Popup from '../components/Popup.vue'
 import PopupAchievements from '../components/PopupAchievements.vue'
 import PopupCharacter from '../components/PopupCharacter.vue'
+import PopupItems from '../components/PopupItems.vue'
 import PopupSkills from '../components/PopupSkills.vue'
 import PopupSongWriting from '../components/PopupSongWriting.vue'
 
