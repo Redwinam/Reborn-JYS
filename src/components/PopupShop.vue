@@ -42,7 +42,7 @@
   <div class="quantity-popup" v-if="showQuantityPopup">
     <input v-model.number="quantityToBuy" type="number" min="1">
     <button @click="confirmPurchase">确认购买</button>
-    <button @click="showQuantityPopup = false">取消</button>
+    <button class="cancel-button" @click="showQuantityPopup = false">取消</button>
   </div>
 </template>
 
@@ -170,16 +170,18 @@ const confirmPurchase = () => {
 }
 
 .shop-item .purchase-options .buttons-container .left-button {
-  padding: 2px 4px 2px 10px;
+  padding: 2px 6px 2px 8px;
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
   white-space: nowrap;
 }
 
 .shop-item .purchase-options .buttons-container .right-button {
-  padding: 2px 10px 2px 4px;
+  padding: 2px 6px 2px 6px;
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
+  background-color: #d3c6c4;
+  color: #1e2228;
 }
 
 
@@ -191,6 +193,7 @@ const confirmPurchase = () => {
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
+  border: 2px solid #1e2228;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 10;
 }
@@ -198,6 +201,22 @@ const confirmPurchase = () => {
 .quantity-popup input {
   width: 50px;
   margin-right: 10px;
+  padding: 6px;
+  border: 2px solid #1e2228;
 }
 
+.quantity-popup button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #1e2228;
+  color: #d3c6c4;
+  font-size: 0.8rem;
+  margin-right: 10px;
+}
+
+.quantity-popup button.cancel-button {
+  background-color: #d3c6c4;
+  color: #1e2228;
+}
 </style>
