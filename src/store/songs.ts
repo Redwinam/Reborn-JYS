@@ -1,5 +1,4 @@
 export interface Song {
-  id: string
   title: string
   conditions: {
     [key: string]: number | boolean
@@ -8,11 +7,11 @@ export interface Song {
   effects: {
     [key: string]: { min: number; max: number }
   }
+  lyrics: string
 }
 
 export const songLibrary: Song[] = [
     {
-      id: 'romanticism',
       title: '浪漫主义',
       conditions: {
         charm: 99,
@@ -24,23 +23,35 @@ export const songLibrary: Song[] = [
         charm: { min: 3, max: 5 }, // 魅力值随机增加3到5
         talent: { min: 1, max: 3 }, // 才华值随机增加1到3
       },
+      lyrics: '大概我承受过的一切，都是为如今和你遇见。'
     },
     {
-      id: 'romanticism-2.0',
       title: '浪漫主义2.0',
       conditions: {
         charm: 100,
         talent: 100,
-        
+        energy: 90
       },
       cost: 500, // 写歌所需金钱
       effects: {
         charm: { min: 3, max: 5 }, // 魅力值随机增加3到5
         talent: { min: 1, max: 3 }, // 才华值随机增加1到3
       },
+      lyrics: '你听我说，只要是你，都OK的。'
     },
     {
-      id: 'lonely-noodle-shop',
+      title: '真没睡',
+      conditions: {
+        talent: 100,
+      },
+      cost: 500, // 写歌所需金钱
+      effects: {
+        charm: { min: 3, max: 5 }, // 魅力值随机增加3到5
+        talent: { min: 1, max: 3 }, // 才华值随机增加1到3
+      },
+      lyrics: '你衣服包包给你换新的，先别动手，先好好听着！'
+    },
+    {
       title: '孤独面店',
       conditions: {
         breakups: 2,
@@ -51,6 +62,7 @@ export const songLibrary: Song[] = [
       effects: {
         mood: { min: -5, max: -2 }, // 心情值随机减少2到5
       },
+      lyrics: '如果这是孤独，那我就敬孤独万岁。'
     },
     // 其他歌曲
 ]

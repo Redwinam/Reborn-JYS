@@ -1,6 +1,6 @@
 <template>
 <div class="song-container">
-  <div v-for="song in availableSongs" :key="song.id" class="song">
+  <div v-for="song in availableSongs" :key="song.title" class="song">
     <h3>{{ song.title }}</h3>
     <p>条件：</p>
     <ul>
@@ -33,6 +33,15 @@ function isSongAvailable(song: Song) {
       return false
     }
   }
+  switch (song.title) {
+    case '浪漫主义':
+      if (store.state.attributes.popularity < 100) {
+        return false
+      }
+      break
+  }
+
+
   return true
 }
 
@@ -46,13 +55,13 @@ const availableSongs = computed(() => {
 })
 
 function writeSong(stage: string, song: Song) {
-  if (!songStages[song.id]) {
-    songStages[song.id] = {
+  if (!songStages[song.title]) {
+    songStages[song.title] = {
       completedStage: null,
     }
   }
 
-  const currentStage = songStages[song.id]
+  const currentStage = songStages[song.title]
 
   if (stage === 'demo' && currentStage.completedStage === null) {
     // 处理 Demo 阶段逻辑

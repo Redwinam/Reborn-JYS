@@ -37,5 +37,5 @@ export const attributeNames: AttributeNames = {
   skill: '技能',
   energy: '体力',
   mood: '心情',
-  divine: '神性',
+  divine: '？',
 }
