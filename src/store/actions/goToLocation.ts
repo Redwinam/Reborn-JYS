@@ -95,6 +95,12 @@ export async function goToLocation(context: {
     case '买东西':
       showShopPopup.value = true;
       break;
+
+
+    case '上山修行':
+      // 姜云升用麦克风大锤敲了敲，对敌人造成了巨大的物理攻击。
+      // 姜云升用麦克风大锤唱了一首歌，对敌人造成了巨大的精神攻击。
+      
       
   }
 }  

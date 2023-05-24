@@ -142,9 +142,6 @@ const mutations = {
       console.error('Cannot update popularity directly, update red or black instead')
     } else if (attribute === 'red') {
       state.attributes.popularity.red += value
-      // if (state.attributes.popularity.red > 100) {
-      //   state.attributes.popularity.red = 100
-      // }
     } else if (attribute === 'black') {
       state.attributes.popularity.black += value
     } else if (attribute === 'gaming' || attribute === 'freestyle') {
@@ -309,6 +306,29 @@ const actions = {
     if ( !Math.floor((store.state.round - 16) % 36) ) {
       context.dispatch('specialEvent', '生日快乐');
     }
+
+    // 第三年2月的时候，触发继承家业任务
+    if (store.state.round === 3 * 36 + 2) {
+      context.dispatch('specialEvent', '继承家业');
+    }
+
+
+    if ((store.state.attributes.popularity.red + store.state.attributes.popularity.black) > 1200 && store.state.attributes.popularity.black > 1000) {
+      if (!store.state.achievements.find((ach) => ach.name === '我所拥有的人气，又是不是真的？' && ach.unlocked === true)) {
+        context.commit('unlockAchievement', '我所拥有的人气，又是不是真的？');
+        context.dispatch('typeWriter', '人气>1200，黑人气>1000。解锁成就【我所拥有的人气，又是不是真的？】')
+      }
+    }
+
+
+
+
+
+
+
+
+
+
 
     if (state.round > state.totalRounds) {
       context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '无法定义的结局' });

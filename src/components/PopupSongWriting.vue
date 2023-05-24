@@ -1,18 +1,17 @@
 <template>
-
-<p>{{ textBoxMessage }}</p>
-<div v-for="song in availableSongs" :key="song.id" class="song">
-  <h3>{{ song.title }}</h3>
-  <p>条件：</p>
-  <ul>
-    <li v-for="(value, key) in song.conditions" :key="key">{{ key }}: {{ value }}</li>
-  </ul>
-  <p>阶段：</p>
-  <button @click="writeSong('demo', song)" :disabled="!song.isAvailable">Demo</button>
-  <button @click="writeSong('record', song)" :disabled="!song.isAvailable">录歌</button>
-  <button @click="writeSong('release', song)" :disabled="!song.isAvailable">上线</button>
+<div class="song-container">
+  <div v-for="song in availableSongs" :key="song.id" class="song">
+    <h3>{{ song.title }}</h3>
+    <p>条件：</p>
+    <ul>
+      <li v-for="(value, key) in song.conditions" :key="key">{{ key }}: {{ value }}</li>
+    </ul>
+    <p>阶段：</p>
+    <button @click="writeSong('demo', song)" :disabled="!song.isAvailable">Demo</button>
+    <button @click="writeSong('record', song)" :disabled="!song.isAvailable">录歌</button>
+    <button @click="writeSong('release', song)" :disabled="!song.isAvailable">上线</button>
+  </div>
 </div>
-
 </template>
 
 <script setup lang="ts">
@@ -70,7 +69,8 @@ function writeSong(stage: string, song: Song) {
       currentStage.completedStage = 'record'
     } else {
       // 金钱不足的提示
-      textBoxMessage.value = '金钱不足，无法录制歌曲。'
+      // textBoxMessage.value = '金钱不足，无法录制歌曲。'
+      store.commit('typeWriterPopup', '金钱不足，无法录制歌曲。')
     }
   } else if (stage === 'release' && currentStage.completedStage === 'record') {
     // 处理上线阶段逻辑
@@ -81,24 +81,18 @@ function writeSong(stage: string, song: Song) {
     }
     // ...
     currentStage.completedStage = 'release'
-    textBoxMessage.value = `歌曲《${song.title}》已经上线，获得了 ${song.effects.popularity} 点人气值！`
+    store.commit('typeWriterPopup', `歌曲《${song.title}》已经上线，获得了 ${song.effects.popularity} 点人气值！`)
   } else {
     // 无法执行当前阶段的提示
-    textBoxMessage.value = '无法执行当前阶段，请按顺序完成写歌任务。'
+    store.commit('typeWriterPopup', '无法执行当前阶段，请按顺序完成写歌任务。')
   }
 }
 
 </script>
 
 <style scoped>
-.popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 16px;
-  border: 1px solid black;
-  z-index: 1;
+.song-container {
+  height: 75vh;
+  overflow-y: auto;
 }
 </style>
