@@ -116,6 +116,55 @@ const buyGold = () => {
   margin: 0.5rem 0;
 }
 
+.attributes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: "Arial", sans-serif;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.attributes-container > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.attributes-container > div:last-child {
+  border-bottom: none;
+}
+
+.attributes-container span {
+  font-weight: bold;
+  color: #333;
+}
+
+.button_buyGold {
+  background-color: #964742;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 0.8em;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.button_buyGold:hover {
+  background-color: #752730;
+}
+
+.weak {
+  color: #964742;
+  font-weight: bold;
+}
+
 .note-message {
   font-size: 0.8em;
   color: #666;

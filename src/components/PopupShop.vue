@@ -1,27 +1,53 @@
 <template>
-  <h2>特殊装备</h2>
-  <div class="shop-list">
-    <div class="shop-item" v-for="item in specialItems" :key="item.name">
-      <p>{{ item.name }}</p>
-      <span>¥ {{ item.price }}</span>
-      <span class="item-note">{{ item.desc }}</span>
-      <button @click="purchaseItem(item.name, 1)" :disabled="inventory[item.name]">{{ inventory[item.name] ? '已拥有' : '购买' }}</button>
+  <div class="shop-container">
+    <h3>特殊装备</h3>
+    <div class="shop-lists">
+      <div class="shop-list" v-for="list in [specialItemsLeft, specialItemsRight]" :key="list[0]?.name">
+        <div class="shop-item" v-for="item in list" :key="item.name">
+          <div class="item-info">
+            <p>{{ item.name }}</p>
+            <span class="item-note">{{ item.desc }}</span>
+          </div>
+          <div class="purchase-options">
+            <span>¥ {{ item.price }}</span>
+            <div class="buttons-container">
+              <button class="only-button" @click="purchaseItem(item.name, 1)" :disabled="inventory[item.name]">{{ inventory[item.name] ? '已拥有' : '购买' }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <h3>普通物品</h3>
+    <div class="shop-lists">
+      <div class="shop-list" v-for="list in [normalItemsLeft, normalItemsRight]" :key="list[0]?.name">
+        <div class="shop-item" v-for="item in list" :key="item.name">
+          <div class="item-info">
+            <p>{{ item.name }}</p>
+            <span class="item-note">{{ item.desc }}</span>
+          </div>
+          <div class="purchase-options">
+            <span>¥ {{ item.price }}</span>
+            <div class="buttons-container">
+              <button class="left-button" @click="purchaseItem(item.name, 1)">购买</button>
+              <button class="right-button" @click="showQuantityPopup = true">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <h2>普通物品</h2>
-  <div class="shop-list">
-    <div class="shop-item" v-for="item in normalItems" :key="item.name">
-      <p>{{ item.name }}</p>
-      <span>¥ {{ item.price }}</span>
-      <span class="item-note">{{ item.desc }}</span>
-      <button @click="purchaseItem(item.name, 1)">购买</button>
-    </div>
+  <div class="quantity-popup" v-if="showQuantityPopup">
+    <input v-model.number="quantityToBuy" type="number" min="1">
+    <button @click="confirmPurchase">确认购买</button>
+    <button @click="showQuantityPopup = false">取消</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { itemsList } from '../store/actions/purchaseItem'
 
@@ -29,51 +55,149 @@ const store = useStore()
 
 const specialItems = computed(() => itemsList.filter(item => item.isSpecial));
 const normalItems = computed(() => itemsList.filter(item => !item.isSpecial));
+
+const splitArrayInHalf = (arr: Array<any>) => {
+  const mid = Math.ceil(arr.length / 2);
+  const left = arr.slice(0, mid);
+  const right = arr.slice(mid);
+  return [left, right];
+};
+
+const [specialItemsLeft, specialItemsRight] = splitArrayInHalf(specialItems.value);
+const [normalItemsLeft, normalItemsRight] = splitArrayInHalf(normalItems.value);
+
 const inventory = computed(() => store.state.inventory);
 
 const purchaseItem = (itemName: string, quantity: number) => {
   store.dispatch('purchaseItem', { itemName, quantity });
 }
+
+let showQuantityPopup = ref(false);
+let quantityToBuy = ref(1);
+
+const confirmPurchase = () => {
+  store.dispatch('purchaseItem', { itemName: 'item name', quantity: quantityToBuy.value });
+  showQuantityPopup.value = false;
+  quantityToBuy.value = 1;
+}
+
 </script>
 
 
 <style scoped>
-.shop-list {
+.shop-container {
+  height: 75vh;
+  overflow-y: auto;
+}
+
+.shop-lists {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  height: 100%;
+  justify-content: space-between;
+}
+
+.shop-list {
+  width: 49%;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  padding: 0;
+  line-height: 1;
 }
 
 .shop-item {
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  width: 30%;
-  border: 1px solid black;
-  border-radius: 10px;
-  margin: 10px;
-  padding: 10px;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
 }
 
-.shop-item p {
+.shop-item:last-child {
+  border-bottom: none;
+}
+
+.shop-item .item-info {
+  text-align: left;
+}
+
+.shop-item .item-info p {
   margin: 0;
-}
-
-.shop-item p span {
+  line-height: 1.2;
   font-size: 0.8rem;
+  font-weight: bold;
 }
 
-.item-note {
+.shop-item .item-info .item-note {
+  margin: 0;
+  font-size: 0.7rem;
+}
+
+.shop-item .purchase-options {
+  display: flex;
+  flex-direction: column;  /* stack price and buttons vertically */
+  align-items: flex-end;  /* align price and buttons to the right */
+  justify-content: space-between; /* distribute price and buttons vertically */
+}
+
+.shop-item .purchase-options span {
+  white-space: nowrap;
   font-size: 0.8rem;
+  line-height: 1.2;
+  font-weight: bold;
 }
 
-.shop-item button {
-  padding: 2px 10px;
-  font-size: 0.9rem;
+.shop-item .purchase-options .buttons-container {
+  display: flex;
+}
+
+.shop-item .purchase-options .buttons-container button {
+  padding: 2px 8px;
+  font-size: 0.8rem;
+  border: none;
+  color: #d3c6c4;
+  background-color: #1e2228;
+  border-radius: 0;
+}
+
+.shop-item .purchase-options .buttons-container .only-button {
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.shop-item .purchase-options .buttons-container .only-button:disabled {
+  background-color: #d3c6c4;
+  color: #1e2228
+}
+
+.shop-item .purchase-options .buttons-container .left-button {
+  padding: 2px 4px 2px 10px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  white-space: nowrap;
+}
+
+.shop-item .purchase-options .buttons-container .right-button {
+  padding: 2px 10px 2px 4px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+
+.quantity-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.quantity-popup input {
+  width: 50px;
+  margin-right: 10px;
 }
 
 </style>

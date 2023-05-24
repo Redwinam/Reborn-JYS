@@ -121,7 +121,7 @@
 
 .textbox .text-history-button {
   position: absolute;
-  padding: 3px 4px 2px 8px;
+  padding: 2px 4px 2px 8px;
   border-radius: 0;
   border-top-left-radius: 4px;
   color: #d3c6c4;
@@ -158,18 +158,6 @@
 .action-dao {  background: url('@/assets/button_Dao.png') center / contain no-repeat;   width: 4.9vh;  height: 9vh;  top: 27%;  left: 80%; }
 .action-underground {  background: url('@/assets/button_Underground.png') center / contain no-repeat;  width: 5.3vh;  height: 13.6vh;  top: 72%;  left: 12%; }
 
-.events,
-.achievements {
-  width: 100%;
-
-  display: none;
-}
-
-.events ul,
-.achievements ul {
-  padding-left: 16px;
-}
-
 /* Styling for pop-ups */
 .popup {
   position: fixed;
@@ -182,31 +170,6 @@
   z-index: 1;
 }
 
-.values-popup {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.values-popup .attribute {
-  margin-bottom: 8px;
-}
-
-.achievements-popup ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.achievements-popup li {
-  margin-bottom: 8px;
-}
-
-/* Styling for pop-up buttons */
-.show-values-button,
-.show-achievements-button {
-  margin-bottom: 16px;
-}
 footer {
   position: absolute;
   bottom: 0;
@@ -230,4 +193,5 @@ footer button {
   font-size: 0.9rem;
   height: 75vh;
   overflow-y: scroll;
+  text-align: left;
 }

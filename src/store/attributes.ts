@@ -35,8 +35,6 @@ export const attributeNames: AttributeNames = {
   popularity: '人气',
   money: '金钱',
   skill: '技能',
-  freestyleskill: 'Freestyle',
-  gamingSkill: '电竞',
   energy: '体力',
   mood: '心情',
   divine: '神性',

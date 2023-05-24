@@ -88,13 +88,13 @@
 
 </div>
 
-<div class="popup" v-if="gameEnded" >
+<Dialog :visible="gameEnded" >
   <h2>游戏结束</h2>
   <p>{{ specialEndingAchievement.desc }}</p>
   <p>您已获得结局成就：{{ specialEndingAchievement.name }}</p>
   <button @click="restartGame">重新开始</button>
   <p>（重启后保留已获得的成就）</p>
-</div>
+</Dialog>
 
 </div>
 
@@ -184,19 +184,7 @@ const currentPeriod = computed(() => {
 // loadGame();
 
 function arabicToChinese(number: number): string {
-  const chineseNumbers = [
-    '零',
-    '一',
-    '二',
-    '三',
-    '四',
-    '五',
-    '六',
-    '七',
-    '八',
-    '九',
-    '十',
-  ];
+  const chineseNumbers = ['零','一','二','三','四','五','六','七','八','九','十'];
   if (number <= 10) {
     return chineseNumbers[number];
   } else {

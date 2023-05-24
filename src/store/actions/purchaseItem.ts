@@ -19,9 +19,14 @@ export interface Inventory {
 }
 
 export const itemsList = [
-  { name: '麦克风大锤', price: 200, isSpecial: true, desc: '麦克风大锤，可以用来打人，也可以用来唱歌' },
-  { name: '恶魔「S」之链', price: 300, isSpecial: true, desc: '恶魔「S」之链，「S」是姜云升的「升」' },
-  // Add more special items...
+  //麦克风大锤 恶魔「S」之链 反穿之甲、虚无之裤、黄色卡车、巴黎之靴
+  { name: '麦克风大锤', price: 1000, isSpecial: true, desc: '麦克风大锤，可以用来打人，也可以用来唱歌' }, // 物理攻击
+  { name: '恶魔「S」之链', price: 5000, isSpecial: true, desc: '恶魔「S」之链，「S」是姜云升的「升」' }, // 精神攻击
+  { name: '反穿之甲', price: 10000, isSpecial: true, desc: '打个响指，你就会忘了这一切' }, // 物理防御
+  { name: '虚无之裤', price: 0, isSpecial: true, desc: '该知道的都知道了，不知道的慢慢了解' }, // 精神防御
+  { name: '巴黎之靴', price: 15000, isSpecial: true, desc: '穿上这双跳跳鞋，再也无法抵挡我在舞台上刷步数' }, // 敏捷度
+  { name: '黄色卡车', price: 2800000, isSpecial: true, desc: '黑夜中，看星空，飘着一个个的梦' }, // 治愈
+
   { name: '玫瑰花', price: 10, isSpecial: false, desc: '虽然她送了我玫瑰花！……' },
   { name: '皮卡丘玩偶', price: 15, isSpecial: false, desc: '黄皮耗子 + 1' },
   // 发带、手铐、煊赫门、书、墨镜
@@ -30,7 +35,8 @@ export const itemsList = [
   { name: '煊赫门', price: 50, isSpecial: false, desc: '我总在抽烟，我知道伤肺' },
   { name: '书', price: 100, isSpecial: false, desc: '可以不上学，但不能不读书' },
   { name: '墨镜', price: 150, isSpecial: false, desc: '买了墨镜记得再去剪头发噢！' },
-  // Add more normal items...
+
+  // 西装、灰裤子
 ];
 
 export async function purchaseItem(context: { commit: Commit, dispatch: Function }, payload: PurchaseItemPayload) {
