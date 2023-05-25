@@ -69,7 +69,7 @@ export async function eatPackedFood(context: {
   const selectedFood = context.state.unlockedFoods.find((unlockedFood: Food) => unlockedFood.name === food);
     if (selectedFood) {
       context.commit('updateAttribute', { attribute: 'energy', value: selectedFood.energy * quantity });
-      context.commit('decreaseInventory', { food, quantity } );
+      context.commit('decreaseInventory', { itemName: food, quantity } );
       await context.dispatch('typeWriterPopup', `姜云升吃掉了${quantity}份打包的${food}，摸了摸腹肌。`);
     } else {
       await context.dispatch('typeWriterPopup', '无法在物品栏中找到这份食物。');

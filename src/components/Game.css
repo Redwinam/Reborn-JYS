@@ -202,3 +202,33 @@ footer button {
   padding: 0.25rem 0;
   border-bottom: 1px dashed #4c4d55;
 }
+
+.textHistory p:last-child {
+  border-bottom: none;
+}
+
+.game-ended-dialog .desc {
+  font-size: 0.9rem;
+  margin: 1rem auto;
+  width: 80%;
+  color: #4c4d55;
+}
+
+.game-ended-dialog button {
+  padding: 0.4em 1rem;
+  border: 2px solid #1e2228;
+  background-color: #9d4842;
+  color: #fff;
+}
+
+.game-ended-dialog .achievement {
+  font-size: 0.8rem;
+  margin: 1rem 0 0;
+  color: #4c4d55;
+}
+
+.game-ended-dialog .hint {
+  font-size: 0.7rem;
+  color: #666;
+  margin: 0.2rem 0 1rem;
+}

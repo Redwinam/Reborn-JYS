@@ -30,31 +30,28 @@
     <p id="textboxText">今天你打算……</p>
     <button @click="showTextHistoryPopup = true" class="text-history-button">文本记录</button>
   </div>
-  
 
   <div class="actions">
     
-    <button @click="performAction('回家')" class="action-button action-back-home" v-if="!isAtHome && !isGoingOut"></button>
-    <button @click="performAction('出去鬼混')" class="action-button action-hang-out" v-if="!isAtHome && !isGoingOut"></button>
-    <button @click="performAction('外出')" class="action-button action-go-out" v-if="!isAtHome && !isGoingOut"></button>
-    <button @click="performAction('赚钱')" class="action-button action-make-money" v-if="!isAtHome && !isGoingOut"></button>
+    <button @click="performAction('回家')" class="action-button action-back-home" v-if="!isAtHome && !isGoingOut" :disabled="isTypeing"></button>
+    <button @click="performAction('出去鬼混')" class="action-button action-hang-out" v-if="!isAtHome && !isGoingOut" :disabled="isTypeing"></button>
+    <button @click="performAction('外出')" class="action-button action-go-out" v-if="!isAtHome && !isGoingOut" :disabled="isTypeing"></button>
+    <button @click="performAction('赚钱')" class="action-button action-make-money" v-if="!isAtHome && !isGoingOut" :disabled="isTypeing"></button>
 
-    <button @click="performAction('睡觉休息')" class="action-button action-sleep-rest" v-if="isAtHome"></button>
-    <button @click="performAction('开直播')" class="action-button action-onlive" v-if="isAtHome"></button>
-    <button @click="performAction('打游戏')" class="action-button action-gaming" v-if="isAtHome"></button>
-    <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome"></button>
-    <button v-if="isAtHome" @click="isAtHome = false; typewriter('今天你打算……')" class="action-button action-back"></button>
+    <button @click="performAction('睡觉休息')" class="action-button action-sleep-rest" v-if="isAtHome" :disabled="isTypeing"></button>
+    <button @click="performAction('开直播')" class="action-button action-onlive" v-if="isAtHome" :disabled="isTypeing"></button>
+    <button @click="performAction('打游戏')" class="action-button action-gaming" v-if="isAtHome" :disabled="isTypeing"></button>
+    <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome" :disabled="isTypeing"></button>
+    <button v-if="isAtHome" @click="isAtHome = false; typewriter('今天你打算……')" class="action-button action-back" :disabled="isTypeing"></button>
 
-    <button @click="goToLocation('去吃点东西')" class="action-button action-eat" v-if="isGoingOut"></button>
-    <button @click="goToLocation('去喝点东西')" class="action-button action-drink" v-if="isGoingOut"></button>
-    <button @click="goToLocation('买东西')" class="action-button action-shopping" v-if="isGoingOut"></button>
-    <button @click="goToLocation('去剪头发')" class="action-button action-cut-hair" v-if="isGoingOut"></button>
-    <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut"></button>
-    <button @click="goToLocation('Underground')" class="action-button action-underground" v-if="isGoingOut"></button>
-    <!-- <button @click="performAction('去吃点东西')" class="action-button action-eat" v-if="isGoingOut">去吃点东西</button> -->
-    <button v-if="isGoingOut" @click="isGoingOut = false; typewriter('今天你打算……')" class="action-button action-back going-out-back"></button>
-
-    <button v-if="store.state.girlfriend && !isGoingOut" @click="accompanyGirlfriend" class="action-button action-accompany-girlfriend"></button>
+    <button @click="goToLocation('去吃点东西')" class="action-button action-eat" v-if="isGoingOut" :disabled="isTypeing"></button>
+    <button @click="goToLocation('去喝点东西')" class="action-button action-drink" v-if="isGoingOut" :disabled="isTypeing"></button>
+    <button @click="goToLocation('买东西')" class="action-button action-shopping" v-if="isGoingOut" :disabled="isTypeing"></button>
+    <button @click="goToLocation('去剪头发')" class="action-button action-cut-hair" v-if="isGoingOut" :disabled="isTypeing"></button>
+    <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut" :disabled="isTypeing"></button>
+    <button @click="goToLocation('Underground')" class="action-button action-underground" v-if="isGoingOut" :disabled="isTypeing"></button>
+    <button v-if="isGoingOut" @click="isGoingOut = false; typewriter('今天你打算……')" class="action-button action-back going-out-back" :disabled="isTypeing"></button>
+    <button v-if="store.state.girlfriend && !isGoingOut" @click="accompanyGirlfriend" class="action-button action-accompany-girlfriend" :disabled="isTypeing"></button>
 
   </div>
 
@@ -88,12 +85,12 @@
 
 </div>
 
-<Dialog :visible="gameEnded" >
+<Dialog :visible="gameEnded" class="game-ended-dialog">
   <h2>游戏结束</h2>
-  <p>{{ specialEndingAchievement.desc }}</p>
-  <p>您已获得结局成就：{{ specialEndingAchievement.name }}</p>
+  <p class="desc">{{ specialEndingAchievement.desc }}</p>
   <button @click="restartGame">重新开始</button>
-  <p>（重启后保留已获得的成就）</p>
+  <p class="achievement">您已获得结局成就：【{{ specialEndingAchievement.name }}】</p>
+  <p class="hint">（重启后保留已获得的成就）</p>
 </Dialog>
 
 </div>
@@ -125,7 +122,8 @@ import { attributeNames } from '../store/attributes'
 
 import { isAtHome, isGoingOut, 
   showBreakupDialog, showEventDialog, showSongWritingDialog,
-  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog
+  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog,
+  isTypeing
 } from './composables/gameRefs';
 
 

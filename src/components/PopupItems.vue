@@ -3,8 +3,9 @@
     <ul class="inventory">
       <li class="item" v-for="(quantity, name) in inventory" :key="name">
         <div class="item-info">
-          <h4>{{ name }}</h4>
-          <p> {{ quantity.quantity }} {{ getQuantifier(String(name)) }}</p>
+          <div>
+            <h4>{{ name }} <span> × {{ quantity.quantity }} {{ quantity.isFood? "份" : getQuantifier(String(name)) }}</span></h4>
+          </div>
           <button v-if="quantity.isFood" @click="eatPackedFood(String(name))">吃掉</button>
         </div>
       </li>
@@ -44,9 +45,11 @@ const eatPackedFood = (food: string) => {
   transition: all 0.3s ease-in-out;
 }
 
-.item:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+.item-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .item-info h4 {
@@ -55,9 +58,10 @@ const eatPackedFood = (food: string) => {
   font-weight: bold;
 }
 
-.item-info p {
+.item-info h4 span {
   margin: 0;
   font-size: 14px;
+  font-weight: normal;
 }
 
 </style>

@@ -10,8 +10,8 @@
             <h4 v-if="achievement.unlocked || term > 1">{{ achievement.name }}</h4>
             <h4 v-else>?</h4>
             <p v-if="achievement.unlocked">{{ achievement.desc }}</p>
-            <p v-else class="grey-out">未解锁</p>
-            <p v-if="achievement.unlocked && achievement.unlockTerm && term > 1"> 解锁于第{{ achievement.unlockTerm }}周目</p>
+            <p v-else class="grey-out">（未解锁）</p>
+            <p v-if="achievement.unlocked && achievement.unlockTerm && term > 1" class="grey-out" >（解锁于第{{ achievement.unlockTerm }}周目）</p>
           </div>
         </li>
       </ul>

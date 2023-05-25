@@ -77,5 +77,6 @@ export async function purchaseItem(context: { commit: Commit, dispatch: Function
 export const getQuantifier = (name: string) => {
   const item = itemsList.find(item => item.name === name)
   if (!item) return ''
+  if (!item.quantifier) return '件'
   return item.quantifier
 }

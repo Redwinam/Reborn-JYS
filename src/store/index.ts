@@ -252,7 +252,6 @@ const mutations = {
     }
   },
 
-
   setSpecialEventDetails(state: State, specialEventDetails: { name: string; intro: string; options: string[]; }) {
     state.specialEventDetails = specialEventDetails;
   },

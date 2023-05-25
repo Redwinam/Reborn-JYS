@@ -1,7 +1,10 @@
 import { Commit } from 'vuex';
 import TypeIt from 'typeit';
 
+import { isTypeing } from '../../components/composables/gameRefs';
+
 export async function typeWriter(context: { commit: Commit }, message: string | string[]) {
+  isTypeing.value = true;
   return new Promise<void>((resolve) => {
     context.commit('addTextToHistory', message);
     new TypeIt("#textboxText", {
@@ -23,6 +26,7 @@ export async function typeWriter(context: { commit: Commit }, message: string | 
         instance.options.cursor = false;
         instance.destroy();
         resolve();
+        isTypeing.value = false;
       },
     }).go();
   });
