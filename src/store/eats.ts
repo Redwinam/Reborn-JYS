@@ -37,7 +37,7 @@ export async function eatFood(context: {
     if (context.state.attributes.money >= selectedFood.cost) {
       context.commit('updateAttribute', { attribute: 'money', value: -selectedFood.cost });
       context.commit('updateAttribute', { attribute: 'energy', value: selectedFood.energy });
-      await context.dispatch('typeWriterPopup', '姜云升吃了一顿' + selectedFood.name + '，摸了摸肚子。');
+      await context.dispatch('typeWriterPopup', '姜云升吃了一顿' + selectedFood.name + '，摸了摸腹肌。');
     } else {
       await context.dispatch('typeWriterPopup', '抱歉，姜云升的钱不够，吃不起' + selectedFood.name + '。');
     }
@@ -49,18 +49,31 @@ export async function packFood(context: {
 }, payload: {food: string, quantity: number}) {
   const { food, quantity } = payload;
   const selectedFood = context.state.unlockedFoods.find((unlockedFood: Food) => unlockedFood.name === food);
-  console.log(selectedFood);
   if (selectedFood) {
     if (context.state.attributes.money >= selectedFood.cost * quantity) {
       context.commit('updateAttribute', { attribute: 'money', value: -selectedFood.cost * quantity });
       context.commit('packFood', { food, quantity });
-      await context.dispatch('typeWriterPopup', '姜云升打包了' + quantity + '份' + selectedFood.name + '，很开心。');
+      await context.dispatch('typeWriterPopup', '姜云升打包了' + quantity + '份' + selectedFood.name + '，真能吃啊。');
     } else {
       await context.dispatch('typeWriterPopup', '抱歉，姜云升的钱不够，买不起' + quantity + '份' + selectedFood.name + '。');
     }
   } else {
     await context.dispatch('typeWriterPopup', '无法找到指定的食物。');
   }
+}
+
+export async function eatPackedFood(context: {
+  state: any; commit: Commit, dispatch: Function
+}, payload: {food: string, quantity: number}) {
+  const { food, quantity } = payload;
+  const selectedFood = context.state.unlockedFoods.find((unlockedFood: Food) => unlockedFood.name === food);
+    if (selectedFood) {
+      context.commit('updateAttribute', { attribute: 'energy', value: selectedFood.energy * quantity });
+      context.commit('decreaseInventory', { food, quantity } );
+      await context.dispatch('typeWriterPopup', `姜云升吃掉了${quantity}份打包的${food}，摸了摸腹肌。`);
+    } else {
+      await context.dispatch('typeWriterPopup', '无法在物品栏中找到这份食物。');
+    }
 }
 
 export const allDrinks: Drink[] = [
@@ -99,7 +112,7 @@ export async function drinkDrink(context: {
       if (amount == 2) {
         message += '，享受了第二杯半价的优惠';
       }
-      message += '，摸了摸肚子。';
+      message += '，摸了摸腹肌。';
       await context.dispatch('typeWriterPopup', message);
     } else {
       await context.dispatch('typeWriterPopup', '抱歉，姜云升的钱不够，喝不起' + amount + '杯' + selectedDrink.name + '。');

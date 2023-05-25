@@ -1,13 +1,19 @@
 <template>
   <div class="food-list">
     <div class="food-item" v-for="food in unlockedFoods" :key="food.id">
-      <p>{{ food.name }}</p>
-      <span>¥ {{ food.cost }}</span>
-      <span class="food-note">饱食度：{{ food.energy }}</span>
+      <div class="item-info">
+        <div class="food-meta">
+          <p>{{ food.name }}</p>
+          <span>¥{{ food.cost }}</span>
+        </div>
+        <span class="food-note">饱食度+{{food.energy}}</span>
+      </div>
       <div class="select-buttons">
-        <button @click="eatFood(food.name)">堂食</button>
-        <button class="left-button" @click="packFood(food.name,1 )">打包</button>
-        <button class="right-button" @click="foodToPack = food.name; showQuantityPopup = true">+</button>
+        <div class="buttons-container">
+          <button class="round-button" @click="eatFood(food.name)">堂食</button>
+          <button class="left-button" @click="packFood(food.name,1 )">打包</button>
+          <button class="right-button" @click="foodToPack = food.name; showQuantityPopup = true">+</button>
+        </div>
       </div>
     </div>
   </div>
@@ -32,10 +38,8 @@ const eatFood = (food: string) => {
 }
 
 const packFood = (food: string, quantity: number) => {
-  store.dispatch('packFood', {food, quantity: 1});
+  store.dispatch('packFood', {food, quantity});
 }
-
-
 
 let showQuantityPopup = ref(false);
 let foodToPack = ref('');
@@ -54,41 +58,55 @@ const confirmPurchase = () => {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
-  height: 100%;
+  max-height: 75vh;
+  overflow-y: auto;
 }
 
 .food-item {
+  flex: 0 0 calc(33.33% - 40px); 
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  width: 30%;
-  height: 30%;
   border: 1px solid black;
   border-radius: 10px;
-  margin: 10px;
   padding: 10px;
+  margin-bottom: 10px;
+
 }
 
-.food-item p {
+.food-item .item-info {
+  width: 100%;
+  line-height: 24px;
+}
+
+.food-item .item-info p {
   margin: 0;
+  line-height: 1.2;
+  font-size: 0.8rem;
+  font-weight: bold;
 }
 
-.food-item p span {
-  font-size: 0.8rem;
+.food-item .food-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .food-note {
-  font-size: 0.8rem;
+  font-size: 0.76rem;
+  line-height: 16px;
+
 }
 
 .food-item .select-buttons {
   display: flex;
   justify-content: space-around;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .food-item .select-buttons button {
@@ -96,4 +114,97 @@ const confirmPurchase = () => {
   font-size: 0.9rem;
 }
 
+.food-item .item-info {
+  text-align: left;
+}
+
+.food-item .item-info .item-note {
+  margin: 0;
+  font-size: 0.7rem;
+}
+
+.food-item .select-buttons {
+  display: flex;
+  flex-direction: column;  /* stack price and buttons vertically */
+  align-items: flex-end;  /* align price and buttons to the right */
+  justify-content: space-between; /* distribute price and buttons vertically */
+}
+
+.food-item .select-buttons span {
+  white-space: nowrap;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  font-weight: bold;
+}
+
+.food-item .select-buttons .buttons-container {
+  display: flex;
+}
+
+.food-item .select-buttons .buttons-container button {
+  padding: 2px 8px;
+  font-size: 0.8rem;
+  border: none;
+  color: #d3c6c4;
+  background-color: #1e2228;
+  border-radius: 0;
+}
+
+.food-item .select-buttons .buttons-container .round-button {
+  border-radius: 6px;
+  white-space: nowrap;
+  margin-right: 6px;
+}
+
+.food-item .select-buttons .buttons-container .left-button {
+  padding: 2px 6px 2px 8px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  white-space: nowrap;
+}
+
+.food-item .select-buttons .buttons-container .right-button {
+  padding: 2px 6px 2px 6px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  background-color: #d3c6c4;
+  color: #1e2228;
+}
+
+
+
+.quantity-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #1e2228;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.quantity-popup input {
+  width: 50px;
+  margin-right: 10px;
+  padding: 6px;
+  border: 2px solid #1e2228;
+}
+
+.quantity-popup button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #1e2228;
+  color: #d3c6c4;
+  font-size: 0.8rem;
+  margin-right: 10px;
+}
+
+.quantity-popup button.cancel-button {
+  background-color: #d3c6c4;
+  color: #1e2228;
+}
 </style>

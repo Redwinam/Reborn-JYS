@@ -8,6 +8,7 @@
         <p id="textboxPopup" v-if="title ==='买喝的！'">喝杯什么呢……</p>
         <p id="textboxPopup" v-if="title ==='买东西！'">要买什么呢？</p>
         <p id="textboxPopup" v-if="title ==='写歌'">一起写歌吧！</p>
+        <p id="textboxPopup" v-if="title ==='物品'"></p>
         <button v-if="showCloseButton" @click="$emit('close')" class="close-button">关闭</button>
       </div>
     </div>

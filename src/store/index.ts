@@ -1,6 +1,6 @@
 import { createStore, Store, Commit } from 'vuex'
 
-import { Food, eatFood, packFood, drinkDrink } from './eats'
+import { Food, eatFood, packFood, eatPackedFood, drinkDrink } from './eats'
 import { achievements, Achievement } from '../store/achievements'
 import { songLibrary, Song } from '../store/songs'
 
@@ -232,11 +232,11 @@ const mutations = {
     }
   },
 
-  packFood(state: State, { foodName, quantity }: { foodName: string, quantity: number }) {
-    if (state.inventory[foodName]) {
-      state.inventory[foodName].quantity += quantity;
+  packFood(state: State, { food, quantity }: { food: string, quantity: number }) {
+    if (state.inventory[food]) {
+      state.inventory[food].quantity += quantity;
     } else {
-      state.inventory[foodName] = {
+      state.inventory[food] = {
         quantity: quantity,
         isFood: true,
       };
@@ -340,6 +340,7 @@ const actions = {
   purchaseItem, 
   eatFood,
   packFood,
+  eatPackedFood,
   drinkDrink, 
   specialEvent,
   specialEventOptionChosen,

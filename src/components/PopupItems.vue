@@ -5,7 +5,7 @@
         <div class="item-info">
           <h4>{{ name }}</h4>
           <p> {{ quantity.quantity }} {{ getQuantifier(String(name)) }}</p>
-          <button v-if="quantity.isFood" @click="eatFood(String(name))">吃掉</button>
+          <button v-if="quantity.isFood" @click="eatPackedFood(String(name))">吃掉</button>
         </div>
       </li>
     </ul>
@@ -21,8 +21,8 @@ import { getQuantifier } from '../store/actions/purchaseItem'
 const store = useStore()
 const inventory = computed(() => store.state.inventory)
 
-const eatFood = (food: string) => {
-  store.commit('eatFood', food)
+const eatPackedFood = (food: string) => {
+  store.dispatch('eatPackedFood', {food, quantity: 1});
 }
 
 </script>
