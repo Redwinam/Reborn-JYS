@@ -15,8 +15,8 @@
       <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span> 红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</div>
       <div>
         <span class="attribute-name">{{ attributeNames['money'] }}</span> 
-        <span>￥{{ attributes['money'] }}  | {{ attributes['gold'] }}枚金子
-          <button class="button_buyGold" @click="showBuyGoldPopup = true">买金子！</button> 
+        <span>￥{{ attributes['money'] }}  | {{ attributes['gold'] }}枚金条 <span class="span_sellGold" @click="showSellGoldPopup = true">/ 出售</span>
+          <button class="button_buyGold" @click="showBuyGoldPopup = true">买金条！</button>
         </span>
       </div>
       <div v-if="attributes['energy'] >= 0"><span class="attribute-name"> {{ attributeNames['energy'] }}</span> {{ attributes['energy'] }}<template v-if="weak">（虚弱！）</template></div>
@@ -38,19 +38,35 @@
     <li><strong>神性：</strong>决定你的神秘能力和超自然力量。</li>
   </ul> -->
 
-<PopupSub title="买金子！" :visible="showBuyGoldPopup" @close="showBuyGoldPopup = false">
+<PopupSub title="买金条！" :visible="showBuyGoldPopup" @close="showBuyGoldPopup = false">
   <div class="buy-gold">
     <div class="gold-amount">
       <label for="gold-amount">购买数量</label>
       <input type="number" id="gold-amount" min="1" max="10000" v-model="goldAmount" /> 克
       <div class="gold-price">/ 总价：￥{{ goldAmount * 360 }}</div>
     </div>
-    <p v-if="goldAmount * 360 > attributes.money" class="error-message">金钱不足，买不起金子</p>
+    <p v-if="goldAmount * 360 > attributes.money" class="error-message">金钱不足，买不起这么多金条</p>
     <div class="button-group">
       <button class="button_buyGold" :disabled="goldAmount * 360 > attributes.money" @click="buyGold">购买</button>
       <button class="button_cancel" @click="showBuyGoldPopup = false">取消</button>
     </div>
-    <p class="note-message">1枚金子 = 360金钱，金子每轮次享有固定的6%利息收益。金价与现实无关，仅代表游戏效果，不构成投资建议。</p>
+    <p class="note-message">1枚金条 = 360金钱，金条每轮次享有固定的6%利息收益。金价与现实无关，仅代表游戏效果，不构成投资建议。</p>
+  </div>
+</PopupSub>
+
+<PopupSub title="出售金条" :visible="showSellGoldPopup" @close="showSellGoldPopup = false">
+  <div class="buy-gold">
+    <div class="gold-amount">
+      <label for="gold-amount">出售数量</label>
+      <input type="number" id="gold-amount" min="1" max="10000" v-model="goldAmount" /> 克
+      <div class="gold-price">/ 获得：￥{{ goldAmount * 360 }}</div>
+    </div>
+    <p v-if="goldAmount > attributes.gold" class="error-message">没有这么多金条可供卖出</p>
+    <div class="button-group">
+      <button class="button_sellGold" :disabled="goldAmount > attributes.gold" @click="sellGold">出售</button>
+      <button class="button_cancel" @click="showSellGoldPopup = false">取消</button>
+    </div>
+    <p class="note-message">1枚金条 = 360金钱，金条每轮次享有固定的6%利息收益。金价与现实无关，仅代表游戏效果，不构成投资建议。</p>
   </div>
 </PopupSub>
 
@@ -69,12 +85,19 @@ const attributes = computed(() => store.state.attributes);
 const weak = computed(() => store.state.weak)
 
 const showBuyGoldPopup = ref(false)
+const showSellGoldPopup = ref(false)
 
 const goldAmount = ref(1)
 const buyGold = () => {
   if (goldAmount.value * 360 <= attributes.value.money) {
     store.commit('buyGold', goldAmount.value)
     showBuyGoldPopup.value = false
+  }
+}
+const sellGold = () => {
+  if (goldAmount.value <= attributes.value.gold) {
+    store.commit('buyGold', -goldAmount.value)
+    showSellGoldPopup.value = false
   }
 }
 
@@ -121,8 +144,21 @@ const buyGold = () => {
   transition: background-color 0.3s ease;
 }
 
-.button_buyGold:hover {
-  background-color: #752730;
+.button_sellGold {
+  background-color: #1e2228;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 0.8em;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.span_sellGold {
+  font-size: 0.8rem;
+  cursor: pointer;
 }
 
 .bug-gold {
@@ -181,7 +217,7 @@ const buyGold = () => {
 .error-message {
   color: #964742;
   font-weight: bold;
-  font-size: 0.9em;
+  font-size: 0.8rem;
   margin: 0 0 20px 0;
 }
 </style>
