@@ -90,7 +90,7 @@ const confirmPurchase = () => {
 
 <style scoped>
 .shop-container {
-  height: 75vh;
+  max-height: 75vh;
   overflow-y: auto;
 }
 

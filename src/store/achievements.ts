@@ -14,6 +14,7 @@ export const achievements: Achievement[] = [
   { name: '姜哥，玩挺好', desc: '从此，姜云升记住了点外卖不留名。', event: true, ending: false, unlocked: false, },
   { name: '放松，呼吸', desc: '山里有位老神仙，他对我说……', event: true, ending: false, unlocked: false, },
   { name: '小学升戴墨镜', desc: '不建议戴', event: true, ending: false, unlocked: false, },
+  { name: '小姜的餐厅', desc: '解锁所有食物！', event: false, ending: false, unlocked: false, },
 
 
 

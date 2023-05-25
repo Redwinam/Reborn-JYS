@@ -35,17 +35,18 @@ const classifiedAchievements = computed(() => {
   const groups = {
     '结局成就': [],
     '事件成就': [],
+    '其他成就': []
   } as Record<string, Achievement[]>
-
   achievements.value.forEach((achievement: Achievement) => {
     if (achievement.ending) {
       groups['结局成就'].push(achievement)
     } else if (achievement.event) {
       groups['事件成就'].push(achievement)
+    } else {
+      groups['其他成就'].push(achievement)
     }
-})
-
-
+  })
+  console.log(groups)
   return groups
 })
 
@@ -76,11 +77,6 @@ const getAchievementBadge = (achievement: Achievement) => {
   transition: all 0.3s ease-in-out;
 }
 
-.achievement:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
 .achievement-badge {
   width: 50px;
   height: 50px;
@@ -92,6 +88,10 @@ const getAchievementBadge = (achievement: Achievement) => {
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+}
+
+.achievement-info {
+  flex: 1;
 }
 
 .achievement-info h4 {

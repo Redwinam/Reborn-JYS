@@ -104,6 +104,11 @@ const buyGold = () => {
   border-bottom: none;
 }
 
+.attribute-name {
+  font-weight: bold;
+  color:#1e2228;
+}
+
 .button_buyGold {
   background-color: #964742;
   border: none;

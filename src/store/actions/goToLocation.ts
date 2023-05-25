@@ -11,9 +11,11 @@ export async function goToLocation(context: {
     case '去吃点东西':
       const unlockedFoods = context.state.unlockedFoods;
       const lockedFoods = allFoods.filter((food: { name: any; }) => !unlockedFoods.find((uf: { name: any; }) => uf.name === food.name));
-
-      if ((lockedFoods.length > 0) || unlockedFoods.length === 0) {
-        const newFood = lockedFoods[Math.floor(Math.random() * lockedFoods.length)];
+      if (lockedFoods.length > 0) {
+        let newFood = lockedFoods[Math.floor(Math.random() * lockedFoods.length)];
+        if (unlockedFoods.length === 0) {
+          newFood = lockedFoods[0];
+        }
         context.commit('unlockFood', newFood);
         const foodIntros = [
           '姜云升出门去找好吃的，无意间发现了一家看起来很不错的餐馆，点了一份' + newFood.name + '，太好吃了。',
@@ -26,6 +28,14 @@ export async function goToLocation(context: {
         
         const randomIntro = foodIntros[Math.floor(Math.random() * foodIntros.length)];
         await context.dispatch('typeWriter', [randomIntro,'解锁新食物：【' + newFood.name + '】', '姜云升的体力上限增加啦！']);
+      } else {
+        const hasAchievement = context.state.achievements.find(
+          (ach: Achievement) => ach.name === '小姜的餐厅' && ach.unlockTerm === context.state.term
+        );
+        if (!hasAchievement) {
+          await context.dispatch('typeWriter', '姜云升已经解锁了所有的食物，解锁成就【小姜的餐厅】。');
+          context.commit('unlockAchievement', '小姜的餐厅');
+        }
       }
       // 等待1秒钟
       await new Promise(resolve => setTimeout(resolve, 1000));
