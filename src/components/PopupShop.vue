@@ -39,17 +39,20 @@
 
   </div>
 
-  <div class="quantity-popup" v-if="showQuantityPopup">
-    <input v-model.number="quantityToBuy" type="number" min="1"> {{ getQuantifier(itemToBuy) }}
-    <button @click="confirmPurchase">确认购买</button>
-    <button class="cancel-button" @click="showQuantityPopup = false">取消</button>
-  </div>
+  <PopupSub :visible="showQuantityPopup" @close="showQuantityPopup = false">
+    <div class="quantity-popup">
+      {{ itemToBuy }} <input v-model.number="quantityToBuy" type="number" min="1"> {{ getQuantifier(itemToBuy) }}
+      <button @click="confirmPurchase">确认购买</button>
+      <button class="cancel-button" @click="showQuantityPopup = false">取消</button>
+    </div>
+  </PopupSub>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { itemsList, getQuantifier } from '../store/actions/purchaseItem'
+import PopupSub from './PopupSub.vue'
 
 const store = useStore()
 
@@ -187,21 +190,16 @@ const confirmPurchase = () => {
 
 
 .quantity-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  border: 2px solid #1e2228;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .quantity-popup input {
   width: 50px;
-  margin-right: 10px;
+  margin: 10px;
   padding: 6px;
   border: 2px solid #1e2228;
 }
@@ -213,11 +211,12 @@ const confirmPurchase = () => {
   background-color: #1e2228;
   color: #d3c6c4;
   font-size: 0.8rem;
-  margin-right: 10px;
+  margin-left: 12px;
 }
 
 .quantity-popup button.cancel-button {
   background-color: #d3c6c4;
   color: #1e2228;
+  margin-left: 10px;
 }
 </style>

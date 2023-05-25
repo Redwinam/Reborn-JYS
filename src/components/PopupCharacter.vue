@@ -2,23 +2,26 @@
 
   <template>
     <div class="attributes-container">
-      <div><span>姓名</span>姜云升</div>
-      <div><span>国籍</span>中国</div>
-      <div><span>生日</span>1996年6月1日 / 四月十六</div>
-      <div><span>年龄</span>{{ Math.floor((store.state.round - 16) / 36) + 16 }}岁</div>
-      <div><span>身高</span> 182cm</div>
+      <div><span class="attribute-name">姓名</span>姜云升</div>
+      <div><span class="attribute-name">国籍</span>中国</div>
+      <div><span class="attribute-name">生日</span>1996年6月1日 / 四月十六</div>
+      <div><span class="attribute-name">星座</span>双子座</div>
+      <div><span class="attribute-name">年龄</span>{{ Math.floor((store.state.round - 16) / 36) + 16 }}岁</div>
+      <div><span class="attribute-name">身高</span> 182cm</div>
 
-      <div><span>{{ attributeNames['talent'] }}</span> {{ attributes['talent'] }}</div>
-      <div><span>{{ attributeNames['charm'] }}</span> {{ attributes['charm'] }}</div>
+      <div><span class="attribute-name">{{ attributeNames['talent'] }}</span> {{ attributes['talent'] }}</div>
+      <div><span class="attribute-name">{{ attributeNames['charm'] }}</span> {{ attributes['charm'] }}</div>
 
-      <div><span>{{ attributeNames['popularity'] }}</span> 红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</div>
+      <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span> 红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</div>
       <div>
-        <span>{{ attributeNames['money'] }}</span> {{ attributes['money'] }}  | {{ attributes['gold'] }}枚金子
-        <button class="button_buyGold" @click="showBuyGoldPopup = true">买金子！</button> 
+        <span class="attribute-name">{{ attributeNames['money'] }}</span> 
+        <span>￥{{ attributes['money'] }}  | {{ attributes['gold'] }}枚金子
+          <button class="button_buyGold" @click="showBuyGoldPopup = true">买金子！</button> 
+        </span>
       </div>
-      <div v-if="attributes['energy'] >= 0"><span> {{ attributeNames['energy'] }}</span> {{ attributes['energy'] }}<template v-if="weak">（虚弱！）</template></div>
-      <div v-else><span class="weak">体力透支</span> {{ attributes['energy'] }} <template v-if="weak">（虚弱！）</template> </div>
-      <div><span>{{ attributeNames['mood'] }}</span> {{ attributes['mood'] }}</div>
+      <div v-if="attributes['energy'] >= 0"><span class="attribute-name"> {{ attributeNames['energy'] }}</span> {{ attributes['energy'] }}<template v-if="weak">（虚弱！）</template></div>
+      <div v-else><span class="weak attribute-name">体力透支</span> {{ attributes['energy'] }} <template v-if="weak">（虚弱！）</template> </div>
+      <div><span class="attribute-name">{{ attributeNames['mood'] }}</span> {{ attributes['mood'] }}</div>
 
     </div>
 
@@ -35,21 +38,21 @@
     <li><strong>神性：</strong>决定你的神秘能力和超自然力量。</li>
   </ul> -->
 
-  <Popup title="买金子！" :visible="showBuyGoldPopup" @close="showBuyGoldPopup = false">
+<PopupSub title="买金子！" :visible="showBuyGoldPopup" @close="showBuyGoldPopup = false">
   <div class="buy-gold">
     <div class="gold-amount">
-      <label for="gold-amount">购买数量：</label>
-      <input type="number" id="gold-amount" min="1" max="10000" v-model="goldAmount" />
+      <label for="gold-amount">购买数量</label>
+      <input type="number" id="gold-amount" min="1" max="10000" v-model="goldAmount" /> 克
+      <div class="gold-price">/ 总价：￥{{ goldAmount * 360 }}</div>
     </div>
-    <div class="gold-price">
-      <label for="gold-price">总价：</label>
-      <input type="number" id="gold-price" :value="goldAmount * 360" disabled />
-    </div>
-    <button class="button_buyGold" :disabled="goldAmount * 360 > attributes.money" @click="buyGold">购买</button>
     <p v-if="goldAmount * 360 > attributes.money" class="error-message">金钱不足，买不起金子</p>
+    <div class="button-group">
+      <button class="button_buyGold" :disabled="goldAmount * 360 > attributes.money" @click="buyGold">购买</button>
+      <button class="button_cancel" @click="showBuyGoldPopup = false">取消</button>
+    </div>
     <p class="note-message">1枚金子 = 360金钱，金子每轮次享有固定的6%利息收益。金价与现实无关，仅代表游戏效果，不构成投资建议。</p>
   </div>
-</Popup>
+</PopupSub>
 
 </template>
 
@@ -58,7 +61,7 @@ import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
 import { attributeNames } from "../store/attributes";
-import Popup from '../components/Popup.vue'
+import PopupSub from '../components/PopupSub.vue'
 
 const store = useStore();
 
@@ -78,50 +81,12 @@ const buyGold = () => {
 </script>
 
 <style scoped>
-
-.attributes-container {
-  /* display: flex; */
-  flex-wrap: wrap;
-  gap: 16px;
-  font-family: "Arial", sans-serif;
-}
-
-.attribute {
-  display: flex;
-  align-items: center;
-  padding: 8px 12px;
-  /* background-color: #333; */
-  /* color: #fff; */
-  border-radius: 8px;
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); */
-}
-
-.attribute-name {
-  font-weight: bold;
-  margin-right: 4px;
-}
-
-.attribute-value {
-  font-size: 1.2em;
-}
-
-.button_buyGold {
-  background-color: #964742;
-  border: 2px solid #200504;
-  color: #fff;
-  border-radius: 4px;
-  padding: 0.2rem 0.4rem;
-  font-size: 0.8em;
-  cursor: pointer;
-  margin: 0.5rem 0;
-}
-
 .attributes-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
   font-family: "Arial", sans-serif;
-  padding: 20px;
+  padding: 12px;
   background-color: #f5f5f5;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -131,17 +96,12 @@ const buyGold = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 12px 10px;
   border-bottom: 1px solid #ddd;
 }
 
 .attributes-container > div:last-child {
   border-bottom: none;
-}
-
-.attributes-container span {
-  font-weight: bold;
-  color: #333;
 }
 
 .button_buyGold {
@@ -160,18 +120,63 @@ const buyGold = () => {
   background-color: #752730;
 }
 
+.bug-gold {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 auto;
+}
+
+.gold-amount {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.gold-amount input {
+  width: 50px;
+  margin: 2px;
+  padding: 6px;
+  border: 2px solid #1e2228;
+}
+
+
+.gold-price {
+  font-size: 0.8em;
+  color: #666;
+}
+
+
+.button_cancel {
+  background-color: #ddd;
+  border: none;
+  color: #333;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 0.8em;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
 .weak {
   color: #964742;
   font-weight: bold;
 }
 
 .note-message {
-  font-size: 0.8em;
+  font-size: 0.7em;
   color: #666;
+  border-top: 1px dashed #666;
+  padding: 12px 0 0;
+  margin-top: 30px;
 }
 .error-message {
   color: #964742;
   font-weight: bold;
   font-size: 0.9em;
+  margin: 0 0 20px 0;
 }
 </style>

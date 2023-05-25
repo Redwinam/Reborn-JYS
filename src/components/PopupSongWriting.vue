@@ -11,10 +11,10 @@
         </div>
       </div>
       <div class="button-group">
-        <button @click="writeSong('demo', song)" :disabled="!song.isAvailable" v-if="!songStages[song.title] || songStages[song.title].completedStage === null">DEMO</button>
+        <button @click="writeSong('demo', song)" :disabled="!song.isAvailable" v-if="!songStages[song.title] || songStages[song.title].completedStage === null">{{ !song.isAvailable ? "×": "✐"}} DEMO</button>
         <button @click="writeSong('record', song)" v-if="songStages[song.title] && songStages[song.title].completedStage === 'demo'">录歌</button>
         <button @click="writeSong('release', song)" v-if="songStages[song.title] && songStages[song.title].completedStage === 'record'">上线</button>
-        <button @click="currentSong = song; showReleaseSongModal = true" v-if="songStages[song.title] && songStages[song.title].completedStage === 'release'">收听</button>
+        <button @click="currentSong = song; showReleaseSongModal = true" v-if="songStages[song.title] && songStages[song.title].completedStage === 'release'">▶ 收听</button>
       </div>
     </div>
     <div class="song">
@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="button-group">
-        <button @click="writeFeiSong()">写歌</button>
+        <button @click="writeFeiSong()">✐ 写歌</button>
       </div>
     </div>
   </div>
@@ -92,18 +92,23 @@ function writeSong(stage: string, song: Song) {
   }
 
   if (stage === 'demo' && !currentStage.completedStage) {
-    console.log(song, 'DEMO')
     for (const [key, effect] of Object.entries(song.effects)) {
+      if (key === 'money') {
+        continue
+      }
       store.commit('updateAttribute', { attribute: key, value: effect * 0.2 })
     }
     store.commit('setSongStages', { songTitle: song.title, stage: 'demo' })
     let attributesChangeStr = Object.entries(song.effects).map(([key, value]) => {
+      if (key === 'money') {
+        return ''
+      }
       value = value *0.2;
       let sign = value >= 0 ? '+' : '';
       return `${attributeNames[key]}${sign}${value}`;
     }).join('、');
     store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经完成DEMO啦，姜云升属性 ${attributesChangeStr} 。`)
-    console.log(store.state.songStages)
+
   } else if (stage === 'record' && currentStage.completedStage === 'demo') {
     if (store.state.attributes.money >= song.cost) {
       store.commit('updateAttribute', { attribute: 'money', value: -song.cost })
@@ -112,13 +117,20 @@ function writeSong(stage: string, song: Song) {
     } else {
       store.dispatch('typeWriterPopup', `姜云升没有足够的钱录歌，录这首歌需要 ${song.cost} 元。`)
     }
+
   } else if (stage === 'release' && currentStage.completedStage === 'record') {
     for (const [key, effect] of Object.entries(song.effects)) {
+      if (key === 'money') {
+        store.commit('updateAttribute', { attribute: key, value: effect })
+        continue
+      }
       store.commit('updateAttribute', { attribute: key, value: effect * 0.8 })
     }
     store.commit('setSongStages', { songTitle: song.title, stage: 'release' })
     let attributesChangeStr = Object.entries(song.effects).map(([key, value]) => {
-      value = value *0.8;
+      if (key != 'money') {
+        value = value *0.8;
+      }
       let sign = value >= 0 ? '+' : '';
       return `${attributeNames[key]}${sign}${value}`;
     }).join('、');
@@ -126,8 +138,8 @@ function writeSong(stage: string, song: Song) {
     
     currentSong.value = song || null;
     showReleaseSongModal.value = true
+
   } else {
-    // 无法执行当前阶段的提示
     store.dispatch('typeWriterPopup', '无法执行当前阶段，请按顺序完成写歌任务。')
   }
 }

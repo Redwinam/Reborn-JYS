@@ -12,8 +12,7 @@ export async function goToLocation(context: {
       const unlockedFoods = context.state.unlockedFoods;
       const lockedFoods = allFoods.filter((food: { name: any; }) => !unlockedFoods.find((uf: { name: any; }) => uf.name === food.name));
 
-      if ((lockedFoods.length > 0 && Math.random() < 0.5) || unlockedFoods.length === 0) {
-        // 50%的概率解锁一个新的食物
+      if ((lockedFoods.length > 0) || unlockedFoods.length === 0) {
         const newFood = lockedFoods[Math.floor(Math.random() * lockedFoods.length)];
         context.commit('unlockFood', newFood);
         const foodIntros = [

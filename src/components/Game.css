@@ -166,7 +166,7 @@
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 16px;
-  border: 1px solid black;
+  border: 2px solid #1e2228;
   z-index: 1;
 }
 
@@ -194,4 +194,11 @@ footer button {
   height: 75vh;
   overflow-y: auto;
   text-align: left;
+}
+
+.textHistory p {
+  margin: 0;
+  font-size: 0.8rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px dashed #4c4d55;
 }

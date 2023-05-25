@@ -82,7 +82,7 @@
 
 <Popup title="历史记录" :visible="showTextHistoryPopup" @close="showTextHistoryPopup = false">
   <div class="textHistory" ref="textHistoryContainer">
-    <div v-for="text in textHistory" :key="text">{{ text }}</div>
+    <p v-for="text in textHistory" :key="text">{{ text }}</p>
   </div>
 </Popup>
 
