@@ -1,15 +1,15 @@
 <template>
 <div class="song-container">
   <div v-for="song in availableSongs" :key="song.title" class="song">
-    <h3>{{ song.title }}</h3>
+    <h3>《{{ song.title }}》</h3>
     <p>条件：</p>
     <ul>
       <li v-for="(value, key) in song.conditions" :key="key">{{ key }}: {{ value }}</li>
     </ul>
-    <p>阶段：</p>
-    <button @click="writeSong('demo', song)" :disabled="!song.isAvailable">Demo</button>
-    <button @click="writeSong('record', song)" :disabled="!song.isAvailable">录歌</button>
-    <button @click="writeSong('release', song)" :disabled="!song.isAvailable">上线</button>
+    <button @click="writeSong('demo', song)" :disabled="!song.isAvailable" v-if="!songStages[song.title] || songStages[song.title].completedStage === null">Demo</button>
+    <button @click="writeSong('record', song)" v-if="songStages[song.title] && songStages[song.title].completedStage === 'demo'">录歌</button>
+    <button @click="writeSong('release', song)" v-if="songStages[song.title] && songStages[song.title].completedStage === 'record'">上线</button>
+    <button @click="listenSong(song)" v-if="songStages[song.title] && songStages[song.title].completedStage === 'release'">收听</button>
   </div>
 </div>
 </template>
@@ -34,7 +34,7 @@ function isSongAvailable(song: Song) {
     }
   }
   switch (song.title) {
-    case '浪漫主义':
+    case '真没睡':
       if (store.state.attributes.popularity < 100) {
         return false
       }
@@ -95,6 +95,10 @@ function writeSong(stage: string, song: Song) {
     // 无法执行当前阶段的提示
     store.commit('typeWriterPopup', '无法执行当前阶段，请按顺序完成写歌任务。')
   }
+}
+
+function listenSong(song: Song) {
+  window.open(song.url)
 }
 
 </script>
