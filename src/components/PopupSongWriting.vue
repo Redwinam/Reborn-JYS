@@ -1,31 +1,62 @@
 <template>
-<div class="song-container">
-  <div v-for="song in availableSongs" :key="song.title" class="song">
-    <h3>《{{ song.title }}》</h3>
-    <p>条件：</p>
-    <ul>
-      <li v-for="(value, key) in song.conditions" :key="key">{{ key }}: {{ value }}</li>
-    </ul>
-    <button @click="writeSong('demo', song)" :disabled="!song.isAvailable" v-if="!songStages[song.title] || songStages[song.title].completedStage === null">Demo</button>
-    <button @click="writeSong('record', song)" v-if="songStages[song.title] && songStages[song.title].completedStage === 'demo'">录歌</button>
-    <button @click="writeSong('release', song)" v-if="songStages[song.title] && songStages[song.title].completedStage === 'record'">上线</button>
-    <button @click="listenSong(song)" v-if="songStages[song.title] && songStages[song.title].completedStage === 'release'">收听</button>
+  <div class="song-container">
+    <div v-for="song in availableSongs" :key="song.title" class="song">
+      <div class="song-meta">
+        <div class="album-cover">
+          <img :src="'/cover-images/' + song.coverImage + '@0.25x.jpg'" :alt="song.title" />
+        </div>
+        <div class="song-info">
+          <h3>《{{ song.title }}》</h3>
+          <p>{{ !song.isAvailable ? '未达成' : '已达成' }} / <span v-for="(value, key, index) in song.conditions" :key="key">{{ attributeNames[key] }}: {{ value }}<span v-if="index !== Object.keys(song.conditions).length - 1">，</span></span></p>
+        </div>
+      </div>
+      <div class="button-group">
+        <button @click="writeSong('demo', song)" :disabled="!song.isAvailable" v-if="!songStages[song.title] || songStages[song.title].completedStage === null">DEMO</button>
+        <button @click="writeSong('record', song)" v-if="songStages[song.title] && songStages[song.title].completedStage === 'demo'">录歌</button>
+        <button @click="writeSong('release', song)" v-if="songStages[song.title] && songStages[song.title].completedStage === 'record'">上线</button>
+        <button @click="currentSong = song; showReleaseSongModal = true" v-if="songStages[song.title] && songStages[song.title].completedStage === 'release'">收听</button>
+      </div>
+    </div>
+    <div class="song">
+      <div class="song-meta">
+        <div class="album-cover">
+          <img :src="'/cover-images/lhmjvuyi@0.25x.jpg'" alt="废歌" />
+        </div>
+        <div class="song-info">
+          <h3>废歌</h3>
+          <p>姜云升今天要废掉哪首歌呢？</p>
+        </div>
+      </div>
+      <div class="button-group">
+        <button @click="writeFeiSong()">写歌</button>
+      </div>
+    </div>
   </div>
-</div>
+
+  <div v-if="showReleaseSongModal" class="song-modal">
+    <div class="modal-content">
+      <div class="close-button" @click="showReleaseSongModal = false">×</div>
+      <img :src="'/cover-images/' + currentSong.coverImage + '.jpg'" :alt="currentSong.title" class="modal-cover-image" />
+      <p>{{ currentSong.lyrics }}</p>
+      <div class="modal-header">
+        <button @click="listenSong(currentSong)">▶ 播放</button>
+        <h3>——《{{ currentSong.title }}》</h3>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, ssrContextKey } from 'vue'
 import { useStore } from 'vuex'
+import { attributeNames } from '../store/attributes'
 import { Song, songLibrary } from '../store/songs'
-// 声明 props showSongWritingDialog
-
-
-let songStages = {} as Record<string, { completedStage: string | null }>
-
-const textBoxMessage = ref('')
 
 const store = useStore()
+const songStages = computed(() => store.state.songStages)
+
+const showReleaseSongModal = ref(false)
+const currentSong = ref(null) as any
 
 function isSongAvailable(song: Song) {
   for (const [key, value] of Object.entries(song.conditions)) {
@@ -55,46 +86,54 @@ const availableSongs = computed(() => {
 })
 
 function writeSong(stage: string, song: Song) {
-  if (!songStages[song.title]) {
-    songStages[song.title] = {
-      completedStage: null,
-    }
+
+  const currentStage = store.state.songStages[song.title] || {
+    completedStage: null,
   }
 
-  const currentStage = songStages[song.title]
-
-  if (stage === 'demo' && currentStage.completedStage === null) {
-    // 处理 Demo 阶段逻辑
-    // 更新歌曲的人气值（一半）
-    // ...
-    currentStage.completedStage = 'demo'
+  if (stage === 'demo' && !currentStage.completedStage) {
+    console.log(song, 'DEMO')
+    for (const [key, effect] of Object.entries(song.effects)) {
+      store.commit('updateAttribute', { attribute: key, value: effect * 0.2 })
+    }
+    store.commit('setSongStages', { songTitle: song.title, stage: 'demo' })
+    let attributesChangeStr = Object.entries(song.effects).map(([key, value]) => {
+      value = value *0.2;
+      let sign = value >= 0 ? '+' : '';
+      return `${attributeNames[key]}${sign}${value}`;
+    }).join('、');
+    store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经完成DEMO啦，姜云升属性 ${attributesChangeStr} 。`)
+    console.log(store.state.songStages)
   } else if (stage === 'record' && currentStage.completedStage === 'demo') {
-    // 检查金钱是否充足
     if (store.state.attributes.money >= song.cost) {
-      // 处理录歌阶段逻辑
-      // 扣除金钱
       store.commit('updateAttribute', { attribute: 'money', value: -song.cost })
-      // ...
-      currentStage.completedStage = 'record'
+      store.commit('setSongStages', { songTitle: song.title, stage: 'record' })
+      store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经录好啦，花费了姜云升 ${song.cost} 元。`)
     } else {
-      // 金钱不足的提示
-      // textBoxMessage.value = '金钱不足，无法录制歌曲。'
-      store.commit('typeWriterPopup', '金钱不足，无法录制歌曲。')
+      store.dispatch('typeWriterPopup', `姜云升没有足够的钱录歌，录这首歌需要 ${song.cost} 元。`)
     }
   } else if (stage === 'release' && currentStage.completedStage === 'record') {
-    // 处理上线阶段逻辑
-    // 更新歌曲的完整数值奖励
     for (const [key, effect] of Object.entries(song.effects)) {
-      const randomValue = Math.floor(Math.random() * (effect.max - effect.min + 1)) + effect.min
-      store.commit('updateAttribute', { attribute: key, value: randomValue })
+      store.commit('updateAttribute', { attribute: key, value: effect * 0.8 })
     }
-    // ...
-    currentStage.completedStage = 'release'
-    store.commit('typeWriterPopup', `歌曲《${song.title}》已经上线，获得了 ${song.effects.popularity} 点人气值！`)
+    store.commit('setSongStages', { songTitle: song.title, stage: 'release' })
+    let attributesChangeStr = Object.entries(song.effects).map(([key, value]) => {
+      value = value *0.8;
+      let sign = value >= 0 ? '+' : '';
+      return `${attributeNames[key]}${sign}${value}`;
+    }).join('、');
+    store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经上线啦，姜云升属性 ${attributesChangeStr} 。`)
+    
+    currentSong.value = song || null;
+    showReleaseSongModal.value = true
   } else {
     // 无法执行当前阶段的提示
-    store.commit('typeWriterPopup', '无法执行当前阶段，请按顺序完成写歌任务。')
+    store.dispatch('typeWriterPopup', '无法执行当前阶段，请按顺序完成写歌任务。')
   }
+}
+
+function writeFeiSong() {
+  store.dispatch('typeWriterPopup', '这歌废了。')
 }
 
 function listenSong(song: Song) {
@@ -107,5 +146,116 @@ function listenSong(song: Song) {
 .song-container {
   height: 75vh;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.song {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.song .song-meta {
+  display: flex;
+  gap: 10px;
+}
+
+.song .album-cover {
+  height: 2.8rem; /* Adjust as needed */
+}
+
+.song .album-cover img {
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.song .song-info {
+  text-align: left;
+}
+
+.song .song-info h3 {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.song .song-info p {
+  margin: 0;
+  font-size: 0.7rem;
+}
+
+.song .button-group {
+  display: flex;
+  gap: 5px;
+}
+
+.song .button-group button {
+  padding: 2px 5px;
+  font-size: 0.8rem;
+  border: none;
+  background-color: #1e2228;
+  color: #d3c6c4;
+  border-radius: 5px;
+}
+
+.song .button-group button:disabled {
+  background-color: #d3c6c4;
+  color: #1e2228;
+}
+
+
+.song-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 36vh;
+  /* height: 60vh; */
+  border-radius: 12px;
+}
+
+.modal-content .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-button {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-cover-image {
+  width: 100%;
+  height: auto;
 }
 </style>

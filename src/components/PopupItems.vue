@@ -8,7 +8,7 @@
         </div>
       </li>
     </ul>
-    <p v-if="!inventory.length">物品栏里空空如也</p>
+    <p v-if="Object.keys(inventory).length === 0">物品栏里空空如也</p>
   </div>
 </template>
 

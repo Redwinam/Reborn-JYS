@@ -6,7 +6,7 @@
       <span class="food-note">饱食度：{{ food.energy }}</span>
       <div class="select-buttons">
         <button @click="selectFood(food.name)">堂食</button>
-        <button @click="selectFood(food.name)">打包</button>
+        <button @click="packFood(food.name)">打包</button>
       </div>
     </div>
   </div>
@@ -21,6 +21,10 @@ const store = useStore()
 const unlockedFoods = computed(() => store.state.unlockedFoods);
 
 const selectFood = (food: string) => {
+  store.dispatch('selectFood', food);
+}
+
+const packFood = (food: string) => {
   store.dispatch('selectFood', food);
 }
 </script>

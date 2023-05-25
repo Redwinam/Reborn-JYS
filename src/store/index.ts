@@ -38,6 +38,7 @@ interface State {
 
   songs: string[]
   songLibrary: Song[]
+  songStages: Record<string, { completedStage: string | null }>
 
   specialEvents: string[]
   specialEventDetails: { name: string, intro: string, options: string[] } | null
@@ -111,6 +112,7 @@ const state: State = {
   
   songs: [],
   songLibrary,
+  songStages: {},
 
   specialEvents: [],
   specialEventDetails: null,
@@ -220,6 +222,16 @@ const mutations = {
 
   setSpecialEventDetails(state: State, specialEventDetails: { name: string; intro: string; options: string[]; }) {
     state.specialEventDetails = specialEventDetails;
+  },
+
+  setSongStages(state: State, songStages: { songTitle: string; stage: string }) {
+    if (state.songStages[songStages.songTitle]) {
+      state.songStages[songStages.songTitle].completedStage = songStages.stage;
+    } else {
+      state.songStages[songStages.songTitle] = {
+        completedStage: songStages.stage,
+      };
+    }
   },
 
   unlockFood(state: State, food: Food) {
