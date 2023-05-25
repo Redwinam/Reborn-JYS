@@ -33,8 +33,8 @@ export async function goToLocation(context: {
           (ach: Achievement) => ach.name === '小姜的餐厅' && ach.unlockTerm === context.state.term
         );
         if (!hasAchievement) {
-          await context.dispatch('typeWriter', '姜云升已经解锁了所有的食物，解锁成就【小姜的餐厅】。');
           context.commit('unlockAchievement', '小姜的餐厅');
+          await context.dispatch('typeWriter', '姜云升已经解锁了所有的食物，解锁成就【小姜的餐厅】。');
         }
       }
       // 等待1秒钟

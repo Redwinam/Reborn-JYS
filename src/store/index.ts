@@ -2,7 +2,7 @@ import { createStore, Store, Commit } from 'vuex'
 
 import { Food, eatFood, packFood, eatPackedFood, drinkDrink } from './eats'
 import { achievements, Achievement } from '../store/achievements'
-import { songLibrary, Song } from '../store/songs'
+import { songLibrary, Song, SongFei } from '../store/songs'
 
 import { Attributes, Popularity, Skill } from '../store/attributes'
 
@@ -39,6 +39,7 @@ interface State {
   songs: string[]
   songLibrary: Song[]
   songStages: Record<string, { completedStage: string | null }>
+  unlockedFeiSongs: SongFei[]
 
   specialEvents: string[]
   specialEventDetails: { name: string, intro: string, options: string[] } | null
@@ -113,6 +114,7 @@ const state: State = {
   songs: [],
   songLibrary,
   songStages: {},
+  unlockedFeiSongs: [],
 
   specialEvents: [],
   specialEventDetails: null,
@@ -264,6 +266,10 @@ const mutations = {
         completedStage: songStages.stage,
       };
     }
+  },
+
+  unlockFeiSong(state: State, songFei: SongFei) {
+    state.unlockedFeiSongs.push(songFei);
   },
 
   unlockFood(state: State, food: Food) {

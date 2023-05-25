@@ -1,10 +1,10 @@
 import { Commit } from 'vuex';
 import TypeIt from 'typeit';
 
-import { isTypeing } from '../../components/composables/gameRefs';
+import { isTyping } from '../../components/composables/gameRefs';
 
 export async function typeWriter(context: { commit: Commit }, message: string | string[]) {
-  isTypeing.value = true;
+  isTyping.value = true;
   return new Promise<void>((resolve) => {
     context.commit('addTextToHistory', message);
     new TypeIt("#textboxText", {
@@ -26,13 +26,14 @@ export async function typeWriter(context: { commit: Commit }, message: string | 
         instance.options.cursor = false;
         instance.destroy();
         resolve();
-        isTypeing.value = false;
+        isTyping.value = false;
       },
     }).go();
   });
 }
 
 export async function typeWriterPopup(context: { commit: Commit }, message: string | string[]) {
+  isTyping.value = true;
   return new Promise<void>((resolve) => {
     context.commit('addTextToHistory', message);
     new TypeIt("#textboxPopup", {
@@ -54,6 +55,7 @@ export async function typeWriterPopup(context: { commit: Commit }, message: stri
         instance.options.cursor = false;
         instance.destroy();
         resolve();
+        isTyping.value = false;
       },
     }).go();
   });

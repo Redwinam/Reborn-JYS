@@ -11,4 +11,4 @@ export const showFoodPopup = ref(false);
 export const showDrinkPopup = ref(false);
 export const showShopPopup = ref(false);
 
-export const isTypeing = ref(false);
+export const isTyping = ref(false);

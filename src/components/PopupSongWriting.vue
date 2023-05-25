@@ -20,7 +20,7 @@
     <div class="song">
       <div class="song-meta">
         <div class="album-cover">
-          <img :src="'/cover-images/lhmjvuyi@0.25x.jpg'" alt="废歌" />
+          <img :src="'/cover-images/feige.png'" alt="废歌" />
         </div>
         <div class="song-info">
           <h3>废歌</h3>
@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="button-group">
-        <button @click="writeFeiSong()">✐ 写歌</button>
+        <button @click="writeFeiSong()" :disabled="isTyping">✐ 写歌</button>
       </div>
     </div>
   </div>
@@ -50,7 +50,9 @@
 import { ref, computed, ssrContextKey } from 'vue'
 import { useStore } from 'vuex'
 import { attributeNames } from '../store/attributes'
-import { Song, songLibrary } from '../store/songs'
+import { Achievement } from '../store/achievements'
+import { Song, songLibrary, songFeiLibrary } from '../store/songs'
+import { isTyping } from './composables/gameRefs'
 
 const store = useStore()
 const songStages = computed(() => store.state.songStages)
@@ -144,8 +146,36 @@ function writeSong(stage: string, song: Song) {
   }
 }
 
-function writeFeiSong() {
-  store.dispatch('typeWriterPopup', '这歌废了。')
+async function writeFeiSong() {
+  const unlockedFeiSongs = store.state.unlockedFeiSongs;
+  const lockedFeiSongs = songFeiLibrary.filter((songFei: { name: any; }) => !unlockedFeiSongs.find((uf: { name: any; }) => uf.name === songFei.name));
+  let toMessage = '';
+  if (lockedFeiSongs.length > 0) {
+    let songFei = lockedFeiSongs[Math.floor(Math.random() * lockedFeiSongs.length)];
+    if (unlockedFeiSongs.length === 0) {
+      songFei = lockedFeiSongs[2];
+    }
+    store.commit('unlockFeiSong', songFei);
+    toMessage = `姜云升写了半首《${songFei.name}》，「${songFei.lyrics}」然后说这歌废啦。`;
+  } else {
+    const hasAchievement = store.state.achievements.find(
+      (ach: Achievement) => ach.name === '这歌废了' && ach.unlockTerm === store.state.term
+    );
+    if (!hasAchievement) {
+      store.commit('unlockAchievement', '这歌废了');
+      toMessage = '姜云升写了半首《这歌废了》，「这歌废了」然后说这歌废啦。';
+    } else {
+      toMessage = '姜云升废歌 + 1，'
+    }
+  }
+
+  store.commit('updateAttribute', { attribute: 'energy', value: -20 });
+  const redValue = 20 + Math.floor(Math.random() * 0.2 * store.state.attributes.popularity.red);
+  const blackValue = 5 + Math.floor(Math.random() * 0.08 * store.state.attributes.popularity.black);
+  store.commit('updateAttribute', { attribute: 'red', value: redValue });
+  store.commit('updateAttribute', { attribute: 'black', value: blackValue });
+  await store.dispatch('typeWriterPopup', [toMessage, '姜云升体力-20，人气红值+' + redValue + '，黑值+' + blackValue + '。']);
+  store.dispatch('incrementRound');
 }
 
 function listenSong(song: Song) {
@@ -217,7 +247,7 @@ function listenSong(song: Song) {
 }
 
 .song .button-group button:disabled {
-  background-color: #d3c6c4;
+  background-color: #ddd;
   color: #1e2228;
 }
 
