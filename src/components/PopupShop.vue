@@ -30,7 +30,7 @@
             <span>¥ {{ item.price }}</span>
             <div class="buttons-container">
               <button class="left-button" @click="purchaseItem(item.name, 1)">购买</button>
-              <button class="right-button" @click="showQuantityPopup = true">+</button>
+              <button class="right-button" @click="itemToBuy = item.name; showQuantityPopup = true">+</button>
             </div>
           </div>
         </div>
@@ -40,7 +40,7 @@
   </div>
 
   <div class="quantity-popup" v-if="showQuantityPopup">
-    <input v-model.number="quantityToBuy" type="number" min="1">
+    <input v-model.number="quantityToBuy" type="number" min="1"> {{ getQuantifier(itemToBuy) }}
     <button @click="confirmPurchase">确认购买</button>
     <button class="cancel-button" @click="showQuantityPopup = false">取消</button>
   </div>
@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
-import { itemsList } from '../store/actions/purchaseItem'
+import { itemsList, getQuantifier } from '../store/actions/purchaseItem'
 
 const store = useStore()
 
@@ -73,10 +73,11 @@ const purchaseItem = (itemName: string, quantity: number) => {
 }
 
 let showQuantityPopup = ref(false);
+let itemToBuy = ref('');
 let quantityToBuy = ref(1);
 
 const confirmPurchase = () => {
-  store.dispatch('purchaseItem', { itemName: 'item name', quantity: quantityToBuy.value });
+  store.dispatch('purchaseItem', { itemName: itemToBuy.value, quantity: quantityToBuy.value });
   showQuantityPopup.value = false;
   quantityToBuy.value = 1;
 }

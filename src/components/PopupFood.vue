@@ -5,28 +5,48 @@
       <span>¥ {{ food.cost }}</span>
       <span class="food-note">饱食度：{{ food.energy }}</span>
       <div class="select-buttons">
-        <button @click="selectFood(food.name)">堂食</button>
-        <button @click="packFood(food.name)">打包</button>
+        <button @click="eatFood(food.name)">堂食</button>
+        <button class="left-button" @click="packFood(food.name,1 )">打包</button>
+        <button class="right-button" @click="foodToPack = food.name; showQuantityPopup = true">+</button>
       </div>
     </div>
+  </div>
+
+  <div class="quantity-popup" v-if="showQuantityPopup">
+    <input v-model.number="quantityToBuy" type="number" min="1"> 份
+    <button @click="confirmPurchase">打包</button>
+    <button class="cancel-button" @click="showQuantityPopup = false">取消</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
 const store = useStore()
 
 const unlockedFoods = computed(() => store.state.unlockedFoods);
 
-const selectFood = (food: string) => {
-  store.dispatch('selectFood', food);
+const eatFood = (food: string) => {
+  store.dispatch('eatFood', food);
 }
 
-const packFood = (food: string) => {
-  store.dispatch('selectFood', food);
+const packFood = (food: string, quantity: number) => {
+  store.dispatch('packFood', {food, quantity: 1});
 }
+
+
+
+let showQuantityPopup = ref(false);
+let foodToPack = ref('');
+let quantityToBuy = ref(1);
+
+const confirmPurchase = () => {
+  packFood( foodToPack.value, quantityToBuy.value );
+  showQuantityPopup.value = false;
+  quantityToBuy.value = 1;
+}
+
 </script>
 
 <style scoped>

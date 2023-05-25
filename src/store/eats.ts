@@ -29,7 +29,7 @@ export interface Food {
   taste: 'spicy' | 'savory' | 'sweet';
 }
 
-export async function selectFood(context: {
+export async function eatFood(context: {
   state: any; commit: Commit, dispatch: Function 
 }, food: string) {
   const selectedFood = context.state.unlockedFoods.find((unlockedFood: Food) => unlockedFood.name === food);
@@ -44,6 +44,24 @@ export async function selectFood(context: {
   }
 }
 
+export async function packFood(context: {
+  state: any; commit: Commit, dispatch: Function 
+}, payload: {food: string, quantity: number}) {
+  const { food, quantity } = payload;
+  const selectedFood = context.state.unlockedFoods.find((unlockedFood: Food) => unlockedFood.name === food);
+  console.log(selectedFood);
+  if (selectedFood) {
+    if (context.state.attributes.money >= selectedFood.cost * quantity) {
+      context.commit('updateAttribute', { attribute: 'money', value: -selectedFood.cost * quantity });
+      context.commit('packFood', { food, quantity });
+      await context.dispatch('typeWriterPopup', '姜云升打包了' + quantity + '份' + selectedFood.name + '，很开心。');
+    } else {
+      await context.dispatch('typeWriterPopup', '抱歉，姜云升的钱不够，买不起' + quantity + '份' + selectedFood.name + '。');
+    }
+  } else {
+    await context.dispatch('typeWriterPopup', '无法找到指定的食物。');
+  }
+}
 
 export const allDrinks: Drink[] = [
   { name: '生椰拿铁', cost: 20, energy: 50, mood: 20, taste: 'sweet' },
@@ -61,7 +79,7 @@ export interface Drink {
   taste: 'spicy' | 'savory' | 'sweet';
 }
 
-export async function selectDrink(context: {
+export async function drinkDrink(context: {
   state: any; commit: Commit, dispatch: Function 
 }, payload: {drink: string, amount: number}) {
   const {drink, amount} = payload;

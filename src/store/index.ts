@@ -1,6 +1,6 @@
 import { createStore, Store, Commit } from 'vuex'
 
-import { Food, selectFood, selectDrink } from './eats'
+import { Food, eatFood, packFood, drinkDrink } from './eats'
 import { achievements, Achievement } from '../store/achievements'
 import { songLibrary, Song } from '../store/songs'
 
@@ -220,6 +220,39 @@ const mutations = {
     state.attributes.money -= 360 * payload
   },
 
+  purchaseItem(state: State, payload: { itemName: string; quantity: number }) {
+    const { itemName, quantity } = payload
+    if (state.inventory[itemName]) {
+      state.inventory[itemName].quantity += quantity
+    } else {
+      state.inventory[itemName] = {
+        quantity: quantity,
+        isFood: false,
+      }
+    }
+  },
+
+  packFood(state: State, { foodName, quantity }: { foodName: string, quantity: number }) {
+    if (state.inventory[foodName]) {
+      state.inventory[foodName].quantity += quantity;
+    } else {
+      state.inventory[foodName] = {
+        quantity: quantity,
+        isFood: true,
+      };
+    }
+  },
+
+  decreaseInventory(state: State, { itemName, quantity }: { itemName: string; quantity: number }) {
+    if (state.inventory[itemName]) {
+      state.inventory[itemName].quantity -= quantity
+      if (state.inventory[itemName].quantity <= 0) {
+        delete state.inventory[itemName];
+      }
+    }
+  },
+
+
   setSpecialEventDetails(state: State, specialEventDetails: { name: string; intro: string; options: string[]; }) {
     state.specialEventDetails = specialEventDetails;
   },
@@ -305,8 +338,9 @@ const actions = {
   goToLocation,
   performAction,
   purchaseItem, 
-  selectFood,
-  selectDrink, 
+  eatFood,
+  packFood,
+  drinkDrink, 
   specialEvent,
   specialEventOptionChosen,
   typeWriter,
