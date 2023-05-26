@@ -9,7 +9,7 @@
 
   <div v-if="!gameEnded">
 
-  <div class="header">
+  <div class="header" :class="currentTerm>1 ? 'header-l' :''">
     <div class="round-info">
       {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }} · 轮次: {{ currentRound }} / {{ totalRounds }}<template v-if="currentTerm>1"> · 第{{ arabicToChinese(currentTerm) }}周目</template>
     </div>

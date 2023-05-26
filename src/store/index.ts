@@ -300,7 +300,7 @@ const mutations = {
     const achievement = state.achievements.find(
       (ach) => ach.name === achievementName
     )
-    if (achievement) {
+    if (achievement && !achievement.unlocked) {
       achievement.unlocked = true;
       achievement.unlockTerm = state.term;
     }

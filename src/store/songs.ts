@@ -3,6 +3,7 @@ export interface Song {
   conditions: {
     [key: string]: number | boolean
   }
+  conditionsText?: string
   cost: number
   effects: {
     [key: string]: number
@@ -50,6 +51,7 @@ export const songLibrary: Song[] = [
       conditions: {
         talent: 100,
       },
+      conditionsText: '拥有衣服>=5件，包包>=5个',
       cost: 500, // 写歌所需金钱
       effects: {
         charm: -100, 

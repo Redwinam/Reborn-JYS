@@ -59,6 +59,13 @@
   padding: 0.6vh 0.6vh 1.2vh;
   position: relative;
 }
+
+.header-l {
+  background: url('@/assets/header_l.png') no-repeat;
+  background-size: contain;
+  background-position: top center;
+}
+
 .round-info {
   color: #f7f6f6;
   text-align: center;

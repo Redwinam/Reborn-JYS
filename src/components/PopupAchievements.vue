@@ -1,8 +1,9 @@
 <template>
+  <div class="achievement-container">
     <div v-for="(achievementGroup, key) in classifiedAchievements" :key="key">
       <h3>{{ key }}</h3>
       <ul class="achievements">
-        <li class="achievement" v-for="achievement in achievementGroup" :key="achievement.name">
+        <li class="achievement" v-for="achievement in achievementGroup" :key="achievement.name" :class="achievement.unlocked ? 'achievement-unlocked' : ''">
           <!-- <div class="achievement-badge">
             <img :src="getAchievementBadge(achievement)" alt="" />
           </div> -->
@@ -18,7 +19,7 @@
     </div>
 
     <p style="display: none;">制作人：@千啾略</p>
-
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -57,6 +58,16 @@ const getAchievementBadge = (achievement: Achievement) => {
 </script>
 
 <style scoped>
+
+.achievement-container {
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.achievement-container h3 {
+  margin: 0;
+}
+
 .achievements {
   display: flex;
   flex-wrap: wrap;
@@ -95,13 +106,13 @@ const getAchievementBadge = (achievement: Achievement) => {
 
 .achievement-info h4 {
   margin: 0;
-  font-size: 16px;
+  font-size: 0.96rem;
   font-weight: bold;
 }
 
 .achievement-info p {
   margin: 0;
-  font-size: 14px;
+  font-size: 0.8rem;
 }
 
 .grey-out {

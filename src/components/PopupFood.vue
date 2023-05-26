@@ -174,6 +174,7 @@ const confirmPurchase = () => {
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
   white-space: nowrap;
+  margin: 0;
 }
 
 .food-item .select-buttons .buttons-container .right-button {
@@ -182,6 +183,7 @@ const confirmPurchase = () => {
   border-bottom-right-radius: 6px;
   background-color: #d3c6c4;
   color: #1e2228;
+  margin: 0;
 }
 
 .quantity-popup {

@@ -9,13 +9,15 @@
         <p id="textboxPopup" v-if="title ==='买东西！'">要买什么呢？</p>
         <p id="textboxPopup" v-if="title ==='写歌'">一起写歌吧！</p>
         <p id="textboxPopup" v-if="title ==='物品'"></p>
-        <button v-if="showCloseButton" @click="$emit('close')" class="close-button">关闭</button>
+        <button v-if="showCloseButton" @click="$emit('close')" class="close-button"><X></X></button>
       </div>
     </div>
   </transition>
 </template>
 
 <script setup lang="ts">
+import { X } from 'lucide-vue-next'
+
 const props = defineProps({
   title: String,
   visible: Boolean,
@@ -51,6 +53,10 @@ const props = defineProps({
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.popup #textboxPopup {
+  font-size: 0.9rem;
+}
+
 .close-button {
   position: absolute;
   top: 10px;
@@ -58,6 +64,9 @@ const props = defineProps({
   border: none;
   background: transparent;
   cursor: pointer;
+  outline: none;
+  color: #1e2228;
+  padding: 10px;
 }
 
 .fade-enter-active,
