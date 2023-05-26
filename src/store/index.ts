@@ -23,6 +23,7 @@ interface State {
   totalRounds: number
   attributes: Attributes
   weak: boolean
+  drunk: number
   girlfriend: { type: string; effect: keyof Attributes; breakupReasons: string[] } | null
   girlfriendTypes: { type: string; effect: keyof Attributes; breakupReasons: string[] }[]
   flirtCount: number
@@ -77,6 +78,7 @@ const state: State = {
     mood: 0,
   },
   weak: false,
+  drunk: 0,
   flirtCount: 0,
   girlfriend: null,
   girlfriendTypes: [
@@ -195,6 +197,11 @@ const mutations = {
   setWeak(state: State, payload: boolean) {
     state.weak = payload
   },
+
+  updateDrunk(state: State, payload: number) {
+    state.drunk += payload
+  },
+
   setGirlfriend(state: State, payload: { type: string; effect: keyof Attributes; breakupReasons: string[] } | null) {
     state.girlfriend = payload
   },
@@ -306,6 +313,9 @@ const mutations = {
     state.term ++
     state.round = 1
     state.gameEnded = false
+
+    state.weak = false
+    state.drunk = 0
     state.specialEndingAchievement = null
     state.girlfriend = null
     state.flirtCount = 0
@@ -353,7 +363,7 @@ const actions = {
   typeWriterPopup,
   upgradeSkill,
 
-  incrementRound(context: { commit: Commit; state: State; dispatch: Function }) {
+  async incrementRound(context: { commit: Commit; state: State; dispatch: Function }) {
     context.commit('incrementRound');
     if ( !Math.floor((store.state.round - 16) % 36) ) {
       context.dispatch('specialEvent', '生日快乐');
@@ -385,6 +395,14 @@ const actions = {
     if (state.round > state.totalRounds) {
       context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '无法定义的结局' });
       context.commit('unlockAchievement', '无法定义的结局');
+    }
+
+    if (state.drunk > 0) {
+      store.commit('updateDrunk', -1);
+      if (state.drunk === 0) {
+        await new Promise(resolve => setTimeout(resolve, 600));
+        await context.dispatch('typeWriter', '姜云升的酒醒了。');
+      }
     }
 
     if ( state.relationRound > 15) {

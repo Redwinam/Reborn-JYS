@@ -77,10 +77,10 @@ export async function eatPackedFood(context: {
 }
 
 export const allDrinks: Drink[] = [
-  { name: '生椰拿铁', cost: 20, energy: 50, mood: 20, taste: 'sweet' },
-  { name: '可乐', cost: 5, energy: 12, mood:10, taste: 'sweet' },
-  { name: '啤酒', cost: 15, energy: 30, mood:-10, taste: 'sweet' },
-
+  { name: '生椰拿铁', cost: 20, energy: 50, mood: 20, type: 'coffee' },
+  { name: '可乐！', cost: 5, energy: 12, mood:10, type: 'sweet' },
+  { name: '奶茶！', cost: 25, energy: 12, mood:30, type: 'sweet' },
+  { name: '啤酒！', cost: 15, energy: 30, mood:-10, type: 'wine' },
 ];
 
 // Food类型
@@ -89,7 +89,7 @@ export interface Drink {
   cost: number;
   energy: number;
   mood: number;
-  taste: 'spicy' | 'savory' | 'sweet';
+  type: 'coffee' | 'sweet' | 'wine';
 }
 
 export async function drinkDrink(context: {
@@ -108,14 +108,26 @@ export async function drinkDrink(context: {
       context.commit('updateAttribute', { attribute: 'energy', value: selectedDrink.energy * amount });
       context.commit('updateAttribute', { attribute: 'mood', value: selectedDrink.mood * amount });
       
-      let message = '姜云升喝了' + amount + '杯' + selectedDrink.name;
+      let message = '姜云升喝了' + amount + '杯' + selectedDrink.name.replace('！', '');
       if (amount == 2) {
-        message += '，享受了第二杯半价的优惠';
+        message += '，第二杯半价';
       }
-      message += '，摸了摸腹肌。';
+
+      if (selectedDrink.type === 'coffee') {
+        message += '，精神恢复啦。';
+      } else if (selectedDrink.type === 'sweet') {
+        message += '，心情好好。';
+      } else if (selectedDrink.type === 'wine') {
+        context.commit('updateDrunk', amount)
+        if (amount == 1) {
+          message += '，当场喝醉。';
+        } else {
+          message += '，醉了一些。';
+        }
+      }
       await context.dispatch('typeWriterPopup', message);
     } else {
-      await context.dispatch('typeWriterPopup', '抱歉，姜云升的钱不够，喝不起' + amount + '杯' + selectedDrink.name + '。');
+      await context.dispatch('typeWriterPopup', '抱歉，姜云升的钱不够，喝不起' + amount + '杯' + selectedDrink.name.replace('！', '') + '。');
     }
   }
 }

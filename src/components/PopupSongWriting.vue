@@ -170,7 +170,7 @@ async function writeFeiSong() {
   }
 
   store.commit('updateAttribute', { attribute: 'energy', value: -20 });
-  const redValue = 20 + Math.floor(Math.random() * 0.2 * store.state.attributes.popularity.red);
+  const redValue = 20 + Math.floor(Math.random() * 0.12 * store.state.attributes.popularity.red);
   const blackValue = 5 + Math.floor(Math.random() * 0.08 * store.state.attributes.popularity.black);
   store.commit('updateAttribute', { attribute: 'red', value: redValue });
   store.commit('updateAttribute', { attribute: 'black', value: blackValue });

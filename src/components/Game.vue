@@ -18,11 +18,12 @@
 
   <div class="attributes" :class="isGoingOut? 'going-out-attributes' : ''">
 
-    <div><span>{{ attributeNames['popularity'] }}</span> 红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</div>
-    <div><span>{{ attributeNames['money'] }}</span> {{ attributes['money'] }}</div>
-    <div v-if="attributes['energy'] >= 0"><span> {{ attributeNames['energy'] }}</span> {{ attributes['energy'] }}<template v-if="weak">（虚弱！）</template></div>
-    <div v-else><span class="weak">体力透支</span> {{ attributes['energy'] }} <template v-if="weak">（虚弱！）</template> </div>
-    <div><span>{{ attributeNames['mood'] }}</span> {{ attributes['mood'] }}</div>
+    <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span><span class="attribute-number">红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</span></div>
+    <div><span class="attribute-name">{{ attributeNames['money'] }}</span><span class="attribute-number">{{ attributes['money'] }}</span></div>
+    <div v-if="attributes['energy'] >= 0"><span class="attribute-name">{{ attributeNames['energy'] }}</span><span class="attribute-number">{{ attributes['energy'] }}<template v-if="weak">（虚弱！）</template></span></div>
+    <div v-else><span class="attribute-name weak">体力透支</span><span class="attribute-number">{{ attributes['energy'] }} <template v-if="weak">（虚弱！）</template></span></div>
+    <div><span class="attribute-name">{{ attributeNames['mood'] }}</span><span class="attribute-number">{{ attributes['mood'] }}</span></div>
+    <div v-if="drunk>0"><span class="attribute-name weak">醉酒</span><span class="attribute-number">× {{drunk}}</span></div>
   </div>
 
   <!-- Textbox for the text-based game -->
@@ -136,6 +137,7 @@ const totalRounds = computed(() => store.state.totalRounds)
 const attributes = computed(() => store.state.attributes)
 const specialEvents = computed(() => store.state.specialEvents)
 const weak = computed(() => store.state.weak)
+const drunk = computed(() => store.state.drunk)
 
 const textHistory = computed(() => {
   const history = store.state.textHistory

@@ -120,6 +120,26 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         break;
 
       case '开直播':
+        if (store.state.attributes.energy < 10) {
+          await context.dispatch('typeWriter', '姜云升今天太累啦，没办法开直播了。');
+          return;
+        }
+        const existingAchievement = store.state.achievements.find(
+          (ach) => ach.name === '醉酒小姜' && ach.unlockTerm === store.state.term
+        );
+        
+        if (store.state.drunk > 0 && !existingAchievement ) {
+          context.commit('updateAttribute', { attribute: 'energy', value: -10 });
+          context.commit('updateAttribute', { attribute: 'red', value: (300 + Math.floor(Math.random() * 0.12 * store.state.attributes.popularity.red)) });
+          context.commit('updateAttribute', { attribute: 'divine', value: 9 });
+          await context.dispatch('typeWriter', ['姜云升今天喝醉了，却还是开了直播，讲了好多平时不会讲的话。', '姜云升的人气增加了，一项神秘的属性增加了。', '解锁了成就【醉酒小姜】']);
+          context.commit('unlockAchievement', '醉酒小姜');
+          break;
+        } else if (store.state.drunk > 0 && existingAchievement) {
+          await context.dispatch('typeWriter', '姜云升今天喝醉了，就不开直播了。');
+          break;
+        }
+
         const liveStreamingIntros = [
           '姜云升今天开直播啦！',
           '姜云升今天要在练刀房暴虐粉丝，开直播啦！',
@@ -132,11 +152,19 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         ];
         const randomLiveStreamingIntro = liveStreamingIntros[Math.floor(Math.random() * liveStreamingIntros.length)];
         context.commit('updateAttribute', { attribute: 'energy', value: -10 });
-        const redValue = 5 + Math.floor(Math.random() * 0.2 * store.state.attributes.popularity.red);
+        const redValue = 5 + Math.floor(Math.random() * 0.12 * store.state.attributes.popularity.red);
         const blackValue = 2 + Math.floor(Math.random() * 0.08 * store.state.attributes.popularity.black);
         context.commit('updateAttribute', { attribute: 'red', value: redValue });
         context.commit('updateAttribute', { attribute: 'black', value: blackValue });
-        await context.dispatch('typeWriter', [randomLiveStreamingIntro, '姜云升的人气红值+' + redValue + '，黑值+' + blackValue]);
+
+        // 人气高是开直播获得金钱奖励
+        if (store.state.attributes.popularity.red > 1000) {
+          const money = 1000 + Math.floor(Math.random() * 0.666 * store.state.attributes.popularity.red);
+          context.commit('updateAttribute', { attribute: 'money', value: money });
+          await context.dispatch('typeWriter', [randomLiveStreamingIntro, '姜云升的人气红值+' + redValue + '，黑值+' + blackValue + '，姜云升直播间人气爆棚，获得了' + money + '元礼物。']);
+        } else {
+          await context.dispatch('typeWriter', [randomLiveStreamingIntro, '姜云升的人气红值+' + redValue + '，黑值+' + blackValue]);
+        }
         break;
         
       default:

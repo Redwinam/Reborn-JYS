@@ -21,7 +21,7 @@
       </div>
       <div v-if="attributes['energy'] >= 0"><span class="attribute-name"> {{ attributeNames['energy'] }}</span> {{ attributes['energy'] }}<template v-if="weak">（虚弱！）</template></div>
       <div v-else><span class="weak attribute-name">体力透支</span> {{ attributes['energy'] }} <template v-if="weak">（虚弱！）</template> </div>
-      <div><span class="attribute-name">{{ attributeNames['mood'] }}</span> {{ attributes['mood'] }}</div>
+      <div><span class="attribute-name">{{ attributeNames['mood'] }}</span> {{ attributes['mood'] }} <template v-if="drunk>0">（醉酒 × {{drunk}}）</template></div>
 
     </div>
 
@@ -83,6 +83,7 @@ const store = useStore();
 
 const attributes = computed(() => store.state.attributes);
 const weak = computed(() => store.state.weak)
+const drunk = computed(() => store.state.drunk)
 
 const showBuyGoldPopup = ref(false)
 const showSellGoldPopup = ref(false)
@@ -137,10 +138,10 @@ const sellGold = () => {
   border: none;
   color: #fff;
   border-radius: 4px;
-  padding: 5px 10px;
+  padding: 5px 7px;
   font-size: 0.8em;
   cursor: pointer;
-  margin-left: 10px;
+  /* margin-left: 10px; */
   transition: background-color 0.3s ease;
 }
 
@@ -156,9 +157,15 @@ const sellGold = () => {
   transition: background-color 0.3s ease;
 }
 
+
 .span_sellGold {
   font-size: 0.8rem;
   cursor: pointer;
+  margin-right: 6px;
+}
+
+.popup-sub .button_buyGold, .popup-sub .button_sellGold {
+  padding: 5px 10px;
 }
 
 .bug-gold {

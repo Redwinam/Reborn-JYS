@@ -20,7 +20,7 @@ import { allDrinks } from '../store/eats'
 const store = useStore()
 
 const selectDrink = (drink: string, amount: number) => {
-  store.dispatch('selectDrink', {drink, amount});
+  store.dispatch('drinkDrink', {drink, amount});
 }
 </script>
 

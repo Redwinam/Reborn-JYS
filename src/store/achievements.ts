@@ -15,6 +15,7 @@ export const achievements: Achievement[] = [
   { name: '放松，呼吸', desc: '山里有位老神仙，他对我说……', event: true, ending: false, unlocked: false, },
   { name: '小学升戴墨镜', desc: '不建议戴', event: true, ending: false, unlocked: false, },
   { name: '小姜的餐厅', desc: '解锁所有食物！', event: false, ending: false, unlocked: false, },
+  { name: '醉酒小姜', desc: '不是酒后吐真言，是借着喝醉说心里话。', event: false, ending: false, unlocked: false, },
 
 
 
