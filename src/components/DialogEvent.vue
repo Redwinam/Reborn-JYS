@@ -33,7 +33,7 @@ const specialEventOptionChosen = (option: string) => {
 
 <style scoped>
 #textboxEvent {
-  font-size: 1.2rem;
+  font-size: 0.9rem;
   margin: 0.5rem 0;
   padding: 0.5rem;
   text-align: center;
@@ -43,6 +43,8 @@ const specialEventOptionChosen = (option: string) => {
   display: flex;
   justify-content: space-around;
   margin: 0.5rem 0;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .event-dialog__options button {
@@ -51,6 +53,7 @@ const specialEventOptionChosen = (option: string) => {
   color: #1e2228;
   border-radius: 6px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .event-dialog__options button:hover {

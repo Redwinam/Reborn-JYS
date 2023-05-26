@@ -29,6 +29,7 @@ interface State {
   flirtCount: number
   accompanyCount: number
   relationRound: number
+  breakupTimes: number
 
   unlockedFoods: Food[]
   inventory: Inventory
@@ -105,6 +106,7 @@ const state: State = {
   ],
   accompanyCount: 0,
   relationRound: 0,
+  breakupTimes: 0,
 
   unlockedFoods: [],
   inventory: {},
@@ -204,6 +206,9 @@ const mutations = {
 
   setGirlfriend(state: State, payload: { type: string; effect: keyof Attributes; breakupReasons: string[] } | null) {
     state.girlfriend = payload
+    if (payload === null) {
+      state.breakupTimes++
+    }
   },
   incrementFlirtCount(state: State) {
     state.flirtCount += 1

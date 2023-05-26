@@ -25,6 +25,9 @@ export const songLibrary: Song[] = [
       effects: {
         charm: 100,
         talent: 100,
+        divine: 100,
+        red: + 2000,
+        black: + 1000,
       },
       lyrics: '大概我承受过的一切，都是为如今和你遇见。',
       url: 'https://music.163.com/#/song?id=1887917182',
@@ -41,10 +44,31 @@ export const songLibrary: Song[] = [
       effects: {
         charm: 100,
         talent: 50,
+        energy: - 100,
+        red: + 1000,
+        black: + 500,
       },
       lyrics: '你听我说，只要是你，都OK的。',
       url: 'https://music.163.com/#/song?id=1920025919',
       coverImage: 'lhmjvuyi2'
+    },
+    {
+      title: '孤独面店',
+      conditions: {
+        talent: 500,
+      },
+      conditionsText: '和女孩子分手>=2次，且分手后至今没有出去鬼混',
+      cost: 1000,
+      effects: {
+        talent: + 100,
+        charm: + 50,
+        mood: + 100,
+        red: + 1000,
+        money: + 10000,
+      },
+      lyrics: '如果这是孤独，那我就敬孤独万岁。',
+      url: 'https://music.163.com/#/song?id=1909021556',
+      coverImage: 'gudummdm'
     },
     {
       title: '真没睡',
@@ -63,25 +87,6 @@ export const songLibrary: Song[] = [
       url: 'https://music.163.com/#/song?id=1358276770',
       coverImage: 'vfmwuv'
     },
-    {
-      title: '孤独面店',
-      conditions: {
-        breakups: 2,
-        noNewGirlfriendForMonths: 3,
-        noFlirt: true,
-      },
-      cost: 1000,
-      effects: {
-        talent: + 100,
-        charm: + 50,
-        mood: + 100,
-        money: + 10000,
-      },
-      lyrics: '如果这是孤独，那我就敬孤独万岁。',
-      url: 'https://music.163.com/#/song?id=1909021556',
-      coverImage: 'gudummdm'
-    },
-    // 其他歌曲
 ]
 
 export interface SongFei {

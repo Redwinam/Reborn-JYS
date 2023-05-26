@@ -105,7 +105,9 @@ const sellGold = () => {
 const gemini = () => {
   console.log('gemini')
   // 才华 + 100
-  store.commit('updateAttribute', { attribute: "talent", value: + 100 })
+  store.commit('updateAttribute', { attribute: "talent", value: + 1200 })
+  store.commit('updateAttribute', { attribute: "charm", value: + 1200 })
+  store.commit('updateAttribute', { attribute: "divine", value: + 1200 })
   store.commit('updateAttribute', { attribute: "money", value: + 10000 })
 }
 

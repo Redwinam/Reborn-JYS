@@ -2,10 +2,11 @@
 
 <h2>女朋友想和你分手</h2>
 <p>{{ randomBreakupReason }}</p>
-<button @click="handleBreakup('挽回')">挽回</button>
-<button @click="handleBreakup('沉默')">沉默</button>
-<button @click="handleBreakup('拜拜就拜拜')">拜拜就拜拜</button>
-
+<div class="button-container">
+  <button @click="handleBreakup('挽回')">挽回</button>
+  <button @click="handleBreakup('沉默')">沉默</button>
+  <button @click="handleBreakup('拜拜就拜拜')">拜拜就拜拜</button>
+</div>
 </template>
 
 <script setup lang="ts">
@@ -66,4 +67,22 @@ async function handleBreakup(choice: string) {
 </script>
 
 <style scoped>
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.button-container button {
+  padding: 0.5rem 1rem;
+  background-color: #f3f3f3;
+  color: #1e2228;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
 </style>

@@ -9,12 +9,12 @@
           <h3>《{{ song.title }}》</h3>
           <p>
             <span v-for="(value, key, index) in song.conditions" :key="key">{{ attributeNames[key] }}: {{ value }}<span v-if="index !== Object.keys(song.conditions).length - 1"> / </span></span>
-            <BatteryWarning size="16" v-if="song.conditionsText"></BatteryWarning>
+            <BatteryWarning size="16" v-if="song.conditionsText" @click="store.dispatch('typeWriterPopup', song.conditionsText)"></BatteryWarning>
           </p>
         </div>
       </div>
       <div class="button-group">
-        <p :class="song.isAvailable ? 'song-available' : ''">{{ !song.isAvailable ? '未达成' : '已达成' }}</p>
+        <p :class="song.isAvailable ? 'song-available' : ''" @click="store.dispatch('typeWriterPopup', songConditions(song))">{{ !song.isAvailable ? '未达成' : '已达成' }}</p>
         <button @click="writeSong('demo', song)" :class="song.isAvailable ? 'song-available' : ''" v-if="!songStages[song.title] || songStages[song.title].completedStage === null" :disabled="isTyping"><Edit3 size="10"></Edit3> DEMO</button>
         <button @click="writeSong('record', song)" class="song-available" v-if="songStages[song.title] && songStages[song.title].completedStage === 'demo'" :disabled="isTyping"><Mic2 size="10"></Mic2>  录歌</button>
         <button @click="writeSong('release', song)" class="song-available" v-if="songStages[song.title] && songStages[song.title].completedStage === 'record'" :disabled="isTyping"><Radio size="10"></Radio> 上线</button>
@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { Edit3, Eraser, Mic2, Play, Radio, BatteryWarning } from 'lucide-vue-next'
 
@@ -68,27 +68,30 @@ const currentSong = ref(null) as any
 
 function isSongAvailable(song: Song) {
   if (store.state.songStages[song.title] && store.state.songStages[song.title].unlocked) {
-    return true
-  } 
-  
-
+    return true;
+  }
 
   for (const [key, value] of Object.entries(song.conditions)) {
     if (store.state.attributes[key] < value) {
-      return false
+      return false;
     }
   }
-  
+
   switch (song.title) {
+    case '孤独面店':
+      if (store.state.breakupTimes < 2 || store.state.flirtCount > 0) {
+        return false;
+      }
+      break;
+
     case '真没睡':
       if (!store.state.inventory['衣服'] || store.state.inventory['衣服'].quantity < 5 || !store.state.inventory['包包']|| store.state.inventory['包包'].quantity < 5) {
-        return false
+        return false;
       }
-      break
+      break;
   }
 
-  store.commit('unlockSong', song.title)
-  return true
+  return true;
 }
 
 const availableSongs = computed(() => {
@@ -100,17 +103,40 @@ const availableSongs = computed(() => {
   })
 })
 
+async function unlockSongs() {
+  for (const song of songLibrary) {
+    if (isSongAvailable(song) && (!store.state.songStages[song.title] || !store.state.songStages[song.title].unlocked)) {
+      store.commit('unlockSong', song.title);
+      await store.dispatch('typeWriterPopup', [`解锁了新歌曲《${song.title}》！`]);
+    }
+  }
+}
+
+onMounted(() => {
+  const textboxPopup = document.getElementById('textboxPopup');
+  if (textboxPopup) {
+    unlockSongs();
+  }
+});
+
+const songConditions = (song: Song) => {
+  const conditions = []
+  conditions.push(
+    Object.entries(song.conditions)
+    .map(([key, value]) => `${attributeNames[key]} >= ${value}`)
+    .join(', ')
+  )
+  if (song.conditionsText) {
+    conditions.push(song.conditionsText)
+  }
+  return conditions
+}
+
 async function writeSong(stage: string, song: Song) {
   if (!isSongAvailable(song)) {
     const conditions = [`歌曲《${song.title}》未达成所有条件——`]
-    conditions.push(
-      Object.entries(song.conditions)
-      .map(([key, value]) => `${attributeNames[key]} >= ${value}`)
-      .join(', ')
-    )
-    if (song.conditionsText) {
-      conditions.push(song.conditionsText)
-    }
+    // 连接songonditions(song)数组
+    conditions.push(...songConditions(song))
     store.dispatch('typeWriterPopup', conditions)
     return
   }
@@ -123,6 +149,9 @@ async function writeSong(stage: string, song: Song) {
     for (const [key, effect] of Object.entries(song.effects)) {
       if (key === 'money') {
         continue
+      } else if (key === 'energy') {
+        store.commit('updateAttribute', { attribute: key, value: effect })
+        continue
       }
       store.commit('updateAttribute', { attribute: key, value: effect * 0.2 })
     }
@@ -130,7 +159,9 @@ async function writeSong(stage: string, song: Song) {
     let attributesChangeStr = Object.entries(song.effects)
     .filter(([key]) => key !== 'money')
     .map(([key, value]) => {
-      value = value * 0.2;
+      if (key !== 'energy') {
+        value = value * 0.2;
+      }
       let sign = value >= 0 ? '+' : '';
       return `${attributeNames[key]}${sign}${value}`;
     })
@@ -151,12 +182,16 @@ async function writeSong(stage: string, song: Song) {
       if (key === 'money') {
         store.commit('updateAttribute', { attribute: key, value: effect })
         continue
+      } else if (key === 'energy') {
+        continue
       }
       store.commit('updateAttribute', { attribute: key, value: effect * 0.8 })
     }
     store.commit('setSongStages', { songTitle: song.title, stage: 'release' })
-    let attributesChangeStr = Object.entries(song.effects).map(([key, value]) => {
-      if (key != 'money') {
+    let attributesChangeStr = Object.entries(song.effects)
+    .filter(([key]) => key !== 'energy')
+    .map(([key, value]) => {
+      if (key !== 'money') {
         value = value *0.8;
       }
       let sign = value >= 0 ? '+' : '';

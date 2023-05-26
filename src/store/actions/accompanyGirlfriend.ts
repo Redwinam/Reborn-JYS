@@ -62,7 +62,7 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
         );
 
         if (!existingAchievement) {
-          if (Math.random() < 0.15) {
+          if (Math.random() < 0.15 * store.state.relationRound) {
             context.dispatch('specialEvent', '姜哥，玩挺好');
           }
         }

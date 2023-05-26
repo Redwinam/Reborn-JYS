@@ -132,8 +132,8 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           context.commit('updateAttribute', { attribute: 'energy', value: -10 });
           context.commit('updateAttribute', { attribute: 'red', value: (300 + Math.floor(Math.random() * 0.12 * store.state.attributes.popularity.red)) });
           context.commit('updateAttribute', { attribute: 'divine', value: 9 });
-          await context.dispatch('typeWriter', ['姜云升今天喝醉了，却还是开了直播，讲了好多平时不会讲的话。', '姜云升的人气增加了，一项神秘的属性增加了。', '解锁了成就【醉酒小姜】']);
           context.commit('unlockAchievement', '醉酒小姜');
+          await context.dispatch('typeWriter', ['姜云升今天喝醉了，却还是开了直播，讲了好多平时不会讲的话。', '姜云升的人气增加了，一项神秘的属性增加了。', '解锁了第' + store.state.achievements.filter((ach) => ach.unlocked).length + '个成就【醉酒小姜】']);
           break;
         } else if (store.state.drunk > 0 && existingAchievement) {
           await context.dispatch('typeWriter', '姜云升今天喝醉了，就不开直播了。');

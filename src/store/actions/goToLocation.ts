@@ -34,7 +34,7 @@ export async function goToLocation(context: {
         );
         if (!hasAchievement) {
           context.commit('unlockAchievement', '小姜的餐厅');
-          await context.dispatch('typeWriter', '姜云升已经解锁了所有的食物，解锁成就【小姜的餐厅】。');
+          await context.dispatch('typeWriter', '姜云升已经解锁了所有的食物，解锁了第' + context.state.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【小姜的餐厅】。');
         }
       }
       // 等待1秒钟
@@ -86,9 +86,9 @@ export async function goToLocation(context: {
         );
       
         if (hasSunglasses && !hasAchievement) {
-          await context.dispatch('typeWriter', '姜云升戴着墨镜去剪了个新发型，花费100元，魅力-100。解锁成就【小学升戴墨镜】（不建议戴）。')
           context.commit('updateAttribute', { attribute: 'charm', value: -100 })
           context.commit('unlockAchievement', '小学升戴墨镜');
+          await context.dispatch('typeWriter', '姜云升戴着墨镜去剪了个新发型，花费100元，魅力-100。解锁了第' + context.state.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【小学升戴墨镜】（不建议戴）。')
         } else if (hasSunglasses && hasAchievement) {
           await context.dispatch('typeWriter', '姜云升再次戴着墨镜去剪了个新发型，花费100元，魅力-20。')
           context.commit('updateAttribute', { attribute: 'charm', value: -20 })

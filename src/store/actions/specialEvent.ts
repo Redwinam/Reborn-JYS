@@ -117,7 +117,7 @@ export async function specialEventOptionChosen(context: {
 
       await new Promise(resolve => setTimeout(resolve, 1000));
       context.commit('unlockAchievement', payload.event);
-      await context.dispatch('typeWriter', ['姜云升解锁了成就【放松，呼吸】。']);
+      await context.dispatch('typeWriter', ['姜云升解锁了第' + context.rootState.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【放松，呼吸】。']);
     } else {
       await context.dispatch('typeWriter', ['姜云升选择了不去丽江旅游，避免了一次巨大的伤害。']);
     }
