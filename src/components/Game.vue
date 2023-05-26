@@ -9,12 +9,13 @@
 
   <div v-if="!gameEnded">
 
-  <div class="header" :class="currentTerm>1 ? 'header-l' :''">
-    <div class="round-info">
-      {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }} · 轮次: {{ currentRound }} / {{ totalRounds }}<template v-if="currentTerm>1"> · 第{{ arabicToChinese(currentTerm) }}周目</template>
+  <div class="header-container">
+    <div class="header" :class="currentTerm>1 ? 'header-l' :''">
+      <div class="round-info">
+        {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }} · 轮次: {{ currentRound }} / {{ totalRounds }}<template v-if="currentTerm>1"> · 第{{ arabicToChinese(currentTerm) }}周目</template>
+      </div>
     </div>
   </div>
-    <!-- <h1>重生<small>之我是姜云升</small>之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升之我是姜云升</h1> -->
 
   <div class="attributes" :class="isGoingOut? 'going-out-attributes' : ''">
 
@@ -127,6 +128,11 @@ import { isAtHome, isGoingOut,
   isTyping
 } from './composables/gameRefs';
 
+const convertStyle = () => {
+    document.body.style.setProperty('height', `${window.innerHeight}px`);
+}
+window.addEventListener("resize", convertStyle);
+window.addEventListener("DOMContentLoaded", convertStyle);
 
 const store = useStore()
 

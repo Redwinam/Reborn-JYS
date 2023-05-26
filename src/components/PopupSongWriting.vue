@@ -308,7 +308,6 @@ function listenSong(song: Song) {
 
 .song .button-group p {
   margin: 0;
-  margin-bottom: -0.2rem;
   font-size: 0.7rem;
   font-weight: bold;
   text-align: right;
