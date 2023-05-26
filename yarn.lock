@@ -345,6 +345,11 @@ is-core-module@^2.11.0:
   dependencies:
     has "^1.0.3"
 
+lucide-vue-next@^0.221.0:
+  version "0.221.0"
+  resolved "https://registry.npmjs.org/lucide-vue-next/-/lucide-vue-next-0.221.0.tgz#a31146f427b5827a31b938fe743caaf48e9e8ddc"
+  integrity sha512-G3e1va+u6Xb0uKYLyFHqy5mSxrqqZol4gQK7+RHgy32d0s9XU11MGSRb8DM7C1/Q/DCPis/kCDJnJP9m1GHD+A==
+
 magic-string@^0.25.7:
   version "0.25.9"
   resolved "https://registry.npmjs.org/magic-string/-/magic-string-0.25.9.tgz"

@@ -61,20 +61,27 @@ const showReleaseSongModal = ref(false)
 const currentSong = ref(null) as any
 
 function isSongAvailable(song: Song) {
+  if (store.state.songStages[song.title] && store.state.songStages[song.title].unlocked) {
+    return true
+  } 
+  
+
+
   for (const [key, value] of Object.entries(song.conditions)) {
     if (store.state.attributes[key] < value) {
       return false
     }
   }
+  
   switch (song.title) {
     case '真没睡':
-      if (store.state.attributes.popularity < 100) {
+      if (!store.state.inventory['衣服'] || store.state.inventory['衣服'].quantity < 5 || !store.state.inventory['包包']|| store.state.inventory['包包'].quantity < 5) {
         return false
       }
       break
   }
 
-
+  store.commit('unlockSong', song.title)
   return true
 }
 
@@ -101,14 +108,14 @@ function writeSong(stage: string, song: Song) {
       store.commit('updateAttribute', { attribute: key, value: effect * 0.2 })
     }
     store.commit('setSongStages', { songTitle: song.title, stage: 'demo' })
-    let attributesChangeStr = Object.entries(song.effects).map(([key, value]) => {
-      if (key === 'money') {
-        return ''
-      }
-      value = value *0.2;
+    let attributesChangeStr = Object.entries(song.effects)
+    .filter(([key]) => key !== 'money')
+    .map(([key, value]) => {
+      value = value * 0.2;
       let sign = value >= 0 ? '+' : '';
       return `${attributeNames[key]}${sign}${value}`;
-    }).join('、');
+    })
+    .join('、');
     store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经完成DEMO啦，姜云升属性 ${attributesChangeStr} 。`)
 
   } else if (stage === 'record' && currentStage.completedStage === 'demo') {
@@ -244,6 +251,7 @@ function listenSong(song: Song) {
   background-color: #1e2228;
   color: #d3c6c4;
   border-radius: 5px;
+  white-space: nowrap;
 }
 
 .song .button-group button:disabled {

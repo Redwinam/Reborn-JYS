@@ -33,9 +33,12 @@ export const attributeNames: AttributeNames = {
   talent: '才华',
   charm: '魅力',
   popularity: '人气',
+  red: '人气红值',
+  black: '人气黑值',
   money: '金钱',
   skill: '技能',
   energy: '体力',
   mood: '心情',
   divine: '???',
+
 }

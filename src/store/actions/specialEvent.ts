@@ -86,7 +86,7 @@ export async function specialEventOptionChosen(context: {
     await context.dispatch('typeWriter', ['又强壮了许多，最大体力值+10！', '体力恢复满格！', '心情恢复满格！']);
     context.commit('updateAttribute', { attribute: 'maxEnergy', value: 10 });
     context.commit('updateAttribute', { attribute: 'energy', value: context.rootState.attributes.maxEnergy });
-    context.commit('updateAttribute', { attribute: 'mood', value: 100 });
+    context.commit('updateAttribute', { attribute: 'mood', value: 100 - context.rootState.attributes.mood });
     await new Promise(resolve => setTimeout(resolve, 1000));
     await context.dispatch('typeWriter', ['祝姜云升生日快乐！']);
   }

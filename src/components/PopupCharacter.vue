@@ -5,7 +5,7 @@
       <div><span class="attribute-name">姓名</span>姜云升</div>
       <div><span class="attribute-name">国籍</span>中国</div>
       <div><span class="attribute-name">生日</span>1996年6月1日 / 四月十六</div>
-      <div><span class="attribute-name">年龄 / 星座</span>{{ Math.floor((store.state.round - 16) / 36) + 16 }}岁 / 双子座</div>
+      <div><span class="attribute-name">年龄 / 星座</span><span>{{ Math.floor((store.state.round - 16) / 36) + 16 }}岁 / <span @click="gemini()">双子座</span></span></div>
       <div><span class="attribute-name">身高 / 体重</span> 182cm / 60kg</div>
 
       <div><span class="attribute-name">{{ attributeNames['talent'] }}</span> {{ attributes['talent'] }}</div>
@@ -100,6 +100,13 @@ const sellGold = () => {
     store.commit('buyGold', -goldAmount.value)
     showSellGoldPopup.value = false
   }
+}
+
+const gemini = () => {
+  console.log('gemini')
+  // 才华 + 100
+  store.commit('updateAttribute', { attribute: "talent", value: + 100 })
+  store.commit('updateAttribute', { attribute: "money", value: + 10000 })
 }
 
 </script>

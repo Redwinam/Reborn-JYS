@@ -116,7 +116,7 @@ const confirmPurchase = () => {
   border-bottom: 1px solid #ddd;
 }
 
-.shop-item:last-child {
+.shop-list .shop-item:last-child {
   border-bottom: none;
 }
 

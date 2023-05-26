@@ -39,7 +39,7 @@ interface State {
 
   songs: string[]
   songLibrary: Song[]
-  songStages: Record<string, { completedStage: string | null }>
+  songStages: Record<string, { completedStage: string | null, unlocked: boolean }>
   unlockedFeiSongs: SongFei[]
 
   specialEvents: string[]
@@ -265,12 +265,24 @@ const mutations = {
     state.specialEventDetails = specialEventDetails;
   },
 
+  unlockSong(state: State, songTitle: string) {
+    if (state.songStages[songTitle]) {
+      state.songStages[songTitle].unlocked = true;
+    } else {
+      state.songStages[songTitle] = {
+        completedStage: null,
+        unlocked: true
+      };
+    }
+  },
+
   setSongStages(state: State, songStages: { songTitle: string; stage: string }) {
     if (state.songStages[songStages.songTitle]) {
       state.songStages[songStages.songTitle].completedStage = songStages.stage;
     } else {
       state.songStages[songStages.songTitle] = {
         completedStage: songStages.stage,
+        unlocked: true
       };
     }
   },

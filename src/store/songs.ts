@@ -54,6 +54,8 @@ export const songLibrary: Song[] = [
       effects: {
         charm: -100, 
         talent: 100,
+        red: + 1000,
+        black: + 1000,
       },
       lyrics: '你衣服包包给你换新的，先别动手，先好好听着！',
       url: 'https://music.163.com/#/song?id=1358276770',
@@ -68,6 +70,8 @@ export const songLibrary: Song[] = [
       },
       cost: 1000,
       effects: {
+        talent: + 100,
+        charm: + 50,
         mood: + 100,
         money: + 10000,
       },
