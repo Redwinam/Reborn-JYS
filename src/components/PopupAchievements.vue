@@ -66,11 +66,11 @@ const getAchievementBadge = (achievement: Achievement) => {
 }
 
 .achievement {
-  width: 45%;
+  flex: 0 0 calc(50% - 30px);
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   background: #f9f9f9;
   display: flex;
   align-items: center;

@@ -80,20 +80,20 @@ const confirmPurchase = () => {
   align-items: center;
   border: 2px solid #1e2228;
   border-radius: 10px;
-  padding: 10px;
+  padding: 0.7rem;
   margin-bottom: 10px;
 
 }
 
 .food-item .item-info {
   width: 100%;
-  line-height: 24px;
+  line-height: 1rem;
 }
 
 .food-item .item-info p {
   margin: 0;
   line-height: 1.2;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: bold;
 }
 
@@ -102,6 +102,11 @@ const confirmPurchase = () => {
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
+}
+
+.food-item .food-meta span {
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 .food-note {
