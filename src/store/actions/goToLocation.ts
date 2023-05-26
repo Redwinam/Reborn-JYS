@@ -97,7 +97,7 @@ export async function goToLocation(context: {
           context.commit('updateAttribute', { attribute: 'charm', value: -10 })
         }
       
-        context.commit('incrementRound');
+        context.dispatch('incrementRound');
         break;
       
       
