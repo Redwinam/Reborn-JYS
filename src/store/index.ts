@@ -416,6 +416,14 @@ const actions = {
       }
     }
 
+    // 金钱达到100000000，解锁成就【汤臣亿品】
+    if (store.state.attributes.money >= 100000000) {
+      if (!store.state.achievements.find((ach) => ach.name === '汤臣亿品' && ach.unlocked === true)) {
+        context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '汤臣亿品' });
+        context.commit('unlockAchievement', '汤臣亿品');
+      }
+    }
+
 
 
 

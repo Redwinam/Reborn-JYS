@@ -25,4 +25,5 @@ export const achievements: Achievement[] = [
   { name: '姜云升虚弱',  desc: '姜云升的体力被透支到了极限，由于极度虚弱，不得不结束游戏。', event: false, ending: true, unlocked: false, },
   { name: '无法定义的结局', desc: '“你们可以像看一个电视剧一样观看我的人生……”', event: false, ending: true, unlocked: false, },
   { name: '皮卡皮卡', desc: '解锁皮卡丘结局，和皮卡丘快乐地生活在一起！', event: false, ending: true, unlocked: false, },
+  { name: '汤臣亿品', desc: '“有两套更好，一套给我，一套给我妈……”', event: false, ending: true, unlocked: false, },
 ]
