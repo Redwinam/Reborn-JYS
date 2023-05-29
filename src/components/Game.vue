@@ -87,13 +87,36 @@
 
 </div>
 
-<Dialog :visible="gameEnded" class="game-ended-dialog">
-  <h2>游戏结束</h2>
+<Dialog :visible="showGameEndDialog" class="game-ended-dialog">
+  <h2>{{ gameEnded ? '游戏结束' : '游戏结局'}}</h2>
   <p class="desc">{{ specialEndingAchievement.desc }}</p>
-  <button @click="restartGame">重新开始</button>
+  <div class="game-ended-dialog-buttons">
+    <button class="continue-game-button" v-if="!gameEnded" @click="showGameEndDialog = false">继续本轮！</button>
+    <button class="restart-game-button" @click="restartGame(false)">重新开始</button>
+    <div class="reset-data-button-container">
+      <button class="reset-data-button" @click="showGameEndConfirmPopup = true">重置数据</button>
+      <HelpCircle :size="12" @click="showGameEndNotePopup = true"></HelpCircle>
+    </div>
+  </div>
   <p class="achievement">您已获得结局成就：【{{ specialEndingAchievement.name }}】</p>
   <p class="hint">（重启后保留已获得的成就）</p>
 </Dialog>
+
+<Popup :visible = "showGameEndNotePopup" @close = "showGameEndNotePopup = false" class="game-ended-dialog">
+  <p class="desc">游戏默认重新开启是为类Roguelite模式，保留当前角色属性的20%⚡️以及所有已解锁的收集品🌟。如玩家希望游戏结局时重置数据，将清空所有属性⚡️和收集品🌟，但依旧会保留已获得的成就🏆。希望玩得开心！</p>
+  <div class="game-ended-dialog-buttons">
+    <button class="restart-game-button confirm-button" @click="showGameEndNotePopup = false">了解！</button>
+  </div>
+</Popup>
+
+<Popup :visible = "showGameEndConfirmPopup" @close = "showGameEndConfirmPopup = false" class="game-ended-dialog">
+  <h2>确认重置游戏数据吗？</h2>
+  <p class="desc">游戏默认重新开启是为类Roguelite模式，保留当前角色属性的20%⚡️以及所有已解锁的收集品🌟。如玩家希望游戏结局时重置数据，将清空所有属性⚡️和收集品🌟，但依旧会保留已获得的成就🏆。希望玩得开心！</p>
+  <div class="game-ended-dialog-buttons">
+    <button class="restart-game-button" @click="restartGame(true)">重新开始</button>
+    <button class="confirm-button cancel-button" @click="showGameEndConfirmPopup = false">取消</button>
+  </div>
+</Popup>
 
 </div>
 
@@ -102,7 +125,7 @@
 <script setup lang="ts">
 import { useStore } from 'vuex'
 import { computed, ref, nextTick, watch } from 'vue'
-// import { onUpdated, ref,  } from 'vue'
+import { HelpCircle } from 'lucide-vue-next'
 
 import Popup from '../components/Popup.vue'
 import PopupAchievements from '../components/PopupAchievements.vue'
@@ -123,8 +146,8 @@ import DialogUpgradeSkill from '../components/DialogUpgradeSkill.vue'
 import { attributeNames } from '../store/attributes'
 
 import { isAtHome, isGoingOut, 
-  showBreakupDialog, showEventDialog, showSongWritingDialog,
-  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog,
+  showBreakupDialog, showEventDialog, showSongWritingDialog, showGameEndDialog, 
+  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, 
   isTyping
 } from './composables/gameRefs';
 
@@ -140,8 +163,9 @@ const currentTerm = computed(() => store.state.term)
 const currentYear = computed(() => store.state.year)
 const currentRound = computed(() => store.state.round)
 const totalRounds = computed(() => store.state.totalRounds)
+const gameEnded = computed(() => store.state.gameEnded)
+
 const attributes = computed(() => store.state.attributes)
-const specialEvents = computed(() => store.state.specialEvents)
 const weak = computed(() => store.state.weak)
 const drunk = computed(() => store.state.drunk)
 
@@ -161,7 +185,6 @@ watch(showTextHistoryPopup, async (newValue) => {
   }
 })
 
-const gameEnded = computed(() => store.state.gameEnded)
 const specialEndingAchievement = computed(() => store.state.specialEndingAchievement)
 
 const accompanyGirlfriend = () => { store.dispatch('accompanyGirlfriend') }
@@ -179,6 +202,9 @@ const showCharacterPopup = ref(false)
 const showItemsPopup = ref(false)
 const showSkillsPopup = ref(false)
 const showAchievementsPopup = ref(false)
+
+const showGameEndNotePopup = ref(false)
+const showGameEndConfirmPopup = ref(false)
 
 // Calculate the current month and period
 const currentMonth = computed(() => Math.ceil((currentRound.value % 36) / 3) || 12)
@@ -198,8 +224,9 @@ function arabicToChinese(number: number): string {
   }
 }
 
-function restartGame() {
-  store.commit('resetGameState')
+function restartGame(resetData: boolean) {
+  showGameEndDialog.value = false
+  store.commit('resetGameState', resetData)
 }
 
 </script>

@@ -241,11 +241,36 @@ footer button {
   color: #4c4d55;
 }
 
-.game-ended-dialog button {
-  padding: 0.4em 1rem;
+.game-ended-dialog button.restart-game-button {
+  padding: 0.4rem 1rem;
   border: 2px solid #1e2228;
   background-color: #9d4842;
   color: #fff;
+}
+
+.game-ended-dialog .reset-data-button-container {
+  margin: 0.25rem auto;
+  gap: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-ended-dialog button.reset-data-button {
+  padding: 0.2rem;
+  font-size: 0.8rem;
+  border: none;
+  background: none;
+  color: #1e2228;
+}
+
+
+.game-ended-dialog button.confirm-button {
+  margin-bottom: 0.75rem;
+}
+
+.game-ended-dialog button.cancel-button {
+  margin-left: 0.75rem;
 }
 
 .game-ended-dialog .achievement {

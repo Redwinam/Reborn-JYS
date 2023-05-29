@@ -15,7 +15,7 @@ import { purchaseItem, Inventory } from './actions/purchaseItem';
 import { upgradeSkill, SkillLevelMapping } from './actions/upgradeSkill';
 import { typeWriter, typeWriterPopup } from './actions/typeWriter';
 
-import { showBreakupDialog } from '../components/composables/gameRefs';
+import { showBreakupDialog, showGameEndDialog } from '../components/composables/gameRefs';
 
 interface State {
   term: number
@@ -48,7 +48,6 @@ interface State {
 
   unlockedVitamins: Vitamin[]
 
-  specialEvents: string[]
   specialEventDetails: { name: string, intro: string, options: string[] } | null
 
   gameEnded: boolean
@@ -128,7 +127,6 @@ const state: State = {
 
   unlockedVitamins: [],
 
-  specialEvents: [],
   specialEventDetails: null,
 
   gameEnded: false,
@@ -335,6 +333,7 @@ const mutations = {
   },
 
   setGameEnded(state: State, payload: { gameEnded: boolean; specialEndingAchievementName: string }) {
+    showGameEndDialog.value = true
     state.gameEnded = payload.gameEnded
     const specialEndingAchievement = state.achievements.find(
       (ach) => ach.name === payload.specialEndingAchievementName && ach.ending
@@ -342,42 +341,65 @@ const mutations = {
     state.specialEndingAchievement = specialEndingAchievement || null
   },
 
-  resetGameState(state: State) {
+  resetGameState(state: State, resetData: boolean) {
     state.term ++
     state.round = 1
     state.gameEnded = false
+    state.specialEndingAchievement = null
+    state.textHistory = []
 
     state.weak = false
     state.drunk = 0
     state.sleepHours = 0
-    state.specialEndingAchievement = null
+
     state.girlfriend = null
     state.flirtCount = 0
+
     state.accompanyCount = 0
     state.relationRound = 0
-    state.attributes = {
-      divine: 0,
-      talent: 0,
-      charm: 0,
-      popularity: {
-        red: 0,
-        black: 0,
-      },
-      money: 0,
-      gold: 0,
-      skill: {
-        freestyle: 0,
-        gaming: 0,
-        gamingLevel: 'D',
-        freestyleLevel: 'D'
-      },
-      energy: 100,
-      maxEnergy: 100,
-      mood: 0,
+
+    if (resetData) {
+      state.attributes = {
+        divine: 0,
+        talent: 0,
+        charm: 0,
+        popularity: {
+          red: 0,
+          black: 0,
+        },
+        money: 0,
+        gold: 0,
+        skill: {
+          freestyle: 0,
+          gaming: 0,
+          gamingLevel: 'D',
+          freestyleLevel: 'D'
+        },
+        energy: 100,
+        maxEnergy: 100,
+        mood: 0,
+      }
+
+      state.undergroundCount = 0
+      state.specialEventDetails = null
+      state.inventory = {}
+      state.songStages = {}
+      state.unlockedFeiSongs = []
+      state.unlockedVitamins = []
+      state.unlockedFoods = []
+
+    } else {
+      state.attributes.talent = Math.floor(state.attributes.talent * 0.2)
+      state.attributes.charm = Math.floor(state.attributes.charm * 0.2)
+      state.attributes.divine = Math.floor(state.attributes.divine * 0.2)
+      state.attributes.popularity.red = Math.floor(state.attributes.popularity.red * 0.2)
+      state.attributes.popularity.black = Math.floor(state.attributes.popularity.black * 0.2)
+      state.attributes.money = Math.floor(state.attributes.money * 0.2)
+      state.attributes.gold = Math.floor(state.attributes.gold * 0.2)
+      state.attributes.maxEnergy = Math.floor((state.attributes.maxEnergy - 100) * 0.2 + 100)
+      state.attributes.energy = state.attributes.maxEnergy
+      state.attributes.mood = 0
     }
-    state.undergroundCount = 0
-    state.specialEvents = []
-    state.specialEventDetails = null
   },
 
 }
