@@ -117,6 +117,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         ];
         const randomGamingIntro = gamingIntros[Math.floor(Math.random() * gamingIntros.length)];
         context.commit('updateAttribute', { attribute: 'energy', value: -10 });
+        context.commit('updateAttribute', { attribute: 'mood', value: 20 });
 
         const skill = 'gaming';
         for (const level of SkillLevelMapping) {
@@ -129,11 +130,11 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         }
 
         context.commit('updateAttribute', { attribute: 'gaming', value: 1 });
-        await context.dispatch('typeWriter', [randomGamingIntro, '姜云升的电竞技能值+1，当前电竞技能等级为【' + store.state.attributes.skill.gamingLevel + '】']);
+        await context.dispatch('typeWriter', [randomGamingIntro, '姜云升体力-10，心情+20，电竞技能值+1，当前电竞技能等级为【' + store.state.attributes.skill.gamingLevel + '】']);
         break;
 
       case '开直播':
-        if (store.state.attributes.energy < 10) {
+        if (store.state.attributes.energy < 0) {
           await context.dispatch('typeWriter', '姜云升今天太累啦，没办法开直播了。');
           return;
         }
