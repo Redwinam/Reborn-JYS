@@ -58,7 +58,7 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
 
       if (isAtHome.value) {
         const existingAchievement = store.state.achievements.find(
-          (ach) => ach.name === '姜哥，玩挺好' && ach.unlockTerm === store.state.term
+          (ach) => ach.name === '姜哥，玩挺好' && ach.unlocked
         );
 
         if (!existingAchievement) {

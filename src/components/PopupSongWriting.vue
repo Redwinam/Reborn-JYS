@@ -217,24 +217,29 @@ async function writeFeiSong() {
 
   const unlockedFeiSongs = store.state.unlockedFeiSongs;
   const lockedFeiSongs = songFeiLibrary.filter((songFei: { name: any; }) => !unlockedFeiSongs.find((uf: { name: any; }) => uf.name === songFei.name));
-  let toMessage = '';
+  let toMessage = [];
   if (lockedFeiSongs.length > 0) {
     let songFei = lockedFeiSongs[Math.floor(Math.random() * lockedFeiSongs.length)];
     if (unlockedFeiSongs.length === 0) {
       songFei = lockedFeiSongs[2];
     }
     store.commit('unlockFeiSong', songFei);
-    toMessage = `姜云升写了半首《${songFei.name}》，「${songFei.lyrics}」然后说这歌废啦。`;
-  } else {
-    const hasAchievement = store.state.achievements.find(
-      (ach: Achievement) => ach.name === '这歌废了' && ach.unlockTerm === store.state.term
-    );
-    if (!hasAchievement) {
-      store.commit('unlockAchievement', '这歌废了');
-      toMessage = '姜云升写了半首《这歌废了》，「这歌废了」然后说这歌废啦。';
-    } else {
-      toMessage = '姜云升废歌 + 1，'
+    toMessage.push(`姜云升写了半首《${songFei.name}》，「${songFei.lyrics}」然后说这歌废啦。`);
+
+    if(lockedFeiSongs.length === 1) {
+      const hasAchievement = store.state.achievements.find(
+        (ach: Achievement) => ach.name === '这歌废啦' && ach.unlocked
+      );
+      if (!hasAchievement) {
+        store.commit('unlockAchievement', '这歌废啦');
+        store.commit('updateAttribute', { attribute: 'talent', value: 30 });
+        store.commit('updateAttribute', { attribute: 'charm', value: 30 });
+        store.commit('updateAttribute', { attribute: 'red', value: 300 });
+        toMessage.push('姜云升已经写完了所有废歌，再写废歌就要被打啦！解锁了第' + store.state.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【这歌废啦】，姜云升才华+30，魅力+30，红色人气+300。');
+      }
     }
+  } else {
+    toMessage.push("姜云升废歌 + 1！")
   }
 
   store.commit('updateAttribute', { attribute: 'energy', value: -100 });
@@ -244,7 +249,8 @@ async function writeFeiSong() {
   store.commit('updateAttribute', { attribute: 'black', value: blackValue });
   store.commit('updateAttribute', { attribute: 'talent', value: 20 });
   store.commit('updateAttribute', { attribute: 'charm', value: 20 });
-  await store.dispatch('typeWriterPopup', [toMessage, '姜云升体力-100，人气红值+' + redValue + '，黑值+' + blackValue + '，才华+20，魅力+20。']);
+  toMessage.push('姜云升体力-100，人气红值+' + redValue + '，黑值+' + blackValue + '，才华+20，魅力+20。');
+  await store.dispatch('typeWriterPopup', toMessage);
   store.dispatch('incrementRound');
 }
 

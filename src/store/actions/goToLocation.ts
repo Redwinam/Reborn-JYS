@@ -28,13 +28,15 @@ export async function goToLocation(context: {
         
         const randomIntro = foodIntros[Math.floor(Math.random() * foodIntros.length)];
         await context.dispatch('typeWriter', [randomIntro,'解锁新食物：【' + newFood.name + '】', '姜云升的体力上限增加啦！']);
-      } else {
-        const hasAchievement = context.state.achievements.find(
-          (ach: Achievement) => ach.name === '小姜的餐厅' && ach.unlockTerm === context.state.term
-        );
-        if (!hasAchievement) {
-          context.commit('unlockAchievement', '小姜的餐厅');
-          await context.dispatch('typeWriter', '姜云升已经解锁了所有的食物，解锁了第' + context.state.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【小姜的餐厅】。');
+
+        if (unlockedFoods.length === 1) {
+          const hasAchievement = context.state.achievements.find(
+            (ach: Achievement) => ach.name === '小姜的餐厅' && ach.unlocked
+          );
+          if (!hasAchievement) {
+            context.commit('unlockAchievement', '小姜的餐厅');
+            await context.dispatch('typeWriter', '姜云升已经解锁了所有的食物，解锁了第' + context.state.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【小姜的餐厅】。');
+          }
         }
       }
       // 等待1秒钟
@@ -82,7 +84,7 @@ export async function goToLocation(context: {
         
         const hasSunglasses = context.state.inventory['墨镜'];
         const hasAchievement = context.state.achievements.find(
-          (ach: Achievement) => ach.name === '小学升戴墨镜' && ach.unlockTerm === context.state.term
+          (ach: Achievement) => ach.name === '小学升戴墨镜'  && ach.unlocked
         );
       
         if (hasSunglasses && !hasAchievement) {

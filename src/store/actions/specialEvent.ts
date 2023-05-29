@@ -71,10 +71,12 @@ export async function specialEventOptionChosen(context: {
   }
 
   else if (payload.event === '生日快乐') {
-    if (context.rootState.round === 16) {
+    if (context.rootState.round === 16 && context.rootState.term === 1) {
       context.commit('unlockAchievement', payload.event);
       await context.dispatch('typeWriter', ['姜云升的生日过得很开心，恭喜，姜云升解锁了第' + context.rootState.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【' + payload.event + '】。']);
       await new Promise(resolve => setTimeout(resolve, 1000));
+    } else {
+      await context.dispatch('typeWriter', ['姜云升的生日过得很开心。']);
     }
     await context.dispatch('typeWriter', ['姜云升收到了长辈的1000元生日红包！']);
     await new Promise(resolve => setTimeout(resolve, 1000));

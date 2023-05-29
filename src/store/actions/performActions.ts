@@ -3,6 +3,7 @@ import { store } from '../index';
 
 import { isAtHome, isGoingOut, showBreakupDialog, showSongWritingDialog } from '../../components/composables/gameRefs';
 import { SkillLevelMapping } from './upgradeSkill';
+import { vitaminLibrary } from '../vitamins';
 
 export async function performAction(context: { commit: Commit, dispatch: Function }, action: string) {
 
@@ -14,7 +15,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
       // 第二年之后，并且姜云升有女朋友时，可能触发特殊事件
       if (store.state.year > 2012 && store.state.girlfriend) {
         const existingAchievement = store.state.achievements.find(
-          (ach) => ach.name === '放松，呼吸' && ach.unlockTerm === store.state.term
+          (ach) => ach.name === '放松，呼吸' && ach.unlocked
         );
         
         if (!existingAchievement) {
@@ -125,7 +126,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           return;
         }
         const existingAchievement = store.state.achievements.find(
-          (ach) => ach.name === '醉酒小姜' && ach.unlockTerm === store.state.term
+          (ach) => ach.name === '醉酒小姜' && ach.unlocked
         );
         
         if (store.state.drunk > 0 && !existingAchievement ) {
@@ -165,6 +166,32 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         } else {
           await context.dispatch('typeWriter', [randomLiveStreamingIntro, '姜云升的人气红值+' + redValue + '，黑值+' + blackValue]);
         }
+
+        const unlockedVitamins = store.state.unlockedVitamins;
+        const lockedVitamins = vitaminLibrary.filter((vitamin: { type: any; }) => !unlockedVitamins.find((uv: { type: any; }) => uv.type === vitamin.type));
+
+        if (Math.random() < 0.5) {
+          if (lockedVitamins.length > 0) {
+            let vitamin = lockedVitamins[Math.floor(Math.random() * lockedVitamins.length)];
+            store.commit('unlockVitamin', vitamin);
+
+            context.commit('updateAttribute', { attribute: 'maxEnergy', value: 10 });
+            await context.dispatch('typeWriter', ['粉丝们提醒姜姜要吃维生素片噢，【' + vitamin.type + '】' + vitamin.benefits + '。', '姜云升的体力上限+10！']);
+
+            if (lockedVitamins.length = 1) {
+              const hasAchievement = store.state.achievements.find(
+                (ach) => ach.name === '谢谢你们提醒我吃维生素' && ach.unlocked
+              );
+              if (!hasAchievement) {
+                store.commit('unlockAchievement', '谢谢你们提醒我吃维生素');
+                await context.dispatch('typeWriter', ['姜云升集齐了所有维生素片，解锁了第' + store.state.achievements.filter((ach: { unlocked: any; }) => ach.unlocked).length + '个成就【谢谢你们提醒我吃维生素】！']);
+              }
+            }
+          } else {
+            await context.dispatch('typeWriter', '粉丝们提醒姜姜要吃维生素ABCDEK噢。');
+          }
+        }
+
         break;
         
       default:

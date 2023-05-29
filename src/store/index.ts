@@ -3,6 +3,7 @@ import { createStore, Store, Commit } from 'vuex'
 import { Food, eatFood, packFood, eatPackedFood, drinkDrink } from './eats'
 import { achievements, Achievement } from '../store/achievements'
 import { songLibrary, Song, SongFei } from '../store/songs'
+import { Vitamin } from '../store/vitamins'
 
 import { Attributes, Popularity, Skill } from '../store/attributes'
 
@@ -42,6 +43,8 @@ interface State {
   songLibrary: Song[]
   songStages: Record<string, { completedStage: string | null, unlocked: boolean }>
   unlockedFeiSongs: SongFei[]
+
+  unlockedVitamins: Vitamin[]
 
   specialEvents: string[]
   specialEventDetails: { name: string, intro: string, options: string[] } | null
@@ -119,6 +122,8 @@ const state: State = {
   songLibrary,
   songStages: {},
   unlockedFeiSongs: [],
+
+  unlockedVitamins: [],
 
   specialEvents: [],
   specialEventDetails: null,
@@ -294,6 +299,10 @@ const mutations = {
 
   unlockFeiSong(state: State, songFei: SongFei) {
     state.unlockedFeiSongs.push(songFei);
+  },
+
+  unlockVitamin(state: State, vitamin: Vitamin) {
+    state.unlockedVitamins.push(vitamin);
   },
 
   unlockFood(state: State, food: Food) {
