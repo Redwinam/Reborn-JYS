@@ -83,6 +83,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
 
       case '睡觉休息':
         const addEnergy = Math.ceil(0.6 * store.state.attributes.maxEnergy) + Math.max(0, 0-store.state.attributes.energy);
+        context.commit('addSleepHours', 17);
         if (store.state.weak) {
           context.commit('updateAttribute', { attribute: 'energy', value: addEnergy });
           await context.dispatch('typeWriter', ['姜云升睡了17个小时，体力+' + addEnergy +'。', '姜云升不虚弱啦！']);
@@ -90,6 +91,17 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           context.commit('updateAttribute', { attribute: 'energy', value: addEnergy });
           await context.dispatch('typeWriter', '姜云升睡了17个小时，体力+' + addEnergy +'。');
         }
+
+        if (store.state.sleepHours >= 500) {
+          const hasAchievement = store.state.achievements.find(
+            (ach) => ach.name === '时间很长' && ach.unlocked
+          );
+          if (!hasAchievement) {
+            store.commit('unlockAchievement', '时间很长');
+            await context.dispatch('typeWriter', ['姜云升解锁了第' + store.state.achievements.filter((ach: { unlocked: any; }) => ach.unlocked).length + '个成就【时间很长】，指的是姜云升的睡眠时间很长，在一轮游戏中累计睡眠时间达到500个小时！']);
+          }
+        }
+
         break;
 
       case '打游戏':

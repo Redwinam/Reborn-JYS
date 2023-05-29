@@ -25,6 +25,8 @@ interface State {
   attributes: Attributes
   weak: boolean
   drunk: number
+  sleepHours: number
+
   girlfriend: { type: string; effect: keyof Attributes; breakupReasons: string[] } | null
   girlfriendTypes: { type: string; effect: keyof Attributes; breakupReasons: string[] }[]
   flirtCount: number
@@ -83,6 +85,7 @@ const state: State = {
   },
   weak: false,
   drunk: 0,
+  sleepHours: 0,
   flirtCount: 0,
   girlfriend: null,
   girlfriendTypes: [
@@ -187,6 +190,10 @@ const mutations = {
 
       }
     }
+  },
+
+  addSleepHours(state: State, payload: number) {
+    state.sleepHours += payload
   },
 
   upgradeSkillLevel(state: State, { skill }: { skill: keyof Skill }) {
@@ -342,6 +349,7 @@ const mutations = {
 
     state.weak = false
     state.drunk = 0
+    state.sleepHours = 0
     state.specialEndingAchievement = null
     state.girlfriend = null
     state.flirtCount = 0
