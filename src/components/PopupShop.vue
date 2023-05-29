@@ -87,7 +87,6 @@ const confirmPurchase = () => {
 
 </script>
 
-
 <style scoped>
 .shop-container {
   max-height: 75vh;

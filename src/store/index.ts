@@ -414,6 +414,11 @@ const actions = {
       context.commit('unlockAchievement', '无法定义的结局');
     }
 
+    if (store.state.inventory['皮卡丘玩偶'] && store.state.inventory['皮卡丘玩偶'].quantity >= 521 && store.state.songStages['皮卡丘'].completedStage && !store.state.songStages['3'].completedStage) {
+      context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '皮卡皮卡' });
+      context.commit('unlockAchievement', '皮卡皮卡');
+    }
+
     if (state.drunk > 0) {
       store.commit('updateDrunk', -1);
       if (state.drunk === 0) {
