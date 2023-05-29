@@ -16,7 +16,7 @@
   flex-direction: column;
   align-items: center;
   font-family: 'Arial', sans-serif;
-  background-image: url('@/assets/bg_just.png');
+  background-image: url('@/assets/bg_titled.png');
 
 }
 .going-out-background {
