@@ -31,10 +31,6 @@ const props = defineProps({
     default: true
   }
 })
-
-const store = useStore()
-const term = computed(() => store.state.term)
-
 </script>
 
 <style scoped>

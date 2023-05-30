@@ -29,7 +29,7 @@ export async function goToLocation(context: {
         const randomIntro = foodIntros[Math.floor(Math.random() * foodIntros.length)];
         await context.dispatch('typeWriter', [randomIntro,'解锁新食物：【' + newFood.name + '】', '姜云升的体力上限增加啦！']);
 
-        if (unlockedFoods.length === 1) {
+        if (unlockedFoods.length === 18) {
           const hasAchievement = context.state.achievements.find(
             (ach: Achievement) => ach.name === '小姜的餐厅' && ach.unlocked
           );
