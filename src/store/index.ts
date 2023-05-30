@@ -53,6 +53,7 @@ interface State {
   happenedEvents: string[]
 
   gameEnded: boolean
+  currentEnding: string[]
   specialEndingAchievement: { name: string; desc: string } | null
 
   textHistory: string[],
@@ -134,6 +135,7 @@ const state: State = {
   happenedEvents: [],
 
   gameEnded: false,
+  currentEnding: [],
   specialEndingAchievement: null,
 
   textHistory: [],
@@ -351,6 +353,7 @@ const mutations = {
   setGameEnded(state: State, payload: { gameEnded: boolean; specialEndingAchievementName: string }) {
     showGameEndDialog.value = true
     state.gameEnded = payload.gameEnded
+    state.currentEnding.push(payload.specialEndingAchievementName)
     const specialEndingAchievement = state.achievements.find(
       (ach) => ach.name === payload.specialEndingAchievementName && ach.ending
     )
@@ -361,6 +364,7 @@ const mutations = {
     state.term ++
     state.round = 1
     state.gameEnded = false
+    state.currentEnding = []
     state.specialEndingAchievement = null
     state.happenedEvents = []
     state.textHistory = []
@@ -438,65 +442,6 @@ const actions = {
 
   async incrementRound(context: { commit: Commit; state: State; dispatch: Function }) {
     context.commit('incrementRound');
-    if ( !Math.floor((store.state.round - 16) % 36) ) {
-      context.dispatch('specialEvent', '生日快乐');
-    }
-
-    // 第三年2月的时候，触发继承家业任务
-    if (store.state.round === 3 * 36 + 4) {
-      context.dispatch('specialEvent', '继承家业');
-    }
-
-    if (store.state.round === 10 * 36 ) {
-      context.dispatch('specialEvent', '十年');
-    }
-
-
-    if ((store.state.attributes.popularity.red + store.state.attributes.popularity.black) > 1200 && store.state.attributes.popularity.black > 1000) {
-      if (!store.state.achievements.find((ach) => ach.name === '我所拥有的人气，又是不是真的？' && ach.unlocked === true)) {
-        context.commit('unlockAchievement', '我所拥有的人气，又是不是真的？');
-        context.dispatch('typeWriter', '人气>1200，黑人气>1000。解锁成就【我所拥有的人气，又是不是真的？】')
-      }
-    }
-
-    if (store.state.attributes.money >= 100000000) {
-      if (!store.state.achievements.find((ach) => ach.name === '汤臣亿品' && ach.unlocked === true)) {
-        context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '汤臣亿品' });
-        context.commit('unlockAchievement', '汤臣亿品');
-      }
-    }
-
-
-
-
-
-
-
-
-
-
-
-    if (state.round > state.totalRounds) {
-
-      if (state.attributes.money < 99999) {
-        context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '一肩明月，两袖清风' });
-        context.commit('unlockAchievement', '一肩明月，两袖清风');
-      } else {
-        context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '无法定义的结局' });
-        context.commit('unlockAchievement', '无法定义的结局');
-      }
-    }
-
-    if (store.state.inventory['皮卡丘玩偶'] && store.state.inventory['皮卡丘玩偶'].quantity >= 521 && store.state.songStages['皮卡丘'].completedStage && !store.state.songStages['3'].completedStage) {
-      context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '皮卡皮卡' });
-      context.commit('unlockAchievement', '皮卡皮卡');
-    }
-
-
-    if (store.state.attributes.energy <= -100) {
-      context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '姜云升虚弱' });
-      context.commit('unlockAchievement', '姜云升虚弱');
-    }
 
     if (state.drunk > 0) {
       store.commit('updateDrunk', -1);
@@ -511,6 +456,77 @@ const actions = {
         showBreakupDialog.value = true
       }
     }
+
+    if ( !Math.floor((state.round - 16) % 36) ) {
+      context.dispatch('specialEvent', '生日快乐');
+    }
+
+    // 第三年2月的时候，触发继承家业任务
+    if (state.round === 3 * 36 + 4) {
+      context.dispatch('specialEvent', '继承家业');
+    }
+
+    if (state.round === 10 * 36 ) {
+      context.dispatch('specialEvent', '十年');
+    }
+
+    if ((state.attributes.popularity.red + state.attributes.popularity.black) > 1200 && state.attributes.popularity.black > 1000) {
+      if (!state.achievements.find((ach) => ach.name === '我所拥有的人气，又是不是真的？' && ach.unlocked === true)) {
+        context.commit('unlockAchievement', '我所拥有的人气，又是不是真的？');
+        context.dispatch('typeWriter', '人气>1200，黑人气>1000。解锁成就【我所拥有的人气，又是不是真的？】')
+      }
+    }
+
+    if ( !state.currentEnding.includes('汤臣亿品') && state.attributes.money >= 100000000) {
+      context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '汤臣亿品' });
+      context.commit('unlockAchievement', '汤臣亿品');
+      return
+    }
+
+    if (!state.currentEnding.includes('刀削面子') && state.girlfriend && state.breakupTimes >= 11 && state.songStages['浪漫主义'].completedStage && state.songStages['浪漫主义2.0'].completedStage) {
+      context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '刀削面子' });
+      context.commit('unlockAchievement', '刀削面子');
+      return
+    }
+
+    if (!state.currentEnding.includes('皮卡皮卡') && state.inventory['皮卡丘玩偶'] && state.inventory['皮卡丘玩偶'].quantity >= 521 && state.songStages['皮卡丘'].completedStage && !state.songStages['3'].completedStage) {
+      context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '皮卡皮卡' });
+      context.commit('unlockAchievement', '皮卡皮卡');
+      return
+    }
+
+
+    if (state.round > state.totalRounds) {
+      if (state.currentEnding.length > 0) {
+        context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: state.currentEnding });
+      } else {
+        
+        if (state.attributes.money < 99999) {
+          context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '一肩明月，两袖清风' });
+          context.commit('unlockAchievement', '一肩明月，两袖清风');
+          return;
+
+        } else {
+          context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '无法定义的结局' });
+          context.commit('unlockAchievement', '无法定义的结局');
+          return;
+        }
+
+      }
+    }
+
+    if (state.attributes.energy <= -100) {
+      context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '姜云升虚弱' });
+      context.commit('unlockAchievement', '姜云升虚弱');
+      return;
+    }
+
+    if (state.attributes.mood <= -100) {
+      context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '我不做人啦' });
+      context.commit('unlockAchievement', '我不做人啦');
+      return;
+    }
+
   },
 
 }
