@@ -108,6 +108,7 @@ export async function goToLocation(context: {
       break;
 
     case '地下钱庄之暴富金铺':
+      await new Promise(resolve => setTimeout(resolve, 600));
       showBankPopup.value = true;
       break;
 
