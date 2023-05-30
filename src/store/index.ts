@@ -33,6 +33,8 @@ interface State {
   accompanyCount: number
   relationRound: number
   breakupTimes: number
+  lastBreakupTerm: number | null
+  seamlessRelation: boolean
 
   unlockedFoods: Food[]
   inventory: Inventory
@@ -116,6 +118,8 @@ const state: State = {
   accompanyCount: 0,
   relationRound: 0,
   breakupTimes: 0,
+  lastBreakupTerm: null,
+  seamlessRelation: false,
 
   unlockedFoods: [],
   inventory: {},
@@ -226,6 +230,7 @@ const mutations = {
     state.girlfriend = payload
     if (payload === null) {
       state.breakupTimes++
+      state.lastBreakupTerm = state.term
     }
   },
   incrementFlirtCount(state: State) {
@@ -236,6 +241,9 @@ const mutations = {
   },
   resetRelationRound(state: State) {
     state.relationRound = 0
+  },
+  setSeamlessRelation(state: State, payload: boolean) {
+    state.seamlessRelation = payload
   },
   incrementAccompanyCount(state: State) {
     state.accompanyCount++
@@ -391,6 +399,7 @@ const mutations = {
 
     state.accompanyCount = 0
     state.relationRound = 0
+    state.lastBreakupTerm = 0
 
     if (resetData) {
       state.attributes = {

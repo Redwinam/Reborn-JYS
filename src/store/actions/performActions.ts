@@ -54,13 +54,20 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
 
       case '出去鬼混':
         if (!store.state.girlfriend) {
-          context.commit('updateAttribute', { attribute: 'energy', value: -10 });
-          context.commit('updateAttribute', { attribute: 'charm', value: 1 });
           const toMessage = [];
+          context.commit('updateAttribute', { attribute: 'energy', value: -10 });
+          context.commit('updateAttribute', { attribute: 'charm', value: 10 });
+          context.commit('updateAttribute', { attribute: 'mood', value: 10 });          
           if (store.state.flirtCount) {
-            toMessage.push('姜云升又成功地搭讪了一个姑娘，魅力+10。');
+            toMessage.push('姜云升又成功地搭讪了一个姑娘，魅力+10，心情+10。');
           } else {
-            toMessage.push('姜云升成功地搭讪了一个姑娘，魅力+10。');
+            if (store.state.lastBreakupTerm && store.state.term - store.state.lastBreakupTerm < 2){
+              context.commit('setSeamlessRelation', true);
+              toMessage.push('姜云升可真有你的，刚分手就出来鬼混。');
+            } else {
+              context.commit('setSeamlessRelation', false);
+            }
+            toMessage.push('姜云升成功地搭讪了一个姑娘，魅力+10，心情+10。');
           }
 
           context.commit('incrementFlirtCount');

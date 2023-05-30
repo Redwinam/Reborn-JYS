@@ -57,7 +57,7 @@ export const songLibrary: Song[] = [
       conditions: {
         talent: 500,
       },
-      conditionsText: '和女孩子分手>=2次，且分手后至今没有出去鬼混',
+      conditionsText: '和女孩子分手>=2次，且分手后至今3个月没有出去鬼混',
       cost: 1000,
       effects: {
         talent: + 100,
@@ -76,7 +76,7 @@ export const songLibrary: Song[] = [
         talent: 100,
       },
       conditionsText: '拥有衣服>=5件，包包>=5个',
-      cost: 500, // 写歌所需金钱
+      cost: 250, // 写歌所需金钱
       effects: {
         charm: -100, 
         talent: 100,
@@ -87,6 +87,24 @@ export const songLibrary: Song[] = [
       url: 'https://music.163.com/#/song?id=1358276770',
       coverImage: 'vfmwuv'
     },
+    {
+      title: 'SAD',
+      conditions: {
+      },
+      conditionsText: '心情<-20，被分手1个月之内，立即外出鬼混。',
+      cost: 1000,
+      effects: {
+        charm: 50,
+        talent: 50,
+        mood: + 100,
+        red: + 1000,
+        black: + 1000,
+      },
+      lyrics: '当你是长夜里寂寞没诚意的梦……',
+      url: 'https://music.163.com/#/song?id=1874158536',
+      coverImage: 'sad'
+    },
+
 ]
 
 export interface SongFei {

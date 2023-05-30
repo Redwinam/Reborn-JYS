@@ -9,7 +9,7 @@
           <h3>《{{ song.title }}》</h3>
           <p>
             <span v-for="(value, key, index) in song.conditions" :key="key">{{ attributeNames[key] }}: {{ value }}<span v-if="index !== Object.keys(song.conditions).length - 1"> / </span></span>
-            <BatteryWarning :size="16" v-if="song.conditionsText" @click="store.dispatch('typeWriterPopup', song.conditionsText)"></BatteryWarning>
+            <BatteryWarning :size="16" v-if="song.conditionsText" @click="!isTyping && store.dispatch('typeWriterPopup', song.conditionsText)"></BatteryWarning>
           </p>
         </div>
       </div>
@@ -79,13 +79,19 @@ function isSongAvailable(song: Song) {
 
   switch (song.title) {
     case '孤独面店':
-      if (store.state.breakupTimes < 2 || store.state.flirtCount > 0) {
+      if (store.state.breakupTimes < 2 || store.state.flirtCount > 0 || (store.state.term - store.state.lastBreakupTerm) < 9) {
         return false;
       }
       break;
 
     case '真没睡':
       if (!store.state.inventory['衣服'] || store.state.inventory['衣服'].quantity < 5 || !store.state.inventory['包包']|| store.state.inventory['包包'].quantity < 5) {
+        return false;
+      }
+      break;
+
+    case 'SAD':
+      if (store.state.attributes['心情'] > -20 || !store.state.seamlessRelation || store.state.girlfriend) {
         return false;
       }
       break;
@@ -304,12 +310,17 @@ function listenSong(song: Song) {
 }
 
 .song .song-info p {
-  margin: 0;
+  margin: 0.25rem 0;
   font-size: 0.7rem;
   display: flex;
   gap: 5px;
   align-items: center;
+  flex-wrap: wrap;
+}
 
+.song .song-info p > span, .song .song-info p > svg {
+  white-space: nowrap;
+  margin: -0.25rem 0;
 }
 
 .song .button-group p {
