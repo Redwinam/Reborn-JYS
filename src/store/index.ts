@@ -443,8 +443,12 @@ const actions = {
     }
 
     // 第三年2月的时候，触发继承家业任务
-    if (store.state.round === 3 * 36 + 2) {
+    if (store.state.round === 3 * 36 + 4) {
       context.dispatch('specialEvent', '继承家业');
+    }
+
+    if (store.state.round === 10 * 36 ) {
+      context.dispatch('specialEvent', '十年');
     }
 
 
@@ -473,13 +477,25 @@ const actions = {
 
 
     if (state.round > state.totalRounds) {
-      context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '无法定义的结局' });
-      context.commit('unlockAchievement', '无法定义的结局');
+
+      if (state.attributes.money < 99999) {
+        context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '一肩明月，两袖清风' });
+        context.commit('unlockAchievement', '一肩明月，两袖清风');
+      } else {
+        context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '无法定义的结局' });
+        context.commit('unlockAchievement', '无法定义的结局');
+      }
     }
 
     if (store.state.inventory['皮卡丘玩偶'] && store.state.inventory['皮卡丘玩偶'].quantity >= 521 && store.state.songStages['皮卡丘'].completedStage && !store.state.songStages['3'].completedStage) {
       context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '皮卡皮卡' });
       context.commit('unlockAchievement', '皮卡皮卡');
+    }
+
+
+    if (store.state.attributes.energy <= -100) {
+      context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '姜云升虚弱' });
+      context.commit('unlockAchievement', '姜云升虚弱');
     }
 
     if (state.drunk > 0) {

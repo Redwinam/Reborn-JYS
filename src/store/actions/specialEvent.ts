@@ -47,6 +47,18 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
     showEventDialog.value = true;
   }
 
+  else if (event === '十年') {
+    const specialEventDetails = {
+      title: '十年',
+      intro: '游戏进程达到十年。你想起了曾经鼓舞到你的那首歌。「如果没人跟着起舞，我们怎么革命。」——《十年》',
+      options: [
+        '【继续游戏】',
+      ],
+    };
+    context.commit('setSpecialEventDetails', specialEventDetails);
+    showEventDialog.value = true;
+  }
+
   else if (event === '放松，呼吸') {
     const specialEventDetails = {
       title: '放松，呼吸',
@@ -104,6 +116,12 @@ export async function specialEventOptionChosen(context: {
     } else {
       await context.dispatch('typeWriter', ['姜云升对此不感兴趣，错过了一次说唱Battle，但是也没有什么大不了的。']);
     }
+  }
+
+  else if (payload.event === '十年') {
+    context.commit('updateAttribute', { attribute: 'divine', value: 10 });
+    context.commit('unlockAchievement', payload.event);
+    await context.dispatch('typeWriter', ['「我用十年奋斗，用十年等候，用十年锻炼自己用身体来忍受」', '姜云升的???属性值+10。', '姜云升解锁了第' + context.rootState.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【' + payload.event + '】。']);
   }
 
   else if (payload.event === '放松，呼吸') {
