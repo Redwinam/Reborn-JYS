@@ -487,19 +487,16 @@ const actions = {
 
     if ( !state.currentEndings.includes('汤臣亿品') && state.attributes.money >= 100000000) {
       context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '汤臣亿品' });
-      context.commit('unlockAchievement', '汤臣亿品');
       return
     }
 
     if (!state.currentEndings.includes('刀削面子') && state.girlfriend && state.breakupTimes >= 11 && state.songStages['浪漫主义'].completedStage && state.songStages['浪漫主义2.0'].completedStage) {
       context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '刀削面子' });
-      context.commit('unlockAchievement', '刀削面子');
       return
     }
 
     if (!state.currentEndings.includes('皮卡皮卡') && state.inventory['皮卡丘玩偶'] && state.inventory['皮卡丘玩偶'].quantity >= 521 && state.songStages['皮卡丘'].completedStage && !state.songStages['3'].completedStage) {
       context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '皮卡皮卡' });
-      context.commit('unlockAchievement', '皮卡皮卡');
       return
     }
 
@@ -509,14 +506,12 @@ const actions = {
         context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: state.currentEndings });
       } else {
         
-        if (state.attributes.money < 99999) {
+        if (state.attributes.money <= 99999) {
           context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '一肩明月，两袖清风' });
-          context.commit('unlockAchievement', '一肩明月，两袖清风');
           return;
 
         } else {
           context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '无法定义的结局' });
-          context.commit('unlockAchievement', '无法定义的结局');
           return;
         }
 
@@ -525,13 +520,11 @@ const actions = {
 
     if (state.attributes.energy <= -100) {
       context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '姜云升虚弱' });
-      context.commit('unlockAchievement', '姜云升虚弱');
       return;
     }
 
     if (state.attributes.mood <= -100) {
       context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '我不做人啦' });
-      context.commit('unlockAchievement', '我不做人啦');
       return;
     }
 

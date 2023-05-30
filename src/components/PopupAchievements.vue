@@ -60,8 +60,8 @@ const term = computed(() => store.state.term)
 
 const classifiedAchievements = computed(() => {
   const groups = {
-    '结局成就': [],
     '事件成就': [],
+    '结局成就': [],
     '其他成就': []
   } as Record<string, Achievement[]>
   achievements.value.forEach((achievement: Achievement) => {
