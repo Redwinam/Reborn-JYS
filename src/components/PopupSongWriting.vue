@@ -317,7 +317,7 @@ function listenSong(song: Song) {
   font-size: 0.7rem;
   font-weight: bold;
   text-align: right;
-  color: #999;
+  color: #999999;
 }
 
 .song .button-group p.song-available {

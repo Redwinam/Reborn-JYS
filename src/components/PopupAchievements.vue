@@ -15,7 +15,7 @@
     </ul>
   </div>
 
-  <p style="display: none;">制作人：@千啾略</p>
+  <p v-if="unlockedAchievementCount == achievements.length" class="game-maker">制作人：@千啾略</p>
 </div>
 
 <Popup :visible = "showAchievementNotePopup" @close = "showAchievementNotePopup = false" class="achievement-note">
@@ -74,6 +74,10 @@ const classifiedAchievements = computed(() => {
     }
   })
   return groups
+})
+
+const unlockedAchievementCount = computed(() => {
+  return achievements.value.filter((achievement: Achievement) => achievement.unlocked).length
 })
 
 const showUnlockAchievementConditionConfirmPopup = ref(false)
@@ -179,5 +183,11 @@ const unlockAchievementCondition = (achievement: Achievement) => {
 
 .achievement-note button.cancel-button {
   margin-left: 0.75rem;
+}
+
+.game-maker {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #999999;
 }
 </style>

@@ -53,7 +53,7 @@ interface State {
   happenedEvents: string[]
 
   gameEnded: boolean
-  currentEnding: string[]
+  currentEndings: string[]
   specialEndingAchievement: { name: string; desc: string } | null
 
   textHistory: string[],
@@ -135,7 +135,7 @@ const state: State = {
   happenedEvents: [],
 
   gameEnded: false,
-  currentEnding: [],
+  currentEndings: [],
   specialEndingAchievement: null,
 
   textHistory: [],
@@ -350,21 +350,29 @@ const mutations = {
     }
   },
 
-  setGameEnded(state: State, payload: { gameEnded: boolean; specialEndingAchievementName: string }) {
-    showGameEndDialog.value = true
+  setGameEnded(state: State, payload: { gameEnded: boolean; specialEndingAchievementName: string | string[] }) {
+    
+    if (typeof payload.specialEndingAchievementName === 'string') {
+      if (!payload.gameEnded) state.currentEndings.push(payload.specialEndingAchievementName)
+      store.commit('unlockAchievement', payload.specialEndingAchievementName)
+      const specialEndingAchievement = state.achievements.find(
+        (ach) => ach.name === payload.specialEndingAchievementName && ach.ending
+      )
+      state.specialEndingAchievement = specialEndingAchievement || null
+    } else {
+      state.specialEndingAchievement = null
+    }
+
     state.gameEnded = payload.gameEnded
-    state.currentEnding.push(payload.specialEndingAchievementName)
-    const specialEndingAchievement = state.achievements.find(
-      (ach) => ach.name === payload.specialEndingAchievementName && ach.ending
-    )
-    state.specialEndingAchievement = specialEndingAchievement || null
+    showGameEndDialog.value = true
+
   },
 
   resetGameState(state: State, resetData: boolean) {
     state.term ++
     state.round = 1
     state.gameEnded = false
-    state.currentEnding = []
+    state.currentEndings = []
     state.specialEndingAchievement = null
     state.happenedEvents = []
     state.textHistory = []
@@ -477,19 +485,19 @@ const actions = {
       }
     }
 
-    if ( !state.currentEnding.includes('汤臣亿品') && state.attributes.money >= 100000000) {
+    if ( !state.currentEndings.includes('汤臣亿品') && state.attributes.money >= 100000000) {
       context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '汤臣亿品' });
       context.commit('unlockAchievement', '汤臣亿品');
       return
     }
 
-    if (!state.currentEnding.includes('刀削面子') && state.girlfriend && state.breakupTimes >= 11 && state.songStages['浪漫主义'].completedStage && state.songStages['浪漫主义2.0'].completedStage) {
+    if (!state.currentEndings.includes('刀削面子') && state.girlfriend && state.breakupTimes >= 11 && state.songStages['浪漫主义'].completedStage && state.songStages['浪漫主义2.0'].completedStage) {
       context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '刀削面子' });
       context.commit('unlockAchievement', '刀削面子');
       return
     }
 
-    if (!state.currentEnding.includes('皮卡皮卡') && state.inventory['皮卡丘玩偶'] && state.inventory['皮卡丘玩偶'].quantity >= 521 && state.songStages['皮卡丘'].completedStage && !state.songStages['3'].completedStage) {
+    if (!state.currentEndings.includes('皮卡皮卡') && state.inventory['皮卡丘玩偶'] && state.inventory['皮卡丘玩偶'].quantity >= 521 && state.songStages['皮卡丘'].completedStage && !state.songStages['3'].completedStage) {
       context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '皮卡皮卡' });
       context.commit('unlockAchievement', '皮卡皮卡');
       return
@@ -497,8 +505,8 @@ const actions = {
 
 
     if (state.round > state.totalRounds) {
-      if (state.currentEnding.length > 0) {
-        context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: state.currentEnding });
+      if (state.currentEndings.length > 0) {
+        context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: state.currentEndings });
       } else {
         
         if (state.attributes.money < 99999) {

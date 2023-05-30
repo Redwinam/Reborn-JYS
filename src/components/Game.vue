@@ -89,7 +89,8 @@
 
 <Dialog :visible="showGameEndDialog" class="game-ended-dialog">
   <h2>{{ gameEnded ? '游戏结束' : '游戏结局'}}</h2>
-  <p class="desc">{{ specialEndingAchievement.desc }}</p>
+  <p class="desc" v-if="specialEndingAchievement">{{ specialEndingAchievement.desc }}</p>
+  <p class="desc" v-else-if="currentEndings.length">12年游戏时间结束，您在本周目达成结局【{{ Object.entries(currentEndings).map((ending) => ending).join('】、【') }}】，愿星辰庇佑于我们！</p>
   <div class="game-ended-dialog-buttons">
     <button class="continue-game-button" v-if="!gameEnded" @click="showGameEndDialog = false">继续本轮！</button>
     <button class="restart-game-button" @click="restartGame(false)">重新开始</button>
@@ -98,7 +99,7 @@
       <HelpCircle :size="12" @click="showGameEndNotePopup = true"></HelpCircle>
     </div>
   </div>
-  <p class="achievement">您已获得结局成就：【{{ specialEndingAchievement.name }}】</p>
+  <p class="achievement" v-if="specialEndingAchievement">您已获得结局成就：【{{ specialEndingAchievement.name }}】</p>
   <p class="hint">（重启后保留已获得的成就）</p>
 </Dialog>
 
@@ -186,6 +187,7 @@ watch(showTextHistoryPopup, async (newValue) => {
 })
 
 const specialEndingAchievement = computed(() => store.state.specialEndingAchievement)
+const currentEndings = computed(() => store.state.currentEndings)
 
 const accompanyGirlfriend = () => { store.dispatch('accompanyGirlfriend') }
 const goToLocation = (location: string) => { store.dispatch('goToLocation', location) }
