@@ -248,6 +248,11 @@ footer button {
   color: #fff;
 }
 
+.game-ended-dialog button.continue-game-button {
+  background-color: #262525;
+  margin-bottom: 0.25rem;
+}
+
 .game-ended-dialog .reset-data-button-container {
   margin: 0.25rem auto;
   gap: 0.25rem;

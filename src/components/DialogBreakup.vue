@@ -42,20 +42,10 @@ async function handleBreakup(choice: string) {
         store.commit('resetRelationRound');
         store.commit('updateAttribute', { attribute: 'charm', value: -20 })
         await store.dispatch('typeWriter', '尽管你努力挽回，但姜云升最终还是被甩了。姜云升魅力-20。')
-
-        if (store.state.breakupTimes >= 10) {
-          const hasAchievement = store.state.achievements.find(
-            (ach: Achievement) => ach.name === '拜拜就拜拜' && ach.unlocked
-          );
-          if (!hasAchievement) {
-            store.commit('unlockAchievement', '拜拜就拜拜');
-            await store.dispatch('typeWriter', ['姜云升累计被分手超过了10次，解锁了第' + store.state.achievements.filter((ach: { unlocked: any; }) => ach.unlocked).length + '个成就【拜拜就拜拜】！']);
-          }
-        }
-
+        await breakupTimesAchievement()
       }
       break
-      
+
     case '沉默':
       // 添加随机选择是否挽回感情的逻辑
       if (Math.random() < 0.5) {
@@ -67,17 +57,7 @@ async function handleBreakup(choice: string) {
         store.commit('resetAccompanyCount')
         store.commit('resetRelationRound');
         await store.dispatch('typeWriter', '你的沉默让你们之间的感情破裂。在命运的指引下，姜云升被甩了。')
-
-        if (store.state.breakupTimes >= 10) {
-          const hasAchievement = store.state.achievements.find(
-            (ach: Achievement) => ach.name === '拜拜就拜拜' && ach.unlocked
-          );
-          if (!hasAchievement) {
-            store.commit('unlockAchievement', '拜拜就拜拜');
-            await store.dispatch('typeWriter', ['姜云升累计被分手超过了10次，解锁了第' + store.state.achievements.filter((ach: { unlocked: any; }) => ach.unlocked).length + '个成就【拜拜就拜拜】！']);
-          }
-        }
-
+        await breakupTimesAchievement()
       }
       break
 
@@ -86,20 +66,23 @@ async function handleBreakup(choice: string) {
       store.commit('resetAccompanyCount')
       store.commit('resetRelationRound');
       await store.dispatch('typeWriter', '你放手了，选择了拜拜就拜拜。你现在没有女朋友了。')
-
-      if (store.state.breakupTimes >= 10) {
-        const hasAchievement = store.state.achievements.find(
-          (ach: Achievement) => ach.name === '拜拜就拜拜' && ach.unlocked
-        );
-        if (!hasAchievement) {
-          store.commit('unlockAchievement', '拜拜就拜拜');
-          await store.dispatch('typeWriter', ['姜云升累计被分手超过了10次，解锁了第' + store.state.achievements.filter((ach: { unlocked: any; }) => ach.unlocked).length + '个成就【拜拜就拜拜】！']);
-        }
-      }
-
+      await breakupTimesAchievement()
       break
   }
 }
+
+async function breakupTimesAchievement() {
+  if (store.state.breakupTimes >= 10) {
+    const hasAchievement = store.state.achievements.find(
+      (ach: Achievement) => ach.name === '拜拜就拜拜' && ach.unlocked
+    );
+    if (!hasAchievement) {
+      store.commit('unlockAchievement', '拜拜就拜拜');
+      await store.dispatch('typeWriter', ['姜云升累计被分手超过了10次，解锁了第' + store.state.achievements.filter((ach: { unlocked: any; }) => ach.unlocked).length + '个成就【拜拜就拜拜】！']);
+    }
+  }
+} 
+
 </script>
 
 <style scoped>

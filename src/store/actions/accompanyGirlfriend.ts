@@ -60,8 +60,7 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
         const existingAchievement = store.state.achievements.find(
           (ach) => ach.name === '姜哥，玩挺好' && ach.unlocked
         );
-
-        if (!existingAchievement) {
+        if (!existingAchievement && !store.state.happenedEvents.includes('姜哥，玩挺好')) {
           if (Math.random() < 0.15 * store.state.relationRound) {
             context.dispatch('specialEvent', '姜哥，玩挺好');
           }

@@ -49,6 +49,7 @@ interface State {
   unlockedVitamins: Vitamin[]
 
   specialEventDetails: { name: string, intro: string, options: string[] } | null
+  happenedEvents: string[]
 
   gameEnded: boolean
   specialEndingAchievement: { name: string; desc: string } | null
@@ -128,6 +129,7 @@ const state: State = {
   unlockedVitamins: [],
 
   specialEventDetails: null,
+  happenedEvents: [],
 
   gameEnded: false,
   specialEndingAchievement: null,
@@ -280,6 +282,10 @@ const mutations = {
     state.specialEventDetails = specialEventDetails;
   },
 
+  addHappenedEvent(state: State, event: string) {
+    state.happenedEvents.push(event);
+  },
+
   unlockSong(state: State, songTitle: string) {
     if (state.songStages[songTitle]) {
       state.songStages[songTitle].unlocked = true;
@@ -346,6 +352,7 @@ const mutations = {
     state.round = 1
     state.gameEnded = false
     state.specialEndingAchievement = null
+    state.happenedEvents = []
     state.textHistory = []
 
     state.weak = false
@@ -438,7 +445,6 @@ const actions = {
       }
     }
 
-    // 金钱达到100000000，解锁成就【汤臣亿品】
     if (store.state.attributes.money >= 100000000) {
       if (!store.state.achievements.find((ach) => ach.name === '汤臣亿品' && ach.unlocked === true)) {
         context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '汤臣亿品' });

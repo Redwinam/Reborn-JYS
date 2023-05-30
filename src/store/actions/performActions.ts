@@ -12,13 +12,12 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
       isGoingOut.value = true;
       await context.dispatch('typeWriter', '打算出发去……');
 
-      // 第二年之后，并且姜云升有女朋友时，可能触发特殊事件
       if (store.state.year > 2012 && store.state.girlfriend) {
         const existingAchievement = store.state.achievements.find(
           (ach) => ach.name === '放松，呼吸' && ach.unlocked
         );
         
-        if (!existingAchievement) {
+        if (!existingAchievement && !store.state.happenedEvents.includes('放松，呼吸')) {
           const currentRoundInYear = store.state.round % 36;
           const isSpring = currentRoundInYear >= 3 && currentRoundInYear < 15; // 假设一年36轮，4-15轮为春天
 
@@ -147,7 +146,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           context.commit('updateAttribute', { attribute: 'red', value: (300 + Math.floor(Math.random() * 0.12 * store.state.attributes.popularity.red)) });
           context.commit('updateAttribute', { attribute: 'divine', value: 9 });
           context.commit('unlockAchievement', '醉酒小姜');
-          await context.dispatch('typeWriter', ['姜云升今天喝醉了，却还是开了直播，讲了好多平时不会讲的话。', '姜云升的人气增加了，一项神秘的属性增加了。', '解锁了第' + store.state.achievements.filter((ach) => ach.unlocked).length + '个成就【醉酒小姜】']);
+          await context.dispatch('typeWriter', ['姜云升今天喝醉了，却还是开了直播，讲了好多平时不会讲的话。酒渐醒，拉开窗帘，窗外是日出。', '姜云升的人气增加了，一项神秘的属性增加了。', '解锁了第' + store.state.achievements.filter((ach) => ach.unlocked).length + '个成就【醉酒小姜】']);
           break;
         } else if (store.state.drunk > 0 && existingAchievement) {
           await context.dispatch('typeWriter', '姜云升今天喝醉了，就不开直播了。');

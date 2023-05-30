@@ -3,6 +3,7 @@ import { showEventDialog } from '../../components/composables/gameRefs';
 import { Achievement } from '../achievements';
 
 export async function specialEvent(context: { rootState: any; commit: Commit, dispatch: Function }, event: string) {
+  context.commit('addHappenEvent', event);
 
   if (event === '姜哥，玩挺好') {
     const specialEventDetails = {
