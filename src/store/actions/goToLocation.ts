@@ -67,6 +67,11 @@ export async function goToLocation(context: {
           context.dispatch('specialEvent', '上去看看');
 
       }
+
+      if (context.state.skills.freestyle >= 15 && !context.state.happenedEvents.includes('二八分')) {
+        context.dispatch('specialEvent', '二八分');
+      }
+
       context.commit('incrementUndergroundCount');
       break;
 

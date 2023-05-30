@@ -5,7 +5,7 @@ import { achievements, Achievement } from '../store/achievements'
 import { songLibrary, Song, SongFei } from '../store/songs'
 import { Vitamin } from '../store/vitamins'
 
-import { Attributes, Popularity, Skill } from '../store/attributes'
+import { Attributes, Skill } from '../store/attributes'
 
 import { accompanyGirlfriend } from './actions/accompanyGirlfriend';
 import { goToLocation } from './actions/goToLocation';
@@ -41,6 +41,7 @@ interface State {
   unlockedAchievementConditions: string[]
 
   undergroundCount: number
+  signedAgency: boolean
 
   songs: string[]
   songLibrary: Song[]
@@ -123,6 +124,7 @@ const state: State = {
   unlockedAchievementConditions: [],
 
   undergroundCount: 0,
+  signedAgency: false,
   
   songs: [],
   songLibrary,
@@ -243,6 +245,9 @@ const mutations = {
   },
   incrementUndergroundCount(state: State) {
     state.undergroundCount++
+  },
+  setSignedAgency(state: State, payload: boolean) {
+    state.signedAgency = payload
   },
 
   buyGold(state: State, payload: number) {

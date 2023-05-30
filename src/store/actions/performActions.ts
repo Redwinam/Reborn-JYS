@@ -190,7 +190,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
             context.commit('updateAttribute', { attribute: 'maxEnergy', value: 10 });
             await context.dispatch('typeWriter', ['粉丝们提醒姜姜要吃维生素片噢，【' + vitamin.type + '】' + vitamin.benefits + '。', '姜云升的体力上限+10！']);
 
-            if (lockedVitamins.length = 1) {
+            if (lockedVitamins.length === 1) {
               const hasAchievement = store.state.achievements.find(
                 (ach) => ach.name === '谢谢你们提醒我吃维生素' && ach.unlocked
               );

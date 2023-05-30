@@ -13,6 +13,8 @@ export const achievements: Achievement[] = [
   { name: '十年', desc: '如果没人跟着起舞，我们怎么革命。', condition: '游戏进程达到十年的特殊事件达成', event: true, ending: false, unlocked: false, },
   { name: '姜哥，玩挺好', desc: '从此，姜云升记住了点外卖不留名。', condition: '在家陪女朋友且体力>=50时概率触发特殊事件选项达成', event: true, ending: false, unlocked: false},
   { name: '放松，呼吸', desc: '山里有位老神仙，他对我说……', condition: '在第二年后的每一年的春天（2-5月）有女朋友时外出概率触发特殊事件选项达成', event: true, ending: false, unlocked: false, },
+  { name: '二八分', desc: '告诉我你也想火吗？', condition: '在说唱技能值到达A级后，在地下签约经纪公司后达成', event: true, ending: false, unlocked: false, },
+  { name: '风炎文化', desc: '因为淋过雨，所以想为他人撑伞。', condition: '在第二次触发二八分事件时选择自己开公司', event: true, ending: false, unlocked: false, },
 
   { name: '姜云升虚弱',  desc: '姜云升的体力透支完毕，由于极度虚弱，不得不结束游戏。', condition: '体力<-100结束游戏触发姜云升虚弱结局达成', event: false, ending: true, unlocked: false, },
   { name: '我不做人啦', desc: '姜云升心情过于EMO，结束游戏！', condition: '心情<-100结束游戏触发我不做人啦结局达成', event: true, ending: true, unlocked: false, },

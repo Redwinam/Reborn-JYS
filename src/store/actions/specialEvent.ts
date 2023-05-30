@@ -4,9 +4,10 @@ import { Achievement } from '../achievements';
 
 export async function specialEvent(context: { rootState: any; commit: Commit, dispatch: Function }, event: string) {
   context.commit('addHappenEvent', event);
+  let specialEventDetails = {}
 
   if (event === '姜哥，玩挺好') {
-    const specialEventDetails = {
+    specialEventDetails = {
       title: '姜哥，玩挺好',
       intro: '这天，姜云升在家陪女朋友，心情很好，忽然想玩点不一样的。决定外卖买个黑丝，外卖订单留哪一个名字呢？',
       options: [
@@ -17,25 +18,22 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
         '【除了姜云升，叫什么都行】',
       ],
     };
-    context.commit('setSpecialEventDetails', specialEventDetails);
-    showEventDialog.value = true;
+
   }
 
   else if (event === '生日快乐') {
     const age = Math.floor((context.rootState.round - 16) / 36) + 16
-    const specialEventDetails = {
+    specialEventDetails = {
       title: '生日快乐',
       intro: '今天是姜云升的' + age + '岁生日……',
       options: [
         '【祝他生日快乐！！】',
       ],
     };
-    context.commit('setSpecialEventDetails', specialEventDetails);
-    showEventDialog.value = true;
   }
 
   else if (event === '上去看看') {
-    const specialEventDetails = {
+    specialEventDetails = {
       title: '上去看看',
       intro: '忽然姜云升听见远处一阵热闹，姜云升决定……”',
       options: [
@@ -43,24 +41,20 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
         '【不感兴趣】',
       ]
     };
-    context.commit('setSpecialEventDetails', specialEventDetails);
-    showEventDialog.value = true;
   }
 
   else if (event === '十年') {
-    const specialEventDetails = {
+    specialEventDetails = {
       title: '十年',
       intro: '游戏进程达到十年。你想起了曾经鼓舞到你的那首歌。「如果没人跟着起舞，我们怎么革命。」——《十年》',
       options: [
         '【继续游戏】',
       ],
     };
-    context.commit('setSpecialEventDetails', specialEventDetails);
-    showEventDialog.value = true;
   }
 
   else if (event === '放松，呼吸') {
-    const specialEventDetails = {
+    specialEventDetails = {
       title: '放松，呼吸',
       intro: '春暖花开，万物复苏，你的好朋友约你出门旅游，要去散散心吗？',
       options: [
@@ -68,9 +62,35 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
         '【打死不去】',
       ],
     };
-    context.commit('setSpecialEventDetails', specialEventDetails);
-    showEventDialog.value = true;
   }
+
+  else if (event === '二八分') {
+
+    if (context.rootState.achievements.filter((ach: Achievement) => ach.name === '二八分' && ach.unlocked).length === 0) {
+      specialEventDetails = {
+        title: '二八分',
+        intro: '有公司欣赏你的说唱才华，希望与你签约。签约经纪公司你可能会接触到非常多的专业资源，收入与知名度也会有所提升。你选择是否签约？',
+        options: [
+          '【签约】',
+          '【再考虑下】',
+        ],
+      };
+    } else {
+      specialEventDetails = {
+        title: '二八分',
+        intro: '有公司欣赏你的说唱才华，希望与你签约。签约经纪公司你可能会接触到非常多的专业资源，收入与知名度也会有所提升。你选择是否签约？',
+        options: [
+          '【签约】',
+          '【再考虑下】',
+          '【自己开公司】',
+        ],
+      };
+    }
+
+  }
+
+  context.commit('setSpecialEventDetails', specialEventDetails);
+  showEventDialog.value = true;
 }  
 
 export async function specialEventOptionChosen(context: {
@@ -126,7 +146,7 @@ export async function specialEventOptionChosen(context: {
 
   else if (payload.event === '放松，呼吸') {
     if (payload.option === '【去丽江旅游】') {
-      await context.dispatch('typeWriter', ['姜云升开心地出门去玩啦！但在旅游的时候，你忽然有一种奇怪的预感，于是你给女朋友打了许多电话，她都没有接。果不其然，姜云升被绿了。在姜云升和女朋友分手之后，没想到，你女朋友还找人打了你一顿。']);
+      await context.dispatch('typeWriter', ['姜云升开心地出门去玩啦！但在旅游的时候，你忽然有一种奇怪的预感，于是你给女朋友打了许多电话，她都没有接。果不其然，姜云升被绿了。在姜云升和女朋友分手之后，没想到，你女朋友还找人打了你一顿。（本故事基于真实事件改编）']);
       // 和女朋友和平分手
       context.rootState.hasGirlfriend = false;
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -141,6 +161,33 @@ export async function specialEventOptionChosen(context: {
       await context.dispatch('typeWriter', ['姜云升解锁了第' + context.rootState.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【放松，呼吸】。']);
     } else {
       await context.dispatch('typeWriter', ['姜云升选择了不去丽江旅游，避免了一次巨大的伤害。']);
+    }
+  }
+
+  else if (payload.event === '二八分') {
+
+    if (payload.option === '【签约】') {
+
+      await context.dispatch('typeWriter', ['姜云升签约了经纪公司，专业资源和知名度都有所提升，每月还能拿5000块基本工资。（公司会抽取你接下来所有收入的80%）']);
+      context.commit('setSignedAgency', true);
+      context.commit('updateAttribute', { attribute: 'money', value: 5000 });
+      context.commit('updateAttribute', { attribute: 'red', value: 250 });
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await context.dispatch('typeWriter', ['姜云升金钱+5000，人气+250。']);
+
+    } else if (payload.option === '【再考虑下】') {
+      
+      context.commit('setSignedAgency', true);
+      await context.dispatch('typeWriter', ['经过慎重考虑，姜云升还是决定签约经纪公司，姜云升专业资源和知名度都有所提升，每月还能拿5000块基本工资。（公司会抽取你接下来所有收入的80%）']);
+      context.commit('updateAttribute', { attribute: 'money', value: 5000 });
+      context.commit('updateAttribute', { attribute: 'red', value: 250 });
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await context.dispatch('typeWriter', ['姜云升金钱+5000，人气+250。']);
+
+    } else if (payload.option === '【自己开公司】') {
+
+      context.dispatch('unlockAchievement', '风炎文化');
+      await context.dispatch('typeWriter', ['“没上过一天正经班，我直接成为董事长。建立个特别的公司，我知道我们能有市场”，姜云升选择自己开一家不一样的经纪公司，解锁成就【风炎文化】。']);
     }
   }
 }
