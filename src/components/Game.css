@@ -236,7 +236,7 @@ footer button {
 
 .game-ended-dialog .desc {
   font-size: 0.9rem;
-  margin: 2rem auto 1rem;
+  margin: 1rem auto;
   width: 90%;
   color: #4c4d55;
 }

@@ -79,6 +79,10 @@ button:focus-visible {
   text-align: center;
 }
 
+::selection { background-color: #f1efed; }
+::-moz-selection { background-color: #f1efed; }
+::-webkit-selection { background-color: #f1efed; }
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
