@@ -1,29 +1,29 @@
 
 
   <template>
-    <div class="attributes-container">
-      <div><span class="attribute-name">姓名</span>姜云升</div>
-      <div><span class="attribute-name">国籍</span>中国</div>
-      <div><span class="attribute-name">生日</span>1996年6月1日 / 四月十六</div>
-      <div><span class="attribute-name">年龄 / 星座</span><span>{{ Math.floor((store.state.round - 16) / 36) + 16 }}岁 / <span @click="gemini()">双子座</span></span></div>
-      <div><span class="attribute-name">身高 / 体重</span> 182cm / 60kg</div>
+  <div class="attributes-container">
+    <div><span class="attribute-name">姓名</span>姜云升</div>
+    <div><span class="attribute-name">国籍</span>中国</div>
+    <div><span class="attribute-name">生日</span>1996年6月1日 / 四月十六</div>
+    <div><span class="attribute-name">年龄 / 星座</span><span>{{ Math.floor((store.state.round - 16) / 36) + 16 }}岁 / <span @click="gemini()">双子座</span></span></div>
+    <div><span class="attribute-name">身高 / 体重</span> 182cm / 60kg</div>
 
-      <div><span class="attribute-name">{{ attributeNames['talent'] }}</span> {{ attributes['talent'] }}</div>
-      <div><span class="attribute-name">{{ attributeNames['charm'] }}</span> {{ attributes['charm'] }}</div>
-      <div><span class="attribute-name">{{ attributeNames['divine'] }}</span> {{ attributes['divine'] }}</div>
+    <div><span class="attribute-name">{{ attributeNames['talent'] }}</span> {{ attributes['talent'] }}</div>
+    <div><span class="attribute-name">{{ attributeNames['charm'] }}</span> {{ attributes['charm'] }}</div>
+    <div><span class="attribute-name">{{ attributeNames['divine'] }}</span> {{ attributes['divine'] }}</div>
 
-      <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span> 红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</div>
-      <div>
-        <span class="attribute-name">{{ attributeNames['money'] }}</span> 
-        <span>￥{{ attributes['money'] }}  | {{ attributes['gold'] }}枚金条 <span class="span_sellGold" @click="showSellGoldPopup = true">/ 出售</span>
-          <button class="button_buyGold" @click="showBuyGoldPopup = true">买金条！</button>
-        </span>
-      </div>
-      <div v-if="attributes['energy'] >= 0"><span class="attribute-name"> {{ attributeNames['energy'] }}</span> {{ attributes['energy'] }}<template v-if="weak">（虚弱！）</template></div>
-      <div v-else><span class="weak attribute-name">体力透支</span> {{ attributes['energy'] }} <template v-if="weak">（虚弱！）</template> </div>
-      <div><span class="attribute-name">{{ attributeNames['mood'] }}</span> {{ attributes['mood'] }} <template v-if="drunk>0">（醉酒 × {{drunk}}）</template></div>
-
+    <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span> 红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</div>
+    <div>
+      <span class="attribute-name">{{ attributeNames['money'] }}</span> 
+      <span>￥{{ attributes['money'] }}  | {{ attributes['gold'] }}枚金条 <span class="span_sellGold" @click="showSellGoldPopup = true">/ 出售</span>
+        <button class="button_buyGold" @click="showBuyGoldPopup = true">买金条！</button>
+      </span>
     </div>
+    <div v-if="attributes['energy'] >= 0"><span class="attribute-name"> {{ attributeNames['energy'] }}</span> {{ attributes['energy'] }}<template v-if="weak">（虚弱！）</template></div>
+    <div v-else><span class="weak attribute-name">体力透支</span> {{ attributes['energy'] }} <template v-if="weak">（虚弱！）</template> </div>
+    <div><span class="attribute-name">{{ attributeNames['mood'] }}</span> {{ attributes['mood'] }} <template v-if="drunk>0">（醉酒 × {{drunk}}）</template></div>
+
+  </div>
 
       <!-- <h3 class="title">数值说明：</h3>
   <ul>
@@ -126,6 +126,8 @@ const gemini = () => {
   background-color: #f5f5f5;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 75vh;
+  overflow-y: auto;
 }
 
 .attributes-container > div {
