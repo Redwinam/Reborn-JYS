@@ -85,7 +85,7 @@ const gemini = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 10px;
+  padding: 0.6rem 0.5rem;
   border-bottom: 1px solid #ddd;
 }
 
