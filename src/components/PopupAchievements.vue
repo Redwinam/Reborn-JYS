@@ -18,14 +18,14 @@
   <p v-if="unlockedAchievementCount == achievements.length" class="game-maker">制作人：@千啾略</p>
 </div>
 
-<Popup :visible = "showAchievementNotePopup" @close = "showAchievementNotePopup = false" class="achievement-note">
+<PopupSub :visible = "showAchievementNotePopup" @close = "showAchievementNotePopup = false" class="achievement-note">
   <p class="desc">点击成就可以查看成就提示。一周目后每周目游戏结束后可以点击查看+1条未解锁的成就🏆的具体达成条件提示，当前剩余可解锁成就提示数量：{{ term - store.state.unlockedAchievementConditions.length -1 }}。</p>
   <div class="achievement-note-buttons">
     <button class="confirm-button" @click="showAchievementNotePopup = false">了解！</button>
   </div>
-</Popup>
+</PopupSub>
 
-<Popup :visible = "showUnlockAchievementConditionConfirmPopup" @close = "showUnlockAchievementConditionConfirmPopup = false" class="achievement-note">
+<PopupSub :visible = "showUnlockAchievementConditionConfirmPopup" @close = "showUnlockAchievementConditionConfirmPopup = false" class="achievement-note">
   <p class="desc" v-if="term > 1">每周目游戏结束后可以查看+1条未解锁的成就🏆的具体达成条件提示，当前剩余可解锁成就提示数量：{{ term - store.state.unlockedAchievementConditions.length - 1 }}。<template v-if="term - store.state.unlockedAchievementConditions.length - 1">请问要查看【{{currentUnlockConditionAchievement.name}}】的成就提示吗？</template></p>
   <p class="desc" v-else>一周目后每周目游戏结束后可以点击查看+1条未解锁的成就🏆的具体达成条件提示，当前可以先继续游玩随机体验噢！</p>
   <div class="achievement-note-buttons" v-if="term - store.state.unlockedAchievementConditions.length > 1">
@@ -35,14 +35,14 @@
   <div class="achievement-note-buttons" v-else>
     <button class="confirm-button" @click="showUnlockAchievementConditionConfirmPopup = false">了解！</button>
   </div>
-</Popup>
+</PopupSub>
 
-<Popup :visible = "showAchievementConditionPopup" @close = "showAchievementConditionPopup = false" class="achievement-note">
+<PopupSub :visible = "showAchievementConditionPopup" @close = "showAchievementConditionPopup = false" class="achievement-note">
   <p class="desc">提示：{{ currentUnlockConditionAchievement.condition }}。</p>
   <div class="achievement-note-buttons">
     <button class="confirm-button" @click="showAchievementConditionPopup = false">了解！</button>
   </div>
-</Popup>
+</PopupSub>
 
 </template>
 
@@ -50,7 +50,7 @@
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
-import Popup from '../components/Popup.vue'
+import PopupSub from '../components/PopupSub.vue'
 import { Achievement } from '../store/achievements'
 import { showAchievementNotePopup } from '../components/composables/gameRefs'
 

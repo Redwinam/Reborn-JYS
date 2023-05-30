@@ -7,6 +7,7 @@
       <p id="textboxPopup" v-if="title ==='客官今天打算吃点什么？'">吃点什么呢……</p>
       <p id="textboxPopup" v-if="title ==='买喝的！'">喝杯什么呢……</p>
       <p id="textboxPopup" v-if="title ==='买东西！'">要买什么呢？</p>
+      <p id="textboxPopup" v-if="title ==='地下钱庄'">欢迎光临～本店有金条出售，价格公道、暴利多销、买卖自由。请问老板今天是要买还是卖呢？</p>
       <p id="textboxPopup" v-if="title ==='写歌'">一起写歌吧！</p>
       <p id="textboxPopup" v-if="title ==='物品'"></p>
       <button v-if="showCloseButton" @click="$emit('close')" class="close-button"><X></X></button>

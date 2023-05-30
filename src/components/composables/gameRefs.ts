@@ -15,3 +15,7 @@ export const showShopPopup = ref(false);
 export const isTyping = ref(false);
 
 export const showAchievementNotePopup = ref(false);
+
+export const showBankPopup = ref(false);
+export const showBuyGoldPopup = ref(false)
+export const showSellGoldPopup = ref(false)

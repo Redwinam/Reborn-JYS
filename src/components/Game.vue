@@ -49,6 +49,7 @@
     <button @click="goToLocation('去吃点东西')" class="action-button action-eat" v-if="isGoingOut" :disabled="isTyping"></button>
     <button @click="goToLocation('去喝点东西')" class="action-button action-drink" v-if="isGoingOut" :disabled="isTyping"></button>
     <button @click="goToLocation('买东西')" class="action-button action-shopping" v-if="isGoingOut" :disabled="isTyping"></button>
+    <button @click="goToLocation('地下钱庄之暴富金铺')" class="action-button action-buy-gold" v-if="isGoingOut" :disabled="isTyping"></button>
     <button @click="goToLocation('去剪头发')" class="action-button action-cut-hair" v-if="isGoingOut" :disabled="isTyping"></button>
     <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut" :disabled="isTyping"></button>
     <button @click="goToLocation('Underground')" class="action-button action-underground" v-if="isGoingOut" :disabled="isTyping"></button>
@@ -72,12 +73,15 @@
 <Popup title="客官今天打算吃点什么？" :visible="showFoodPopup" @close="showFoodPopup = false; store.dispatch('incrementRound');"><popup-food /></Popup>
 <Popup title="买喝的！" :visible="showDrinkPopup" @close="showDrinkPopup = false; store.dispatch('incrementRound'); "><popup-drink /></Popup>
 <Popup title="买东西！" :visible="showShopPopup" @close="showShopPopup = false; store.dispatch('incrementRound');"><popup-shop /></Popup>
+<Popup title="地下钱庄" :visible="showBankPopup" @close="showBankPopup = false"><popup-bank /></Popup>
 
 <Popup title="写歌" :visible="showSongWritingDialog" @close="showSongWritingDialog = false"><popup-song-writing /></Popup>
 <Popup title="角色" :visible="showCharacterPopup" @close="showCharacterPopup = false"><popup-character /></Popup>
 <Popup title="物品" :visible="showItemsPopup" @close="showItemsPopup = false"><popup-items /></Popup>
 <Popup title="技能" :visible="showSkillsPopup" @close="showSkillsPopup = false"><popup-skills /></Popup>
 <Popup title="成就" :visible="showAchievementsPopup" @close="showAchievementsPopup = false"><popup-achievements /></Popup>
+
+<PopupSubGold></PopupSubGold>
 
 <Popup title="历史记录" :visible="showTextHistoryPopup" @close="showTextHistoryPopup = false">
   <div class="textHistory" ref="textHistoryContainer">
@@ -129,6 +133,7 @@ import { computed, ref, nextTick, watch } from 'vue'
 import { HelpCircle } from 'lucide-vue-next'
 
 import Popup from '../components/Popup.vue'
+
 import PopupAchievements from '../components/PopupAchievements.vue'
 import PopupCharacter from '../components/PopupCharacter.vue'
 import PopupItems from '../components/PopupItems.vue'
@@ -138,6 +143,8 @@ import PopupSongWriting from '../components/PopupSongWriting.vue'
 import PopupFood from '../components/PopupFood.vue'
 import PopupDrink from '../components/PopupDrink.vue'
 import PopupShop from '../components/PopupShop.vue'
+import PopupBank from '../components/PopupBank.vue'
+import PopupSubGold from '../components/PopupSubGold.vue'
 
 import Dialog from '../components/Dialog.vue'
 import DialogBreakup from '../components/DialogBreakup.vue'
@@ -148,7 +155,7 @@ import { attributeNames } from '../store/attributes'
 
 import { isAtHome, isGoingOut, 
   showBreakupDialog, showEventDialog, showSongWritingDialog, showGameEndDialog, 
-  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, 
+  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, showBankPopup, 
   isTyping
 } from './composables/gameRefs';
 

@@ -1,6 +1,6 @@
 import { Commit } from 'vuex';
 import { Food, allFoods } from '../eats';
-import { showFoodPopup, showDrinkPopup, showShopPopup } from '../../components/composables/gameRefs';
+import { showFoodPopup, showDrinkPopup, showShopPopup, showBankPopup } from '../../components/composables/gameRefs';
 import { Achievement } from '../achievements';
 
 export async function goToLocation(context: {
@@ -105,6 +105,10 @@ export async function goToLocation(context: {
       
     case '买东西':
       showShopPopup.value = true;
+      break;
+
+    case '地下钱庄之暴富金铺':
+      showBankPopup.value = true;
       break;
 
 
