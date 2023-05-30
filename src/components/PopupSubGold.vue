@@ -39,22 +39,29 @@ import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
 import PopupSub from '../components/PopupSub.vue'
-import { showBuyGoldPopup, showSellGoldPopup } from './composables/gameRefs';
+import { showBankPopup, showBuyGoldPopup, showSellGoldPopup } from './composables/gameRefs';
 
 const store = useStore()
 const attributes = computed(() => store.state.attributes);
 
 const goldAmount = ref(1)
-const buyGold = () => {
+async function buyGold() {
   if (goldAmount.value * 360 <= attributes.value.money) {
     store.commit('buyGold', goldAmount.value)
     showBuyGoldPopup.value = false
+    if (showBankPopup.value) {
+      await store.dispatch('typeWriterPopup', '姜云升花了' + goldAmount.value * 360 + '金钱，购买了' + goldAmount.value + '克金条。')
+    }
   }
 }
-const sellGold = () => {
+
+async function sellGold() {
   if (goldAmount.value <= attributes.value.gold) {
     store.commit('buyGold', -goldAmount.value)
     showSellGoldPopup.value = false
+    if (showBankPopup.value) {
+      await store.dispatch('typeWriterPopup', '姜云升卖出了' + goldAmount.value + '克金条，获得了' + goldAmount.value * 360 + '金钱。')
+    }
   }
 }
 
