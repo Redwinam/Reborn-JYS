@@ -38,6 +38,7 @@ interface State {
   inventory: Inventory
 
   achievements: Achievement[]
+  unlockedAchievementConditions: string[]
 
   undergroundCount: number
 
@@ -118,6 +119,7 @@ const state: State = {
   inventory: {},
 
   achievements: achievements,
+  unlockedAchievementConditions: [],
 
   undergroundCount: 0,
   
@@ -330,6 +332,14 @@ const mutations = {
       achievement.unlockTerm = state.term;
     }
   },
+
+  unlockAchievementCondition(state: State, achievementName: string) {
+    if (state.unlockedAchievementConditions.length >= state.term - 1) {
+      return;
+    }
+    state.unlockedAchievementConditions.push(achievementName);
+  },
+
   addTextToHistory(state: State, message: string | string[]) {
     if (typeof message === 'string') {
       state.textHistory.push(message);

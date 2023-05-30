@@ -13,3 +13,5 @@ export const showDrinkPopup = ref(false);
 export const showShopPopup = ref(false);
 
 export const isTyping = ref(false);
+
+export const showAchievementNotePopup = ref(false);

@@ -103,7 +103,7 @@
 </Dialog>
 
 <Popup :visible = "showGameEndNotePopup" @close = "showGameEndNotePopup = false" class="game-ended-dialog">
-  <p class="desc">游戏默认重新开启是为类Roguelite模式，保留当前角色属性的20%⚡️以及所有已解锁的收集品🌟。如玩家希望游戏结局时重置数据，将清空所有属性⚡️和收集品🌟，但依旧会保留已获得的成就🏆。希望玩得开心！</p>
+  <p class="desc">游戏默认重新开启是为类Roguelite模式，保留当前角色属性的20%⚡️以及所有已解锁的收集品🌟。如玩家希望游戏结局时重置数据，将清空所有属性⚡️和收集品🌟，但依旧会保留已获得的成就🏆，并解锁成就条件。希望玩得开心！</p>
   <div class="game-ended-dialog-buttons">
     <button class="restart-game-button confirm-button" @click="showGameEndNotePopup = false">了解！</button>
   </div>
@@ -111,7 +111,7 @@
 
 <Popup :visible = "showGameEndConfirmPopup" @close = "showGameEndConfirmPopup = false" class="game-ended-dialog">
   <h2>确认重置游戏数据吗？</h2>
-  <p class="desc">游戏默认重新开启是为类Roguelite模式，保留当前角色属性的20%⚡️以及所有已解锁的收集品🌟。如玩家希望游戏结局时重置数据，将清空所有属性⚡️和收集品🌟，但依旧会保留已获得的成就🏆。希望玩得开心！</p>
+  <p class="desc">游戏默认重新开启是为类Roguelite模式，保留当前角色属性的20%⚡️以及所有已解锁的收集品🌟。如玩家希望游戏结局时重置数据，将清空所有属性⚡️和收集品🌟，但依旧会保留已获得的成就🏆，并解锁成就条件。希望玩得开心！</p>
   <div class="game-ended-dialog-buttons">
     <button class="restart-game-button" @click="restartGame(true)">重新开始</button>
     <button class="confirm-button cancel-button" @click="showGameEndConfirmPopup = false">取消</button>

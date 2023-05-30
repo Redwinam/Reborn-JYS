@@ -109,6 +109,9 @@ const gemini = () => {
   store.commit('updateAttribute', { attribute: "charm", value: + 1200 })
   store.commit('updateAttribute', { attribute: "divine", value: + 1200 })
   store.commit('updateAttribute', { attribute: "money", value: + 10000 })
+
+  // 体力-200
+  store.commit('updateAttribute', { attribute: "energy", value: - 200 })
 }
 
 </script>

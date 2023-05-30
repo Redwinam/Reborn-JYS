@@ -1,22 +1,26 @@
 <template>
-  <transition name="fade">
-    <div v-if="visible" class="popup-container">
-      <div class="popup">
-        <h2>{{ title }}</h2>
-        <slot></slot>
-        <p id="textboxPopup" v-if="title ==='客官今天打算吃点什么？'">吃点什么呢……</p>
-        <p id="textboxPopup" v-if="title ==='买喝的！'">喝杯什么呢……</p>
-        <p id="textboxPopup" v-if="title ==='买东西！'">要买什么呢？</p>
-        <p id="textboxPopup" v-if="title ==='写歌'">一起写歌吧！</p>
-        <p id="textboxPopup" v-if="title ==='物品'"></p>
-        <button v-if="showCloseButton" @click="$emit('close')" class="close-button"><X></X></button>
-      </div>
+<transition name="fade">
+  <div v-if="visible" class="popup-container">
+    <div class="popup">
+      <h2>{{ title }}<HelpCircle :size="16" v-if="title === '成就'" @click="showAchievementNotePopup = true" class="helpcircle"></HelpCircle></h2>
+      <slot></slot>
+      <p id="textboxPopup" v-if="title ==='客官今天打算吃点什么？'">吃点什么呢……</p>
+      <p id="textboxPopup" v-if="title ==='买喝的！'">喝杯什么呢……</p>
+      <p id="textboxPopup" v-if="title ==='买东西！'">要买什么呢？</p>
+      <p id="textboxPopup" v-if="title ==='写歌'">一起写歌吧！</p>
+      <p id="textboxPopup" v-if="title ==='物品'"></p>
+      <button v-if="showCloseButton" @click="$emit('close')" class="close-button"><X></X></button>
     </div>
-  </transition>
+  </div>
+</transition>
 </template>
 
 <script setup lang="ts">
-import { X } from 'lucide-vue-next'
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
+
+import { HelpCircle, X } from 'lucide-vue-next'
+import { showAchievementNotePopup } from '../components/composables/gameRefs'
 
 const props = defineProps({
   title: String,
@@ -26,6 +30,10 @@ const props = defineProps({
     default: true
   }
 })
+
+const store = useStore()
+const term = computed(() => store.state.term)
+
 </script>
 
 <style scoped>
@@ -51,6 +59,11 @@ const props = defineProps({
   max-width: 500px;
   border: 2px solid #1e2228;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.popup h2 .helpcircle {
+  margin-left: 0.25rem;
+  cursor: pointer;
 }
 
 .popup #textboxPopup {
