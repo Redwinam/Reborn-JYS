@@ -70,19 +70,19 @@ const confirmPurchase = () => {
   width: 100%;
   max-height: 75vh;
   overflow-y: auto;
+  gap: 10px;
 }
 
 .food-item {
-  flex: 0 0 calc(33.33% - 40px); 
+  flex: 0 0 calc(50% - 30px);
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  border: 2px solid #1e2228;
-  border-radius: 10px;
   padding: 0.7rem;
-  margin-bottom: 10px;
-
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #f9f9f9;
 }
 
 .food-item .item-info {
@@ -155,7 +155,7 @@ const confirmPurchase = () => {
 }
 
 .food-item .select-buttons .buttons-container button {
-  padding: 2px 8px;
+  padding: 0.1rem 0.4rem;
   font-size: 0.8rem;
   border: none;
   color: #d3c6c4;
@@ -170,7 +170,7 @@ const confirmPurchase = () => {
 }
 
 .food-item .select-buttons .buttons-container .left-button {
-  padding: 2px 6px 2px 8px;
+  padding: 0.1rem 0.3rem 0.1rem 0.4rem;
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
   white-space: nowrap;
@@ -178,7 +178,7 @@ const confirmPurchase = () => {
 }
 
 .food-item .select-buttons .buttons-container .right-button {
-  padding: 2px 6px 2px 6px;
+  padding: 0.1rem 0.3rem;
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
   background-color: #d3c6c4;
