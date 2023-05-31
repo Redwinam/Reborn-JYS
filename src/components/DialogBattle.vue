@@ -1,5 +1,5 @@
 <template>
-  <p>{{ battleText }}</p>
+  <p class="desc">{{ battleText }}</p>
   <div class="button-container">
     <button v-for="battleOption in battleOptions" @click="battle(battleOption)">{{battleOption}}</button>
   </div>

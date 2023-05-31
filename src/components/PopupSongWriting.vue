@@ -274,7 +274,7 @@ async function writeFeiSong() {
         store.commit('updateAttribute', { attribute: 'talent', value: 30 });
         store.commit('updateAttribute', { attribute: 'charm', value: 30 });
         store.commit('updateAttribute', { attribute: 'red', value: 300 });
-        toMessage.push('姜云升已经写完了所有废歌，再写废歌就要被打啦！解锁了第' + store.state.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【这歌废啦】，姜云升才华+30，魅力+30，红色人气+300。');
+        toMessage.push('姜云升已经写完了所有废歌，再写废歌就要被打啦！解锁了第' + store.state.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【这歌废啦】<small>姜云升才华+30，魅力+30，红色人气+300。</small>');
       }
     }
   } else {
@@ -288,7 +288,7 @@ async function writeFeiSong() {
   store.commit('updateAttribute', { attribute: 'black', value: blackValue });
   store.commit('updateAttribute', { attribute: 'talent', value: 20 });
   store.commit('updateAttribute', { attribute: 'charm', value: 20 });
-  toMessage.push('姜云升体力-100，人气红值+' + redValue + '，黑值+' + blackValue + '，才华+20，魅力+20。');
+  toMessage.push('<small>姜云升体力-100，人气红值+' + redValue + '，黑值+' + blackValue + '，才华+20，魅力+20。</small>');
   await store.dispatch('typeWriterPopup', toMessage);
   store.dispatch('incrementRound');
 }
