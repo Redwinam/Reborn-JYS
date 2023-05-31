@@ -1,5 +1,4 @@
 <template>
-
 <PopupSub title="地下·世界" :visible="showUndergroundPopup" @close="showUndergroundPopup = false">
 <div class="underground-tour">
   
@@ -18,7 +17,6 @@
 </div>
 
 </PopupSub>
-
 </template>
 
 <script setup lang="ts">
@@ -37,8 +35,9 @@ const tourStation = [
 
 // store.state.tourCount[index] 是否等于13
 const finishTour = (index: number) => computed(() => store.state.tourCount[index] === 13);
-console.log(finishTour(0), store.state.tourCount[0])
 async function tour(index: number) {
+  showUndergroundPopup.value = false
+
   store.commit('incrementTourCount', index)
   const currentTourCount = computed(() => store.state.tourCount[index])
 
@@ -75,26 +74,23 @@ async function tour(index: number) {
     gift.push('粉丝的画×1', '粉丝打磨的锤子×1')
   }
 
-  showUndergroundPopup.value = false
   await store.dispatch('typeWriter', 
     `姜云升开启了巡演${tourStation[index].name}的${currentTourCount.value !== 13 ? `第${currentTourCount.value}站` : '最后一站'}·${tourStation[index].station[currentTourCount.value - 1]}站。${tourStation[index].intro}<small>姜云升金钱+${index === 0 ? 10000 : 100000}，人气+${index === 0 ? 1000 : 3000}，收到了${gift.join('、')}。</small>`
   )
 
   store.dispatch('incrementRound');
-  showUndergroundPopup.value = true
-
 }
 
 const activity = async (activityName: string) => {
   switch (activityName) {
     case '上节目':
+      showUndergroundPopup.value = false
       // 才华 +30 魅力 + 30
       store.commit('updateAttribute', { attribute: 'talent', value: + 30 })
       store.commit('updateAttribute', { attribute: 'charm', value: + 30 })
       store.commit('updateAttribute', { attribute: 'money', value: + 10000 })
       store.commit('updateAttribute', { attribute: 'red', value: + 1000 })
 
-      showUndergroundPopup.value = false
       await store.dispatch('typeWriter', [
         '姜云升用1个月的时间参加一档说唱类综艺节目，又是一个不一样的他。<small>姜云升才华+30，魅力+30，金钱+10000，人气+1000。</small>'
       ])
@@ -104,6 +100,7 @@ const activity = async (activityName: string) => {
       break;
 
     case '上音乐节':
+      showUndergroundPopup.value = false
       const musicFestivals = ['星巢秘境音乐节', '仙人掌音乐节', 'Heloy音乐节', '迷笛音乐节', '太湖湾音乐节', '奇幻音乐节', '海潮宇宙音乐节', 'AYO!音乐节', '麦田音乐节', '星空音乐节', '楠溪江音乐节', '长江潮音乐节', '星动音乐节', '绿野音乐节', '禧都音乐节', '二次元音乐节', 'MDSK音乐节', '麦浪音乐节']
       const musicFestival = musicFestivals[Math.floor(Math.random() * musicFestivals.length)]
       // 才华 +10 魅力 + 10
@@ -112,12 +109,10 @@ const activity = async (activityName: string) => {
       store.commit('updateAttribute', { attribute: 'money', value: + 10000 })
       store.commit('updateAttribute', { attribute: 'red', value: + 200 })
 
-      showUndergroundPopup.value = false
       await store.dispatch('typeWriter', [
         `姜云升来到了${musicFestival}的舞台上，为现场的观众们带来了一场印象深刻的演出。<small>姜云升才华+10，魅力+10，金钱+10000，人气+200。</small>`
       ])
       store.dispatch('incrementRound');
-
       break;
   }
 }
