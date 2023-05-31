@@ -186,8 +186,10 @@ const signedAgency = computed(() => store.state.signedAgency)
 
 const textHistory = computed(() => {
   const history = store.state.textHistory
-  return history.length > 99 ? history.slice(-99) : history
+  const filteredHistory = history.map((record:string) => record.replace(/<\/?small>/g, ''))
+  return filteredHistory.length > 99 ? filteredHistory.slice(-99) : filteredHistory
 })
+
 const showTextHistoryPopup = ref(false)
 const textHistoryContainer = ref<HTMLDivElement | null>(null)
 
