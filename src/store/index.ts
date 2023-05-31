@@ -438,7 +438,6 @@ const mutations = {
       state.attributes.popularity.red = Math.floor(state.attributes.popularity.red * 0.2)
       state.attributes.popularity.black = Math.floor(state.attributes.popularity.black * 0.2)
       state.attributes.money = Math.floor(state.attributes.money * 0.2)
-      state.attributes.gold = Math.floor(state.attributes.gold * 0.2)
       state.attributes.maxEnergy = Math.floor((state.attributes.maxEnergy - 100) * 0.2 + 100)
       state.attributes.energy = state.attributes.maxEnergy
       state.attributes.mood = 0
