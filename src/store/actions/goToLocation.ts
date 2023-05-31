@@ -1,7 +1,8 @@
 import { Commit } from 'vuex';
 import { allFoods } from '../eats';
-import { showFoodPopup, showDrinkPopup, showShopPopup, showBankPopup, showUnsignAgencyDialog } from '../../components/composables/gameRefs';
 import { Achievement } from '../achievements';
+import { SkillLevelMapping } from './upgradeSkill';
+import { showFoodPopup, showDrinkPopup, showShopPopup, showBankPopup, showUnsignAgencyDialog } from '../../components/composables/gameRefs';
 
 export async function goToLocation(context: {
   state: any; commit: Commit, dispatch: Function 
@@ -54,22 +55,171 @@ export async function goToLocation(context: {
       break;
 
     case 'Underground':
-      switch (context.state.undergroundCount) {
-        case 0 :
-          await context.dispatch('typeWriter', '这是姜云升第一次来到这个世界，他在这里感受到了不一样的力量，彼时的他是否已经在这里看到了自己的未来了呢？')
-          // 黑红属性各增加1
-          context.commit('updateAttribute', { attribute: 'red', value: 1 })
-          context.commit('updateAttribute', { attribute: 'black', value: 1 })
-          break;
-
-        case 1 :
-          await context.dispatch('typeWriter', '咦？又走到了这里。姜云升再次被这里的力量吸引，忽然……')
+      
+      const skill = 'freestyle';
+      for (const level of SkillLevelMapping) {
+        if (context.state.attributes.skill.freestyle === level.max) {
           await new Promise(resolve => setTimeout(resolve, 1000));
-          context.dispatch('specialEvent', '上去看看');
+          await context.dispatch('typeWriter', ['姜云升的freestyle技能进入了瓶颈期，需要通过考验才能升级！']);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          await context.dispatch('upgradeSkill', { skill, level: level.level });
+          return;
 
+        } else if (context.state.attributes.skill.freestyle >= level.min && context.state.attributes.skill.freestyle < level.max) {
+
+          switch (context.state.undergroundCount) {
+            case 0:
+              await context.dispatch('typeWriter', '这是姜云升第一次来到这个世界，他在这里感受到了不一样的力量，彼时的他是否已经在这里看到了自己的未来了呢？')
+              context.commit('updateAttribute', { attribute: 'red', value: 1 })
+              context.commit('updateAttribute', { attribute: 'black', value: 1 })
+              break;
+    
+            case 1:
+              await context.dispatch('typeWriter', '咦？又走到了这里。姜云升再次被这里的力量吸引，忽然……')
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              context.dispatch('specialEvent', '去看热闹');
+              break;
+    
+            case 2:
+              context.commit('updateAttribute', { attribute: 'mood', value: 10 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              await context.dispatch('typeWriter', '第三次来到这里，姜云升开始学着和一些MC们一起Freestyle Battle，真是学好不容易，学坏一出溜。内容过于低俗，出于公序良俗和青少年优良学风引导的考虑，这里不便展开。姜云升心情+10，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+    
+            case 3:
+              context.commit('updateAttribute', { attribute: 'mood', value: 10 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              await context.dispatch('typeWriter', '第四次来到这里，姜云升决心把所有的心血都投入到音乐和说唱里，姜云升心情+10，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+            
+            case 4:
+              context.commit('updateAttribute', { attribute: 'mood', value: -10 });
+              context.commit('updateAttribute', { attribute: 'black', value: 100 });
+              await context.dispatch('typeWriter', '第五次来到这里，悲伤的故事发生了！也不知道怎么做到的，姜云升被这里所有的圈子给封杀了，姜云升心情-10，黑人气+100！');
+              break;
+
+            case 5:
+              context.commit('updateAttribute', { attribute: 'talent', value: 10 });
+              context.commit('updateAttribute', { attribute: 'charm', value: 10 });
+              context.commit('updateAttribute', { attribute: 'red', value: 200 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              await context.dispatch('typeWriter', '第六次来到这里，姜云升决定用心参加各类比赛和选秀，想要出头。才华+10，魅力+10，人气+200，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+
+            case 6:
+              context.commit('updateAttribute', { attribute: 'mood', value: -10 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              await context.dispatch('typeWriter', '第七次来到这里，姜云升参加了一档综艺节目，可晋级后主办方却没了消息，姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+
+            case 7:
+              context.commit('updateAttribute', { attribute: 'mood', value: -10 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              await context.dispatch('typeWriter', '第八次来到这里，姜云升参加了一场说唱比赛，结果告负。姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+
+            case 8:
+              context.commit('updateAttribute', { attribute: 'mood', value: -10 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              await context.dispatch('typeWriter', '第九次来到这里，姜云升又参加了一场说唱比赛，结果依然告负。姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+
+            case 9:
+              context.commit('updateAttribute', { attribute: 'mood', value: -30 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              await context.dispatch('typeWriter', '第十次来到这里，姜云升坚持参加了很多很多比赛，全部告负。姜云升心情-30，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+
+            case 10:
+              context.commit('updateAttribute', { attribute: 'mood', value: 60 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              context.commit('updateAttribute', { attribute: 'red', value: 200 });
+              await context.dispatch('typeWriter', '第十一次来到这里，姜云升参加了第五届K.O.B，终于拿到了冠军。他开始有了朋友，以为生活开始变好。姜云升心情+60，人气+200，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+
+            case 11:
+              context.commit('updateAttribute', { attribute: 'mood', value: 10 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              context.commit('updateAttribute', { attribute: 'red', value: 600 });
+              await context.dispatch('typeWriter', '第十二次来到这里，两年时间，姜云升拿了iron mic、地下8英里、干一票、三寸不烂之舌昆明站的冠军。姜云升心情+10，人气+600，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+
+            case 12:
+              context.commit('updateAttribute', { attribute: 'mood', value: -10 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              await context.dispatch('typeWriter', '第十三次来到这里，姜云升依旧害怕输和失败，“其实就算是那些获胜的比赛，你看不见的地方，我的手臂也在颤抖着，我畏惧失败。”。姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+
+            case 13:
+              context.commit('updateAttribute', { attribute: 'mood', value: 9 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              context.commit('updateAttribute', { attribute: 'red', value: 1000 });
+              await context.dispatch('typeWriter', '第十四次来到这里，姜云升代表家乡云南昆明来西安参加「干一票」总决赛，在这里他找到了自信和前进下去的动力。姜云升心情+9，人气+1000，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+
+            case 14:
+              context.commit('updateAttribute', { attribute: 'mood', value: 10 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              context.commit('updateAttribute', { attribute: 'red', value: 600 });
+              await context.dispatch('typeWriter', '第十五次来到这里，姜云升和朋友组建了自己的说唱团队，拿下了一个又一个冠军。姜云升心情+10，人气+600，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+
+            case 15:
+              context.commit('updateAttribute', { attribute: 'mood', value: 10 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              context.commit('updateAttribute', { attribute: 'red', value: 1000 });
+              context.commit('updateAttribute', { attribute: 'money', value: 5000 });
+              await context.dispatch('typeWriter', '第十六次来到这里，姜云升的说唱团队举办了演出专场，破了昆明的票房纪录。姜云升心情+10，人气+1000，金钱+5000，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+
+            case 16:
+              context.commit('updateAttribute', { attribute: 'mood', value: -10 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              await context.dispatch('typeWriter', '第十七次来到这里，姜云升的厂牌宣告分裂。姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+              
+            case 17:
+              context.dispatch('specialEvent', '二八分');
+              break;
+
+            case 18:
+              context.commit('updateAttribute', { attribute: 'mood', value: -90 });
+              context.dispatch('typeWriter', '第十九次来到这里，姜云升和徒弟前往深圳参加铁麦决赛，惨遭淘汰。他觉得自己看明白了许多事情，意冷心灰，决定放弃说唱。');
+              break;
+
+            case 19:
+              context.commit('updateAttribute', { attribute: 'mood', value: 10 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              await context.dispatch('typeWriter', '第二十次来到这里，姜云升重新点开了电脑上的伴奏，唱了一夜。姜云升心情+10，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+
+            case 20:
+              context.commit('updateAttribute', { attribute: 'mood', value: 10 });
+              context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+              context.commit('updateAttribute', { attribute: 'red', value: 2000 });
+              await context.dispatch('typeWriter', '第二十一次来到这里，姜云升一个人收拾好行李，前往重庆参加「地下8英里」，在那他收获了第一批因为他的音乐而支持他的人，他有了自己的粉丝。姜云升心情+10，人气+2000，freestyle技能值+1，当前freestyle技能等级为【' + context.state.attributes.skill.freestyleLevel + '】');
+              break;
+
+            case 21:
+              await context.dispatch('typeWriter', '行李箱滚轮和布满碎石子的路面摩擦，咯哒咯哒的声音传出老远。');
+              await context.dispatch('typeWriter', '第一百步，接到母亲的电话，她怕我跌在黑暗里头破血流，更怕我一去不返。');
+              await context.dispatch('typeWriter', '第二百步，听到背后的揶揄，傲睨自若，视我如草芥。');
+              await context.dispatch('typeWriter', '第三百步，飘来颓坏的腐气，唯见木然的瞳孔。');
+              await context.dispatch('typeWriter', '第四百步，同行者或三五结伴，或形单影只。快或慢，远或近，大多消失在岔路口。');
+              await context.dispatch('typeWriter', '第五百步，你弃我如敝履。');
+              await context.dispatch('typeWriter', '第六百步，我走不动了。');
+              await context.dispatch('typeWriter', '第七百步，于绝望中看到北辰，强撑着爬起来，丢掉行李再启程。');
+              await context.dispatch('typeWriter', '第八百步，狂笑声从头顶传来，探头一瞥，镶嵌金边的窗内人影憧憧，美酒，美食，美人，主人开门请我入座。');
+              await context.dispatch('typeWriter', '第九百步，昏黄之光点此刻已如太阳。——习作《深巷》 / 姜云升');
+              break;
+
+            default:
+              return;
+          }
+          
+        }
       }
 
-      if ((context.state.skills.freestyle >= 15 || context.state.undergroundCount >= 15 ) && !context.state.happenedEvents.includes('二八分')) {
+      if (context.state.term > 1 && context.state.skills.freestyle >= 15 && !context.state.happenedEvents.includes('二八分')) {
         context.dispatch('specialEvent', '二八分');
       }
 
@@ -77,37 +227,37 @@ export async function goToLocation(context: {
       context.dispatch('incrementRound');
       break;
 
-      case '去剪头发':
-        const haircutCost = 100; // 剪头发的花费
-        
-        // 检查用户是否有足够的金钱进行剪头发
-        if (context.state.attributes.money < haircutCost) {
-          await context.dispatch('typeWriter', '剪发费用需要100元。幸好，姜云升没有足够的钱来剪头发。');
-          break; // 如果没有足够的金钱，就结束这个 case
-        }
+    case '去剪头发':
+      const haircutCost = 100; // 剪头发的花费
       
-        // 扣除剪头发的花费
-        context.commit('updateAttribute', { attribute: 'money', value: - haircutCost });
-        
-        const hasSunglasses = context.state.inventory['墨镜'];
-        const hasAchievement = context.state.achievements.find(
-          (ach: Achievement) => ach.name === '小学升戴墨镜'  && ach.unlocked
-        );
+      // 检查用户是否有足够的金钱进行剪头发
+      if (context.state.attributes.money < haircutCost) {
+        await context.dispatch('typeWriter', '剪发费用需要100元。幸好，姜云升没有足够的钱来剪头发。');
+        break; // 如果没有足够的金钱，就结束这个 case
+      }
+    
+      // 扣除剪头发的花费
+      context.commit('updateAttribute', { attribute: 'money', value: - haircutCost });
       
-        if (hasSunglasses && !hasAchievement) {
-          context.commit('updateAttribute', { attribute: 'charm', value: -100 })
-          context.commit('unlockAchievement', '小学升戴墨镜');
-          await context.dispatch('typeWriter', '姜云升戴着墨镜去剪了个新发型，花费100元，魅力-100。解锁了第' + context.state.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【小学升戴墨镜】（不建议戴）。')
-        } else if (hasSunglasses && hasAchievement) {
-          await context.dispatch('typeWriter', '姜云升再次戴着墨镜去剪了个新发型，花费100元，魅力-20。')
-          context.commit('updateAttribute', { attribute: 'charm', value: -20 })
-        } else {
-          await context.dispatch('typeWriter', '姜云升出门去剪了个新发型，花费100元，魅力-10。')
-          context.commit('updateAttribute', { attribute: 'charm', value: -10 })
-        }
-      
-        context.dispatch('incrementRound');
-        break;
+      const hasSunglasses = context.state.inventory['墨镜'];
+      const hasAchievement = context.state.achievements.find(
+        (ach: Achievement) => ach.name === '小学升戴墨镜'  && ach.unlocked
+      );
+    
+      if (hasSunglasses && !hasAchievement) {
+        context.commit('updateAttribute', { attribute: 'charm', value: -100 })
+        context.commit('unlockAchievement', '小学升戴墨镜');
+        await context.dispatch('typeWriter', '姜云升戴着墨镜去剪了个新发型，花费100元，魅力-100。解锁了第' + context.state.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【小学升戴墨镜】（不建议戴）。')
+      } else if (hasSunglasses && hasAchievement) {
+        await context.dispatch('typeWriter', '姜云升再次戴着墨镜去剪了个新发型，花费100元，魅力-20。')
+        context.commit('updateAttribute', { attribute: 'charm', value: -20 })
+      } else {
+        await context.dispatch('typeWriter', '姜云升出门去剪了个新发型，花费100元，魅力-10。')
+        context.commit('updateAttribute', { attribute: 'charm', value: -10 })
+      }
+    
+      context.dispatch('incrementRound');
+      break;
       
       
     case '买东西':

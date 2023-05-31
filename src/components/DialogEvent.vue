@@ -1,11 +1,11 @@
 <template>
 
-<p id="textboxEvent">{{ specialEventDetails && specialEventDetails.intro }}</p>
+<p id="textboxEvent">{{ specialEventDetail && specialEventDetail.intro }}</p>
 
 <div class="event-dialog__options">
 
-  <button v-if="specialEventDetails && specialEventDetails.options && specialEventDetails.options.length"
-    v-for="option in specialEventDetails.options"
+  <button v-if="specialEventDetail && specialEventDetail.options && specialEventDetail.options.length"
+    v-for="option in specialEventDetail.options"
     :key="option"
     @click="specialEventOptionChosen(option)"
   >
@@ -17,15 +17,16 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { mapActions, useStore } from 'vuex'
+
+import { specialEventDetail } from '../store/actions/specialEvent'
 import { showEventDialog } from './composables/gameRefs';
 
 const store = useStore()
 
-const specialEventDetails = computed(() => store.state.specialEventDetails);
-
 const specialEventOptionChosen = (option: string) => {
-  store.dispatch('specialEventOptionChosen', { event: specialEventDetails.value.title, option });
+  if (!specialEventDetail.value) return;
+  store.dispatch('specialEventOptionChosen', { event: specialEventDetail.value.title, option });
   showEventDialog.value = false;
 }
 

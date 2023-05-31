@@ -1,5 +1,5 @@
 :root {
-  font-size: calc(1vh * 1.8); /* 基本字体大小为视口高度的1.5% */
+  font-size: calc(1vh * 1.8);
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.6;

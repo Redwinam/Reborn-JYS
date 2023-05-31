@@ -55,7 +55,6 @@ interface State {
 
   unlockedVitamins: Vitamin[]
 
-  specialEventDetails: { name: string, intro: string, options: string[] } | null
   happenedEvents: string[]
 
   gameEnded: boolean
@@ -122,7 +121,6 @@ const state: State = {
 
   unlockedVitamins: [],
 
-  specialEventDetails: null,
   happenedEvents: [],
 
   gameEnded: false,
@@ -167,6 +165,7 @@ const mutations = {
       const currentLevel = SkillLevelMapping.find(level => level.level === state.attributes.skill[`${skill}Level`]);
       const currentLevelMax = currentLevel ? currentLevel.max : 0;
       state.attributes.skill[skill] = Math.min(state.attributes.skill[skill] + value, currentLevelMax);
+      
     } else {
       (state.attributes[attribute] as number) += value
       
@@ -290,10 +289,6 @@ const mutations = {
         delete state.inventory[itemName];
       }
     }
-  },
-
-  setSpecialEventDetails(state: State, specialEventDetails: { name: string; intro: string; options: string[]; }) {
-    state.specialEventDetails = specialEventDetails;
   },
 
   addHappenedEvent(state: State, event: string) {
@@ -425,7 +420,6 @@ const mutations = {
         mood: 0,
       }
 
-      state.specialEventDetails = null
       state.inventory = {}
       state.songStages = {}
       state.unlockedFeiSongs = []

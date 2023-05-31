@@ -1,13 +1,21 @@
+import { ref } from 'vue';
 import { Commit } from 'vuex';
 import { showEventDialog } from '../../components/composables/gameRefs';
 import { Achievement } from '../achievements';
 
+interface SpecialEventDetail {
+  title: string;
+  intro: string;
+  options: string[];
+}
+
+export const specialEventDetail = ref<SpecialEventDetail | null>(null);
+
 export async function specialEvent(context: { rootState: any; commit: Commit, dispatch: Function }, event: string) {
   context.commit('addHappenedEvent', event);
-  let specialEventDetails = {}
 
   if (event === '姜哥，玩挺好') {
-    specialEventDetails = {
+    specialEventDetail.value = {
       title: '姜哥，玩挺好',
       intro: '这天，姜云升在家陪女朋友，心情很好，忽然想玩点不一样的。决定外卖买个黑丝，外卖订单留哪一个名字呢？',
       options: [
@@ -23,7 +31,7 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
 
   else if (event === '生日快乐') {
     const age = Math.floor((context.rootState.round - 16) / 36) + 16
-    specialEventDetails = {
+    specialEventDetail.value  = {
       title: '生日快乐',
       intro: '今天是姜云升的' + age + '岁生日……',
       options: [
@@ -32,19 +40,19 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
     };
   }
 
-  else if (event === '上去看看') {
-    specialEventDetails = {
-      title: '上去看看',
+  else if (event === '去看热闹') {
+    specialEventDetail.value  = {
+      title: '去看热闹',
       intro: '忽然姜云升听见远处一阵热闹，姜云升决定……”',
       options: [
-        '【上去看看】',
+        '【去看热闹】',
         '【不感兴趣】',
       ]
     };
   }
 
   else if (event === '十年') {
-    specialEventDetails = {
+    specialEventDetail.value  = {
       title: '十年',
       intro: '游戏进程达到十年。你想起了曾经鼓舞到你的那首歌。「如果没人跟着起舞，我们怎么革命。」——《十年》',
       options: [
@@ -54,7 +62,7 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
   }
 
   else if (event === '放松，呼吸') {
-    specialEventDetails = {
+    specialEventDetail.value  = {
       title: '放松，呼吸',
       intro: '春暖花开，万物复苏，你的好朋友约你出门旅游，要去散散心吗？',
       options: [
@@ -67,7 +75,7 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
   else if (event === '二八分') {
 
     if (context.rootState.achievements.filter((ach: Achievement) => ach.name === '二八分' && ach.unlocked).length === 0) {
-      specialEventDetails = {
+      specialEventDetail.value  = {
         title: '二八分',
         intro: '有公司欣赏你的说唱才华，希望与你签约。签约经纪公司你可能会接触到非常多的专业资源，收入与知名度也会有所提升。你选择是否签约？',
         options: [
@@ -76,7 +84,7 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
         ],
       };
     } else {
-      specialEventDetails = {
+      specialEventDetail.value  = {
         title: '二八分',
         intro: '有公司欣赏你的说唱才华，希望与你签约。签约经纪公司你可能会接触到非常多的专业资源，收入与知名度也会有所提升。你选择是否签约？',
         options: [
@@ -91,8 +99,6 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
     return;
   }
 
-  console.log(specialEventDetails, event);
-  context.commit('setSpecialEventDetails', specialEventDetails);
   showEventDialog.value = true;
 }  
 
@@ -129,8 +135,8 @@ export async function specialEventOptionChosen(context: {
     await context.dispatch('typeWriter', ['祝姜云升生日快乐！']);
   }
 
-  else if (payload.event === '上去看看') {
-    if (payload.option === '【上去看看】') {
+  else if (payload.event === '去看热闹') {
+    if (payload.option === '【去看热闹】') {
       await context.dispatch('typeWriter', ['明明是几个人在那互骂，姜云升却越听越觉得有意思，开心极了，甚至还想加入他们！', '这是他第一次在现场看到什么叫说唱Battle。', '你选择的路，和他一样吗？']);
       context.commit('updateAttribute', { attribute: 'mood', value: 100 });
       context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
