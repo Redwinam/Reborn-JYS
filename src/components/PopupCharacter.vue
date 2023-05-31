@@ -56,15 +56,29 @@ const drunk = computed(() => store.state.drunk)
 const gemini = () => {
   console.log('gemini')
   // setagency
-  store.commit('setSignedAgency', true)
+  // store.commit('setSignedAgency', true)
   // 才华 + 100
   store.commit('updateAttribute', { attribute: "talent", value: + 1200 })
   store.commit('updateAttribute', { attribute: "charm", value: + 1200 })
   store.commit('updateAttribute', { attribute: "divine", value: + 1200 })
   store.commit('updateAttribute', { attribute: "money", value: + 10000 })
 
+  store.commit('incrementUndergroundCount');
+  store.commit('incrementUndergroundCount');
+  store.commit('incrementUndergroundCount');
+  store.commit('incrementUndergroundCount');
+
+  store.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+  store.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+  store.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+
+  store.commit('upgradeSkillLevel', 'freestyle');
+  store.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+
+
+
   // 体力-200
-  store.commit('updateAttribute', { attribute: "energy", value: - 200 })
+  // store.commit('updateAttribute', { attribute: "energy", value: - 200 })
 }
 
 </script>

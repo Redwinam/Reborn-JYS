@@ -40,7 +40,7 @@ const props = defineProps({
   padding: 20px;
   width: 80%;
   max-width: 500px;
-  border: 2px solid black;
+  border: 2px solid #1e2228;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 

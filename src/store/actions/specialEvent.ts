@@ -137,11 +137,9 @@ export async function specialEventOptionChosen(context: {
 
   else if (payload.event === '去看热闹') {
     if (payload.option === '【去看热闹】') {
-      await context.dispatch('typeWriter', ['明明是几个人在那互骂，姜云升却越听越觉得有意思，开心极了，甚至还想加入他们！', '这是他第一次在现场看到什么叫说唱Battle。', '你选择的路，和他一样吗？']);
       context.commit('updateAttribute', { attribute: 'mood', value: 100 });
       context.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      await context.dispatch('typeWriter', ['姜云升的freestyle技能值+1，当前freestyle技能等级为【' + context.rootState.attributes.skill.freestyleLevel + '】']);
+      await context.dispatch('typeWriter', ['明明是几个人在那互骂，姜云升却越听越觉得有意思，开心极了，甚至还想加入他们！', '这是他第一次在现场看到什么叫说唱Battle。', '你选择的路，和他一样吗？', '<small>姜云升的freestyle技能值+1，当前freestyle技能等级为【' + context.rootState.attributes.skill.freestyleLevel + '】</small>']);
     } else {
       await context.dispatch('typeWriter', ['姜云升对此不感兴趣，错过了一次说唱Battle，但是也没有什么大不了的。']);
     }
@@ -155,15 +153,13 @@ export async function specialEventOptionChosen(context: {
 
   else if (payload.event === '放松，呼吸') {
     if (payload.option === '【去丽江旅游】') {
-      await context.dispatch('typeWriter', ['姜云升开心地出门去玩啦！但在旅游的时候，你忽然有一种奇怪的预感，于是你给女朋友打了许多电话，她都没有接。果不其然，姜云升被绿了。在姜云升和女朋友分手之后，没想到，你女朋友还找人打了你一顿。（本故事基于真实事件改编）']);
       // 和女朋友和平分手
       context.rootState.hasGirlfriend = false;
       await new Promise(resolve => setTimeout(resolve, 1000));
-
       // 她女朋友还找人打他，姜云升体力-60，心情-99
       context.commit('updateAttribute', { attribute: 'energy', value: Math.max(context.rootState.attributes.energy - 60, -90) });
       context.commit('updateAttribute', { attribute: 'mood', value: Math.max(context.rootState.attributes.mood - 99, -99) });
-      await context.dispatch('typeWriter', ['姜云升体力-60，心情-99。']);
+      await context.dispatch('typeWriter', ['姜云升开心地出门去玩啦！但在旅游的时候，你忽然有一种奇怪的预感，于是你给女朋友打了许多电话，她都没有接。果不其然，姜云升被绿了。在姜云升和女朋友分手之后，没想到，你女朋友还找人打了你一顿。（本故事基于真实事件改编）', '<small>姜云升体力-60，心情-99。</small>']);
 
       await new Promise(resolve => setTimeout(resolve, 1000));
       context.commit('unlockAchievement', payload.event);
@@ -181,8 +177,7 @@ export async function specialEventOptionChosen(context: {
       context.commit('updateAttribute', { attribute: 'money', value: 500 * 5 });
       context.commit('updateAttribute', { attribute: 'red', value: 250 });
       await new Promise(resolve => setTimeout(resolve, 1000));
-      await context.dispatch('typeWriter', ['姜云升签约了经纪公司，专业资源和知名度都有所提升，每月还能拿500块基本工资。（公司会抽取你接下来所有收入的80%，需一年后才可以申请解约）']);
-      await context.dispatch('typeWriter', ['姜云升金钱+500，人气+250。']);
+      await context.dispatch('typeWriter', ['姜云升签约了经纪公司，专业资源和知名度都有所提升，每月还能拿500块基本工资。（公司会抽取你接下来所有收入的80%，需一年后才可以申请解约）', '<small>姜云升金钱+500，人气+250。</small>']);
 
     } else if (payload.option === '【再考虑下】') {
       
@@ -190,8 +185,7 @@ export async function specialEventOptionChosen(context: {
       context.commit('updateAttribute', { attribute: 'money', value: 500 * 5 });
       context.commit('updateAttribute', { attribute: 'red', value: 250 });
       await new Promise(resolve => setTimeout(resolve, 1000));
-      await context.dispatch('typeWriter', ['经过慎重考虑，姜云升还是决定签约经纪公司，姜云升专业资源和知名度都有所提升，每月还能拿500块基本工资。（公司会抽取你接下来所有收入的80%，需一年后才可以申请解约）']);
-      await context.dispatch('typeWriter', ['姜云升金钱+500，人气+250。']);
+      await context.dispatch('typeWriter', ['经过慎重考虑，姜云升还是决定签约经纪公司，姜云升专业资源和知名度都有所提升，每月还能拿500块基本工资。（公司会抽取你接下来所有收入的80%，需一年后才可以申请解约）', '<small>姜云升金钱+500，人气+250。</small>']);
 
     } else if (payload.option === '【自己开公司】') {
 

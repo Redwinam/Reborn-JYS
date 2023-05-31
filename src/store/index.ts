@@ -46,6 +46,7 @@ interface State {
   battleResults: BattleResult[]
 
   undergroundCount: number
+  tourCount: number[]
 
   signedAgency: boolean
   signedAgencyRound: number | null
@@ -114,6 +115,7 @@ const state: State = {
 
   battleResults: battleResults,
   undergroundCount: 0,
+  tourCount: [0,0],
 
   signedAgency: false,
   signedAgencyRound: null,
@@ -201,12 +203,12 @@ const mutations = {
     state.sleepHours += payload
   },
 
-  upgradeSkillLevel(state: State, { skill }: { skill: keyof Skill }) {
+  upgradeSkillLevel(state: State, skill: 'gaming' | 'freestyle') {
     if ( skill === 'gaming' || skill === 'freestyle' ) {
-      state.attributes.skill[skill] = (state.attributes.skill[skill] as number) + 1;
+      state.attributes.skill[skill] ++;
       for (const level of SkillLevelMapping) {
-        if (state.attributes.skill.gaming >= level.min && state.attributes.skill.gaming <= level.max) {
-          state.attributes.skill.gamingLevel = level.level;
+        if (state.attributes.skill[skill] >= level.min && state.attributes.skill[skill] <= level.max) {
+          state.attributes.skill[`${skill}Level`] = level.level;
           break;
         }
       }
@@ -247,7 +249,10 @@ const mutations = {
     state.accompanyCount = 0
   },
   incrementUndergroundCount(state: State) {
-    state.undergroundCount++
+    state.undergroundCount ++
+  },
+  incrementTourCount(state: State, index: number) {
+    state.tourCount[index] ++
   },
   updateBattleResult(state: State, payload: { year: number; result: "落选" | "海选" | "八强" | "冠军" }) { 
     const { year, result } = payload
@@ -279,7 +284,7 @@ const mutations = {
     state.attributes.money -= 360 * payload
   },
 
-  purchaseItem(state: State, payload: { itemName: string; quantity: number }) {
+  updateItem(state: State, payload: { itemName: string; quantity: number }) {
     const { itemName, quantity } = payload
     if (state.inventory[itemName]) {
       state.inventory[itemName].quantity += quantity
@@ -510,7 +515,7 @@ const actions = {
       context.dispatch('specialEvent', '继承家业');
     }
 
-    if ((state.round - 25) % 36) {
+    if ( !Math.floor((state.round - 25) % 36) ) {
       await context.dispatch('typeWriter', '今年的Battle比赛已经开放，可以在外出时报名参加比赛了。');
     }
 

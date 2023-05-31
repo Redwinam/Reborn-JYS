@@ -84,6 +84,7 @@
 <Popup title="成就" :visible="showAchievementsPopup" @close="showAchievementsPopup = false"><popup-achievements /></Popup>
 
 <PopupSubGold></PopupSubGold>
+<PopupSubUnderground></PopupSubUnderground>
 
 <Popup title="历史记录" :visible="showTextHistoryPopup" @close="showTextHistoryPopup = false">
   <div class="textHistory" ref="textHistoryContainer">
@@ -147,6 +148,7 @@ import PopupDrink from '../components/PopupDrink.vue'
 import PopupShop from '../components/PopupShop.vue'
 import PopupBank from '../components/PopupBank.vue'
 import PopupSubGold from '../components/PopupSubGold.vue'
+import PopupSubUnderground from '../components/PopupSubUnderground.vue'
 
 import Dialog from '../components/Dialog.vue'
 import DialogBreakup from '../components/DialogBreakup.vue'

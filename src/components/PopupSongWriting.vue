@@ -44,7 +44,7 @@
     <img :src="'/cover-images/' + currentSong.title + '.jpg'" :alt="currentSong.title" class="modal-cover-image" />
     <p>{{ currentSong.lyrics }}</p>
     <div class="modal-header">
-      <button @click="listenSong(currentSong)"><Play :size="16"></Play> 播放</button>
+      <button @click="currentSong && listenSong(currentSong)"><Play :size="16"></Play> 播放</button>
       <h3>——《{{ currentSong.title }}》</h3>
     </div>
   </Popup>

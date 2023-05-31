@@ -31,7 +31,7 @@ export const itemsList = [
   { name: '玫瑰花', quantifier:'朵', price: 10, isSpecial: false, desc: '虽然她送了我玫瑰花！……' },
   { name: '皮卡丘玩偶', price: 15, isSpecial: false, desc: '黄皮耗子 + 1' },
   { name: '衣服', quantifier:'件', price: 10000, isSpecial: false, desc: '贵贵的丑衣服' },
-  { name: '包包', quantifier:'个', price: 10000, isSpecial: false, desc: '有消防隐患的包包' },
+  { name: '包包', quantifier:'个', price: 10000, isSpecial: false, desc: '很燃的包包' },
   // 发带、手铐、煊赫门、书、墨镜、自热米饭
   // { name: '发带', price: 20, isSpecial: false, desc: '姜云升的发带，可以用来打人，也可以用来扎马尾' },
   // { name: '手铐', price: 30, isSpecial: false, desc: '姜云升的手铐，可以用来打人，也可以用来扣人' },
@@ -63,7 +63,7 @@ export async function purchaseItem(context: { commit: Commit, dispatch: Function
   }
 
   context.commit('updateAttribute', { attribute: 'money', value: -item.price * quantity });
-  context.commit('purchaseItem', { itemName, quantity })
+  context.commit('updateItem', { itemName, quantity })
 
   const toMessage = ref("")
 

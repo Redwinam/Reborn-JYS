@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 
-export const isAtHome = ref(false)
+export const isAtHome = ref(false);
 export const isGoingOut = ref(false);
 export const showBreakupDialog = ref(false);
 export const showEventDialog = ref(false);
@@ -19,5 +19,7 @@ export const isTyping = ref(false);
 export const showAchievementNotePopup = ref(false);
 
 export const showBankPopup = ref(false);
-export const showBuyGoldPopup = ref(false)
-export const showSellGoldPopup = ref(false)
+export const showBuyGoldPopup = ref(false);
+export const showSellGoldPopup = ref(false);
+
+export const showUndergroundPopup = ref(true);
