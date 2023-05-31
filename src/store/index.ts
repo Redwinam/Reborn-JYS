@@ -479,9 +479,9 @@ const actions = {
       }
     }
 
-    if ( state.signedAgency && !Math.floor(state.round % 3) ) {
-      store.commit('updateAttribute', { attribute: "money", value: 500 * 5 })
-      context.dispatch('typeWriter', '姜云升签约了公司，本月到账工资500元。');
+    if ( state.signedAgency && !Math.floor(state.round % 9) ) {
+      store.commit('updateAttribute', { attribute: "money", value: 500 * 3 * 5 })
+      context.dispatch('typeWriter', '姜云升签约了公司，到账工资1500元。');
     }
 
     await new Promise(resolve => setTimeout(resolve, 600));
