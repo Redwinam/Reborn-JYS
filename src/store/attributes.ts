@@ -37,6 +37,8 @@ export const attributeNames: AttributeNames = {
   black: '人气黑值',
   money: '金钱',
   skill: '技能',
+  gaming: '电竞技能',
+  freestyle: 'Freestyle技能',
   energy: '体力',
   mood: '心情',
   divine: '???',

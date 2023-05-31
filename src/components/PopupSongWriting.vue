@@ -72,7 +72,15 @@ function isSongAvailable(song: Song) {
   }
 
   for (const [key, value] of Object.entries(song.conditions)) {
-    if (store.state.attributes[key] < value) {
+    if (key === 'gaming') {
+      if (store.state.attributes.skill.gaming < value) {
+        return false;
+      }
+    } else if (key === 'freestyle') {
+      if (store.state.attributes.skill.freestyle < value) {
+        return false;
+      }
+    } else if (store.state.attributes[key] < value) {
       return false;
     }
   }
