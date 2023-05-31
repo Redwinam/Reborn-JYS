@@ -46,6 +46,14 @@ export const songLibrary: Song[] = [{
   lyrics: '如果这是孤独，那我就敬孤独万岁。',
   url: 'https://music.163.com/#/song?id=1909021556',
 }, {
+  title: '网易云',
+  conditions: { talent: 80, },
+  conditions_ne: { mood: 0 },
+  cost: 1000,
+  effects: { talent: 50, red: + 800 },
+  lyrics: '你今夜为了什么戴上耳机？',
+  url: 'https://music.163.com/#/song?id=1307591526',
+}, {
   title: '真没睡',
   conditions: { talent: 100, },
   conditionsText: '拥有衣服 ≥ 5件，包包 ≥ 5个',
