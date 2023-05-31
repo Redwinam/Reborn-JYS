@@ -4,7 +4,7 @@
 
 <div class="event-dialog__options">
 
-  <button v-if="specialEventDetails && specialEventDetails.options.length"
+  <button v-if="specialEventDetails && specialEventDetails.options && specialEventDetails.options.length"
     v-for="option in specialEventDetails.options"
     :key="option"
     @click="specialEventOptionChosen(option)"

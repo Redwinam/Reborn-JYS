@@ -3,7 +3,7 @@ import { showEventDialog } from '../../components/composables/gameRefs';
 import { Achievement } from '../achievements';
 
 export async function specialEvent(context: { rootState: any; commit: Commit, dispatch: Function }, event: string) {
-  context.commit('addHappenEvent', event);
+  context.commit('addHappenedEvent', event);
   let specialEventDetails = {}
 
   if (event === '姜哥，玩挺好') {
@@ -87,8 +87,11 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
       };
     }
 
+  } else {
+    return;
   }
 
+  console.log(specialEventDetails, event);
   context.commit('setSpecialEventDetails', specialEventDetails);
   showEventDialog.value = true;
 }  
@@ -172,7 +175,7 @@ export async function specialEventOptionChosen(context: {
       context.commit('updateAttribute', { attribute: 'money', value: 500 * 5 });
       context.commit('updateAttribute', { attribute: 'red', value: 250 });
       await new Promise(resolve => setTimeout(resolve, 1000));
-      await context.dispatch('typeWriter', ['姜云升签约了经纪公司，专业资源和知名度都有所提升，每月还能拿500块基本工资。（公司会抽取你接下来所有收入的80%）']);
+      await context.dispatch('typeWriter', ['姜云升签约了经纪公司，专业资源和知名度都有所提升，每月还能拿500块基本工资。（公司会抽取你接下来所有收入的80%，需一年后才可以申请解约）']);
       await context.dispatch('typeWriter', ['姜云升金钱+500，人气+250。']);
 
     } else if (payload.option === '【再考虑下】') {
@@ -181,7 +184,7 @@ export async function specialEventOptionChosen(context: {
       context.commit('updateAttribute', { attribute: 'money', value: 500 * 5 });
       context.commit('updateAttribute', { attribute: 'red', value: 250 });
       await new Promise(resolve => setTimeout(resolve, 1000));
-      await context.dispatch('typeWriter', ['经过慎重考虑，姜云升还是决定签约经纪公司，姜云升专业资源和知名度都有所提升，每月还能拿500块基本工资。（公司会抽取你接下来所有收入的80%）']);
+      await context.dispatch('typeWriter', ['经过慎重考虑，姜云升还是决定签约经纪公司，姜云升专业资源和知名度都有所提升，每月还能拿500块基本工资。（公司会抽取你接下来所有收入的80%，需一年后才可以申请解约）']);
       await context.dispatch('typeWriter', ['姜云升金钱+500，人气+250。']);
 
     } else if (payload.option === '【自己开公司】') {

@@ -1,5 +1,4 @@
 <template>
-
 <h2>女朋友想和你分手</h2>
 <p>{{ randomBreakupReason }}</p>
 <div class="button-container">

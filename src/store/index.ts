@@ -33,7 +33,7 @@ interface State {
   accompanyCount: number
   relationRound: number
   breakupTimes: number
-  lastBreakupTerm: number | null
+  lastBreakupRound: number | null
   seamlessRelation: boolean
 
   unlockedFoods: Food[]
@@ -45,7 +45,8 @@ interface State {
   undergroundCount: number
 
   signedAgency: boolean
-  signedAgencyTerm: number | null
+  signedAgencyRound: number | null
+  goToAgencyTimes: number
 
   songs: string[]
   songLibrary: Song[]
@@ -99,7 +100,7 @@ const state: State = {
   accompanyCount: 0,
   relationRound: 0,
   breakupTimes: 0,
-  lastBreakupTerm: null,
+  lastBreakupRound: null,
   seamlessRelation: false,
 
   unlockedFoods: [],
@@ -111,7 +112,8 @@ const state: State = {
   undergroundCount: 0,
 
   signedAgency: false,
-  signedAgencyTerm: null,
+  signedAgencyRound: null,
+  goToAgencyTimes: 0,
   
   songs: [],
   songLibrary,
@@ -148,7 +150,7 @@ const mutations = {
     const { attribute, value } = payload
 
     if (attribute === 'money') {
-      if (state.signedAgency) {
+      if (state.signedAgency && value > 0) {
         (state.attributes[attribute] as number) += value * 0.2
       } else {
         (state.attributes[attribute] as number) += value
@@ -219,7 +221,7 @@ const mutations = {
     state.girlfriend = payload
     if (payload === null) {
       state.breakupTimes++
-      state.lastBreakupTerm = state.term
+      state.lastBreakupRound = state.round
     }
   },
   incrementFlirtCount(state: State) {
@@ -246,8 +248,11 @@ const mutations = {
   setSignedAgency(state: State, payload: boolean) {
     state.signedAgency = payload
     if (payload) {
-      state.signedAgencyTerm = state.term
+      state.signedAgencyRound = state.round
     }
+  },
+  incrementGoToAgencyTimes(state: State) {
+    state.goToAgencyTimes++
   },
 
   buyGold(state: State, payload: number) {
@@ -361,7 +366,7 @@ const mutations = {
       if (!payload.gameEnded) state.currentEndings.push(payload.specialEndingAchievementName)
       store.commit('unlockAchievement', payload.specialEndingAchievementName)
       const specialEndingAchievement = state.achievements.find(
-        (ach) => ach.name === payload.specialEndingAchievementName && ach.ending
+        (ach) => ach.name === payload.specialEndingAchievementName
       )
       state.specialEndingAchievement = specialEndingAchievement || null
     } else {
@@ -391,7 +396,12 @@ const mutations = {
 
     state.accompanyCount = 0
     state.relationRound = 0
-    state.lastBreakupTerm = 0
+    state.lastBreakupRound = 0
+
+    if (state.undergroundCount > 2) state.undergroundCount = 2
+
+    state.signedAgency = false
+    state.signedAgencyRound = null
 
     if (resetData) {
       state.attributes = {
@@ -415,7 +425,6 @@ const mutations = {
         mood: 0,
       }
 
-      state.undergroundCount = 0
       state.specialEventDetails = null
       state.inventory = {}
       state.songStages = {}
@@ -470,10 +479,12 @@ const actions = {
       }
     }
 
-    if ( state.signedAgency && !Math.floor((state.round - 16) % 3) ) {
+    if ( state.signedAgency && !Math.floor(state.round % 3) ) {
       store.commit('updateAttribute', { attribute: "money", value: 500 * 5 })
-      context.dispatch('specialEvent', '姜云升，二八分，到账工资500元。');
+      context.dispatch('typeWriter', '姜云升签约了公司，本月到账工资500元。');
     }
+
+    await new Promise(resolve => setTimeout(resolve, 600));
 
     if ( !Math.floor((state.round - 16) % 36) ) {
       context.dispatch('specialEvent', '生日快乐');

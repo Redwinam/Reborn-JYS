@@ -1,63 +1,62 @@
 <template>
 <div id="game-container" class="game-container">
-  <transition name="fade">
-    <div class="home-background" v-if="isAtHome"></div>
-  </transition>
-  <transition name="fade">
-    <div class="going-out-background" v-if="isGoingOut"></div>
-  </transition>
+<transition name="fade">
+  <div class="home-background" v-if="isAtHome"></div>
+</transition>
+<transition name="fade">
+  <div class="going-out-background" v-if="isGoingOut"></div>
+</transition>
 
-  <div v-if="!gameEnded">
+<div v-if="!gameEnded">
 
-  <div class="header-container">
-    <div class="header" :class="currentTerm>1 ? 'header-l' :''">
-      <div class="round-info">
-        {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }} · 轮次: {{ currentRound }} / {{ totalRounds }}<template v-if="currentTerm>1"> · 第{{ arabicToChinese(currentTerm) }}周目</template>
-      </div>
+<div class="header-container">
+  <div class="header" :class="currentTerm>1 ? 'header-l' :''">
+    <div class="round-info">
+      {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }} · 轮次: {{ currentRound }} / {{ totalRounds }}<template v-if="currentTerm>1"> · 第{{ arabicToChinese(currentTerm) }}周目</template>
     </div>
   </div>
+</div>
 
-  <div class="attributes" :class="isGoingOut? 'going-out-attributes' : ''">
+<div class="attributes" :class="isGoingOut? 'going-out-attributes' : ''">
 
-    <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span><span class="attribute-number">红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</span></div>
-    <div><span class="attribute-name">{{ attributeNames['money'] }}</span><span class="attribute-number">{{ attributes['money'] }} <template v-if="signedAgency" @click="checkUnsignAgency()">（二八分）</template></span></div>
-    <div v-if="attributes['energy'] >= 0"><span class="attribute-name">{{ attributeNames['energy'] }}</span><span class="attribute-number">{{ attributes['energy'] }}<template v-if="weak">（虚弱！）</template></span></div>
-    <div v-else><span class="attribute-name weak">体力透支</span><span class="attribute-number">{{ attributes['energy'] }} <template v-if="weak">（虚弱！）</template></span></div>
-    <div><span class="attribute-name">{{ attributeNames['mood'] }}</span><span class="attribute-number">{{ attributes['mood'] }}</span></div>
-    <div v-if="drunk>0"><span class="attribute-name weak">醉酒</span><span class="attribute-number">× {{drunk}}</span></div>
-  </div>
+  <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span><span class="attribute-number">红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</span></div>
+  <div><span class="attribute-name">{{ attributeNames['money'] }}</span><span class="attribute-number">{{ attributes['money'] }} <span v-if="signedAgency" @click="!isTyping && checkUnsignAgency()"><br>（二八分<small>{{ leftUnsignAgencyMonth }}/12月</small>）</span></span></div>
+  <div v-if="attributes['energy'] >= 0"><span class="attribute-name">{{ attributeNames['energy'] }}</span><span class="attribute-number">{{ attributes['energy'] }}<template v-if="weak">（虚弱！）</template></span></div>
+  <div v-else><span class="attribute-name weak">体力透支</span><span class="attribute-number">{{ attributes['energy'] }} <template v-if="weak">（虚弱！）</template></span></div>
+  <div><span class="attribute-name">{{ attributeNames['mood'] }}</span><span class="attribute-number">{{ attributes['mood'] }}</span></div>
+  <div v-if="drunk>0"><span class="attribute-name weak">醉酒</span><span class="attribute-number">× {{drunk}}</span></div>
+</div>
 
-  <!-- Textbox for the text-based game -->
-  <div class="textbox">
-    <p id="textboxText">今天你打算……</p>
-    <button @click="showTextHistoryPopup = true" class="text-history-button">文本记录</button>
-  </div>
+<div class="textbox">
+  <p id="textboxText">今天你打算……</p>
+  <button @click="showTextHistoryPopup = true" class="text-history-button">文本记录</button>
+</div>
 
-  <div class="actions">
+<div class="actions">
     
-    <button @click="performAction('回家')" class="action-button action-back-home" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
-    <button @click="performAction('出去鬼混')" class="action-button action-hang-out" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
-    <button @click="performAction('外出')" class="action-button action-go-out" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
-    <button @click="performAction('赚钱')" class="action-button action-make-money" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
+  <button @click="performAction('回家')" class="action-button action-back-home" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
+  <button @click="performAction('出去鬼混')" class="action-button action-hang-out" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
+  <button @click="performAction('外出')" class="action-button action-go-out" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
+  <button @click="performAction('赚钱')" class="action-button action-make-money" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
 
-    <button @click="performAction('睡觉休息')" class="action-button action-sleep-rest" v-if="isAtHome" :disabled="isTyping"></button>
-    <button @click="performAction('开直播')" class="action-button action-onlive" v-if="isAtHome" :disabled="isTyping"></button>
-    <button @click="performAction('打游戏')" class="action-button action-gaming" v-if="isAtHome" :disabled="isTyping"></button>
-    <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome" :disabled="isTyping"></button>
-    <button v-if="isAtHome" @click="isAtHome = false; typewriter('今天你打算……')" class="action-button action-back" :disabled="isTyping"></button>
+  <button @click="performAction('睡觉休息')" class="action-button action-sleep-rest" v-if="isAtHome" :disabled="isTyping"></button>
+  <button @click="performAction('开直播')" class="action-button action-onlive" v-if="isAtHome" :disabled="isTyping"></button>
+  <button @click="performAction('打游戏')" class="action-button action-gaming" v-if="isAtHome" :disabled="isTyping"></button>
+  <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome" :disabled="isTyping"></button>
+  <button v-if="isAtHome" @click="isAtHome = false; typewriter('今天你打算……')" class="action-button action-back" :disabled="isTyping"></button>
 
-    <button @click="goToLocation('去吃点东西')" class="action-button action-eat" v-if="isGoingOut" :disabled="isTyping"></button>
-    <button @click="goToLocation('去喝点东西')" class="action-button action-drink" v-if="isGoingOut" :disabled="isTyping"></button>
-    <button @click="goToLocation('买东西')" class="action-button action-shopping" v-if="isGoingOut" :disabled="isTyping"></button>
-    <button @click="goToLocation('地下钱庄之暴富金铺')" class="action-button action-buy-gold" v-if="isGoingOut" :disabled="isTyping"></button>
-    <button @click="goToLocation('去剪头发')" class="action-button action-cut-hair" v-if="isGoingOut" :disabled="isTyping"></button>
-    <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut" :disabled="isTyping"></button>
-    <button @click="goToLocation('Underground')" class="action-button action-underground" v-if="isGoingOut" :disabled="isTyping"></button>
-    <button v-if="isGoingOut" @click="isGoingOut = false; typewriter('今天你打算……')" class="action-button action-back going-out-back" :disabled="isTyping"></button>
-    <button v-if="store.state.girlfriend && !isGoingOut" @click="accompanyGirlfriend" class="action-button action-accompany-girlfriend" :disabled="isTyping"></button>
+  <button @click="goToLocation('去吃点东西')" class="action-button action-eat" v-if="isGoingOut" :disabled="isTyping"></button>
+  <button @click="goToLocation('去喝点东西')" class="action-button action-drink" v-if="isGoingOut" :disabled="isTyping"></button>
+  <button @click="goToLocation('买东西')" class="action-button action-shopping" v-if="isGoingOut" :disabled="isTyping"></button>
+  <button @click="goToLocation('地下钱庄之暴富金铺')" class="action-button action-buy-gold" v-if="isGoingOut" :disabled="isTyping"></button>
+  <button @click="goToLocation('公司')" class="action-button action-agency" v-if="isGoingOut && signedAgency" :disabled="isTyping">公司</button>
+  <button @click="goToLocation('去剪头发')" class="action-button action-cut-hair" v-if="isGoingOut" :disabled="isTyping"></button>
+  <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut" :disabled="isTyping"></button>
+  <button @click="goToLocation('Underground')" class="action-button action-underground" v-if="isGoingOut" :disabled="isTyping"></button>
+  <button v-if="isGoingOut" @click="isGoingOut = false; typewriter('今天你打算……')" class="action-button action-back going-out-back" :disabled="isTyping"></button>
+  <button v-if="store.state.girlfriend && !isGoingOut" @click="accompanyGirlfriend" class="action-button action-accompany-girlfriend" :disabled="isTyping"></button>
 
-  </div>
-
+</div>
 
 <Dialog :visible="showEventDialog" @close="showEventDialog = false"><dialog-event /></Dialog>
 <Dialog :visible="showBreakupDialog" @close="showBreakupDialog = false"><dialog-breakup /></Dialog>
@@ -200,8 +199,7 @@ const currentEndings = computed(() => store.state.currentEndings)
 const accompanyGirlfriend = () => { store.dispatch('accompanyGirlfriend') }
 const goToLocation = (location: string) => { store.dispatch('goToLocation', location) }
 const performAction = (action: string) => { store.dispatch('performAction', action) }
-const typewriter = (message: string | string[]) => { store.dispatch('typeWriter', message) }
-
+const typewriter = async (message: string | string[]) => { await store.dispatch('typeWriter', message) }
 
 function loadGame() {
   typewriter('今天你打算……')
@@ -215,16 +213,18 @@ const showAchievementsPopup = ref(false)
 const showGameEndNotePopup = ref(false)
 const showGameEndConfirmPopup = ref(false)
 
-
-const checkUnsignAgency = () => {
-  const leftUnsignAgencyMonth = Math.ceil((36 - (store.state.term - store.state.signedAgencyTerm)) / 3)
+const leftUnsignAgencyMonth = Math.max(Math.ceil((36 - (store.state.round - store.state.signedAgencyRound)) / 3), 0 )
+const checkUnsignAgency = async () => {
   if (leftUnsignAgencyMonth > 0) {
-    typewriter('签约公司后需要1年后才可以解约，当前剩余' + arabicToChinese(leftUnsignAgencyMonth) + '月。')
+    typewriter('签约公司后需要1年后才可以解约，当前剩余' + leftUnsignAgencyMonth + '个月。')
   } else {
-    // goToLocation('agency')
+    await typewriter('姜云升可以和原来签约的公司解约了。要去公司看看吗？')
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    isAtHome.value = false
+    isGoingOut.value = true
+    goToLocation('公司')
   }
 }
-
 
 // Calculate the current month and period
 const currentMonth = computed(() => Math.ceil((currentRound.value % 36) / 3) || 12)

@@ -55,6 +55,8 @@ const drunk = computed(() => store.state.drunk)
 
 const gemini = () => {
   console.log('gemini')
+  // setagency
+  store.commit('setSignedAgency', true)
   // 才华 + 100
   store.commit('updateAttribute', { attribute: "talent", value: + 1200 })
   store.commit('updateAttribute', { attribute: "charm", value: + 1200 })

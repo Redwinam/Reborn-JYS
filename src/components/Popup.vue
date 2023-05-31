@@ -17,9 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
-
 import { HelpCircle, X } from 'lucide-vue-next'
 import { showAchievementNotePopup } from '../components/composables/gameRefs'
 

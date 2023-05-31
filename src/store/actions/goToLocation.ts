@@ -1,6 +1,6 @@
 import { Commit } from 'vuex';
-import { Food, allFoods } from '../eats';
-import { showFoodPopup, showDrinkPopup, showShopPopup, showBankPopup } from '../../components/composables/gameRefs';
+import { allFoods } from '../eats';
+import { showFoodPopup, showDrinkPopup, showShopPopup, showBankPopup, showUnsignAgencyDialog } from '../../components/composables/gameRefs';
 import { Achievement } from '../achievements';
 
 export async function goToLocation(context: {
@@ -46,6 +46,7 @@ export async function goToLocation(context: {
       break;
 
     case '去喝点东西':
+      await new Promise(resolve => setTimeout(resolve, 200));
       // 椰奶咖啡
       // await context.dispatch('typeWriter', '姜云升去了酒吧，喝了一顿酒。')
       // context.commit('updateAttribute', { attribute: 'energy', value: 10 })
@@ -68,11 +69,12 @@ export async function goToLocation(context: {
 
       }
 
-      if (context.state.skills.freestyle >= 15 && !context.state.happenedEvents.includes('二八分')) {
+      if ((context.state.skills.freestyle >= 15 || context.state.undergroundCount >= 15 ) && !context.state.happenedEvents.includes('二八分')) {
         context.dispatch('specialEvent', '二八分');
       }
 
       context.commit('incrementUndergroundCount');
+      context.dispatch('incrementRound');
       break;
 
       case '去剪头发':
@@ -109,6 +111,7 @@ export async function goToLocation(context: {
       
       
     case '买东西':
+      await new Promise(resolve => setTimeout(resolve, 200));
       showShopPopup.value = true;
       break;
 
@@ -116,6 +119,62 @@ export async function goToLocation(context: {
       await new Promise(resolve => setTimeout(resolve, 600));
       showBankPopup.value = true;
       break;
+
+    case '公司':
+      const leftUnsignAgencyMonth = Math.max(Math.ceil((36 - (context.state.round - context.state.signedAgencyRound)) / 3), 0 )
+      if (leftUnsignAgencyMonth <= 0) {
+        showUnsignAgencyDialog.value = true;
+      } else {
+        const agencyIntros = [
+          '姜云升今天在公司通宵写了一晚上的歌词，收入金钱+20',
+          '姜云升今天在公司上公司安排的课程，支出金钱-200，才华+3',
+          '姜云升今天发现公司在你不知情的情况下向粉丝贩卖你的周边，心情-20，人气+5',
+          '今天公司安排你去夜店演出，收入金钱+20',
+          '你写出了一首爆火的歌，公司用100元买下了它的版权',
+          '今天公司安排你接一个商演，收入金钱+20',
+          '今天公司终于安排你去参加了一个综艺节目，人气+10',
+          '今天公司安排你接一条商业广告，收入金钱+20',
+        ];
+        let randomAgency = Math.floor(Math.random() * agencyIntros.length);
+        if (context.state.goToAgencyTimes === 0) { randomAgency = 0; }
+
+        context.commit('updateAttribute', { attribute: 'energy', value: -80 });
+        switch (randomAgency){
+          case 0:
+            context.commit('updateAttribute', { attribute: 'money', value: 20 * 5 });
+            break;
+          case 1:
+            context.commit('updateAttribute', { attribute: 'money', value: -200 });
+            context.commit('updateAttribute', { attribute: 'talent', value: 3 });
+            break;
+          case 2:
+            context.commit('updateAttribute', { attribute: 'mood', value: -20 });
+            context.commit('updateAttribute', { attribute: 'red', value: 5 });
+            break;
+          case 3:
+            context.commit('updateAttribute', { attribute: 'money', value: 20 * 5 });
+            break;
+          case 4:
+            context.commit('updateAttribute', { attribute: 'money', value: 100 * 5});
+            break;
+          case 5:
+            context.commit('updateAttribute', { attribute: 'money', value: 20 * 5 });
+            break;
+          case 6:
+            context.commit('updateAttribute', { attribute: 'red', value: 10 });
+            break;
+          case 7:
+            context.commit('updateAttribute', { attribute: 'money', value: 20 * 5 });
+            break;
+        }
+
+        await context.dispatch('typeWriter', agencyIntros[randomAgency] + "，体力-80。");
+
+        context.commit('incrementGoToAgencyTimes');
+        context.dispatch('incrementRound');
+      }
+
+
 
 
     case '上山修行':

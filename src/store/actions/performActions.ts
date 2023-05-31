@@ -61,7 +61,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           if (store.state.flirtCount) {
             toMessage.push('姜云升又成功地搭讪了一个姑娘，魅力+10，心情+10。');
           } else {
-            if (store.state.lastBreakupTerm && store.state.term - store.state.lastBreakupTerm < 2){
+            if (store.state.lastBreakupRound && store.state.term - store.state.lastBreakupRound < 2){
               context.commit('setSeamlessRelation', true);
               toMessage.push('姜云升可真有你的，刚分手就出来鬼混。');
             } else {

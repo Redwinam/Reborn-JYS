@@ -178,15 +178,19 @@ async function writeSong(stage: string, song: Song) {
     if (store.state.attributes.money >= song.cost) {
       store.commit('updateAttribute', { attribute: 'money', value: -song.cost })
       store.commit('setSongStages', { songTitle: song.title, stage: 'record' })
-      store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经录好啦，花费了姜云升 ${song.cost} 元。`)
+      store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经录好啦，花费了姜云升 ${song.cost} 元编曲制作费。`)
     } else {
-      store.dispatch('typeWriterPopup', `姜云升没有足够的钱录歌，录这首歌需要 ${song.cost} 元。`)
+      store.dispatch('typeWriterPopup', `姜云升没有足够的钱录歌，录这首歌需要 ${song.cost} 元编曲制作费。`)
     }
 
   } else if (stage === 'release' && currentStage.completedStage === 'record') {
     for (const [key, effect] of Object.entries(song.effects)) {
       if (key === 'money') {
-        store.commit('updateAttribute', { attribute: key, value: effect })
+        if (store.state.signedAgency) {
+          store.commit('updateAttribute', { attribute: key, value: 0 })
+        } else {
+          store.commit('updateAttribute', { attribute: key, value: effect })
+        }
         continue
       } else if (key === 'energy') {
         continue
@@ -197,13 +201,17 @@ async function writeSong(stage: string, song: Song) {
     let attributesChangeStr = Object.entries(song.effects)
     .filter(([key]) => key !== 'energy')
     .map(([key, value]) => {
-      if (key !== 'money') {
+      if (key === 'money') {
+        if (store.state.signedAgency) {
+          value = 0
+        }
+      } else {
         value = value *0.8;
       }
       let sign = value >= 0 ? '+' : '';
       return `${attributeNames[key]}${sign}${value}`;
     }).join('、');
-    store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经上线啦，姜云升属性 ${attributesChangeStr} 。`)
+    store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经上线啦，姜云升属性 ${attributesChangeStr} 。${store.state.signedAgency ? '由于姜云升签约了经纪公司，这首歌的版权归属公司，姜云升没有收入。' : ''}`)
 
     await new Promise(resolve => setTimeout(resolve, 1000));
     

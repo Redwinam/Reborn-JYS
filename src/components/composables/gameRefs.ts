@@ -6,6 +6,7 @@ export const showBreakupDialog = ref(false);
 export const showEventDialog = ref(false);
 export const showSongWritingDialog = ref(false);
 export const showUpgradeSkillDialog = ref(false);
+export const showUnsignAgencyDialog = ref(false);
 export const showGameEndDialog = ref(false);
 
 export const showFoodPopup = ref(false);
