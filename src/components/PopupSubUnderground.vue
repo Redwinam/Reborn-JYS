@@ -11,7 +11,7 @@
     <button class="button-activity"  @click="activity('上节目')">上节目（1个月）</button>
     <button class="button-activity"  @click="activity('上音乐节')">上音乐节</button>
     <hr>
-    <p class="tour-message"><small>姜云升可以选择<span>开启巡演 / 参加节目 / 参加音乐节</span>了</small></p>
+    <p class="note-message">姜云升可以选择<span>开启巡演 / 参加节目 / 参加音乐节</span>了</p>
     <button class="button_cancel" @click="showUndergroundPopup = false">返回</button>
   </div>
 </div>
@@ -147,50 +147,10 @@ const activity = async (activityName: string) => {
   color: #fff;
   border-radius: 4px;
   padding: 5px 10px;
-  font-size: 0.8em;
+  font-size: 0.9rem;
   cursor: pointer;
   margin-left: 10px;
   transition: background-color 0.3s ease;
-}
-
-
-.span_sellGold {
-  font-size: 0.8rem;
-  cursor: pointer;
-  margin-right: 6px;
-}
-
-.popup-sub .button_buyGold, .popup-sub .button_sellGold {
-  padding: 5px 10px;
-}
-
-.bug-gold {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 0 auto;
-}
-
-.gold-amount {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  justify-content: center;
-  margin: 10px 0;
-  white-space: nowrap;
-}
-
-.gold-amount input {
-  width: 2.5rem;
-  margin: 2px;
-  padding: 6px;
-  border: 2px solid #1e2228;
-}
-
-
-.gold-price {
-  font-size: 0.8em;
-  color: #666;
 }
 
 
@@ -200,24 +160,16 @@ const activity = async (activityName: string) => {
   color: #333;
   border-radius: 4px;
   padding: 5px 10px;
-  font-size: 0.8em;
+  font-size: 0.9rem;
   cursor: pointer;
-  margin-left: 10px;
+  margin-bottom: 0.5rem;
   transition: background-color 0.3s ease;
 }
 
 .note-message {
-  font-size: 0.7em;
+  font-size: 0.7rem;
   color: #666;
-  border-top: 1px dashed #666;
-  padding: 12px 0 0;
-  margin-top: 30px;
-}
-.error-message {
-  color: #964742;
-  font-weight: bold;
-  font-size: 0.8rem;
-  margin: 0 0 20px 0;
+  margin-top: 0.5rem;
 }
 
 </style>
