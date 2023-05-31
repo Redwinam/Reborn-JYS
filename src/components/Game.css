@@ -16,7 +16,7 @@
   flex-direction: column;
   align-items: center;
   font-family: 'Arial', sans-serif;
-  background-image: url('@/assets/bg_titled.png');
+  background-image: url('@/assets/bg_titled.jpg');
 
 }
 .going-out-background {
@@ -25,7 +25,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('@/assets/bg_going-out.png');
+  background-image: url('@/assets/bg_going-out.jpg');
   background-size: cover;
   background-position: top center;
   /* z-index: -1; */
@@ -37,7 +37,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('@/assets/bg_sleep.png');
+  background-image: url('@/assets/bg_sleep.jpg');
   background-size: cover;
   background-position: top center;
   /* z-index: -1; */
