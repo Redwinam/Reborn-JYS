@@ -43,7 +43,9 @@ interface State {
   unlockedAchievementConditions: string[]
 
   undergroundCount: number
+
   signedAgency: boolean
+  signedAgencyTerm: number | null
 
   songs: string[]
   songLibrary: Song[]
@@ -107,7 +109,9 @@ const state: State = {
   unlockedAchievementConditions: [],
 
   undergroundCount: 0,
+
   signedAgency: false,
+  signedAgencyTerm: null,
   
   songs: [],
   songLibrary,
@@ -241,6 +245,9 @@ const mutations = {
   },
   setSignedAgency(state: State, payload: boolean) {
     state.signedAgency = payload
+    if (payload) {
+      state.signedAgencyTerm = state.term
+    }
   },
 
   buyGold(state: State, payload: number) {
@@ -461,6 +468,11 @@ const actions = {
       if (Math.random() < 0.52) {
         showBreakupDialog.value = true
       }
+    }
+
+    if ( state.signedAgency && !Math.floor((state.round - 16) % 3) ) {
+      store.commit('updateAttribute', { attribute: "money", value: 500 * 5 })
+      context.dispatch('specialEvent', '姜云升，二八分，到账工资500元。');
     }
 
     if ( !Math.floor((state.round - 16) % 36) ) {

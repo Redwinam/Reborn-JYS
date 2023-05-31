@@ -20,7 +20,7 @@
   <div class="attributes" :class="isGoingOut? 'going-out-attributes' : ''">
 
     <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span><span class="attribute-number">红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</span></div>
-    <div><span class="attribute-name">{{ attributeNames['money'] }}</span><span class="attribute-number">{{ attributes['money'] }}</span></div>
+    <div><span class="attribute-name">{{ attributeNames['money'] }}</span><span class="attribute-number">{{ attributes['money'] }} <template v-if="signedAgency" @click="checkUnsignAgency()">（二八分）</template></span></div>
     <div v-if="attributes['energy'] >= 0"><span class="attribute-name">{{ attributeNames['energy'] }}</span><span class="attribute-number">{{ attributes['energy'] }}<template v-if="weak">（虚弱！）</template></span></div>
     <div v-else><span class="attribute-name weak">体力透支</span><span class="attribute-number">{{ attributes['energy'] }} <template v-if="weak">（虚弱！）</template></span></div>
     <div><span class="attribute-name">{{ attributeNames['mood'] }}</span><span class="attribute-number">{{ attributes['mood'] }}</span></div>
@@ -176,6 +176,7 @@ const gameEnded = computed(() => store.state.gameEnded)
 const attributes = computed(() => store.state.attributes)
 const weak = computed(() => store.state.weak)
 const drunk = computed(() => store.state.drunk)
+const signedAgency = computed(() => store.state.signedAgency)
 
 const textHistory = computed(() => {
   const history = store.state.textHistory
@@ -206,7 +207,6 @@ function loadGame() {
   typewriter('今天你打算……')
 }
 
-// Add refs for character, items and skills pop-ups
 const showCharacterPopup = ref(false)
 const showItemsPopup = ref(false)
 const showSkillsPopup = ref(false)
@@ -214,6 +214,17 @@ const showAchievementsPopup = ref(false)
 
 const showGameEndNotePopup = ref(false)
 const showGameEndConfirmPopup = ref(false)
+
+
+const checkUnsignAgency = () => {
+  const leftUnsignAgencyMonth = Math.ceil((36 - (store.state.term - store.state.signedAgencyTerm)) / 3)
+  if (leftUnsignAgencyMonth > 0) {
+    typewriter('签约公司后需要1年后才可以解约，当前剩余' + arabicToChinese(leftUnsignAgencyMonth) + '月。')
+  } else {
+    // goToLocation('agency')
+  }
+}
+
 
 // Calculate the current month and period
 const currentMonth = computed(() => Math.ceil((currentRound.value % 36) / 3) || 12)
