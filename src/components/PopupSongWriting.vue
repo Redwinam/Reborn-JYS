@@ -8,8 +8,10 @@
         <div class="song-info">
           <h3>《{{ song.title }}》</h3>
           <p>
-            <span v-for="(value, key, index) in song.conditions" :key="key">{{ attributeNames[key] }}: {{ value }}<span v-if="index !== Object.keys(song.conditions).length - 1"> / </span></span>
-            <BatteryWarning :size="16" v-if="song.conditionsText" @click="!isTyping && store.dispatch('typeWriterPopup', song.conditionsText)"></BatteryWarning>
+            <span v-for="(value, key, index) in song.conditions" :key="key">{{ attributeNames[key] }} ≥ {{ value }}<span v-if="index !== Object.keys(song.conditions).length - 1"> / </span></span>
+            <span v-if="song.conditions_ne" v-for="(value, key, index) in song.conditions_ne" :key="key">{{ attributeNames[key] }} ≤ {{ value }}<span v-if="index !== Object.keys(song.conditions_ne).length - 1"> / </span></span>
+            <span v-if="!Object.keys(song.conditions).length && !song.conditions_ne" class="condition-text">满足——</span>
+            <BatteryWarning :size="16" @click="!isTyping && store.dispatch('typeWriterPopup', song.conditionsText)"></BatteryWarning>
           </p>
         </div>
       </div>
@@ -85,6 +87,14 @@ function isSongAvailable(song: Song) {
     }
   }
 
+  if (song.conditions_ne) {
+    for (const [key, value] of Object.entries(song.conditions_ne)) {
+      if (store.state.attributes[key] > value) {
+        return false;
+      }
+    }
+  }
+
   switch (song.title) {
     case '孤独面店':
       if (store.state.breakupTimes < 2 || store.state.flirtCount > 0 || (store.state.term - store.state.lastBreakupTerm) < 9) {
@@ -136,10 +146,13 @@ onMounted(() => {
 const songConditions = (song: Song) => {
   const conditions = []
   conditions.push(
-    Object.entries(song.conditions)
-    .map(([key, value]) => `${attributeNames[key]} >= ${value}`)
-    .join(', ')
+    Object.entries(song.conditions).map(([key, value]) => `${attributeNames[key]} ≥ ${value}`).join(', ')
   )
+  if (song.conditions_ne) {
+    conditions.push(
+      Object.entries(song.conditions_ne).map(([key, value]) => `${attributeNames[key]} ≤ ${value}`).join(', ')
+    )
+  }
   if (song.conditionsText) {
     conditions.push(song.conditionsText)
   }

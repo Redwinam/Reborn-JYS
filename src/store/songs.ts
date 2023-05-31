@@ -3,6 +3,9 @@ export interface Song {
   conditions: {
     [key: string]: number | boolean
   }
+  conditions_ne?: {
+    [key: string]: number | boolean
+  }
   conditionsText?: string
   cost: number
   effects: {
@@ -32,7 +35,7 @@ export const songLibrary: Song[] = [{
 }, {
   title: '孤独面店',
   conditions: { talent: 500, },
-  conditionsText: '和女孩子分手>=2次，且分手后至今3个月没有出去鬼混',
+  conditionsText: '和女孩子分手 ≥ 2次，且分手后至今3个月没有出去鬼混',
   cost: 1000,
   effects: { talent: + 100, charm: + 50, mood: + 100, red: + 1000, money: + 10000, },
   lyrics: '如果这是孤独，那我就敬孤独万岁。',
@@ -41,7 +44,7 @@ export const songLibrary: Song[] = [{
 }, {
   title: '真没睡',
   conditions: { talent: 100, },
-  conditionsText: '拥有衣服>=5件，包包>=5个',
+  conditionsText: '拥有衣服 ≥ 5件，包包 ≥ 5个',
   cost: 250,
   effects: { charm: -100,  talent: 100, red: + 1000, black: + 1000, },
   lyrics: '你衣服包包给你换新的，先别动手，先好好听着！',
@@ -50,7 +53,8 @@ export const songLibrary: Song[] = [{
 }, {
   title: 'SAD',
   conditions: {  },
-  conditionsText: '心情<-20，被分手1个月之内，立即外出鬼混。',
+  conditions_ne: { mood: 20 },
+  conditionsText: '被分手1个月之内，立即外出鬼混。',
   cost: 1000,
   effects: { charm: 50, talent: 50, mood: + 100, red: + 1000, black: + 200, },
   lyrics: '当你是长夜里寂寞没诚意的梦……',
