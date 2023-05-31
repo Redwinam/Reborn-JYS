@@ -93,6 +93,7 @@ const battle = async (battleOption: string) => {
         battleText.value = `很遗憾，姜云升没有通过「海选」，不得不提前离开这个舞台。但你的生命就是这场Battle，继续你的人生吧！`
         battleOptions.value = ["离开比赛"]
       }
+      
     } else if (battleOption === "继续参赛！") {
       if (isWinning(currentBattleCondition.condition_baqiang)) {
         // updateBattleResult
@@ -105,6 +106,7 @@ const battle = async (battleOption: string) => {
         battleText.value = `很遗憾，姜云升没有通过「八强之争」，不得不提前离开这个舞台。但你的生命就是这场Battle，继续你的人生吧！`
         battleOptions.value = ["离开比赛"]
       }
+
     } else if (battleOption === "进入决赛！") {
       if (isWinning(currentBattleCondition.condition_zongjuesai)) {
         // updateBattleResult
@@ -117,15 +119,33 @@ const battle = async (battleOption: string) => {
         battleText.value = `经过激烈的角逐，姜云升虽然没有获得本届Battle大赛的冠军，但是，姜云升的生命就是这场Battle，继续你的人生吧！`
         battleOptions.value = ["结束比赛"]
       }
-    } else if (battleOption === "离开比赛" || battleOption === "结束比赛") {
+
+    } else if (battleOption === "离开比赛") {
       // updateBattleEnd
       store.commit('updateBattleEnd', { year: year, end: true })
       showBattleDialog.value = false
       await battleReward()
       store.dispatch('incrementRound');
+
+    } else if (battleOption === "结束比赛") {
+      store.commit('updateBattleEnd', { year: year, end: true })
+      showBattleDialog.value = false
+      await battleReward()
+      if (store.state.battleResults.filter((battleResult: BattleResult) => battleResult.result === '冠军').length >= 3) {
+        store.commit('updateAchievements', 'Battle King')
+        await store.dispatch('typeWriter', `恭喜姜云升累计在Battle大赛中拿下3次冠军奖杯，解锁成就【Battle King】！`)
+      }
+      store.dispatch('incrementRound');
+
     } else if (battleOption === "再准备准备") {
       showBattleDialog.value = false
       store.dispatch('typeWriter', `胜利是留给有准备的人的！记得留意本届Battle大赛的结束时间是在本年度的十二月，如未完成比赛，将无法获得比赛名次奖励。`)
+      store.dispatch('incrementRound');
+
+    } else if (battleOption === "放弃本次比赛") {
+      store.commit('updateBattleEnd', { year: year, end: true })
+      showBattleDialog.value = false
+      store.dispatch('typeWriter', `姜云升放弃了本次Battle大赛。无妨，生命是一场更宏大的Battle，继续你的人生吧！`)
     }
   }
 }
