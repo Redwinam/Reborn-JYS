@@ -62,6 +62,8 @@
 <Dialog :visible="showEventDialog" @close="showEventDialog = false"><dialog-event /></Dialog>
 <Dialog :visible="showBreakupDialog" @close="showBreakupDialog = false"><dialog-breakup /></Dialog>
 <Dialog :visible="showUpgradeSkillDialog" @close="showUpgradeSkillDialog = false"><dialog-upgrade-skill /></Dialog>
+<Dialog :visible="showUnsignAgencyDialog" @close="showUnsignAgencyDialog = false"><dialog-unsign-agency /></Dialog>
+<Dialog :visible="showBattleDialog" @close="showBattleDialog = false"><dialog-battle /></Dialog>
   
 <footer class="footer">
   <button class="button" @click="showCharacterPopup = true">角色</button>
@@ -150,11 +152,13 @@ import Dialog from '../components/Dialog.vue'
 import DialogBreakup from '../components/DialogBreakup.vue'
 import DialogEvent from '../components/DialogEvent.vue'
 import DialogUpgradeSkill from '../components/DialogUpgradeSkill.vue'
+import DialogUnsignAgency from '../components/DialogUnsignAgency.vue'
+import DialogBattle from '../components/DialogBattle.vue'
 
 import { attributeNames } from '../store/attributes'
 
 import { isAtHome, isGoingOut, 
-  showBreakupDialog, showEventDialog, showSongWritingDialog, showGameEndDialog, 
+  showBreakupDialog, showEventDialog, showSongWritingDialog, showGameEndDialog, showUnsignAgencyDialog, showBattleDialog, 
   showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, showBankPopup, 
   isTyping
 } from './composables/gameRefs';
