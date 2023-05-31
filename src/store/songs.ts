@@ -13,7 +13,6 @@ export interface Song {
   }
   lyrics: string
   url: string,
-  coverImage: string
 }
 
 export const songLibrary: Song[] = [{
@@ -23,7 +22,6 @@ export const songLibrary: Song[] = [{
   effects: { charm: 100, talent: 100, divine: 100, red: + 2000, black: + 1000, },
   lyrics: '大概我承受过的一切，都是为如今和你遇见。',
   url: 'https://music.163.com/#/song?id=1887917182',
-  coverImage: 'lhmjvuyi'
 }, {
   title: '浪漫主义2.0',
   conditions: { charm: 1000, talent: 1000, energy: 90 },
@@ -31,7 +29,14 @@ export const songLibrary: Song[] = [{
   effects: { charm: 100, talent: 50, energy: - 100, red: + 1000, black: + 500, },
   lyrics: '你听我说，只要是你，都OK的。',
   url: 'https://music.163.com/#/song?id=1920025919',
-  coverImage: 'lhmjvuyi2'
+}, {
+  title: '你一定能够成为你想要去成为的人',
+  conditions: { talent: 1200, divine: 1000 },
+  conditions_ne: { money: 10000 },
+  cost: 500,
+  effects: { talent: 100, red: + 2000 },
+  lyrics: '你一定能够成为你想要去成为的人。',
+  url: 'https://music.163.com/#/song?id=1414783972',
 }, {
   title: '孤独面店',
   conditions: { talent: 500, },
@@ -40,7 +45,6 @@ export const songLibrary: Song[] = [{
   effects: { talent: + 100, charm: + 50, mood: + 100, red: + 1000, money: + 10000, },
   lyrics: '如果这是孤独，那我就敬孤独万岁。',
   url: 'https://music.163.com/#/song?id=1909021556',
-  coverImage: 'gudummdm'
 }, {
   title: '真没睡',
   conditions: { talent: 100, },
@@ -49,7 +53,6 @@ export const songLibrary: Song[] = [{
   effects: { charm: -100,  talent: 100, red: + 1000, black: + 1000, },
   lyrics: '你衣服包包给你换新的，先别动手，先好好听着！',
   url: 'https://music.163.com/#/song?id=1358276770',
-  coverImage: 'vfmwuv'
 }, {
   title: 'SAD',
   conditions: {  },
@@ -59,7 +62,6 @@ export const songLibrary: Song[] = [{
   effects: { charm: 50, talent: 50, mood: + 100, red: + 1000, black: + 200, },
   lyrics: '当你是长夜里寂寞没诚意的梦……',
   url: 'https://music.163.com/#/song?id=1874158536',
-  coverImage: 'sad'
 }, {
   title: '这首歌没唱直接听',
   conditions: { freestyle: 21, },
@@ -67,8 +69,15 @@ export const songLibrary: Song[] = [{
   effects: { talent: 50, mood: + 100, red: + 1200, black: + 1000, },
   lyrics: '我抬着头当Rapper，也不低头当个IDOL。',
   url: 'https://music.163.com/#/song?id=1315952365',
-  coverImage: 'veuzgemwihvijptk'
-},
+}, {
+  title: '流量Rapper',
+  conditions: { popularity: 3000, },
+  cost: 1000,
+  effects: { talent: 50, charm: 50, red: + 800, black: + 500, money: + 10000, },
+  lyrics: '靠HIPHOP的大树赚钱，老子就是那棵树。',
+  url: 'https://music.163.com/#/song?id=1981589542',
+}
+
 ]
 
 export interface SongFei {

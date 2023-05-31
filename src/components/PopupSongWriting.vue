@@ -3,15 +3,15 @@
     <div v-for="song in availableSongs" :key="song.title" class="song">
       <div class="song-meta">
         <div class="album-cover">
-          <img :src="'/cover-images/' + song.coverImage + '@0.25x.jpg'" :alt="song.title" />
+          <img :src="'/cover-images/' + song.title + '@0.25x.jpg'" :alt="song.title" />
         </div>
         <div class="song-info">
-          <h3>《{{ song.title }}》</h3>
+          <h3>{{ song.title }}</h3>
           <p>
             <span v-for="(value, key, index) in song.conditions" :key="key">{{ attributeNames[key] }} ≥ {{ value }}<span v-if="index !== Object.keys(song.conditions).length - 1"> / </span></span>
-            <span v-if="song.conditions_ne" v-for="(value, key, index) in song.conditions_ne" :key="key">{{ attributeNames[key] }} ≤ {{ value }}<span v-if="index !== Object.keys(song.conditions_ne).length - 1"> / </span></span>
+            <span v-if="!Object.keys(song.conditions).length && song.conditions_ne && Object.keys(song.conditions_ne).length"> / </span><span v-if="song.conditions_ne" v-for="(value, key, index) in song.conditions_ne" :key="key">{{ attributeNames[key] }} ≤ {{ value }}<span v-if="index !== Object.keys(song.conditions_ne).length - 1"> / </span></span>
             <span v-if="!Object.keys(song.conditions).length && !song.conditions_ne" class="condition-text">满足——</span>
-            <BatteryWarning :size="16" @click="!isTyping && store.dispatch('typeWriterPopup', song.conditionsText)"></BatteryWarning>
+            <BatteryWarning :size="16" v-if="song.conditionsText" @click="!isTyping && store.dispatch('typeWriterPopup', song.conditionsText)"></BatteryWarning>
           </p>
         </div>
       </div>
@@ -30,7 +30,7 @@
         </div>
         <div class="song-info">
           <h3>废歌</h3>
-          <p>姜云升今天要废掉哪首歌呢？</p>
+          <p><span>姜云升今天要废掉哪首歌呢？</span></p>
         </div>
       </div>
       <div class="button-group">
@@ -40,8 +40,8 @@
     </div>
   </div>
 
-  <Popup title="" :visible="showReleaseSongModal" @close="showReleaseSongModal = false" class="song-modal">
-    <img :src="'/cover-images/' + currentSong.coverImage + '.jpg'" :alt="currentSong.title" class="modal-cover-image" />
+  <Popup title="" :visible="showReleaseSongModal" @close="showReleaseSongModal = false" class="song-modal" v-if="currentSong">
+    <img :src="'/cover-images/' + currentSong.title + '.jpg'" :alt="currentSong.title" class="modal-cover-image" />
     <p>{{ currentSong.lyrics }}</p>
     <div class="modal-header">
       <button @click="listenSong(currentSong)"><Play :size="16"></Play> 播放</button>
@@ -66,7 +66,7 @@ const store = useStore()
 const songStages = computed(() => store.state.songStages)
 
 const showReleaseSongModal = ref(false)
-const currentSong = ref(null) as any
+const currentSong = ref<null | Song>(null)
 
 function isSongAvailable(song: Song) {
   if (store.state.songStages[song.title] && store.state.songStages[song.title].unlocked) {
@@ -74,7 +74,11 @@ function isSongAvailable(song: Song) {
   }
 
   for (const [key, value] of Object.entries(song.conditions)) {
-    if (key === 'gaming') {
+    if (key === 'popularity') {
+      if (store.state.attributes.popularity.red + store.state.attributes.popularity.black < value) {
+        return false;
+      }
+    } else if (key === 'gaming') {
       if (store.state.attributes.skill.gaming < value) {
         return false;
       }
