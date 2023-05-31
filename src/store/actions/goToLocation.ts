@@ -2,7 +2,7 @@ import { Commit } from 'vuex';
 import { allFoods } from '../eats';
 import { Achievement } from '../achievements';
 import { SkillLevelMapping } from './upgradeSkill';
-import { showFoodPopup, showDrinkPopup, showShopPopup, showBankPopup, showUnsignAgencyDialog } from '../../components/composables/gameRefs';
+import { showFoodPopup, showDrinkPopup, showShopPopup, showBankPopup, showUnsignAgencyDialog, showBattleDialog } from '../../components/composables/gameRefs';
 
 export async function goToLocation(context: {
   state: any; commit: Commit, dispatch: Function 
@@ -213,6 +213,7 @@ export async function goToLocation(context: {
               break;
 
             default:
+              // 参加比赛、演出、活动
               return;
           }
           
@@ -330,6 +331,10 @@ export async function goToLocation(context: {
     case '上山修行':
       // 姜云升用麦克风大锤敲了敲，对敌人造成了巨大的物理攻击。
       // 姜云升用麦克风大锤唱了一首歌，对敌人造成了巨大的精神攻击。
+      break;
+
+    case 'Battle大赛':
+      showBattleDialog.value = true;
       
       
   }

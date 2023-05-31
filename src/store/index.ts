@@ -1,9 +1,10 @@
 import { createStore, Store, Commit } from 'vuex'
 
 import { Food, eatFood, packFood, eatPackedFood, drinkDrink } from './eats'
-import { achievements, Achievement } from '../store/achievements'
-import { songLibrary, Song, SongFei } from '../store/songs'
-import { Vitamin } from '../store/vitamins'
+import { achievements, Achievement } from './achievements'
+import { songLibrary, Song, SongFei } from './songs'
+import { Vitamin } from './vitamins'
+import { battleResults, BattleResult } from './battle'
 
 import { Attributes, Skill } from '../store/attributes'
 import { girlfriendTypes, Girlfriend } from './girlfriend'
@@ -41,6 +42,8 @@ interface State {
 
   achievements: Achievement[]
   unlockedAchievementConditions: string[]
+  
+  battleResults: BattleResult[]
 
   undergroundCount: number
 
@@ -52,6 +55,7 @@ interface State {
   songLibrary: Song[]
   songStages: Record<string, { completedStage: string | null, unlocked: boolean }>
   unlockedFeiSongs: SongFei[]
+
 
   unlockedVitamins: Vitamin[]
 
@@ -108,6 +112,7 @@ const state: State = {
   achievements: achievements,
   unlockedAchievementConditions: [],
 
+  battleResults: battleResults,
   undergroundCount: 0,
 
   signedAgency: false,
@@ -165,7 +170,7 @@ const mutations = {
       const currentLevel = SkillLevelMapping.find(level => level.level === state.attributes.skill[`${skill}Level`]);
       const currentLevelMax = currentLevel ? currentLevel.max : 0;
       state.attributes.skill[skill] = Math.min(state.attributes.skill[skill] + value, currentLevelMax);
-      
+
     } else {
       (state.attributes[attribute] as number) += value
       
@@ -244,6 +249,21 @@ const mutations = {
   incrementUndergroundCount(state: State) {
     state.undergroundCount++
   },
+  updateBattleResult(state: State, payload: { year: number; result: "落选" | "海选" | "八强" | "冠军" }) { 
+    const { year, result } = payload
+    const index = state.battleResults.findIndex(battleResult => battleResult.year === year)
+    if (index !== -1) {
+      state.battleResults[index].result = result
+    }
+  },
+  updateBattleEnd(state: State, payload: { year: number; end: boolean }) {
+    const { year, end } = payload
+    const index = state.battleResults.findIndex(battleResult => battleResult.year === year)
+    if (index !== -1) {
+      state.battleResults[index].end = end
+    }
+  },
+
   setSignedAgency(state: State, payload: boolean) {
     state.signedAgency = payload
     if (payload) {
@@ -394,6 +414,7 @@ const mutations = {
     state.lastBreakupRound = 0
 
     if (state.undergroundCount > 2) state.undergroundCount = 2
+    state.battleResults = battleResults
 
     state.signedAgency = false
     state.signedAgencyRound = null
@@ -487,6 +508,10 @@ const actions = {
     // 第三年2月的时候，触发继承家业任务
     if (state.round === 3 * 36 + 4) {
       context.dispatch('specialEvent', '继承家业');
+    }
+
+    if ((state.round - 25) % 36) {
+      await context.dispatch('typeWriter', '今年的Battle比赛已经开放，可以在外出时报名参加比赛了。');
     }
 
     if (state.round === 10 * 36 ) {
