@@ -1,7 +1,7 @@
 <template>
   <p>{{ battleText }}</p>
   <div class="button-container">
-    <button v-for="battleOption in battleOptions" @click="battle(battleOption)">battleOption</button>
+    <button v-for="battleOption in battleOptions" @click="battle(battleOption)">{{battleOption}}</button>
   </div>
 </template>
 

@@ -187,7 +187,7 @@
 .action-cut-hair {  background: url('@/assets/button_cut-hair.png') center / contain no-repeat;  width: 4.8vh;  height: 12vh;  top: 24%;  left: 56%; }
 .action-dao {  background: url('@/assets/button_Dao.png') center / contain no-repeat;   width: 4.9vh;  height: 9vh;  top: 27%;  right: 14%; }
 .action-underground {  background: url('@/assets/button_Underground.png') center / contain no-repeat;  width: 5.3vh;  height: 13.6vh;  top: 72%;  left: 12%; }
-.action-battle {  background: url('@/assets/button_battle.png') center / contain no-repeat;  width: 5.3vh;  height: 13.6vh;  top: 72%;  left: 52%; }
+.action-battle {  background: url('@/assets/button_Battle.png') center / contain no-repeat;  width: 7.15vh;  height: 7.3vh;  top: 70%;  left: 60%; }
 
 /* Styling for pop-ups */
 .popup {

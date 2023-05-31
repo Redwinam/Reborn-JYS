@@ -53,7 +53,7 @@
   <button @click="goToLocation('去剪头发')" class="action-button action-cut-hair" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('Underground')" class="action-button action-underground" v-if="isGoingOut" :disabled="isTyping"></button>
-  <button @click="goToLocation('Battle大赛')" class="action-button action-battle" v-if="isGoingOut && isBattleOpen()" :disabled="isTyping">Battle大赛</button>
+  <button @click="goToLocation('Battle大赛')" class="action-button action-battle" v-if="isGoingOut && isBattleOpen()" :disabled="isTyping"></button>
   <button v-if="isGoingOut" @click="isGoingOut = false; typewriter('今天你打算……')" class="action-button action-back going-out-back" :disabled="isTyping"></button>
   <button v-if="store.state.girlfriend && !isGoingOut" @click="accompanyGirlfriend" class="action-button action-accompany-girlfriend" :disabled="isTyping"></button>
 
