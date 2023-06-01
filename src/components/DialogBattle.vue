@@ -232,7 +232,7 @@ async function battle(battleOption: string) {
         typeWriterPopup(`恭喜姜云升成功晋级「总决赛」！这是姜云升第${countHistoryBaqiang}次晋级「总决赛」，激动或紧张，请问姜云升要现在就继续参加下一轮的比赛吗？`,
         ["进入决赛！", "再准备准备"])
       } else {
-        typeWriterPopup(`很遗憾，姜云升没有通过「八强之争」——你的对手的实力居然达到了惊人的${conditionText(currentBattleCondition.condition_haixuan)}，你的${currentBattleCondition.condition_note}不足以击败对手。你不得不提前离开这个舞台。但你的生命就是这场Battle，继续你的人生吧！`,
+        typeWriterPopup(`很遗憾，姜云升没有通过「八强之争」——你的对手的实力居然达到了惊人的${conditionText(currentBattleCondition.condition_baqiang)}，你的${currentBattleCondition.condition_note}不足以击败对手。你不得不提前离开这个舞台。但你的生命就是这场Battle，继续你的人生吧！`,
         ["离开比赛"])
       }
 
@@ -247,7 +247,7 @@ async function battle(battleOption: string) {
         ["结束比赛"])
 
       } else {
-        typeWriterPopup(`很遗憾，姜云升没有获得本届Battle大赛的「总冠军」——你的对手的实力居然达到了惊人的${conditionText(currentBattleCondition.condition_haixuan)}，你的${currentBattleCondition.condition_note}不足以击败对手，但是，姜云升的生命就是这场Battle，继续你的人生吧！`,
+        typeWriterPopup(`很遗憾，姜云升没有获得本届Battle大赛的「总冠军」——你的对手的实力居然达到了惊人的${conditionText(currentBattleCondition.condition_zongjuesai)}，你的${currentBattleCondition.condition_note}不足以击败对手，但是，姜云升的生命就是这场Battle，继续你的人生吧！`,
         ["结束比赛"])
       }
 
