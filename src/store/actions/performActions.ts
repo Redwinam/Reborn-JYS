@@ -44,32 +44,60 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         if (store.state.attributes.mood < -50) {
           await context.dispatch('typeWriter', '姜云升今天心情不好，不想去上课。');
           return;
+        } else if (store.state.attributes.energy < 0) {
+          await context.dispatch('typeWriter', '姜云升今天虚弱，不想去上课。');
+          return;
         }
         
         const randomStudyInrtro = [
-          '这是一节英语课，姜云升被发现了上课睡觉，你成为了走廊上罚站的少年。<small>才华+10，心情-20</small>',
+          '这是一节英语课，姜云升被发现了上课睡觉，成为了走廊上罚站的少年。<small>才华+10，心情-20</small>',
           '这是一节英语课，姜云升学会了几句受益终身的外语。<small>才华+10，心情-20</small>',
-          '这是一节数学课，姜云升被发现了上课睡觉，你成为了走廊上罚站的少年。<small>才华+10，心情-20</small>',
-          '这是一节物理课，姜云升被发现了上课睡觉，你成为了走廊上罚站的少年。<small>才华+10，心情-20</small>',
+          '这是一节数学课，姜云升被发现了上课睡觉，成为了走廊上罚站的少年。<small>才华+10，心情-20</small>',
+          '这是一节物理课，姜云升被发现了上课睡觉，成为了走廊上罚站的少年。<small>才华+10，心情-20</small>',
           '这是一节作文课，你写你要成为说唱歌手，班主任撕掉了你的试卷。<small>才华+10，心情-20</small>',
-          ['这是一节体育课，姜云升被高年级的同学堵在了角落。<small>体力-20，心情-20</small>', '但你没有服输。<small>最大体力上限+5</small>'],
+          ['这是一节体育课，姜云升被高年级的同学堵在了角落。<small>体力-20，心情-20</small>', '但姜云升没有服输。<small>最大体力上限+5</small>'],
+          '……姜云升今天翘课去奶茶店抽烟。<small>魅力+6，心情+10</small>',
+          '……姜云升今天翘课去当扛把子。<small>魅力+6，心情+10</small>',
+          '……姜云升今天翘课站在校门口抽烟。<small>魅力+6，心情+10</small>',
+          '……姜云升今天翘课在校门口抽烟，不小心把自己呛到了。<small>魅力+6，心情+10</small>',
+          '……姜云升今天翘课在烧烤摊看人打架。<small>魅力+6，心情+10</small>',
+          '……姜云升今天翘课跑去网吧通宵上网。<small>魅力+6，心情+10</small>',
         ];
         const randomStudyIndex = Math.floor(Math.random() * randomStudyInrtro.length);
         await context.dispatch('typeWriter', randomStudyInrtro[randomStudyIndex]);
-        
+
         if (randomStudyIndex === 5) {
           context.commit('updateAttribute', { attribute: 'energy', value: -20 });
           context.commit('updateAttribute', { attribute: 'maxEnergy', value: 5 });
-        } else {
+          context.commit('updateAttribute', { attribute: 'mood', value: -20 });
+        } else if (randomStudyIndex < 5) {
+          context.commit('updateAttribute', { attribute: 'energy', value: -5 });
           context.commit('updateAttribute', { attribute: 'talent', value: 10 });
+          context.commit('updateAttribute', { attribute: 'mood', value: -20 });
+        } else {
+          context.commit('updateAttribute', { attribute: 'energy', value: -5 });
+          context.commit('updateAttribute', { attribute: 'charm', value: 6 });
+          context.commit('updateAttribute', { attribute: 'mood', value: 10 });
         }
-        context.commit('updateAttribute', { attribute: 'mood', value: -20 });
         break;
 
       case '赚钱':
         context.commit('updateAttribute', { attribute: 'energy', value: -10 });
         context.commit('updateAttribute', { attribute: 'money', value: 100 });
+        let makeMoney = 100;
         await context.dispatch('typeWriter', '姜云升努力工作，赚到了100金钱。');
+        if (store.state.attributes.charm > 50) {
+          makeMoney = Math.floor(store.state.attributes.charm * Math.random());
+          // typeWriter 魅力>50，18号云南小姜额外获得金钱奖励
+          context.commit('updateAttribute', { attribute: 'money', value: makeMoney });
+          await context.dispatch('typeWriter', `<small>魅力>50，18号云南小姜额外获得金钱奖励${makeMoney}。</small>`);
+        } 
+        // 才华>50，文化绿洲小姜额外获得金钱奖励
+        if (store.state.attributes.talent > 50) {
+          makeMoney = Math.floor(store.state.attributes.talent * Math.random());
+          context.commit('updateAttribute', { attribute: 'money', value: makeMoney });
+          await context.dispatch('typeWriter', `<small>才华>50，文化绿洲小姜额外获得金钱奖励${makeMoney}。</small>`);
+        } 
         break;
 
       case '出去鬼混':
@@ -81,7 +109,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           if (store.state.flirtCount) {
             toMessage.push('姜云升又成功地搭讪了一个姑娘，魅力+10，心情+10。');
           } else {
-            if (store.state.lastBreakupRound && store.state.term - store.state.lastBreakupRound < 2){
+            if (store.state.lastBreakupRound && store.state.round - store.state.lastBreakupRound < 2){
               context.commit('setSeamlessRelation', true);
               toMessage.push('姜云升可真有你的，刚分手就出来鬼混。');
             } else {
