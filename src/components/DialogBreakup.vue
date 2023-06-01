@@ -72,12 +72,9 @@ async function handleBreakup(choice: string) {
 
 async function breakupTimesAchievement() {
   if (store.state.breakupTimes >= 10) {
-    const hasAchievement = store.state.achievements.find(
-      (ach: Achievement) => ach.name === '拜拜就拜拜' && ach.unlocked
-    );
-    if (!hasAchievement) {
+    if (!store.getters('unlockedAchievement', '拜拜就拜拜')) {
       store.commit('unlockAchievement', '拜拜就拜拜');
-      await store.dispatch('typeWriter', ['姜云升累计被分手超过了10次，解锁了第' + store.state.achievements.filter((ach: { unlocked: any; }) => ach.unlocked).length + '个成就【拜拜就拜拜】！']);
+      await store.dispatch('typeWriter', ['姜云升累计被分手超过了10次，解锁了第' + store.getters("UnlockedAchievementCount") + '个成就【拜拜就拜拜】！']);
     }
   }
 } 

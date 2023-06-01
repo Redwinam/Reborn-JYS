@@ -2,6 +2,7 @@ import { Commit } from 'vuex';
 import { store } from '../index';
 
 import { isAtHome, isGoingOut, showBreakupDialog, showSongWritingDialog } from '../../components/composables/gameRefs';
+import { girlfriendTypes } from '../girlfriend';
 import { SkillLevelMapping } from './upgradeSkill';
 import { vitaminLibrary } from '../vitamins';
 
@@ -13,11 +14,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
       await context.dispatch('typeWriter', '打算出发去……');
 
       if (store.state.year > 2012 && store.state.girlfriend) {
-        const existingAchievement = store.state.achievements.find(
-          (ach) => ach.name === '放松，呼吸' && ach.unlocked
-        );
-        
-        if (!existingAchievement && !store.state.happenedEvents.includes('放松，呼吸')) {
+        if (!store.getters('unlockedAchievement', '放松，呼吸') && !store.state.happenedEvents.includes('放松，呼吸')) {
           const currentRoundInYear = store.state.round % 36;
           const isSpring = currentRoundInYear >= 3 && currentRoundInYear < 15; // 假设一年36轮，4-15轮为春天
 
@@ -120,7 +117,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
 
           context.commit('incrementFlirtCount');
           if (store.state.flirtCount >= 3) {
-            const randomGirlfriend = store.state.girlfriendTypes[Math.floor(Math.random() * store.state.girlfriendTypes.length)];
+            const randomGirlfriend = girlfriendTypes[Math.floor(Math.random() * girlfriendTypes.length)];
             context.commit('setGirlfriend', randomGirlfriend);
             context.commit('resetFlirtCount');
             context.commit('resetRelationRound');
@@ -147,12 +144,9 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         }
 
         if (store.state.sleepHours >= 500) {
-          const hasAchievement = store.state.achievements.find(
-            (ach) => ach.name === '时间很长' && ach.unlocked
-          );
-          if (!hasAchievement) {
+          if (!store.getters('unlockedAchievement', '时间很长')) {
             store.commit('unlockAchievement', '时间很长');
-            await context.dispatch('typeWriter', ['姜云升解锁了第' + store.state.achievements.filter((ach: { unlocked: any; }) => ach.unlocked).length + '个成就【时间很长】，指的是姜云升的睡眠时间很长，在一轮游戏中累计睡眠时间达到500个小时！']);
+            await context.dispatch('typeWriter', ['姜云升解锁了第' + store.getters("UnlockedAchievementCount") + '个成就【时间很长】，指的是姜云升的睡眠时间很长，在一轮游戏中累计睡眠时间达到500个小时！']);
           }
         }
 
@@ -192,18 +186,14 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           await context.dispatch('typeWriter', '姜云升今天太累啦，没办法开直播了。');
           return;
         }
-        const existingAchievement = store.state.achievements.find(
-          (ach) => ach.name === '醉酒小姜' && ach.unlocked
-        );
-        
-        if (store.state.drunk > 0 && !existingAchievement ) {
+        if (store.state.drunk > 0 && !store.getters('unlockedAchievement', '醉酒小姜') ) {
           context.commit('updateAttribute', { attribute: 'energy', value: -10 });
           context.commit('updateAttribute', { attribute: 'red', value: (300 + Math.floor(Math.random() * 0.12 * store.state.attributes.popularity.red)) });
           context.commit('updateAttribute', { attribute: 'divine', value: 9 });
           context.commit('unlockAchievement', '醉酒小姜');
-          await context.dispatch('typeWriter', ['姜云升今天喝醉了，却还是开了直播，讲了好多平时不会讲的话。酒渐醒，拉开窗帘，窗外是日出。', '姜云升的人气增加了，一项神秘的属性增加了。', '解锁了第' + store.state.achievements.filter((ach) => ach.unlocked).length + '个成就【醉酒小姜】']);
+          await context.dispatch('typeWriter', ['姜云升今天喝醉了，却还是开了直播，讲了好多平时不会讲的话。酒渐醒，拉开窗帘，窗外是日出。', '姜云升的人气增加了，一项神秘的属性增加了。', '解锁了第' + store.getters("UnlockedAchievementCount") + '个成就【醉酒小姜】']);
           break;
-        } else if (store.state.drunk > 0 && existingAchievement) {
+        } else if (store.state.drunk > 0 && !store.getters('unlockedAchievement', '醉酒小姜')) {
           await context.dispatch('typeWriter', '姜云升今天喝醉了，就不开直播了。');
           break;
         }
@@ -246,12 +236,9 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
             await context.dispatch('typeWriter', ['粉丝们提醒姜姜要吃维生素片噢，【' + vitamin.type + '】' + vitamin.benefits + '。<small>姜云升的体力上限+10！</small>']);
 
             if (lockedVitamins.length === 1) {
-              const hasAchievement = store.state.achievements.find(
-                (ach) => ach.name === '谢谢你们提醒我吃维生素' && ach.unlocked
-              );
-              if (!hasAchievement) {
+              if (!store.getters('unlockedAchievement', '谢谢你们提醒我吃维生素')) {
                 store.commit('unlockAchievement', '谢谢你们提醒我吃维生素');
-                await context.dispatch('typeWriter', ['姜云升集齐了所有维生素片，解锁了第' + store.state.achievements.filter((ach: { unlocked: any; }) => ach.unlocked).length + '个成就【谢谢你们提醒我吃维生素】！']);
+                await context.dispatch('typeWriter', ['姜云升集齐了所有维生素片，解锁了第' + store.getters("UnlockedAchievementCount") + '个成就【谢谢你们提醒我吃维生素】！']);
               }
             }
           } else {

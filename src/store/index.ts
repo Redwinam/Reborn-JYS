@@ -1,13 +1,13 @@
 import { createStore, Store, Commit } from 'vuex'
 
 import { Food, eatFood, packFood, eatPackedFood, drinkDrink } from './eats'
-import { achievements, Achievement } from './achievements'
+import { achievements, Achievement, AchievementState } from './achievements'
 import { songLibrary, Song, SongFei } from './songs'
 import { Vitamin } from './vitamins'
 import { battleResults, BattleResult } from './battle'
 
 import { Attributes } from '../store/attributes'
-import { girlfriendTypes, Girlfriend } from './girlfriend'
+import { Girlfriend } from './girlfriend'
 import { accompanyGirlfriend } from './actions/accompanyGirlfriend';
 import { goToLocation } from './actions/goToLocation';
 import { specialEvent, specialEventOptionChosen } from './actions/specialEvent';
@@ -17,6 +17,7 @@ import { upgradeSkill, SkillLevelMapping } from './actions/upgradeSkill';
 import { typeWriter, typeWriterPopup } from './actions/typeWriter';
 
 import { showBreakupDialog, showGameEndDialog } from '../components/composables/gameRefs';
+import { Unlock } from 'lucide-vue-next'
 
 interface State {
   term: number
@@ -29,7 +30,6 @@ interface State {
   sleepHours: number
 
   girlfriend: Girlfriend | null
-  girlfriendTypes: Girlfriend[]
   flirtCount: number
   accompanyCount: number
   relationRound: number
@@ -41,7 +41,7 @@ interface State {
   inventory: Inventory
   lastSpecialItem: string | null
 
-  achievements: Achievement[]
+  achievementStates: AchievementState[]
   unlockedAchievementConditions: string[]
   
   battleResults: BattleResult[]
@@ -54,7 +54,6 @@ interface State {
   goToAgencyTimes: number
 
   songs: string[]
-  songLibrary: Song[]
   songStages: Record<string, { completedStage: string | null, unlocked: boolean }>
   unlockedFeiSongs: SongFei[]
 
@@ -109,7 +108,6 @@ const state: State = {
   sleepHours: 0,
   flirtCount: 0,
   girlfriend: null,
-  girlfriendTypes: girlfriendTypes,
   accompanyCount: 0,
   relationRound: 0,
   breakupTimes: 0,
@@ -120,7 +118,7 @@ const state: State = {
   inventory: {},
   lastSpecialItem: null,
 
-  achievements: achievements,
+  achievementStates: [],
   unlockedAchievementConditions: [],
 
   battleResults: battleResults,
@@ -132,7 +130,6 @@ const state: State = {
   goToAgencyTimes: 0,
   
   songs: [],
-  songLibrary,
   songStages: {},
   unlockedFeiSongs: [],
 
@@ -389,12 +386,18 @@ const mutations = {
   },
 
   unlockAchievement(state: State, achievementName: string) {
-    const achievement = state.achievements.find(
+    const achievement = achievements.find(
       (ach) => ach.name === achievementName
     )
-    if (achievement && !achievement.unlocked) {
-      achievement.unlocked = true;
-      achievement.unlockTerm = state.term;
+    const achievementState = state.achievementStates.find(
+      (ach) => ach.name === achievementName
+    )
+    if (achievement && !achievementState) {
+      state.achievementStates.push({
+        name: achievement.name,
+        unlocked: true,
+        unlockTerm: state.term,
+      });
     }
   },
 
@@ -418,7 +421,7 @@ const mutations = {
     if (typeof payload.specialEndingAchievementName === 'string') {
       if (!payload.gameEnded) state.currentEndings.push(payload.specialEndingAchievementName)
       store.commit('unlockAchievement', payload.specialEndingAchievementName)
-      const specialEndingAchievement = state.achievements.find(
+      const specialEndingAchievement = achievements.find(
         (ach) => ach.name === payload.specialEndingAchievementName
       )
       state.specialEndingAchievement = specialEndingAchievement || null
@@ -506,6 +509,9 @@ const mutations = {
       state.attributes.mood = 0
     }
   },
+  loadGameState(state: State, gameData: State) {
+    Object.assign(state, gameData);
+  },
 
 }
 
@@ -567,7 +573,7 @@ const actions = {
     }
 
     if ((state.attributes.popularity.red + state.attributes.popularity.black) > 1200 && state.attributes.popularity.black > 1000) {
-      if (!state.achievements.find((ach) => ach.name === '我所拥有的人气，又是不是真的？' && ach.unlocked === true)) {
+      if ( !store.getters('unlockedAchievement', '我所拥有的人气，又是不是真的？') ) {
         context.commit('unlockAchievement', '我所拥有的人气，又是不是真的？');
         await context.dispatch('typeWriter', '人气>1200，黑人气>1000。解锁成就【我所拥有的人气，又是不是真的？】')
       }
@@ -633,8 +639,11 @@ const getters = {
   attributes(state: State) {
     return state.attributes
   },
-  achievements(state: State) {
-    return state.achievements
+  unlockedAchievement(state: State, achievementName: string) {
+    return state.achievementStates.find((ach) => ach.name === achievementName && ach.unlocked === true)
+  },
+  UnlockedAchievementCount(state: State) {
+    return state.achievementStates.filter((ach) => ach.unlocked === true).length
   },
 }
 

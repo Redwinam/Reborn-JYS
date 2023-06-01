@@ -56,7 +56,7 @@ import { useStore } from 'vuex'
 import { Edit3, Eraser, Mic2, Play, Radio, BatteryWarning } from 'lucide-vue-next'
 
 import { attributeNames } from '../store/attributes'
-import { Achievement } from '../store/achievements'
+import { Achievement, AchievementState } from '../store/achievements'
 import { Song, songLibrary, songFeiLibrary } from '../store/songs'
 import { isTyping } from './composables/gameRefs'
 import Popup from '../components/Popup.vue'
@@ -271,16 +271,13 @@ async function writeFeiSong() {
     store.commit('unlockFeiSong', songFei);
     toMessage.push(`姜云升写了半首《${songFei.name}》，「${songFei.lyrics}」然后说这歌废啦。`);
 
-    if(lockedFeiSongs.length === 1) {
-      const hasAchievement = store.state.achievements.find(
-        (ach: Achievement) => ach.name === '这歌废啦' && ach.unlocked
-      );
-      if (!hasAchievement) {
+    if(lockedFeiSongs.length === 1) {      
+      if (!store.getters('unlockedAchievement', '这歌废啦')) {
         store.commit('unlockAchievement', '这歌废啦');
         store.commit('updateAttribute', { attribute: 'talent', value: 30 });
         store.commit('updateAttribute', { attribute: 'charm', value: 30 });
         store.commit('updateAttribute', { attribute: 'red', value: 300 });
-        toMessage.push('姜云升已经写完了所有废歌，再写废歌就要被打啦！解锁了第' + store.state.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【这歌废啦】<small>姜云升才华+30，魅力+30，红色人气+300。</small>');
+        toMessage.push('姜云升已经写完了所有废歌，再写废歌就要被打啦！解锁了第' + store.getters("UnlockedAchievementCount") + '个成就【这歌废啦】<small>姜云升才华+30，魅力+30，红色人气+300。</small>');
       }
     }
   } else {
@@ -307,7 +304,7 @@ function listenSong(song: Song) {
 
 <style scoped>
 .song-container {
-  max-height: 75vh;
+  max-height: 69vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;

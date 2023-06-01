@@ -32,12 +32,9 @@ export async function goToLocation(context: {
         await context.dispatch('typeWriter', [randomIntro,'解锁新食物：【' + newFood.name + '】', '<small>姜云升的体力上限增加啦！</small>']);
 
         if (unlockedFoods.length === 18) {
-          const hasAchievement = context.state.achievements.find(
-            (ach: Achievement) => ach.name === '小姜的餐厅' && ach.unlocked
-          );
-          if (!hasAchievement) {
+          if (!store.getters('unlockedAchievement', '小姜的餐厅')) {
             context.commit('unlockAchievement', '小姜的餐厅');
-            await context.dispatch('typeWriter', '姜云升已经解锁了所有的食物，解锁了第' + context.state.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【小姜的餐厅】。');
+            await context.dispatch('typeWriter', '姜云升已经解锁了所有的食物，解锁了第' + store.getters("UnlockedAchievementCount") + '个成就【小姜的餐厅】。');
           }
         }
       }
@@ -243,15 +240,11 @@ export async function goToLocation(context: {
       context.commit('updateAttribute', { attribute: 'money', value: - haircutCost });
       
       const hasSunglasses = context.state.inventory['墨镜'];
-      const hasAchievement = context.state.achievements.find(
-        (ach: Achievement) => ach.name === '小学升戴墨镜'  && ach.unlocked
-      );
-    
-      if (hasSunglasses && !hasAchievement) {
+      if (hasSunglasses && !store.getters('unlockedAchievement', '小学升戴墨镜')) {
         context.commit('updateAttribute', { attribute: 'charm', value: -100 })
         context.commit('unlockAchievement', '小学升戴墨镜');
-        await context.dispatch('typeWriter', '姜云升戴着墨镜去剪了个新发型，花费100元，魅力-100。解锁了第' + context.state.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【小学升戴墨镜】（不建议戴）。')
-      } else if (hasSunglasses && hasAchievement) {
+        await context.dispatch('typeWriter', '姜云升戴着墨镜去剪了个新发型，花费100元，魅力-100。解锁了第' + store.getters("UnlockedAchievementCount") + '个成就【小学升戴墨镜】（不建议戴）。')
+      } else if (hasSunglasses && store.getters('unlockedAchievement', '小学升戴墨镜')) {
         await context.dispatch('typeWriter', '姜云升再次戴着墨镜去剪了个新发型，花费100元，魅力-20。')
         context.commit('updateAttribute', { attribute: 'charm', value: -20 })
       } else {

@@ -98,7 +98,7 @@ const isWinning = (conditions: { attribute: string; value: number }[]) => {
         return false
       }
     } else if (condition.attribute === 'freestyle') {
-      if (store.state.skills.freestyle < condition.value) {
+      if (store.state.attributes.skills.freestyle < condition.value) {
         return false
       }
     } else if (condition.attribute === 'song-release') {

@@ -15,7 +15,7 @@
     </ul>
   </div>
 
-  <p v-if="unlockedAchievementCount == achievements.length" class="game-maker">制作人：@千啾略</p>
+  <p v-if="store.getters('UnlockedAchievementCount') == achievements.length" class="game-maker">制作人：@千啾略</p>
 </div>
 
 <PopupSub :visible = "showAchievementNotePopup" @close = "showAchievementNotePopup = false" class="achievement-note">
@@ -51,20 +51,36 @@ import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
 import PopupSub from '../components/PopupSub.vue'
-import { Achievement } from '../store/achievements'
+import { achievements, Achievement } from '../store/achievements'
 import { showAchievementNotePopup } from '../components/composables/gameRefs'
 
 const store = useStore()
-const achievements = computed(() => store.state.achievements)
+const achievementStates = computed(() => store.state.achievementStates)
 const term = computed(() => store.state.term)
+
+interface AchievementLib {
+  name: string; 
+  desc: string; 
+  condition?: string;
+  event?: boolean;
+  ending?: boolean;
+  unlocked: boolean;
+  unlockTerm?: number;
+}
 
 const classifiedAchievements = computed(() => {
   const groups = {
     '事件成就': [],
     '结局成就': [],
     '其他成就': []
-  } as Record<string, Achievement[]>
-  achievements.value.forEach((achievement: Achievement) => {
+  } as Record<string, AchievementLib[]>
+
+  achievements.forEach((ach) => {
+    const achievement = ach as AchievementLib    
+    if (achievementStates.value[achievement.name] && achievementStates.value[achievement.name].unlocked) {
+      achievement.unlocked = true
+      achievement.unlockTerm = achievementStates.value[achievement.name].unlockTerm
+    }
     if (achievement.ending) {
       groups['结局成就'].push(achievement)
     } else if (achievement.event) {
@@ -73,11 +89,9 @@ const classifiedAchievements = computed(() => {
       groups['其他成就'].push(achievement)
     }
   })
-  return groups
-})
 
-const unlockedAchievementCount = computed(() => {
-  return achievements.value.filter((achievement: Achievement) => achievement.unlocked).length
+  console.log(groups)
+  return groups
 })
 
 const showUnlockAchievementConditionConfirmPopup = ref(false)
@@ -85,7 +99,7 @@ const showAchievementConditionPopup = ref(false)
 const currentUnlockConditionAchievement = ref({} as Achievement)
 const showAchievementCondition = (achievement: Achievement) => {
   currentUnlockConditionAchievement.value = achievement
-  if (achievement.unlocked || store.state.unlockedAchievementConditions.includes(achievement.name)) {
+  if (achievementStates.value[achievement.name].unlocked || store.state.unlockedAchievementConditions.includes(achievement.name)) {
     showAchievementConditionPopup.value = true
   } else {
     showUnlockAchievementConditionConfirmPopup.value = true

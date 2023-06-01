@@ -265,6 +265,26 @@ function restartGame(resetData: boolean) {
   store.commit('resetGameState', resetData)
 }
 
+onMounted(() => {
+  const savedGameData = document.cookie
+  .split(';')
+  .find((cookie) => cookie.trim().startsWith('gameData='));
+
+
+  if (savedGameData) {
+    const gameData = JSON.parse(savedGameData.split('=')[1]);
+    store.commit('loadGameState', gameData);
+  }
+
+  store.subscribe(() => {
+    // 存储游戏状态数据到 cookies
+    let toSaveStore = store.state;
+    toSaveStore.textHistory = [];
+    document.cookie = `gameData=${JSON.stringify(toSaveStore)}; expires=Thu, 01 Jan 2099 00:00:00 UTC; path=/;`;
+  });
+
+})
+
 </script>
 
 <style scoped>

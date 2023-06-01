@@ -13,11 +13,6 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
     const girlfriendEffect = store.state.girlfriend.effect
 
     const toMessage = ref([] as string[])
-
-    const existingOneSongAchievement = store.state.achievements.find(
-      (ach) => ach.name === '一首歌的时间' && ach.unlocked
-    );
-
     if (store.state.accompanyCount < 5) {
       
       if (store.state.weak) {
@@ -29,16 +24,16 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
       if (store.state.accompanyCount < 1) {
         
         
-        if (store.state.drunk > 0 && !existingOneSongAchievement ) {
+        if (store.state.drunk > 0 && !store.getters('unlockedAchievement', '一首歌的时间') ) {
           context.commit('updateAttribute', { attribute: 'charm', value: -50 });
           context.commit('unlockAchievement', '一首歌的时间');
-          await context.dispatch('typeWriter', ['她是你在酒吧认识的一位姑娘，昏暗的灯光下，一切都很好。你忘了你喝了酒，状态有些不好，一首歌的时间后……第二天她向你提出了分手。姜云升魅力-50，解锁了第' + store.state.achievements.filter((ach) => ach.unlocked).length + '个成就【一首歌的时间】']);
+          await context.dispatch('typeWriter', ['她是你在酒吧认识的一位姑娘，昏暗的灯光下，一切都很好。你忘了你喝了酒，状态有些不好，一首歌的时间后……第二天她向你提出了分手。姜云升魅力-50，解锁了第' + store.getters("UnlockedAchievementCount") + '个成就【一首歌的时间】']);
           store.commit('setGirlfriend', null)
           store.commit('resetAccompanyCount')
           store.commit('resetRelationRound');
           return;
 
-        } else if (store.state.drunk > 0 && existingOneSongAchievement) {
+        } else if (store.state.drunk > 0 && store.getters('unlockedAchievement', '一首歌的时间')) {
           await context.dispatch('typeWriter', '姜云升今天喝醉了，状态不好！👋🏻');
           return;
 
@@ -68,7 +63,7 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
     }
 
     if (energy >= 50) {
-      if (store.state.drunk > 0 && existingOneSongAchievement) {
+      if (store.state.drunk > 0 && store.getters('unlockedAchievement', '一首歌的时间')) {
         await context.dispatch('typeWriter', '姜云升今天喝醉了，状态不好！👋🏻');
         return;
       }
@@ -87,10 +82,7 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
       context.dispatch('typeWriter', toMessage.value);
 
       if (isAtHome.value) {
-        const existingAchievement = store.state.achievements.find(
-          (ach) => ach.name === '姜哥，玩挺好' && ach.unlocked
-        );
-        if (!existingAchievement && !store.state.happenedEvents.includes('姜哥，玩挺好')) {
+        if (!store.getters('unlockedAchievement', '姜哥，玩挺好') && !store.state.happenedEvents.includes('姜哥，玩挺好')) {
           if (Math.random() < 0.15 * store.state.relationRound) {
             context.dispatch('specialEvent', '姜哥，玩挺好');
           }
@@ -99,7 +91,7 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
       
 
     } else if (energy >= 20) {
-      if (store.state.drunk > 0 && existingOneSongAchievement) {
+      if (store.state.drunk > 0 && store.getters('unlockedAchievement', '一首歌的时间')) {
         await context.dispatch('typeWriter', '姜云升今天喝醉了，状态不好！👋🏻');
         return;
       }
