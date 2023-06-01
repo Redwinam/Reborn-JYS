@@ -41,9 +41,11 @@
 
   <PopupSub :visible="showQuantityPopup" @close="showQuantityPopup = false">
     <div class="quantity-popup">
-      {{ itemToBuy }} <input v-model.number="quantityToBuy" type="number" min="1"> {{ getQuantifier(itemToBuy) }}
-      <button @click="confirmPurchase">确认购买</button>
-      <button class="cancel-button" @click="showQuantityPopup = false">取消</button>
+      <div>{{ itemToBuy }} <input v-model.number="quantityToBuy" type="number" min="1"> {{ getQuantifier(itemToBuy) }}</div>
+      <div>
+        <button @click="confirmPurchase">确认购买</button>
+        <button class="cancel-button" @click="showQuantityPopup = false">取消</button>
+      </div>
     </div>
   </PopupSub>
 </template>
@@ -160,6 +162,7 @@ const confirmPurchase = () => {
   color: #d3c6c4;
   background-color: #1e2228;
   border-radius: 0;
+  white-space: nowrap;
 }
 
 .shop-item .purchase-options .buttons-container .only-button {
@@ -196,6 +199,7 @@ const confirmPurchase = () => {
   align-items: center;
   width: 100%;
   height: 100%;
+  flex-wrap: wrap;
 }
 
 .quantity-popup input {
