@@ -3,7 +3,7 @@ import { Commit } from 'vuex';
 import { store } from '../index';
 import { attributeNames } from '../attributes'
 
-import { isAtHome, isGoingOut, showBreakupDialog, showSongWritingDialog } from '../../components/composables/gameRefs';
+import { isAtHome, showBreakupDialog } from '../../components/composables/gameRefs';
 
 export async function accompanyGirlfriend(context: { commit: Commit, dispatch: Function }) {
   if (store.state.girlfriend) {
@@ -51,7 +51,11 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
       
       toMessage.value.push(`姜云升${isAtHome.value ? '在家' :''}陪了${girlfriendType}，消耗了50点体力。`)
       
-      store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 11) })
+      if (girlfriendEffect === 'money') {
+        store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 360) })
+      } else {
+        store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 36) })
+      }
       toMessage.value.push(`姜云升的${attributeNames[girlfriendEffect]}属性上升了。`)
 
       context.dispatch('typeWriter', toMessage.value);
@@ -73,7 +77,11 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
       store.commit('incrementAccompanyCount')
       toMessage.value.push(`姜云升${isAtHome.value ? '在家' :''}陪了${girlfriendType}，消耗了20点体力。`)
 
-      store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 6) })
+      if (girlfriendEffect === 'money') {
+        store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 180) })
+      } else {
+        store.commit('updateAttribute', { attribute: girlfriendEffect, value: Math.floor(Math.random() * 18) })
+      }
       toMessage.value.push(`姜云升的${attributeNames[girlfriendEffect]}属性上升了。`)
 
       await context.dispatch('typeWriter', toMessage.value);

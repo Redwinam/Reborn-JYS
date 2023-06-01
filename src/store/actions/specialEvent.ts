@@ -116,22 +116,22 @@ export async function specialEventOptionChosen(context: {
     if (context.rootState.round === 16 && context.rootState.term === 1) {
       context.commit('unlockAchievement', payload.event);
       await context.dispatch('typeWriter', ['姜云升的生日过得很开心，恭喜，姜云升解锁了第' + context.rootState.achievements.filter((ach: Achievement) => ach.unlocked).length + '个成就【' + payload.event + '】。']);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 600));
     } else {
       await context.dispatch('typeWriter', ['姜云升的生日过得很开心。']);
     }
     await context.dispatch('typeWriter', ['姜云升收到了长辈的1000元生日红包！']);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 600));
     context.commit('updateAttribute', { attribute: 'money', value: 1000 });
     await context.dispatch('typeWriter', ['长大一岁了，这一年姜云升又学到了许多，才华+10！', '又长帅了许多，魅力+10！']);
     context.commit('updateAttribute', { attribute: 'talent', value: 10 });
     context.commit('updateAttribute', { attribute: 'charm', value: 10 });
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 600));
     await context.dispatch('typeWriter', ['又强壮了许多，最大体力值+10！', '体力恢复满格！', '心情恢复满格！']);
     context.commit('updateAttribute', { attribute: 'maxEnergy', value: 10 });
     context.commit('updateAttribute', { attribute: 'energy', value: context.rootState.attributes.maxEnergy });
     context.commit('updateAttribute', { attribute: 'mood', value: 100 - context.rootState.attributes.mood });
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 600));
     await context.dispatch('typeWriter', ['祝姜云升生日快乐！']);
   }
 

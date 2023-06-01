@@ -11,7 +11,7 @@ export const girlfriendTypes = [
     breakupReasons: ['她觉得你们不合适', '她觉得你太帅了自己配不上', '想起了她的前男友'],
   },
   { 
-    type: '让你牵肠挂肚的女朋友', effect: 'mood',
+    type: '让你牵挂的女朋友', effect: 'mood',
     breakupReasons: ['你两个小时没回她微信', '你一天没回她微信', '你一周没回她微信', '你一月没回她微信', '你一年没回她微信'],
   },
   { 
@@ -19,7 +19,7 @@ export const girlfriendTypes = [
     breakupReasons: ['最近体力有些跟不上', '最近想换换口味', '最近想换个人试试', '腻了'],
   },
   { 
-    type: '会理财的女朋友', effect: 'money',
+    type: '会赚钱的女朋友', effect: 'money',
     breakupReasons: ['你父母给了她500万让她离开你', '你父母给了她1000万让她离开你', '你父母给了她2000万让她离开你', '你父母给了她5000万让她离开你', '你父母给了她一个亿让她离开你'],
   },
 ] as Girlfriend[]
