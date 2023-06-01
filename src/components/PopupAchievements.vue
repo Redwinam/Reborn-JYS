@@ -15,7 +15,7 @@
     </ul>
   </div>
 
-  <p v-if="store.getters('UnlockedAchievementCount') == achievements.length" class="game-maker">制作人：@千啾略</p>
+  <p v-if="UnlockedAchievementCount == achievements.length" class="game-maker">制作人：@千啾略</p>
 </div>
 
 <PopupSub :visible = "showAchievementNotePopup" @close = "showAchievementNotePopup = false" class="achievement-note">
@@ -57,6 +57,8 @@ import { showAchievementNotePopup } from '../components/composables/gameRefs'
 const store = useStore()
 const achievementStates = computed(() => store.state.achievementStates)
 const term = computed(() => store.state.term)
+
+const UnlockedAchievementCount = store.getters.UnlockedAchievementCount
 
 interface AchievementLib {
   name: string; 

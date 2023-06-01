@@ -277,7 +277,7 @@ async function writeFeiSong() {
         store.commit('updateAttribute', { attribute: 'talent', value: 30 });
         store.commit('updateAttribute', { attribute: 'charm', value: 30 });
         store.commit('updateAttribute', { attribute: 'red', value: 300 });
-        toMessage.push('姜云升已经写完了所有废歌，再写废歌就要被打啦！解锁了第' + store.getters("UnlockedAchievementCount") + '个成就【这歌废啦】<small>姜云升才华+30，魅力+30，红色人气+300。</small>');
+        toMessage.push('姜云升已经写完了所有废歌，再写废歌就要被打啦！解锁了第' + store.getters.UnlockedAchievementCount + '个成就【这歌废啦】<small>姜云升才华+30，魅力+30，红色人气+300。</small>');
       }
     }
   } else {

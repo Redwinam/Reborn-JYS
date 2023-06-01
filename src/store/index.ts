@@ -510,7 +510,8 @@ const mutations = {
     }
   },
   loadGameState(state: State, gameData: State) {
-    Object.assign(state, gameData);
+    const { textHistory, ...otherData } = gameData;
+    Object.assign(state, otherData);
   },
 
 }
@@ -573,7 +574,7 @@ const actions = {
     }
 
     if ((state.attributes.popularity.red + state.attributes.popularity.black) > 1200 && state.attributes.popularity.black > 1000) {
-      if ( !store.getters('unlockedAchievement', '我所拥有的人气，又是不是真的？') ) {
+      if ( !store.getters.UnlockedAchievement('我所拥有的人气，又是不是真的？') ) {
         context.commit('unlockAchievement', '我所拥有的人气，又是不是真的？');
         await context.dispatch('typeWriter', '人气>1200，黑人气>1000。解锁成就【我所拥有的人气，又是不是真的？】')
       }
@@ -639,7 +640,7 @@ const getters = {
   attributes(state: State) {
     return state.attributes
   },
-  unlockedAchievement(state: State, achievementName: string) {
+  unlockedAchievement:(state: State) => (achievementName: string) => {
     return state.achievementStates.find((ach) => ach.name === achievementName && ach.unlocked === true)
   },
   UnlockedAchievementCount(state: State) {
