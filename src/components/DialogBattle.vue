@@ -223,7 +223,8 @@ async function battle(battleOption: string) {
       }
       
     } else if (battleOption === "继续参赛！") {
-      await typeWriterFenwei();
+      await store.dispatch('typeWriterPopup', "Wow~~！今天晚上决胜出的八强是——🏆");
+      await new Promise(resolve => setTimeout(resolve, 1000))
       if (isWinning(currentBattleCondition.condition_baqiang)) {
         // updateBattleResult
         store.commit('updateBattleResult', { year: year, result: '八强'})
@@ -237,7 +238,8 @@ async function battle(battleOption: string) {
       }
 
     } else if (battleOption === "进入决赛！") {
-      await typeWriterFenwei();
+      await store.dispatch('typeWriterPopup', "Wow~~！今天晚上获胜的冠军选手是——🏆");
+      await new Promise(resolve => setTimeout(resolve, 1000))
       if (isWinning(currentBattleCondition.condition_zongjuesai)) {
         // updateBattleResult
         store.commit('updateBattleResult', { year: year, result: '冠军'})
