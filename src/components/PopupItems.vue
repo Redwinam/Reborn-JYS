@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="items-container">
     <ul class="inventory">
       <li class="item" v-for="(quantity, name) in inventory" :key="name">
         <div class="item-info">
@@ -30,6 +30,11 @@ const eatPackedFood = (food: string) => {
 
 
 <style scoped>
+
+.items-container {
+  max-height: 75vh;
+  overflow-y: auto;
+}
 .inventory {
   padding: 0;
 }
@@ -62,6 +67,16 @@ const eatPackedFood = (food: string) => {
   margin: 0;
   font-size: 14px;
   font-weight: normal;
+}
+
+.item button {
+  padding: 5px 10px;
+  border-radius: 5px;
+  background: #eaeaea;
+  border: 1px solid #ccc;
+  color: #333;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 </style>

@@ -1,53 +1,53 @@
 <template>
-  <div class="song-container">
-    <div v-for="song in availableSongs" :key="song.title" class="song">
-      <div class="song-meta">
-        <div class="album-cover">
-          <img :src="'/cover-images/' + song.title + '@0.25x.jpg'" :alt="song.title" />
-        </div>
-        <div class="song-info">
-          <h3>{{ song.title }}</h3>
-          <p>
-            <span v-for="(value, key, index) in song.conditions" :key="key">{{ attributeNames[key] }} ≥ {{ value }}<span v-if="index !== Object.keys(song.conditions).length - 1 || song.conditions_ne"> / </span></span>
-            <span v-if="song.conditions_ne" v-for="(value, key, index) in song.conditions_ne" :key="key">{{ attributeNames[key] }} ≤ {{ value }}<span v-if="index !== Object.keys(song.conditions_ne).length - 1"> / </span></span>
-            <span v-if="!Object.keys(song.conditions).length && !song.conditions_ne" class="condition-text">满足——</span>
-            <BatteryWarning :size="16" v-if="song.conditionsText" @click="!isTyping && store.dispatch('typeWriterPopup', song.conditionsText)"></BatteryWarning>
-          </p>
-        </div>
+<div class="song-container">
+  <div v-for="song in availableSongs" :key="song.title" class="song">
+    <div class="song-meta">
+      <div class="album-cover">
+        <img :src="'/cover-images/' + song.title + '@0.25x.jpg'" :alt="song.title" />
       </div>
-      <div class="button-group">
-        <p :class="song.isAvailable ? 'song-available' : ''" @click="store.dispatch('typeWriterPopup', songConditions(song))">{{ !song.isAvailable ? '未达成' : '已达成' }}</p>
-        <button @click="writeSong('demo', song)" :class="song.isAvailable ? 'song-available' : ''" v-if="!songStages[song.title] || songStages[song.title].completedStage === null" :disabled="isTyping"><Edit3 :size="10"></Edit3> DEMO</button>
-        <button @click="writeSong('record', song)" class="song-available" v-if="songStages[song.title] && songStages[song.title].completedStage === 'demo'" :disabled="isTyping"><Mic2 :size="10"></Mic2>  录歌</button>
-        <button @click="writeSong('release', song)" class="song-available" v-if="songStages[song.title] && songStages[song.title].completedStage === 'record'" :disabled="isTyping"><Radio :size="10"></Radio> 上线</button>
-        <button @click="currentSong = song; showReleaseSongModal = true" v-if="songStages[song.title] && songStages[song.title].completedStage === 'release'"><Play :size="10"></Play> 收听</button>
+      <div class="song-info">
+        <h3>{{ song.title }}</h3>
+        <p>
+          <span v-for="(value, key, index) in song.conditions" :key="key">{{ attributeNames[key] }} ≥ {{ value }}<span v-if="index !== Object.keys(song.conditions).length - 1 || song.conditions_ne"> / </span></span>
+          <span v-if="song.conditions_ne" v-for="(value, key, index) in song.conditions_ne" :key="key">{{ attributeNames[key] }} ≤ {{ value }}<span v-if="index !== Object.keys(song.conditions_ne).length - 1"> / </span></span>
+          <span v-if="!Object.keys(song.conditions).length && !song.conditions_ne" class="condition-text">满足——</span>
+          <BatteryWarning :size="16" v-if="song.conditionsText" @click="!isTyping && store.dispatch('typeWriterPopup', song.conditionsText)"></BatteryWarning>
+        </p>
       </div>
     </div>
-    <div class="song">
-      <div class="song-meta">
-        <div class="album-cover">
-          <img :src="'/cover-images/feige.png'" alt="废歌" />
-        </div>
-        <div class="song-info">
-          <h3>废歌</h3>
-          <p><span>姜云升今天要废掉哪首歌呢？</span></p>
-        </div>
-      </div>
-      <div class="button-group">
-        <p class="song-available">加油！</p>
-        <button @click="writeFeiSong()" class="song-available" :disabled="isTyping"><Eraser :size="10"></Eraser> 写废歌</button>
-      </div>
+    <div class="button-group">
+      <p :class="song.isAvailable ? 'song-available' : ''" @click="store.dispatch('typeWriterPopup', songConditions(song))">{{ !song.isAvailable ? '未达成' : '已达成' }}</p>
+      <button @click="writeSong('demo', song)" :class="song.isAvailable ? 'song-available' : ''" v-if="!songStages[song.title] || songStages[song.title].completedStage === null" :disabled="isTyping"><Edit3 :size="10"></Edit3> DEMO</button>
+      <button @click="writeSong('record', song)" class="song-available" v-if="songStages[song.title] && songStages[song.title].completedStage === 'demo'" :disabled="isTyping"><Mic2 :size="10"></Mic2>  录歌</button>
+      <button @click="writeSong('release', song)" class="song-available" v-if="songStages[song.title] && songStages[song.title].completedStage === 'record'" :disabled="isTyping"><Radio :size="10"></Radio> 上线</button>
+      <button @click="currentSong = song; showReleaseSongModal = true" v-if="songStages[song.title] && songStages[song.title].completedStage === 'release'"><Play :size="10"></Play> 收听</button>
     </div>
   </div>
-
-  <Popup title="" :visible="showReleaseSongModal" @close="showReleaseSongModal = false" class="song-modal" v-if="currentSong">
-    <img :src="'/cover-images/' + currentSong.title + '.jpg'" :alt="currentSong.title" class="modal-cover-image" />
-    <p>{{ currentSong.lyrics }}</p>
-    <div class="modal-header">
-      <button @click="currentSong && listenSong(currentSong)"><Play :size="16"></Play> 播放</button>
-      <h3>——《{{ currentSong.title }}》</h3>
+  <div class="song">
+    <div class="song-meta">
+      <div class="album-cover">
+        <img :src="'/cover-images/feige.png'" alt="废歌" />
+      </div>
+      <div class="song-info">
+        <h3>废歌</h3>
+        <p><span>姜云升今天要废掉哪首歌呢？</span></p>
+      </div>
     </div>
-  </Popup>
+    <div class="button-group">
+      <p class="song-available">加油！</p>
+      <button @click="writeFeiSong()" class="song-available" :disabled="isTyping"><Eraser :size="10"></Eraser> 写废歌</button>
+    </div>
+  </div>
+</div>
+
+<Popup title="" :visible="showReleaseSongModal" @close="showReleaseSongModal = false" class="song-modal" v-if="currentSong">
+  <img :src="'/cover-images/' + currentSong.title + '.jpg'" :alt="currentSong.title" class="modal-cover-image" />
+  <p>{{ currentSong.lyrics }}</p>
+  <div class="modal-header">
+    <button @click="currentSong && listenSong(currentSong)"><Play :size="16"></Play> 播放</button>
+    <h3>——《{{ currentSong.title }}》</h3>
+  </div>
+</Popup>
 </template>
 
 <script setup lang="ts">
