@@ -18,15 +18,13 @@
     </div>
   </div>
 
-  <div class="quantity-popup" v-if="showQuantityPopup">
-    
-  </div>
-
   <PopupSub :visible="showQuantityPopup" @close="showQuantityPopup = false">
     <div class="quantity-popup">
-      {{ foodToPack }} <input v-model.number="quantityToBuy" type="number" min="1"> 份
-      <button @click="confirmPurchase">打包</button>
-      <button class="cancel-button" @click="showQuantityPopup = false">取消</button>
+      <div>{{ foodToPack }} <input v-model.number="quantityToBuy" type="number" min="1"> 份</div>
+      <div>
+        <button @click="confirmPurchase">打包</button>
+        <button class="cancel-button" @click="showQuantityPopup = false">取消</button>
+      </div>
     </div>
   </PopupSub>
 </template>
@@ -192,11 +190,13 @@ const confirmPurchase = () => {
   align-items: center;
   width: 100%;
   height: 100%;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .quantity-popup input {
   width: 50px;
-  margin: 10px;
+  margin: 6px 0;
   padding: 6px;
   border: 2px solid #1e2228;
 }
@@ -208,7 +208,7 @@ const confirmPurchase = () => {
   background-color: #1e2228;
   color: #d3c6c4;
   font-size: 0.8rem;
-  margin-left: 12px;
+  white-space: nowrap;
 }
 
 .quantity-popup button.cancel-button {
