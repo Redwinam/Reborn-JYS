@@ -27,13 +27,13 @@ const battleConditions = [{
   condition_haixuan: [{ attribute: 'talent', value: 25 }],
   condition_baqiang:[ { attribute: 'talent', value: 50 }],
   condition_zongjuesai: [{ attribute: 'talent', value: 100 }],
-  condition_note: "才华属性"
+  condition_note: "【才华】属性"
 }, { 
   year: 2013, 
   condition_haixuan: [{ attribute: 'popularity', value: 200 }],
   condition_baqiang:[ { attribute: 'popularity', value: 400 }],
   condition_zongjuesai: [{ attribute: 'popularity', value: 800 }],
-  condition_note: "人气属性"
+  condition_note: "【人气】属性"
 }, 
 
 ] as BattleCondition[]
@@ -57,15 +57,15 @@ const battleReward = async () => {
   const result = store.state.battleResults.find((battleResult: BattleResult) => battleResult.year === year).result
   const reward = [200, 300, 500, 800, 1200, 1600, 2000, 2500, 3000, 4000, 6000, 10000][year - 2012]
   if (result === '海选') {
-    store.commit('updateAttribute', { attribute: 'popularity', value: reward * 0.5 })
+    store.commit('updateAttribute', { attribute: 'red', value: reward * 0.5 })
     store.commit('updateAttribute', { attribute: 'money', value: reward * 10 * 0.5 })
     await store.dispatch('typeWriter', `本届Battle大赛告一段落，恭喜姜云升获得「海选」奖励${reward * 0.5}人气和${reward * 10 * 0.5}金钱！`)
   } else if (result === '八强') {
-    store.commit('updateAttribute', { attribute: 'popularity', value: reward * 0.75 })
+    store.commit('updateAttribute', { attribute: 'red', value: reward * 0.75 })
     store.commit('updateAttribute', { attribute: 'money', value: reward * 10 * 0.75 })
     await store.dispatch('typeWriter', `本届Battle大赛告一段落，恭喜姜云升获得「八强」奖励${reward * 0.75}人气和${reward * 10 * 0.75}金钱！`)
   } else if (result === '冠军') {
-    store.commit('updateAttribute', { attribute: 'popularity', value: reward * 1 })
+    store.commit('updateAttribute', { attribute: 'red', value: reward * 1 })
     store.commit('updateAttribute', { attribute: 'money', value: reward * 10 * 1})
     await store.dispatch('typeWriter', `本届Battle大赛圆满结束，恭喜姜云升获得「冠军」奖励${reward * 1}人气和${reward * 10 * 1}金钱！`)
   }

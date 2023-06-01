@@ -160,8 +160,14 @@ const mutations = {
       } else {
         (state.attributes[attribute] as number) += value
       }
-
-    } else if (attribute === 'red') {
+    } else if (attribute === "popularity") {
+      if (value > 0) {
+        state.attributes.popularity.red += value
+      } else {
+        state.attributes.popularity.black += value
+      }
+    }
+    else if (attribute === 'red') {
       state.attributes.popularity.red += value
     } else if (attribute === 'black') {
       state.attributes.popularity.black += value
