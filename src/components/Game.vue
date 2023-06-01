@@ -265,7 +265,7 @@ function restartGame(resetData: boolean) {
   store.commit('resetGameState', resetData)
 }
 
-onMounted(() => {
+onMounted( async () => {
   const savedGameData = document.cookie
   .split(';')
   .find((cookie) => cookie.trim().startsWith('gameData='));
@@ -274,6 +274,11 @@ onMounted(() => {
   if (savedGameData) {
     const gameData = JSON.parse(savedGameData.split('=')[1]);
     store.commit('loadGameState', gameData);
+
+    await store.dispatch('typeWriter', '【系统】我回来啦！')
+
+  } else {
+    showStartGameDialog.value = true
   }
 
   store.subscribe(() => {
