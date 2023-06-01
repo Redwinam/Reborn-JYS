@@ -511,6 +511,8 @@ const mutations = {
   },
   loadGameState(state: State, gameData: State) {
     const { textHistory, ...otherData } = gameData;
+    console.log(textHistory)
+    console.log(state.textHistory)
     Object.assign(state, otherData);
   },
 

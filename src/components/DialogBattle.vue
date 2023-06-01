@@ -9,7 +9,7 @@
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { BattleResult } from '../store/battle'
-import { Song } from '../store/songs'
+import { songLibrary, Song } from '../store/songs'
 import { showBattleDialog } from '../components/composables/gameRefs'
 
 const store = useStore()
@@ -98,12 +98,13 @@ const isWinning = (conditions: { attribute: string; value: number }[]) => {
         return false
       }
     } else if (condition.attribute === 'freestyle') {
-      if (store.state.attributes.skills.freestyle < condition.value) {
+      console.log(store.state.attributes.skill.freestyle)
+      if (store.state.attributes.skill.freestyle < condition.value) {
         return false
       }
     } else if (condition.attribute === 'song-release') {
       // count songStages[song.title].completedStage === 'release' 的数量
-      const songReleased = store.state.songs.filter((song: Song) => store.state.songStages[song.title].completedStage === 'release').length
+      const songReleased = songLibrary.filter((song: Song) => store.state.songStages[song.title].completedStage === 'release').length
       if (songReleased < condition.value) {
         return false
       }

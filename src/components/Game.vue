@@ -278,9 +278,9 @@ onMounted(() => {
 
   store.subscribe(() => {
     // 存储游戏状态数据到 cookies
-    let toSaveStore = store.state;
-    toSaveStore.textHistory = [];
+    const { textHistory, ...toSaveStore } = store.state;
     document.cookie = `gameData=${JSON.stringify(toSaveStore)}; expires=Thu, 01 Jan 2099 00:00:00 UTC; path=/;`;
+
   });
 
 })

@@ -19,16 +19,12 @@ onMounted(async () => {
   .split(';')
   .find((cookie) => cookie.trim().startsWith('gameData='));
 
-
   if (savedGameData) {
     const gameData = JSON.parse(savedGameData.split('=')[1]);
     store.commit('loadGameState', gameData);
 
-    if (gameData.term > 1 || gameData.round > 1) {
-      showStartGameDialog.value = false
-      restartGame();
-      return
-    }
+    restartGame();
+    return;
     
   }
 
@@ -53,6 +49,7 @@ const startGame = async () => {
 }
 
 const restartGame = async () => {
+  showStartGameDialog.value = false
   await store.dispatch('typeWriter', '【系统】我回来啦！')
   await new Promise(resolve => setTimeout(resolve, 200))
 }

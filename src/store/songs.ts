@@ -15,6 +15,12 @@ export interface Song {
   url: string,
 }
 
+export interface SongStage {
+  completedStage: string | null
+  unlocked: boolean
+}
+
+
 export const songLibrary: Song[] = [{
   title: '浪漫主义',
   conditions: { charm: 999, talent: 999, divine: 999, },
