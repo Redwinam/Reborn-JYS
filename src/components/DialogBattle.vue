@@ -156,6 +156,9 @@ const battleReward = async () => {
     store.commit('updateAttribute', { attribute: 'red', value: reward * 1 })
     store.commit('updateAttribute', { attribute: 'money', value: reward * 10 * 1})
     await store.dispatch('typeWriter', `本届Battle大赛圆满结束，恭喜姜云升获得「冠军」奖励${reward * 1}人气和${reward * 10 * 1}金钱！`)
+  } else if (result === '落选') {
+    store.commit('updateAttribute', { attribute: 'red', value: reward * 0.1 })
+    await store.dispatch('typeWriter', `本届Battle大赛圆满结束，虽然姜云升这次大赛中没有获得名次，但是却让更多人听见了你的说唱，姜云升获得了${reward * 0.1}人气！`)
   }
 }
 
