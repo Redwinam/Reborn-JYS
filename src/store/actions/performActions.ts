@@ -176,13 +176,13 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         const skill = 'gaming';
         for (const level of SkillLevelMapping) {
           if (store.state.attributes.skill.gaming === level.max) {
-            await context.dispatch('typeWriter', [randomGamingIntro + '<small>姜云升体力-10，心情+20。</small>', '姜云升的电竞技能进入了瓶颈期，需要通过考验才能升级！']);
+            await context.dispatch('typeWriter', [randomGamingIntro + '<small>姜云升体力-10，心情+20。</small>', '姜云升的游戏技能进入了瓶颈期，需要填空答对问题，考验你对姜云升的游戏水平了不了解的时候到了，要通过这困难的考验才能升级！']);
             await new Promise(resolve => setTimeout(resolve, 1000));
             await context.dispatch('upgradeSkill', { skill, level: level.level });
             break;
           } else if (store.state.attributes.skill.gaming >= level.min && store.state.attributes.skill.gaming < level.max) {
             context.commit('updateAttribute', { attribute: 'gaming', value: 1 });
-            await context.dispatch('typeWriter', [randomGamingIntro + '<small>姜云升体力-10，心情+20，电竞技能值+1，当前电竞技能等级为【' + store.state.attributes.skill.gamingLevel + '】</small>']);
+            await context.dispatch('typeWriter', [randomGamingIntro + '<small>姜云升体力-10，心情+20，游戏技能值+1，当前游戏技能等级为【' + store.state.attributes.skill.gamingLevel + '】</small>']);
           }
         }
         break;

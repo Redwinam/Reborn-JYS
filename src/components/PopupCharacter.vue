@@ -32,7 +32,7 @@
     <li><strong>人气：</strong>决定你的知名度和影响力，分为红色人气和黑色人气。</li>
     <li><strong>金钱：</strong>决定你的经济实力。</li>
     <li><strong>Freestyle：</strong>决定你的说唱Freestyle实力。</li>
-    <li><strong>电竞：</strong>决定你的电竞实力。</li>
+    <li><strong>游戏：</strong>决定你的游戏实力。</li>
     <li><strong>体力：</strong>决定你的身体素质和耐力。</li>
     <li><strong>心情：</strong>决定你的情绪和心态。</li>
     <li><strong>神性：</strong>决定你的神秘能力和超自然力量。</li>

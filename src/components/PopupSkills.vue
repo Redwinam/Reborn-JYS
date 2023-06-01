@@ -1,11 +1,11 @@
 <template>
   <div class="gaming-skill-container">
     <div class="gaming-skill">
-      <h3>电竞值: {{ attributes.skill.gaming }}</h3>
+      <h3>游戏技能: {{ attributes.skill.gaming }}</h3>
       <h4>等级: {{ attributes.skill.gamingLevel }}</h4>
     </div>
     <div class="gaming-freestyle">
-      <h3>Freestyle值: {{ attributes.skill.freestyle }}</h3>
+      <h3>Freestyle技能: {{ attributes.skill.freestyle }}</h3>
       <h4>等级: {{ attributes.skill.freestyleLevel }}</h4>
     </div>
   </div>
