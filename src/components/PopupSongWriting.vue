@@ -117,6 +117,12 @@ function isSongAvailable(song: Song) {
         return false;
       }
       break;
+
+    case '自白书':
+      if ( Math.floor((store.state.round - 16) / 36) + 16 < 20) {
+        return false;
+      }
+      break;
   }
 
   return true;

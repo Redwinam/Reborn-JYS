@@ -84,9 +84,15 @@ export const songLibrary: Song[] = [{
   effects: { talent: 50, charm: 50, red: + 800, black: + 500, money: + 10000, },
   lyrics: '靠HIPHOP的大树赚钱，老子就是那棵树。',
   url: 'https://music.163.com/#/song?id=1981589542',
-}
-
-]
+}, {
+  title: '自白书',
+  conditions: { talent: 100, },
+  conditionsText: '姜云升长到20岁！',
+  cost: 100,
+  effects: { talent: 50, charm: 50, red: + 800, black: + 500, money: + 100, },
+  lyrics: 'Hey 很高兴和你相见',
+  url: 'https://music.163.com/#/song?id=440090070'
+}]
 
 export interface SongFei {
   name: string
