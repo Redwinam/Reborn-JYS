@@ -91,10 +91,12 @@ const activity = async (activityName: string) => {
       store.commit('updateAttribute', { attribute: 'charm', value: + 30 })
       store.commit('updateAttribute', { attribute: 'money', value: + 10000 })
       store.commit('updateAttribute', { attribute: 'red', value: + 1000 })
-
-      await store.dispatch('typeWriter', [
-        '姜云升用1个月的时间参加一档说唱类综艺节目，又是一个不一样的他。<small>姜云升才华+30，魅力+30，金钱+10000，人气+1000。</small>'
-      ])
+      if (store.state.attributes.skill.freestyleLevel !== "SSS") {
+        store.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
+        await store.dispatch('typeWriter', ['姜云升用1个月的时间参加了一档说唱类综艺节目，又是一个不一样的他。<small>姜云升才华+30，魅力+30，金钱+10000，人气+1000freestyle技能值+1，当前freestyle技能等级为【' + store.state.attributes.skill.freestyleLevel + '】</small>']);
+      } else {
+        await store.dispatch('typeWriter', ['姜云升用1个月的时间参加了一档说唱类综艺节目，又是一个不一样的他。<small>姜云升才华+30，魅力+30，金钱+10000，人气+1000</small>']);
+      }
       store.dispatch('incrementRound');
       store.dispatch('incrementRound');
       store.dispatch('incrementRound');
