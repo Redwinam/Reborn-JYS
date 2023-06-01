@@ -39,6 +39,7 @@ interface State {
 
   unlockedFoods: Food[]
   inventory: Inventory
+  lastSpecialItem: string | null
 
   achievements: Achievement[]
   unlockedAchievementConditions: string[]
@@ -117,6 +118,7 @@ const state: State = {
 
   unlockedFoods: [],
   inventory: {},
+  lastSpecialItem: null,
 
   achievements: achievements,
   unlockedAchievementConditions: [],
@@ -147,7 +149,7 @@ const state: State = {
 }
 
 type UpdateAttributePayload = {
-  attribute: keyof Attributes | "red" | "black" | "gaming" | "freestyle"
+  attribute: keyof Attributes | "red" | "black" | "gaming" | "freestyle" | 'fightLevel'
   value: number
 }
 
@@ -187,7 +189,12 @@ const mutations = {
       const currentLevelMax = currentLevel ? currentLevel.max : 0;
       state.attributes.skill[skill] = Math.min(state.attributes.skill[skill] + value, currentLevelMax);
 
-    } else {
+    } else if (attribute === 'fightLevel') {
+      const currentLevel = state.attributes.fight.level;
+      const currentLevelMax = 81;
+      state.attributes.fight.level = Math.min(currentLevel + value, currentLevelMax);
+    }
+    else {
       (state.attributes[attribute] as number) += value
       
       if (attribute === 'energy') {
@@ -300,7 +307,21 @@ const mutations = {
 
   updateItem(state: State, payload: { itemName: string; quantity: number }) {
     const { itemName, quantity } = payload
+
+    if (itemName === '麦克风大锤' || itemName === '恶魔「S」之链' || itemName === '反穿之甲' || itemName === '虚无之裤' || itemName === '黄色卡车' || itemName === '巴黎之靴') {
+      if (state.inventory[itemName] && state.inventory[itemName].quantity > 0) {
+        state.inventory[itemName].quantity = 1
+      } else {
+        state.inventory[itemName] = {
+          quantity: 1,
+          isFood: false,
+        }
+        state.lastSpecialItem = itemName
+      }
+    }
+
     if (state.inventory[itemName]) {
+      
       state.inventory[itemName].quantity += quantity
     } else {
       state.inventory[itemName] = {
@@ -469,6 +490,7 @@ const mutations = {
       }
 
       state.inventory = {}
+      state.lastSpecialItem = null
       state.songStages = {}
       state.unlockedFeiSongs = []
       state.unlockedVitamins = []

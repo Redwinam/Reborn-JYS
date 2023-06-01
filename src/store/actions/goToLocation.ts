@@ -3,6 +3,7 @@ import { allFoods } from '../eats';
 import { Achievement } from '../achievements';
 import { SkillLevelMapping } from './upgradeSkill';
 import { showFoodPopup, showDrinkPopup, showShopPopup, showBankPopup, showUnsignAgencyDialog, showBattleDialog, showUndergroundPopup, showDaoPopup } from '../../components/composables/gameRefs';
+import store from '..';
 
 export async function goToLocation(context: {
   state: any; commit: Commit, dispatch: Function 
@@ -28,7 +29,7 @@ export async function goToLocation(context: {
         ];
         
         const randomIntro = foodIntros[Math.floor(Math.random() * foodIntros.length)];
-        await context.dispatch('typeWriter', [randomIntro,'解锁新食物：【' + newFood.name + '】', '姜云升的体力上限增加啦！']);
+        await context.dispatch('typeWriter', [randomIntro,'解锁新食物：【' + newFood.name + '】', '<small>姜云升的体力上限增加啦！</small>']);
 
         if (unlockedFoods.length === 18) {
           const hasAchievement = context.state.achievements.find(
@@ -273,6 +274,10 @@ export async function goToLocation(context: {
       break;
 
     case '公司':
+      if (store.state.attributes.energy < 0) {
+        await context.dispatch('typeWriter', "姜云升体力<0，就别去公司上班啦！");
+        return
+      }
       const leftUnsignAgencyMonth = Math.max(Math.ceil((36 - (context.state.round - context.state.signedAgencyRound)) / 3), 0 )
       if (leftUnsignAgencyMonth <= 0) {
         showUnsignAgencyDialog.value = true;
@@ -328,10 +333,17 @@ export async function goToLocation(context: {
       break;
 
     case '上山修行':
+      // 体力<0
+      if (store.state.attributes.energy < 0) {
+        await context.dispatch('typeWriter', "姜云升体力<0，上不动山啦！");
+        return
+      }
+      await new Promise(resolve => setTimeout(resolve, 200));
       showDaoPopup.value = true;
       break;
 
     case 'Battle大赛':
+      await new Promise(resolve => setTimeout(resolve, 200));
       showBattleDialog.value = true;
       break;
   }
