@@ -4,8 +4,8 @@
       <p>{{ drink.name }} <span>¥ {{ drink.cost }}</span></p>
       <span class="drink-note">能量 {{ drink.energy }} | 心情 {{ drink.mood }}</span>
       <div class="select-buttons">
-        <button @click="selectDrink(drink.name, 1)" class="one-button">买一杯</button>
-        <button @click="selectDrink(drink.name, 2)" class="two-button">第二杯半价</button>
+        <button @click="drinkDrink(drink.name, 1)" class="one-button">买一杯</button>
+        <button @click="drinkDrink(drink.name, 2)" class="two-button">第二杯半价</button>
       </div>
     </div>
   </div>
@@ -19,7 +19,7 @@ import { allDrinks } from '../store/eats'
 
 const store = useStore()
 
-const selectDrink = (drink: string, amount: number) => {
+const drinkDrink = (drink: string, amount: number) => {
   store.dispatch('drinkDrink', {drink, amount});
 }
 </script>

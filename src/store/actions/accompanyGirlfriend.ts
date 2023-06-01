@@ -34,6 +34,8 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
           context.commit('unlockAchievement', '一首歌的时间');
           await context.dispatch('typeWriter', ['她是你在酒吧认识的一位姑娘，昏暗的灯光下，一切都很好。你忘了你喝了酒，状态有些不好，一首歌的时间后……第二天她向你提出了分手。姜云升魅力-50，解锁了第' + store.state.achievements.filter((ach) => ach.unlocked).length + '个成就【一首歌的时间】']);
           store.commit('setGirlfriend', null)
+          store.commit('resetAccompanyCount')
+          store.commit('resetRelationRound');
           return;
 
         } else if (store.state.drunk > 0 && existingOneSongAchievement) {
