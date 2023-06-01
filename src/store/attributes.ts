@@ -10,6 +10,14 @@ export interface Popularity {
   black: number
 }
 
+export interface Fight {
+  level: number
+  attack: number
+  defense: number
+  hp: number
+  mp: number
+}
+
 
 export interface Attributes {
   divine: number
@@ -22,6 +30,8 @@ export interface Attributes {
   energy: number
   maxEnergy: number
   mood: number
+  fight: Fight
+  superstition: number
 }
 
 export interface AttributeNames {
@@ -42,5 +52,9 @@ export const attributeNames: AttributeNames = {
   energy: '体力',
   mood: '心情',
   divine: '???',
-
+  attack: '攻击力',
+  defense: '防御力',
+  hp: '生命值',
+  mp: '法力值',
+  superstition: '封建迷信',
 }

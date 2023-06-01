@@ -23,3 +23,4 @@ export const showBuyGoldPopup = ref(false);
 export const showSellGoldPopup = ref(false);
 
 export const showUndergroundPopup = ref(false);
+export const showDaoPopup = ref(false);

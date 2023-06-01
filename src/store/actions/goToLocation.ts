@@ -2,7 +2,7 @@ import { Commit } from 'vuex';
 import { allFoods } from '../eats';
 import { Achievement } from '../achievements';
 import { SkillLevelMapping } from './upgradeSkill';
-import { showFoodPopup, showDrinkPopup, showShopPopup, showBankPopup, showUnsignAgencyDialog, showBattleDialog, showUndergroundPopup } from '../../components/composables/gameRefs';
+import { showFoodPopup, showDrinkPopup, showShopPopup, showBankPopup, showUnsignAgencyDialog, showBattleDialog, showUndergroundPopup, showDaoPopup } from '../../components/composables/gameRefs';
 
 export async function goToLocation(context: {
   state: any; commit: Commit, dispatch: Function 
@@ -325,36 +325,14 @@ export async function goToLocation(context: {
         context.commit('incrementGoToAgencyTimes');
         context.dispatch('incrementRound');
       }
-
-
-
+      break;
 
     case '上山修行':
-      // 姜云升用麦克风大锤敲了敲，对敌人造成了巨大的物理攻击。
-      // 姜云升用麦克风大锤唱了一首歌，对敌人造成了巨大的精神攻击。
+      showDaoPopup.value = true;
       break;
 
     case 'Battle大赛':
       showBattleDialog.value = true;
-      
-      
+      break;
   }
-}  
-
-
-// const handleOptionChosen = (option: string) => {
-//   if (specialEventDetails.value.title === '选择食物') {
-//     const selectedFood = store.state.unlockedFoods.find(food => food.name === option);
-//     if (selectedFood) {
-//       if (store.state.money >= selectedFood.cost) {
-//         store.commit('updateAttribute', { attribute: 'money', value: -selectedFood.cost });
-//         store.commit('updateAttribute', { attribute: 'energy', value: selectedFood.energy });
-//       } else {
-//         // 玩家没有足够的金钱购买食物
-//         store.dispatch('typeWriter', '抱歉，你没有足够的金钱购买' + selectedFood.name);
-//       }
-//     }
-//   } else if (eventDetails.value.title === '姜哥，玩挺好') {
-//     specialEvent({ event: eventDetails.value.title, option });
-//   }
-// };
+}

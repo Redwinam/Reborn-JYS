@@ -5,23 +5,23 @@ import { store } from '../index';
 import { showUpgradeSkillDialog } from '../../components/composables/gameRefs'
 
 export const SkillLevelMapping = [
-    { level: 'D', min: 0, max: 3 },
-    { level: 'C', min: 4, max: 7 },
-    { level: 'B', min: 8, max: 11 },
-    { level: 'A', min: 12, max: 15 },
-    { level: 'S', min: 16, max: 19 },
-    { level: 'SS', min: 20, max: 23 },
-    { level: 'SSS', min: 24, max: 24 },
-  ];
+  { level: 'D', min: 0, max: 3 },
+  { level: 'C', min: 4, max: 7 },
+  { level: 'B', min: 8, max: 11 },
+  { level: 'A', min: 12, max: 15 },
+  { level: 'S', min: 16, max: 19 },
+  { level: 'SS', min: 20, max: 23 },
+  { level: 'SSS', min: 24, max: 24 },
+];
 
 interface QuestionsAndAnswers {
+  [key: string]: {
     [key: string]: {
-        [key: string]: {
-            questions: (string|string[])[];
-            answers: string[];
-            type?: string;
-        };
+      questions: (string|string[])[];
+      answers: string[];
+      type?: string;
     };
+  };
 }
 
 function getQuestionAndAnswer(skill: string, level: string) {

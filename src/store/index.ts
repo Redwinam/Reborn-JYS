@@ -6,7 +6,7 @@ import { songLibrary, Song, SongFei } from './songs'
 import { Vitamin } from './vitamins'
 import { battleResults, BattleResult } from './battle'
 
-import { Attributes, Skill } from '../store/attributes'
+import { Attributes } from '../store/attributes'
 import { girlfriendTypes, Girlfriend } from './girlfriend'
 import { accompanyGirlfriend } from './actions/accompanyGirlfriend';
 import { goToLocation } from './actions/goToLocation';
@@ -94,6 +94,14 @@ const state: State = {
     energy: 100,
     maxEnergy: 100,
     mood: 0,
+    fight: {
+      level: 26,
+      attack: 19,
+      defense: 9,
+      hp: 6,
+      mp: 61,
+    }, 
+    superstition: 0,
   },
   weak: false,
   drunk: 0,
@@ -450,6 +458,14 @@ const mutations = {
         energy: 100,
         maxEnergy: 100,
         mood: 0,
+        fight: {
+          level: 26,
+          attack: 19,
+          defense: 9,
+          hp: 6,
+          mp: 61,
+        },
+        superstition: 0
       }
 
       state.inventory = {}

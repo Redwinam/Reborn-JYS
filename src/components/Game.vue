@@ -86,6 +86,7 @@
 
 <PopupSubGold></PopupSubGold>
 <PopupSubUnderground></PopupSubUnderground>
+<PopupDao></PopupDao>
 
 <Popup title="历史记录" :visible="showTextHistoryPopup" @close="showTextHistoryPopup = false">
   <div class="textHistory" ref="textHistoryContainer">
@@ -150,6 +151,7 @@ import PopupShop from '../components/PopupShop.vue'
 import PopupBank from '../components/PopupBank.vue'
 import PopupSubGold from '../components/PopupSubGold.vue'
 import PopupSubUnderground from '../components/PopupSubUnderground.vue'
+import PopupDao from '../components/PopupDao.vue'
 
 import Dialog from '../components/Dialog.vue'
 import DialogBreakup from '../components/DialogBreakup.vue'
