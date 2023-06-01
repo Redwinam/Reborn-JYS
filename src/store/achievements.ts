@@ -33,5 +33,6 @@ export const achievements: Achievement[] = [
   { name: '我所拥有的人气，又是不是真的？', desc: '都来到我身边，都要我感恩呢。', condition: '人气>1200，其中黑人气>1000时达成', event: false, ending: false, unlocked: false, },
   { name: '时间很长', desc: '指的是姜云升的睡眠时间很长！', condition: '在一轮游戏中累计睡眠时间达到500小时达成', event: false, ending: false, unlocked: false, },
   { name: '拜拜就拜拜', desc: '拜拜就拜拜👋🏻，下一个更乖🥺', condition: '姜云升累计分手或被甩超过10次达成', event: false, ending: false, unlocked: false, },
+  { name: '一首歌的时间', desc: '那天只是状态不好！', condition: '醉酒的时候第一次陪女朋友时达成', event: false, ending: false, unlocked: false, },
   { name: 'Battle King', desc: '中国Underground比赛，老子哪个没拿过冠。', condition: '在每年的Battle大赛中累计拿冠次数>=3次达成', event: false, ending: false, unlocked: false, },
 ]
