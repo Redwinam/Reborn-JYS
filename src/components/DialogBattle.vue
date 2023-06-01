@@ -1,12 +1,12 @@
 <template>
-  <p class="desc">{{ battleText }}</p>
+  <p class="desc" id="textboxPopup"></p>
   <div class="button-container">
-    <button v-for="battleOption in battleOptions" @click="battle(battleOption)">{{battleOption}}</button>
+    <button v-if="showOptions" v-for="battleOption in battleOptions" @click="battle(battleOption)">{{battleOption}}</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { BattleResult } from '../store/battle'
 import { showBattleDialog } from '../components/composables/gameRefs'
@@ -72,11 +72,33 @@ const battleReward = async () => {
 }
 
 const currentBattleCondition = battleConditions.find(battleCondition => battleCondition.year === year)
+const showOptions = ref(false)
 
-const battleText = ref(`欢迎姜云升来到${year}届Battle大赛的现场🎙，给我你的声音🎉和手🤘！这是《重生之我是姜云升》游戏里的第${year-2012+1}场Battle大赛，比赛分为「海选」、「八强之争」和「总决赛」三个阶段，在本年度的九到十二月随时可以报名参加，本届比赛考验选手的${ currentBattleCondition?.condition_note }。请问姜云升要现在就报名参加吗？`)
+const battleToText = ref(`欢迎姜云升来到${year}届Battle大赛的现场🎙，给我你的声音🎉和手🤘！这是《重生之我是姜云升》游戏里的第${year-2012+1}场Battle大赛，比赛分为「海选」、「八强之争」和「总决赛」三个阶段，在本年度的九到十二月随时可以报名参加，本届比赛考验选手的${ currentBattleCondition?.condition_note }。请问姜云升要现在就报名参加吗？`)
 const battleOptions = ref(["报名参加！", "再准备准备", "放弃本次比赛"])
 
-const battle = async (battleOption: string) => {
+onMounted(async () => {
+  if (document.getElementById('textboxPopup')) {
+    await store.dispatch('typeWriterPopup', battleToText.value);
+    await new Promise(resolve => setTimeout(resolve, 200))
+    showOptions.value = true
+  }
+});
+
+async function typeWriterPopup (text: string, options: string[]) {
+  const textboxPopup = document.getElementById('textboxPopup')
+  if (textboxPopup) {
+    textboxPopup.innerHTML = ""
+    showOptions.value = false
+    await store.dispatch('typeWriterPopup', text);
+    await new Promise(resolve => setTimeout(resolve, 600))
+    battleOptions.value = options
+    showOptions.value = true
+  }
+}
+
+
+async function battle(battleOption: string) {
   if (currentBattleCondition) {
     if (battleOption === "报名参加！") {
       // 检查条件
@@ -85,13 +107,14 @@ const battle = async (battleOption: string) => {
         store.commit('updateBattleResult', { year: year, result: '海选'})
         // 根据battleResult统计历史
         const countHistoryHaixuan = store.state.battleResults.filter((battleResult: BattleResult) => battleResult.result === '海选').length
-        battleText.value = `恭喜姜云升成功晋级「八强之争」！这是姜云升第${countHistoryHaixuan}次晋级「八强之争」，是否已经准备好迎接观众们热情的呼声与投票了？请问姜云升要现在就继续参加下一轮的比赛吗？`
-        battleOptions.value = ["继续参赛！", "再准备准备"]
+        typeWriterPopup(`恭喜姜云升成功晋级「八强之争」！这是姜云升第${countHistoryHaixuan}次晋级「八强之争」，是否已经准备好迎接观众们热情的呼声与投票了？请问姜云升要现在就继续参加下一轮的比赛吗？`,
+        ["继续参赛！", "再准备准备"])
+
       } else {
         // 落选
         store.commit('updateBattleResult', { year: year, result: '落选'})
-        battleText.value = `很遗憾，姜云升没有通过「海选」，不得不提前离开这个舞台。但你的生命就是这场Battle，继续你的人生吧！`
-        battleOptions.value = ["离开比赛"]
+        typeWriterPopup(`很遗憾，姜云升没有通过「海选」，不得不提前离开这个舞台。但你的生命就是这场Battle，继续你的人生吧！`,
+        ["离开比赛"])
       }
       
     } else if (battleOption === "继续参赛！") {
@@ -100,11 +123,11 @@ const battle = async (battleOption: string) => {
         store.commit('updateBattleResult', { year: year, result: '八强'})
         // 根据battleResult统计历史
         const countHistoryBaqiang = store.state.battleResults.filter((battleResult: BattleResult) => battleResult.result === '八强').length
-        battleText.value = `恭喜姜云升成功晋级「总决赛」！这是姜云升第${countHistoryBaqiang}次晋级「总决赛」，你的心情是激动还是紧张？请问姜云升要现在就继续参加下一轮的比赛吗？`
-        battleOptions.value = ["进入决赛！", "再准备准备"]
+        typeWriterPopup(`恭喜姜云升成功晋级「总决赛」！这是姜云升第${countHistoryBaqiang}次晋级「总决赛」，激动或紧张，请问姜云升要现在就继续参加下一轮的比赛吗？`,
+        ["进入决赛！", "再准备准备"])
       } else {
-        battleText.value = `很遗憾，姜云升没有通过「八强之争」，不得不提前离开这个舞台。但你的生命就是这场Battle，继续你的人生吧！`
-        battleOptions.value = ["离开比赛"]
+        typeWriterPopup(`很遗憾，姜云升没有通过「八强之争」，不得不提前离开这个舞台。但你的生命就是这场Battle，继续你的人生吧！`,
+        ["离开比赛"])
       }
 
     } else if (battleOption === "进入决赛！") {
@@ -113,11 +136,12 @@ const battle = async (battleOption: string) => {
         store.commit('updateBattleResult', { year: year, result: '冠军'})
         // 根据battleResult统计历史
         const countHistoryZongjuesai = store.state.battleResults.filter((battleResult: BattleResult) => battleResult.result === '冠军').length
-        battleText.value = `恭喜姜云升获得了本届Battle大赛的「总冠军」！这是姜云升第${countHistoryZongjuesai}次获得「总冠军」，他的手被主理人高高举起，台下的欢呼声与喝彩声久久不止。也许时隔多年之后，姜云升会再次回想起这一年、这一刻、这一幕，那时的他会是怎样的心情呢？`
-        battleOptions.value = ["结束比赛"]
+        typeWriterPopup(`恭喜姜云升获得了本届Battle大赛的「总冠军」！这是姜云升第${countHistoryZongjuesai}次获得「总冠军」，他的手被主理人高高举起，台下的欢呼声与喝彩声久久不止。也许时隔多年之后，姜云升会再次回想起这一年、这一刻、这一切，那时的他会是怎样的心情呢？`,
+        ["结束比赛"])
+
       } else {
-        battleText.value = `经过激烈的角逐，姜云升虽然没有获得本届Battle大赛的冠军，但是，姜云升的生命就是这场Battle，继续你的人生吧！`
-        battleOptions.value = ["结束比赛"]
+        typeWriterPopup(`很遗憾，姜云升没有获得本届Battle大赛的「总冠军」，但是，姜云升的生命就是这场Battle，继续你的人生吧！`,
+        ["结束比赛"])
       }
 
     } else if (battleOption === "离开比赛") {
@@ -150,3 +174,22 @@ const battle = async (battleOption: string) => {
   }
 }
 </script>
+
+<style scoped>
+.button-container {
+  margin: 0.25rem auto;
+  gap: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-container button {
+  padding: 0.5rem 1rem;
+  background-color: #f3f3f3;
+  color: #1e2228;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+</style>
