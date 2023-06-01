@@ -128,13 +128,13 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         const skill = 'gaming';
         for (const level of SkillLevelMapping) {
           if (store.state.attributes.skill.gaming === level.max) {
-            await context.dispatch('typeWriter', [randomGamingIntro, '姜云升体力-10，心情+20。姜云升的电竞技能进入了瓶颈期，需要通过考验才能升级！']);
+            await context.dispatch('typeWriter', [randomGamingIntro + '<small>姜云升体力-10，心情+20。</small>', '姜云升的电竞技能进入了瓶颈期，需要通过考验才能升级！']);
             await new Promise(resolve => setTimeout(resolve, 1000));
             await context.dispatch('upgradeSkill', { skill, level: level.level });
             break;
           } else if (store.state.attributes.skill.gaming >= level.min && store.state.attributes.skill.gaming < level.max) {
             context.commit('updateAttribute', { attribute: 'gaming', value: 1 });
-            await context.dispatch('typeWriter', [randomGamingIntro, '姜云升体力-10，心情+20，电竞技能值+1，当前电竞技能等级为【' + store.state.attributes.skill.gamingLevel + '】']);
+            await context.dispatch('typeWriter', [randomGamingIntro + '<small>姜云升体力-10，心情+20，电竞技能值+1，当前电竞技能等级为【' + store.state.attributes.skill.gamingLevel + '】</small>']);
           }
         }
         break;
@@ -181,9 +181,9 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         if (store.state.attributes.popularity.red > 1000) {
           const money = 1000 + Math.floor(Math.random() * 0.666 * store.state.attributes.popularity.red);
           context.commit('updateAttribute', { attribute: 'money', value: money });
-          await context.dispatch('typeWriter', [randomLiveStreamingIntro, '姜云升的人气红值+' + redValue + '，黑值+' + blackValue + '，姜云升直播间人气爆棚，获得了' + money + '元礼物。']);
+          await context.dispatch('typeWriter', [randomLiveStreamingIntro + '<small>姜云升的人气红值+' + redValue + '，黑值+' + blackValue + '，姜云升直播间人气爆棚，获得了' + money + '元礼物。</small>']);
         } else {
-          await context.dispatch('typeWriter', [randomLiveStreamingIntro, '姜云升的人气红值+' + redValue + '，黑值+' + blackValue]);
+          await context.dispatch('typeWriter', [randomLiveStreamingIntro + '<small>姜云升的人气红值+' + redValue + '，黑值+' + blackValue + '</small>']);
         }
 
         const unlockedVitamins = store.state.unlockedVitamins;
@@ -195,7 +195,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
             store.commit('unlockVitamin', vitamin);
 
             context.commit('updateAttribute', { attribute: 'maxEnergy', value: 10 });
-            await context.dispatch('typeWriter', ['粉丝们提醒姜姜要吃维生素片噢，【' + vitamin.type + '】' + vitamin.benefits + '。', '姜云升的体力上限+10！']);
+            await context.dispatch('typeWriter', ['粉丝们提醒姜姜要吃维生素片噢，【' + vitamin.type + '】' + vitamin.benefits + '。<small>姜云升的体力上限+10！</small>']);
 
             if (lockedVitamins.length === 1) {
               const hasAchievement = store.state.achievements.find(
