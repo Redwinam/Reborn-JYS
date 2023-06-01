@@ -15,7 +15,7 @@ const store = useStore()
 const showStartButton = ref(false)
 onMounted(async () => {
   if (document.getElementById('textboxPopup')) {
-    await store.dispatch('typeWriterPopup', ['【系统】这是一个六月的夏天，你睁开了你的大眼睛，你惊呆了！因为你重生了……', '【系统】你重生成了姜云升！', '【系统】你决定——'])
+    await store.dispatch('typeWriterPopup', ['【系统】这是一个六月的夏天，你睁开了你的大眼睛🥺，你惊呆了！因为你重生了……', '【系统】你重生成了姜云升！', '【系统】你决定——'])
     await new Promise(resolve => setTimeout(resolve, 200))
     showStartButton.value = true
   }
