@@ -95,6 +95,11 @@ const confirmPurchase = () => {
   overflow-y: auto;
 }
 
+.shop-container h3 {
+  margin: 0;
+  padding: 0.5rem 0 0.36rem;
+}
+
 .shop-lists {
   display: flex;
   justify-content: space-between;

@@ -71,7 +71,8 @@ async function tour(index: number) {
   if (index === 1 && currentTourCount.value === 13) {
     store.commit('updateItem', { itemName: '粉丝的画', quantity: 1 })
     store.commit('updateItem', { itemName: '粉丝打磨的锤子', quantity: 1 })
-    gift.push('粉丝的画×1', '粉丝打磨的锤子×1')
+    store.commit('updateItem', { itemName: '黄色卡车', quantity: 1 })    
+    gift.push('粉丝的画×1', '粉丝打磨的锤子×1', '黄色卡车×1')
   }
 
   await store.dispatch('typeWriter', 
