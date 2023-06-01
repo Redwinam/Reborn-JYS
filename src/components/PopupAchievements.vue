@@ -51,7 +51,7 @@ import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
 import PopupSub from '../components/PopupSub.vue'
-import { achievements, Achievement } from '../store/achievements'
+import { achievements, Achievement, AchievementState } from '../store/achievements'
 import { showAchievementNotePopup } from '../components/composables/gameRefs'
 
 const store = useStore()
@@ -66,7 +66,7 @@ interface AchievementLib {
   condition?: string;
   event?: boolean;
   ending?: boolean;
-  unlocked: boolean;
+  unlocked?: boolean;
   unlockTerm?: number;
 }
 
@@ -78,11 +78,12 @@ const classifiedAchievements = computed(() => {
   } as Record<string, AchievementLib[]>
 
   achievements.forEach((ach) => {
-    const achievement = ach as AchievementLib    
-    if (achievementStates.value[achievement.name] && achievementStates.value[achievement.name].unlocked) {
+    const achievement = ach as AchievementLib
+    const isAchUnlocked = store.getters.unlockedAchievement(achievement.name);
+    if (isAchUnlocked) {
       achievement.unlocked = true
-      achievement.unlockTerm = achievementStates.value[achievement.name].unlockTerm
-    }
+      achievement.unlockTerm = store.state.achievementStates.find((ach: AchievementState) => ach.name === achievement.name)?.unlockTerm;
+    } 
     if (achievement.ending) {
       groups['结局成就'].push(achievement)
     } else if (achievement.event) {
@@ -101,7 +102,8 @@ const showAchievementConditionPopup = ref(false)
 const currentUnlockConditionAchievement = ref({} as Achievement)
 const showAchievementCondition = (achievement: Achievement) => {
   currentUnlockConditionAchievement.value = achievement
-  if (achievementStates.value[achievement.name].unlocked || store.state.unlockedAchievementConditions.includes(achievement.name)) {
+  const isAchUnlocked = store.getters.unlockedAchievement(achievement.name);
+  if (isAchUnlocked || store.state.unlockedAchievementConditions.includes(achievement.name)) {
     showAchievementConditionPopup.value = true
   } else {
     showUnlockAchievementConditionConfirmPopup.value = true

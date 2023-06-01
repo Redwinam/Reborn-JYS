@@ -29,7 +29,7 @@ export const achievements: Achievement[] = [
   { name: '一肩明月，两袖清风', desc: '何以为富 身无他物 一肩明月 两袖清风', condition: '结局时金钱<=99999时达成', event: false, ending: true },
   { name: '无法定义的结局', desc: '“你们可以像看一个电视剧一样观看我的人生……”', condition: '完成一个周目的游戏未触发其他特殊结局时达成', event: false, ending: true },
 
-  { name: '小学升戴墨镜', desc: '不建议戴', condition: '佩戴墨镜并去剪头发达成', event: false, ending: false },
+  { name: '小学升戴墨镜', desc: '（不建议戴）', condition: '佩戴墨镜并去剪头发达成', event: false, ending: false },
   { name: '小姜的餐厅', desc: '解锁所有食物！', condition: '外出吃点东西概率解锁所有共18种食物达成', event: false, ending: false },
   { name: '这歌废啦', desc: '解锁所有废歌！', condition: '在家写废歌解锁所有共16首废歌达成', event: false, ending: false },
   { name: '谢谢你们提醒我吃维生素', desc: '集齐所有维生素片！', condition: '在家直播概率解锁所有共13种维生素片达成', event: false, ending: false },

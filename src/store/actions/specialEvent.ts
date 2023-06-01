@@ -75,8 +75,8 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
   }
 
   else if (event === '二八分') {
-
-    if (!store.getters.UnlockedAchievement('二八分')) {
+    const isAchUnlocked = store.getters.UnlockedAchievement('二八分')
+    if (!isAchUnlocked) {
       specialEventDetail.value  = {
         title: '二八分',
         intro: '有公司欣赏你的说唱才华，希望与你签约。签约经纪公司你可能会接触到非常多的专业资源，收入与知名度也会有所提升。你选择是否签约？',

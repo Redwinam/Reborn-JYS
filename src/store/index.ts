@@ -576,7 +576,9 @@ const actions = {
     }
 
     if ((state.attributes.popularity.red + state.attributes.popularity.black) > 1200 && state.attributes.popularity.black > 1000) {
-      if ( !store.getters.UnlockedAchievement('我所拥有的人气，又是不是真的？') ) {
+      const isAchUnlocked = store.getters.unlockedAchievement('我所拥有的人气，又是不是真的？');
+
+      if ( !isAchUnlocked ) {
         context.commit('unlockAchievement', '我所拥有的人气，又是不是真的？');
         await context.dispatch('typeWriter', '人气>1200，黑人气>1000。解锁成就【我所拥有的人气，又是不是真的？】')
       }
