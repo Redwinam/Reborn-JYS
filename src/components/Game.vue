@@ -37,6 +37,7 @@
   <button @click="performAction('回家')" class="action-button action-back-home" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
   <button @click="performAction('出去鬼混')" class="action-button action-hang-out" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
   <button @click="performAction('外出')" class="action-button action-go-out" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
+  <button @click="performAction('去上课')" class="action-button action-study" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
   <button @click="performAction('赚钱')" class="action-button action-make-money" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
 
   <button @click="performAction('睡觉休息')" class="action-button action-sleep-rest" v-if="isAtHome" :disabled="isTyping"></button>

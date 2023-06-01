@@ -168,6 +168,7 @@
   position: absolute;
 }
 
+.action-study {  background: url('@/assets/button_study.png') center / contain no-repeat; width: 4.5vh;  height: 12.35vh; top: 26%;  left: 19%; }
 .action-back-home {  background: url('@/assets/button_back-home.png') center / contain no-repeat;  width: 4.65vh;  height: 7.85vh;  top: 57%;  left: 20%; }
 .action-go-out {  background: url('@/assets/button_go-out.png') center / contain no-repeat;  width: 5vh;  height: 12.3vh;  top: 70%;  right: 12%; }
 .action-hang-out {  background: url('@/assets/button_hang-out.png') center / contain no-repeat;  width: 5vh;  height: 13.6vh;  top: 69%;  left: 11%; }

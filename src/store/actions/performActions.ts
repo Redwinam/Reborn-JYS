@@ -40,10 +40,30 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
   } else {
     switch (action) {
 
-      case '上课':
-        context.commit('updateAttribute', { attribute: 'energy', value: -10 });
-        context.commit('updateAttribute', { attribute: 'talent', value: 1 });
-        await context.dispatch('typeWriter', '姜云升参加了一堂课，才华+10。');
+      case '去上课':
+        if (store.state.attributes.mood < -50) {
+          await context.dispatch('typeWriter', '姜云升今天心情不好，不想去上课。');
+          return;
+        }
+        
+        const randomStudyInrtro = [
+          '这是一节英语课，姜云升被发现了上课睡觉，你成为了走廊上罚站的少年。<small>才华+10，心情-20</small>',
+          '这是一节英语课，姜云升学会了几句受益终身的外语。<small>才华+10，心情-20</small>',
+          '这是一节数学课，姜云升被发现了上课睡觉，你成为了走廊上罚站的少年。<small>才华+10，心情-20</small>',
+          '这是一节物理课，姜云升被发现了上课睡觉，你成为了走廊上罚站的少年。<small>才华+10，心情-20</small>',
+          '这是一节作文课，你写你要成为说唱歌手，班主任撕掉了你的试卷。<small>才华+10，心情-20</small>',
+          ['这是一节体育课，姜云升被高年级的同学堵在了角落。<small>体力-20，心情-20</small>', '但你没有服输。<small>最大体力上限+5</small>'],
+        ];
+        const randomStudyIndex = Math.floor(Math.random() * randomStudyInrtro.length);
+        await context.dispatch('typeWriter', randomStudyInrtro[randomStudyIndex]);
+        
+        if (randomStudyIndex === 5) {
+          context.commit('updateAttribute', { attribute: 'energy', value: -20 });
+          context.commit('updateAttribute', { attribute: 'maxEnergy', value: 5 });
+        } else {
+          context.commit('updateAttribute', { attribute: 'talent', value: 10 });
+        }
+        context.commit('updateAttribute', { attribute: 'mood', value: -20 });
         break;
 
       case '赚钱':
