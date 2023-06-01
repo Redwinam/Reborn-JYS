@@ -28,11 +28,11 @@
 </div>
 
 <div class="textbox">
-  <p id="textboxText">今天你打算……</p>
+  <p id="textboxText"> </p>
   <button @click="showTextHistoryPopup = true" class="text-history-button">文本记录</button>
 </div>
 
-<div class="actions">
+<div class="actions" v-if="!showStartGameDialog">
     
   <button @click="performAction('回家')" class="action-button action-back-home" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
   <button @click="performAction('出去鬼混')" class="action-button action-hang-out" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
@@ -96,6 +96,8 @@
 
 </div>
 
+<Dialog :visible="showStartGameDialog" @close="showStartGameDialog = false"><dialog-start-game /></Dialog>
+
 <Dialog :visible="showGameEndDialog" class="game-ended-dialog">
   <h2>{{ gameEnded ? '游戏结束' : '游戏结局'}}</h2>
   <p class="desc" v-if="specialEndingAchievement">{{ specialEndingAchievement.desc }}</p>
@@ -134,7 +136,7 @@
 </template>
 <script setup lang="ts">
 import { useStore } from 'vuex'
-import { computed, ref, nextTick, watch } from 'vue'
+import { computed, ref, nextTick, watch, onMounted } from 'vue'
 import { HelpCircle } from 'lucide-vue-next'
 
 import Popup from '../components/Popup.vue'
@@ -159,12 +161,13 @@ import DialogEvent from '../components/DialogEvent.vue'
 import DialogUpgradeSkill from '../components/DialogUpgradeSkill.vue'
 import DialogUnsignAgency from '../components/DialogUnsignAgency.vue'
 import DialogBattle from '../components/DialogBattle.vue'
+import DialogStartGame from '../components/DialogStartGame.vue'
 
 import { attributeNames } from '../store/attributes'
 
 import { isAtHome, isGoingOut, 
   showBreakupDialog, showEventDialog, showSongWritingDialog, showGameEndDialog, showUnsignAgencyDialog, showBattleDialog, 
-  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, showBankPopup, 
+  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, showBankPopup, showStartGameDialog,
   isTyping
 } from './composables/gameRefs';
 
@@ -213,9 +216,6 @@ const goToLocation = (location: string) => { store.dispatch('goToLocation', loca
 const performAction = (action: string) => { store.dispatch('performAction', action) }
 const typewriter = async (message: string | string[]) => { await store.dispatch('typeWriter', message) }
 
-function loadGame() {
-  typewriter('今天你打算……')
-}
 
 const showCharacterPopup = ref(false)
 const showItemsPopup = ref(false)

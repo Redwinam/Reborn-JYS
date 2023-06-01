@@ -307,7 +307,6 @@ const mutations = {
 
   updateItem(state: State, payload: { itemName: string; quantity: number }) {
     const { itemName, quantity } = payload
-
     if (itemName === '麦克风大锤' || itemName === '恶魔「S」之链' || itemName === '反穿之甲' || itemName === '虚无之裤' || itemName === '黄色卡车' || itemName === '巴黎之靴') {
       if (state.inventory[itemName] && state.inventory[itemName].quantity > 0) {
         state.inventory[itemName].quantity = 1
@@ -318,15 +317,14 @@ const mutations = {
         }
         state.lastSpecialItem = itemName
       }
-    }
-
-    if (state.inventory[itemName]) {
-      
-      state.inventory[itemName].quantity += quantity
     } else {
-      state.inventory[itemName] = {
-        quantity: quantity,
-        isFood: false,
+      if (state.inventory[itemName]) {
+        state.inventory[itemName].quantity += quantity
+      } else {
+        state.inventory[itemName] = {
+          quantity: quantity,
+          isFood: false,
+        }
       }
     }
   },

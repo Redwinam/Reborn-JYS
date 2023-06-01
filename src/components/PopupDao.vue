@@ -10,7 +10,7 @@
     <button class="button-dao" @click="dao('潜心修行')">潜心修行</button>
     <hr>
     <button class="button-dao" :disabled="lastFight().value" @click="dao('上山打怪')">上山打怪</button>
-    <span class="note-fight">当前在第{{ FightLevelMapping[currentFightLevelIndex].level }}层</span>
+    <span class="note-fight">当前在第{{ FightLevelMapping[currentFightLevelIndex].level }}层 | 等级：{{ fight.level }}级</span>
     <hr>
     <p class="note-message">如月之恒，如日之升</p>
     <button class="button_cancel" @click="showDaoPopup = false">返回</button>
@@ -128,9 +128,7 @@ const allSpecialItemEffects = computed(() => {
 const lastSpecialItem = computed(() => store.state.lastSpecialItem)
 
 
-      // 姜云升 等级 26
-    // 攻击力19 防御力 9 
-      // 生命值6 法力值61
+
       
 
 // store.state.daoCount[index] 是否等于13
@@ -190,8 +188,8 @@ async function dao(action: string) {
         if (specialItemCount() > currentFightLevelIndex.value -1 ) {
           store.commit('updateAttribute', { attribute: 'fightLevel', value: 1 })
           store.commit('updateAttribute', { attribute: 'energy', value: -60 })
-          store.commit('updateAttribute', { attribute: 'divine', value: 10 * specialItemCount() })
-            await store.dispatch('typeWriter', `${randomEffect}。<small>姜云升的神秘属性+${10 * specialItemCount()}，等级+1，当前等级为${store.state.attributes.fight.level}级</small>`)
+          store.commit('updateAttribute', { attribute: 'divine', value: 5 * specialItemCount() })
+            await store.dispatch('typeWriter', `${randomEffect}。<small>姜云升的神秘属性+${5 * specialItemCount()}，等级+1，当前等级为${store.state.attributes.fight.level}级</small>`)
             
         } else {
           await store.dispatch('typeWriter', `好奇心驱使姜云升想再进山里看看，可是前方敌人过于强大，生命值为6的姜云升只有收集更多的装备才能前行啦！`)
@@ -209,8 +207,8 @@ async function dao(action: string) {
               let randomEffect = lastSpecialItemEffect[Math.floor(Math.random() * lastSpecialItemEffect.length)];
               console.log
 
-            store.commit('updateAttribute', { attribute: 'divine', value: 100 })
-            await store.dispatch('typeWriter', `姜云升获得了新的道具${lastSpecialItem.value}——${randomEffect}。姜云升探索到了山的第${FightLevelMapping[currentFightLevelIndex.value].level}层。<small>姜云升的神秘属性+100，等级+5，当前等级为${store.state.attributes.fight.level}级</small>`)
+            store.commit('updateAttribute', { attribute: 'divine', value: 90 })
+            await store.dispatch('typeWriter', `姜云升获得了新的道具${lastSpecialItem.value}——${randomEffect}。姜云升探索到了山的第${FightLevelMapping[currentFightLevelIndex.value].level}层。<small>姜云升的神秘属性+90，等级+5，当前等级为${store.state.attributes.fight.level}级</small>`)
           }
             
         } else {

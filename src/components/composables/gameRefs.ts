@@ -24,3 +24,5 @@ export const showSellGoldPopup = ref(false);
 
 export const showUndergroundPopup = ref(false);
 export const showDaoPopup = ref(false);
+
+export const showStartGameDialog = ref(true)
