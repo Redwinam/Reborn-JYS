@@ -537,38 +537,39 @@ const actions = {
 
     if ( state.relationRound > 15) {
       if (Math.random() < 0.52) {
+        await new Promise(resolve => setTimeout(resolve, 600));
         showBreakupDialog.value = true
       }
     }
 
     if ( state.signedAgency && !Math.floor(state.round % 9) ) {
       store.commit('updateAttribute', { attribute: "money", value: 500 * 3 * 5 })
-      context.dispatch('typeWriter', '姜云升签约了公司，到账工资1500元。');
+      await context.dispatch('typeWriter', '姜云升签约了公司，到账工资1500元。');
     }
 
     await new Promise(resolve => setTimeout(resolve, 600));
 
     if ( !Math.floor((state.round - 16) % 36) ) {
-      context.dispatch('specialEvent', '生日快乐');
+      await context.dispatch('specialEvent', '生日快乐');
     }
 
     // 第三年2月的时候，触发继承家业任务
-    if (state.round === 3 * 36 + 4) {
-      context.dispatch('specialEvent', '继承家业');
-    }
+    // if (state.round === 3 * 36 + 4) {
+    //   context.dispatch('specialEvent', '继承家业');
+    // }
 
     if ( !Math.floor((state.round - 25) % 36) ) {
       await context.dispatch('typeWriter', '今年的Battle比赛已经开放，可以在外出时报名参加比赛了。');
     }
 
     if (state.round === 10 * 36 ) {
-      context.dispatch('specialEvent', '十年');
+      await context.dispatch('specialEvent', '十年');
     }
 
     if ((state.attributes.popularity.red + state.attributes.popularity.black) > 1200 && state.attributes.popularity.black > 1000) {
       if (!state.achievements.find((ach) => ach.name === '我所拥有的人气，又是不是真的？' && ach.unlocked === true)) {
         context.commit('unlockAchievement', '我所拥有的人气，又是不是真的？');
-        context.dispatch('typeWriter', '人气>1200，黑人气>1000。解锁成就【我所拥有的人气，又是不是真的？】')
+        await context.dispatch('typeWriter', '人气>1200，黑人气>1000。解锁成就【我所拥有的人气，又是不是真的？】')
       }
     }
 

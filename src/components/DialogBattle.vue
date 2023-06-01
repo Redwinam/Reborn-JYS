@@ -272,7 +272,7 @@ async function battle(battleOption: string) {
 
     } else if (battleOption === "再准备准备") {
       showBattleDialog.value = false
-      store.dispatch('typeWriter', `胜利是留给有准备的人的！记得留意本届Battle大赛的结束时间是在本年度的十二月，如未完成比赛，将无法获得比赛名次奖励。`)
+      store.dispatch('typeWriter', `胜利是留给有准备的人的！记得留意本届Battle大赛的结束时间是在本年度的12月，如未完成比赛，将无法获得比赛名次奖励。`)
       store.dispatch('incrementRound');
 
     } else if (battleOption === "放弃本次比赛") {
