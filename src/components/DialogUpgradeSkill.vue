@@ -97,11 +97,11 @@ p.question {
 }
 
 .gaming .span {
-  vertical-align: text-bottom;
+  vertical-align: middle;
 }
 
 .gaming .question svg {
-  vertical-align: text-bottom;
+  vertical-align: middle;
 }
 
 input {
