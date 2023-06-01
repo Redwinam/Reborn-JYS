@@ -533,7 +533,7 @@ const actions = {
   typeWriterPopup,
   upgradeSkill,
 
-  async incrementRound(context: { commit: Commit; state: State; dispatch: Function }) {
+  async incrementRound(context: { commit: Commit; state: State; dispatch: Function; getters: any }) {
     context.commit('incrementRound');
 
     if (state.drunk > 0) {
@@ -576,7 +576,7 @@ const actions = {
     }
 
     if ((state.attributes.popularity.red + state.attributes.popularity.black) > 1200 && state.attributes.popularity.black > 1000) {
-      const isAchUnlocked = store.getters.unlockedAchievement('我所拥有的人气，又是不是真的？');
+      const isAchUnlocked = context.getters.unlockedAchievement('我所拥有的人气，又是不是真的？');
 
       if ( !isAchUnlocked ) {
         context.commit('unlockAchievement', '我所拥有的人气，又是不是真的？');

@@ -6,7 +6,7 @@ import { showFoodPopup, showDrinkPopup, showShopPopup, showBankPopup, showUnsign
 import store from '..';
 
 export async function goToLocation(context: {
-  state: any; commit: Commit, dispatch: Function 
+  state: any; commit: Commit, dispatch: Function, getters: any
 }, location: string) {
   await context.dispatch('typeWriter', '正在前往：' + location)
   switch (location) {
@@ -32,10 +32,10 @@ export async function goToLocation(context: {
         await context.dispatch('typeWriter', [randomIntro,'解锁新食物：【' + newFood.name + '】', '<small>姜云升的体力上限增加啦！</small>']);
 
         if (unlockedFoods.length === 18) {
-          const isAchUnlocked = store.getters.unlockedAchievement('小姜的餐厅');
+          const isAchUnlocked = context.getters.unlockedAchievement('小姜的餐厅');
           if (!isAchUnlocked) {
             context.commit('unlockAchievement', '小姜的餐厅');
-            await context.dispatch('typeWriter', '姜云升已经解锁了所有的食物，解锁了第' + store.getters.UnlockedAchievementCount + '个成就【小姜的餐厅】。');
+            await context.dispatch('typeWriter', '姜云升已经解锁了所有的食物，解锁了第' + context.getters.UnlockedAchievementCount + '个成就【小姜的餐厅】。');
           }
         }
       }
@@ -241,11 +241,11 @@ export async function goToLocation(context: {
       context.commit('updateAttribute', { attribute: 'money', value: - haircutCost });
       
       const hasSunglasses = context.state.inventory['墨镜'];
-      const isAchUnlocked = store.getters.unlockedAchievement('小学升戴墨镜');
+      const isAchUnlocked = context.getters.unlockedAchievement('小学升戴墨镜');
       if (hasSunglasses && !isAchUnlocked) {
         context.commit('updateAttribute', { attribute: 'charm', value: -100 })
         context.commit('unlockAchievement', '小学升戴墨镜');
-        await context.dispatch('typeWriter', '姜云升戴着墨镜去剪了个新发型，花费100元，魅力-100。解锁了第' + store.getters.UnlockedAchievementCount + '个成就【小学升戴墨镜】（不建议戴）。')
+        await context.dispatch('typeWriter', '姜云升戴着墨镜去剪了个新发型，花费100元，魅力-100。解锁了第' + context.getters.UnlockedAchievementCount + '个成就【小学升戴墨镜】（不建议戴）。')
       } else if (hasSunglasses && isAchUnlocked) {
         await context.dispatch('typeWriter', '姜云升再次戴着墨镜去剪了个新发型，花费100元，魅力-20。')
         context.commit('updateAttribute', { attribute: 'charm', value: -20 })

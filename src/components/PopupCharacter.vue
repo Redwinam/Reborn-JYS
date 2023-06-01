@@ -75,7 +75,7 @@ const gemini = () => {
   store.commit('upgradeSkillLevel', 'freestyle');
   store.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
 
-  for (let i = 0; i < 25; i++) {
+  for (let i = 0; i < 10; i++) {
     store.commit('incrementRound');
   }
 

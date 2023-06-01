@@ -13,7 +13,7 @@ const store = useStore();
 
 export const specialEventDetail = ref<SpecialEventDetail | null>(null);
 
-export async function specialEvent(context: { rootState: any; commit: Commit, dispatch: Function }, event: string) {
+export async function specialEvent(context: { rootState: any; commit: Commit, dispatch: Function, getters: any }, event: string) {
   context.commit('addHappenedEvent', event);
 
   if (event === '姜哥，玩挺好') {
@@ -75,7 +75,7 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
   }
 
   else if (event === '二八分') {
-    const isAchUnlocked = store.getters.UnlockedAchievement('二八分')
+    const isAchUnlocked = context.getters.UnlockedAchievement('二八分')
     if (!isAchUnlocked) {
       specialEventDetail.value  = {
         title: '二八分',
@@ -105,19 +105,22 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
 }  
 
 export async function specialEventOptionChosen(context: {
-  rootState: any; commit: Commit, dispatch: Function 
+  rootState: any; commit: Commit, dispatch: Function, getters: any
 }, payload: { event: string; option: string }) {
   if (payload.event === '姜哥，玩挺好') {
     if (payload.option !== '【除了姜云升，叫什么都行】') {
       context.commit('unlockAchievement', payload.event);
-      await context.dispatch('typeWriter', ['片刻后，外卖小哥咚咚咚敲了敲门，送了外卖，看到你开门就笑了，留下了一句“姜哥，玩挺好”。','恭喜，姜云升解锁了第' + store.getters.UnlockedAchievementCount + '个成就【' + payload.event + '】。']);
+      await context.dispatch('typeWriter', ['片刻后，外卖小哥咚咚咚敲了敲门，送了外卖，看到你开门就笑了，留下了一句“姜哥，玩挺好”。','恭喜，姜云升解锁了第' + context.getters.UnlockedAchievementCount + '个成就【' + payload.event + '】。']);
     }
   }
 
   else if (payload.event === '生日快乐') {
+    console.log('生日快乐1')
     if (context.rootState.round === 16 && context.rootState.term === 1) {
+      console.log('生日快乐2')
+
       context.commit('unlockAchievement', payload.event);
-      await context.dispatch('typeWriter', ['姜云升的生日过得很开心，恭喜，姜云升解锁了第' + store.getters.UnlockedAchievementCount + '个成就【' + payload.event + '】。']);
+      await context.dispatch('typeWriter', ['姜云升的生日过得很开心，恭喜，姜云升解锁了第' + context.getters.UnlockedAchievementCount + '个成就【' + payload.event + '】。']);
       await new Promise(resolve => setTimeout(resolve, 600));
     } else {
       await context.dispatch('typeWriter', ['姜云升的生日过得很开心。']);
@@ -150,7 +153,7 @@ export async function specialEventOptionChosen(context: {
   else if (payload.event === '十年') {
     context.commit('updateAttribute', { attribute: 'divine', value: 10 });
     context.commit('unlockAchievement', payload.event);
-    await context.dispatch('typeWriter', ['「我用十年奋斗，用十年等候，用十年锻炼自己用身体来忍受」', '姜云升的???属性值+10。', '姜云升解锁了第' + store.getters.UnlockedAchievementCount + '个成就【' + payload.event + '】。']);
+    await context.dispatch('typeWriter', ['「我用十年奋斗，用十年等候，用十年锻炼自己用身体来忍受」', '姜云升的???属性值+10。', '姜云升解锁了第' + context.getters.UnlockedAchievementCount + '个成就【' + payload.event + '】。']);
   }
 
   else if (payload.event === '放松，呼吸') {
@@ -165,7 +168,7 @@ export async function specialEventOptionChosen(context: {
 
       await new Promise(resolve => setTimeout(resolve, 1000));
       context.commit('unlockAchievement', payload.event);
-      await context.dispatch('typeWriter', ['姜云升解锁了第' + store.getters.UnlockedAchievementCount + '个成就【放松，呼吸】。']);
+      await context.dispatch('typeWriter', ['姜云升解锁了第' + context.getters.UnlockedAchievementCount + '个成就【放松，呼吸】。']);
     } else {
       await context.dispatch('typeWriter', ['姜云升选择了不去丽江旅游，避免了一次巨大的伤害。']);
     }

@@ -275,7 +275,9 @@ onMounted( async () => {
     const gameData = JSON.parse(savedGameData.split('=')[1]);
     store.commit('loadGameState', gameData);
 
-    await store.dispatch('typeWriter', '【系统】我回来啦！')
+    if (document.getElementById('textboxText')) {
+      await store.dispatch('typeWriter', '【系统】我回来啦！')
+    }
 
   } else {
     showStartGameDialog.value = true
