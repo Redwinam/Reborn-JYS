@@ -9,6 +9,7 @@
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { BattleResult } from '../store/battle'
+import { Song } from '../store/songs'
 import { showBattleDialog } from '../components/composables/gameRefs'
 
 const store = useStore()
@@ -34,9 +35,61 @@ const battleConditions = [{
   condition_baqiang:[ { attribute: 'popularity', value: 400 }],
   condition_zongjuesai: [{ attribute: 'popularity', value: 800 }],
   condition_note: "【人气】属性"
-}, 
-
-] as BattleCondition[]
+}, { 
+  year: 2014, 
+  condition_haixuan: [{ attribute: 'freestyle', value: 4 }],
+  condition_baqiang:[ { attribute: 'freestyle', value: 8 }],
+  condition_zongjuesai: [{ attribute: 'freestyle', value: 12 }],
+  condition_note: "【Freestyle】技能"
+}, { 
+  year: 2015, 
+  condition_haixuan: [{ attribute: 'talent', value: 100 }, { attribute: 'energy', value: 90 }],
+  condition_baqiang:[ { attribute: 'talent', value: 200 }, { attribute: 'energy', value: 100 }],
+  condition_zongjuesai: [{ attribute: 'talent', value: 400 }, { attribute: 'energy', value: 120 }],
+  condition_note: "【才华】属性、【体力】属性"
+}, { 
+  year: 2016, 
+  condition_haixuan: [{ attribute: 'talent', value: 150 }, { attribute: 'charm', value: 150 }],
+  condition_baqiang:[ { attribute: 'talent', value: 250 }, { attribute: 'charm', value: 250 }],
+  condition_zongjuesai: [{ attribute: 'talent', value: 500 }, { attribute: 'charm', value: 500 }],
+  condition_note: "【才华】属性、【魅力】属性"
+}, { 
+  year: 2017, 
+  condition_haixuan: [{ attribute: 'popularity', value: 1000 }],
+  condition_baqiang:[ { attribute: 'popularity', value: 2000 }],
+  condition_zongjuesai: [{ attribute: 'popularity', value: 5000 }],
+  condition_note: "【人气】属性"
+}, { 
+  year: 2018, 
+  condition_haixuan: [{ attribute: 'freestyle', value: 8 }],
+  condition_baqiang:[ { attribute: 'freestyle', value: 12 }],
+  condition_zongjuesai: [{ attribute: 'freestyle', value: 16 }],
+  condition_note: "【Freestyle】技能"
+}, { 
+  year: 2019, 
+  condition_haixuan: [{ attribute: 'song-release', value: 1 }],
+  condition_baqiang:[ { attribute: 'song-release', value: 2 }],
+  condition_zongjuesai: [{ attribute: 'song-release', value: 3 }],
+  condition_note: "发布【歌曲】数量"
+}, { 
+  year: 2020, 
+  condition_haixuan: [{ attribute: 'talent', value: 250 }, { attribute: 'charm', value: 250 }, { attribute: 'divine', value: 100 }],
+  condition_baqiang:[ { attribute: 'talent', value: 500 }, { attribute: 'charm', value: 500 }, { attribute: 'divine', value: 180 }],
+  condition_zongjuesai: [{ attribute: 'talent', value: 900 }, { attribute: 'charm', value: 900 }, { attribute: 'divine', value: 360 }],
+  condition_note: "【才华】属性、【魅力】属性、【???】属性"
+}, { 
+  year: 2021, 
+  condition_haixuan: [{ attribute: 'popularity', value: 5000 }],
+  condition_baqiang:[ { attribute: 'popularity', value: 9000 }],
+  condition_zongjuesai: [{ attribute: 'popularity', value: 18000 }],
+  condition_note: "【人气】属性"
+}, { 
+  year: 2022, 
+  condition_haixuan: [{ attribute: 'freestyle', value: 16 }],
+  condition_baqiang:[ { attribute: 'freestyle', value: 20 }],
+  condition_zongjuesai: [{ attribute: 'freestyle', value: 24 }],
+  condition_note: "【Freestyle】技能"
+}] as BattleCondition[]
 
 const isWinning = (conditions: { attribute: string; value: number }[]) => {
   for (const condition of conditions) {
@@ -44,13 +97,48 @@ const isWinning = (conditions: { attribute: string; value: number }[]) => {
       if (store.state.attributes.popularity.red + store.state.attributes.popularity.black < condition.value) {
         return false
       }
-    } else {
+    } else if (condition.attribute === 'freestyle') {
+      if (store.state.skills.freestyle < condition.value) {
+        return false
+      }
+    } else if (condition.attribute === 'song-release') {
+      // count songStages[song.title].completedStage === 'release' 的数量
+      const songReleased = store.state.songs.filter((song: Song) => store.state.songStages[song.title].completedStage === 'release').length
+      if (songReleased < condition.value) {
+        return false
+      }
+    }
+    else {
       if (store.state.attributes[condition.attribute] < condition.value) {
         return false
       }
     }
   }
   return true
+}
+
+const conditionText = (conditions: { attribute: string; value: number }[]) => {
+  let text = []
+  for (const condition of conditions) {
+    if (condition.attribute === 'popularity') {
+      text.push(`「人气」≥${condition.value} `)
+    } else if (condition.attribute === 'freestyle') {
+      text.push(`「Freestyle」技能≥${condition.value}`)
+    } else if (condition.attribute === 'song-release') {
+      text.push(`发布「歌曲」数量≥${condition.value}`)
+    } else if (condition.attribute === 'divine') {
+      text.push(`「???」属性≥${condition.value}`)
+    } else if (condition.attribute === 'charm') {
+      text.push(`「魅力」属性≥${condition.value}`)
+    } else if (condition.attribute === 'talent') {
+      text.push(`「才华」属性≥${condition.value}`)
+    } else if (condition.attribute === 'energy') {
+      text.push(`「体力」属性≥${condition.value}`)
+    } else {
+      text.push(`「${condition.attribute}」≥${condition.value}`)
+    }
+  }
+  return text
 }
 
 const battleReward = async () => {
@@ -97,11 +185,25 @@ async function typeWriterPopup (text: string, options: string[]) {
   }
 }
 
+async function typeWriterFenwei() {
+  const textboxPopup = document.getElementById('textboxPopup')
+  if (textboxPopup) {
+    textboxPopup.innerHTML = ""
+    showOptions.value = false
+    await store.dispatch('typeWriterPopup', "（比赛现场）");
+    await store.dispatch('typeWriterPopup', "「yoyo~切克闹！」");
+    await store.dispatch('typeWriterPopup', "「🙌！！」");
+    await store.dispatch('typeWriterPopup', "「Motherf**ker!」…「WTF!」……「不好意思』…🎉！");
+    await store.dispatch('typeWriterPopup', "Wow~~！今天晚上获胜的选手是——🏆");
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
+}
 
 async function battle(battleOption: string) {
   if (currentBattleCondition) {
     if (battleOption === "报名参加！") {
       // 检查条件
+      await typeWriterFenwei();
       if (isWinning(currentBattleCondition.condition_haixuan)) {
         // updateBattleResult
         store.commit('updateBattleResult', { year: year, result: '海选'})
@@ -113,11 +215,12 @@ async function battle(battleOption: string) {
       } else {
         // 落选
         store.commit('updateBattleResult', { year: year, result: '落选'})
-        typeWriterPopup(`很遗憾，姜云升没有通过「海选」，不得不提前离开这个舞台。但你的生命就是这场Battle，继续你的人生吧！`,
+        typeWriterPopup(`很遗憾，姜云升没有通过「海选」——你的对手的实力居然达到了惊人的${conditionText(currentBattleCondition.condition_haixuan)}，你的${currentBattleCondition.condition_note}不足以击败对手。你不得不提前离开这个舞台。但你的生命就是这场Battle，继续你的人生吧！`,
         ["离开比赛"])
       }
       
     } else if (battleOption === "继续参赛！") {
+      await typeWriterFenwei();
       if (isWinning(currentBattleCondition.condition_baqiang)) {
         // updateBattleResult
         store.commit('updateBattleResult', { year: year, result: '八强'})
@@ -126,11 +229,12 @@ async function battle(battleOption: string) {
         typeWriterPopup(`恭喜姜云升成功晋级「总决赛」！这是姜云升第${countHistoryBaqiang}次晋级「总决赛」，激动或紧张，请问姜云升要现在就继续参加下一轮的比赛吗？`,
         ["进入决赛！", "再准备准备"])
       } else {
-        typeWriterPopup(`很遗憾，姜云升没有通过「八强之争」，不得不提前离开这个舞台。但你的生命就是这场Battle，继续你的人生吧！`,
+        typeWriterPopup(`很遗憾，姜云升没有通过「八强之争」——你的对手的实力居然达到了惊人的${conditionText(currentBattleCondition.condition_haixuan)}，你的${currentBattleCondition.condition_note}不足以击败对手。你不得不提前离开这个舞台。但你的生命就是这场Battle，继续你的人生吧！`,
         ["离开比赛"])
       }
 
     } else if (battleOption === "进入决赛！") {
+      await typeWriterFenwei();
       if (isWinning(currentBattleCondition.condition_zongjuesai)) {
         // updateBattleResult
         store.commit('updateBattleResult', { year: year, result: '冠军'})
@@ -140,7 +244,7 @@ async function battle(battleOption: string) {
         ["结束比赛"])
 
       } else {
-        typeWriterPopup(`很遗憾，姜云升没有获得本届Battle大赛的「总冠军」，但是，姜云升的生命就是这场Battle，继续你的人生吧！`,
+        typeWriterPopup(`很遗憾，姜云升没有获得本届Battle大赛的「总冠军」——你的对手的实力居然达到了惊人的${conditionText(currentBattleCondition.condition_haixuan)}，你的${currentBattleCondition.condition_note}不足以击败对手，但是，姜云升的生命就是这场Battle，继续你的人生吧！`,
         ["结束比赛"])
       }
 

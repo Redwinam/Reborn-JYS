@@ -6,12 +6,12 @@ import { showUpgradeSkillDialog } from '../../components/composables/gameRefs'
 
 export const SkillLevelMapping = [
     { level: 'D', min: 0, max: 3 },
-    { level: 'C', min: 4, max: 8 },
-    { level: 'B', min: 9, max: 14 },
-    { level: 'A', min: 15, max: 20 },
-    { level: 'S', min: 21, max: 24 },
-    { level: 'SS', min: 25, max: 27 },
-    { level: 'SSS', min: 28, max: 28 },
+    { level: 'C', min: 4, max: 7 },
+    { level: 'B', min: 8, max: 11 },
+    { level: 'A', min: 12, max: 15 },
+    { level: 'S', min: 16, max: 19 },
+    { level: 'SS', min: 20, max: 23 },
+    { level: 'SSS', min: 24, max: 24 },
   ];
 
 interface QuestionsAndAnswers {
