@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, customRef, computed } from 'vue'
 import { useStore } from 'vuex'
 import { BattleResult } from '../store/battle'
 import { songLibrary, Song } from '../store/songs'
@@ -104,7 +104,8 @@ const isWinning = (conditions: { attribute: string; value: number }[]) => {
       }
     } else if (condition.attribute === 'song-release') {
       // count songStages[song.title].completedStage === 'release' 的数量
-      const songReleased = songLibrary.filter((song: Song) => store.state.songStages[song.title].completedStage === 'release').length
+      const songStages = computed(() => store.state.songStages).value
+      const songReleased = songLibrary.filter((song: Song) => songStages[song.title] && songStages[song.title].completedStage === 'release').length
       if (songReleased < condition.value) {
         return false
       }

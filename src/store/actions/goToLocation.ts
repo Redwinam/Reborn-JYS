@@ -54,17 +54,16 @@ export async function goToLocation(context: {
       break;
 
     case 'Underground':
-      
       const skill = 'freestyle';
       for (const level of SkillLevelMapping) {
-        if (context.state.attributes.skill.freestyle === level.max) {
+        if (context.state.attributes.skill.freestyle === level.max && level.max !== 24) {
           await new Promise(resolve => setTimeout(resolve, 200));
           await context.dispatch('typeWriter', ['姜云升的freestyle技能进入了瓶颈期，考验你会不会freestyle的时候到了，需要答对所有歌词才能升级！']);
           await new Promise(resolve => setTimeout(resolve, 600));
           await context.dispatch('upgradeSkill', { skill, level: level.level });
           return;
 
-        } else if (context.state.attributes.skill.freestyle >= level.min && context.state.attributes.skill.freestyle < level.max) {
+        } else if ((context.state.attributes.skill.freestyle >= level.min && context.state.attributes.skill.freestyle < level.max) || (context.state.attributes.skill.freestyle === level.max && level.max === 24)) {
           context.commit('updateAttribute', { attribute: 'energy', value: -25 })
           switch (context.state.undergroundCount) {
             case 0:
@@ -216,7 +215,6 @@ export async function goToLocation(context: {
               showUndergroundPopup.value = true;
               return;
           }
-          
         }
       }
 

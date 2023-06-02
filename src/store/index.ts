@@ -1,4 +1,5 @@
 import { createStore, Store, Commit } from 'vuex'
+import axios from 'axios'
 
 import { Food, eatFood, packFood, eatPackedFood, drinkDrink } from './eats'
 import { achievements, Achievement, AchievementState } from './achievements'
@@ -70,6 +71,8 @@ export interface State {
 
   textHistory: string[],
   player: Player | null
+
+  [key: string]: any;
 }
 
 const state: State = {
@@ -156,7 +159,12 @@ type UpdateAttributePayload = {
 const mutations = {
   incrementRound(state: State) {
     state.round++
-    if (state.round % 36 === 0) { state.year++ }
+    if (state.round % 36 === 0) { 
+      state.year++
+    }
+    if ( state.year > 2027 ) {
+      state.year = 2012
+    }
     state.attributes.money += Math.ceil(state.attributes.gold * 0.06 * 360);
     if (state.girlfriend) { state.relationRound++; }
   },
@@ -165,11 +173,23 @@ const mutations = {
     const { attribute, value } = payload
 
     if (attribute === 'money') {
-      if (state.signedAgency && value > 0) {
+      if (isNaN(state.attributes.money)) {
+        state.attributes.money = 0;
+        state.attributes.gold = 2;
+      } else if (state.signedAgency && value > 0) {
         (state.attributes[attribute] as number) += value * 0.2
       } else {
         (state.attributes[attribute] as number) += value
       }
+
+    } else if (attribute === 'gold') {
+      if (isNaN(state.attributes.gold)) {
+        state.attributes.money = 0;
+        state.attributes.gold = 2;
+      } else {
+        state.attributes.gold += value
+      }
+
     } else if (attribute === "popularity") {
       if (value > 0) {
         state.attributes.popularity.red += value
@@ -277,17 +297,22 @@ const mutations = {
   },
   updateBattleResult(state: State, payload: { year: number; result: "落选" | "海选" | "八强" | "冠军" }) { 
     const { year, result } = payload
-    const index = state.battleResults.findIndex(battleResult => battleResult.year === year)
-    if (index !== -1) {
-      state.battleResults[index].result = result
+    if (Array.isArray(state.battleResults)) {
+      const index = state.battleResults.findIndex(battleResult => battleResult.year === year);
+      if (index !== -1) {
+        state.battleResults[index].result = result;
+      }
     }
   },
   updateBattleEnd(state: State, payload: { year: number; end: boolean }) {
     const { year, end } = payload
-    const index = state.battleResults.findIndex(battleResult => battleResult.year === year)
-    if (index !== -1) {
-      state.battleResults[index].end = end
+    if (Array.isArray(state.battleResults)) {
+      const index = state.battleResults.findIndex(battleResult => battleResult.year === year);
+      if (index !== -1) {
+        state.battleResults[index].end = end;
+      }
     }
+
   },
 
   setSignedAgency(state: State, payload: boolean) {
@@ -440,6 +465,7 @@ const mutations = {
   resetGameState(state: State, resetData: boolean) {
     state.term ++
     state.round = 1
+    state.year = 2012
     state.gameEnded = false
     state.currentEndings = []
     state.specialEndingAchievement = null
@@ -457,7 +483,7 @@ const mutations = {
     state.relationRound = 0
     state.lastBreakupRound = 0
 
-    if (state.undergroundCount > 2) state.undergroundCount = 2
+    state.undergroundCount = 0
     state.battleResults = battleResults
 
     state.signedAgency = false
@@ -539,6 +565,26 @@ const actions = {
 
   async incrementRound(context: { commit: Commit; state: State; dispatch: Function; getters: any }) {
     context.commit('incrementRound');
+
+    if (isNaN(state.attributes.money)) {
+      context.commit('updateAttribute', { attribute: "money", value: 0 })
+      if (isNaN(state.attributes.gold)) {
+        context.commit('updateAttribute', { attribute: "gold", value: 0 })
+      } else if (state.attributes.gold > 1000) {
+          context.commit('updateAttribute', { attribute: "gold", value: 2 - state.attributes.gold })
+      }
+      await context.dispatch('typeWriter', '姜云升实在是太有爱心了，你的钱太多了，你无私地把你的钱全部捐给了有需要的人，甚至不需要任何回报，也不需要任何人知晓！姜云升阴德+10');
+
+    } else if ( state.attributes.money > 1000000000000) {
+      context.commit('updateAttribute', { attribute: "money", value: -state.attributes.money })
+      if (isNaN(state.attributes.gold)) {
+        context.commit('updateAttribute', { attribute: "gold", value: 0 })
+      } else if (state.attributes.gold > 1000) {
+          context.commit('updateAttribute', { attribute: "gold", value: 2 - state.attributes.gold })
+      }
+      await context.dispatch('typeWriter', '姜云升实在是太有爱心了，你的钱太多了，你无私地把你的钱全部捐给了有需要的人，甚至不需要任何回报，也不需要任何人知晓！姜云升阴德+10');
+    }
+
 
     if (state.drunk > 0) {
       store.commit('updateDrunk', -1);

@@ -111,6 +111,7 @@ const savePlay = () => {
   }).then(res => {
     const player: Player = res.data
     store.commit('setPlayer', player)
+    errorMessage.value = ""
   }).catch(error => {
     if (error.response && error.response.data && error.response.data.error) {
       errorMessage.value = error.response.data.error
@@ -126,6 +127,7 @@ const linkPlayer = () => {
   }).then(res => {
     const player: Player = res.data
     store.commit('setPlayer', player)
+    errorMessage.value = ""
   }).catch(error => {
     if (error.response && error.response.data && error.response.data.error) {
       errorMessage.value = error.response.data.error
@@ -140,6 +142,7 @@ const loadPlay = (id: number) => {
     const play: Play = res.data
     store.commit('loadGameState', play.state)
     showSLPopup.value = false
+    errorMessage.value = ""
   }).catch(error => {
     if (error.response && error.response.data && error.response.data.error) {
       errorMessage.value = error.response.data.error
@@ -160,6 +163,7 @@ const deletePlay = (id: number) => {
   }).then(res => {
     const player: Player = res.data
     store.commit('setPlayer', player)
+    errorMessage.value = ""
   }).catch(error => {
     if (error.response && error.response.data && error.response.data.error) {
       errorMessage.value = error.response.data.error
@@ -241,9 +245,16 @@ const timeToString = (time: string) => {
   margin-left: 0.4rem;
   border: 1px solid #ccc;
   background-color: #fafafa;
+  color: #1e2228
 
 }
 
+.player .focus-button-container .button-group {
+  display: flex;
+  align-items: center;
+  margin: 0.25rem auto;
+  justify-content: center;
+}
 
 .player-meta {
   display: flex;
@@ -269,6 +280,8 @@ const timeToString = (time: string) => {
 
 .play-list {
   margin: 0.5rem 0;
+  max-height: 50vh;
+  overflow-y: auto;
 }
 
 .play-item {
