@@ -48,6 +48,7 @@
     <span class="player-info"><input v-model="link_player.anonymous" type="checkbox"> <HelpCircle :size="12" @click="showAnonymousNote = true"></HelpCircle></span>
   </div>
   <div><button class="sl" @click="linkPlayer()">确认</button></div>
+<p class="note-message error">{{ errorMessage }}</p>
   <span v-if="showAnonymousNote" class="note-message">（希望匿名的玩家昵称不会在后续的星星墙上显示）</span>
   <p class="note-message dashed">说明：游戏线上存档会保存在游戏服务器。第一次连接时请记得输入的昵称和邮箱，因为在再次连接时需要昵称与邮箱匹配才可以连接成功。PS：不支持特别冒犯的昵称，系统会定期删你存档。</p>
 </Popup>
@@ -66,6 +67,7 @@
     <span class="player-info"><input v-model="update_player.anonymous" type="checkbox"></span>
   </div>
   <div><button class="sl" @click="updatePlayer()">确认</button></div>
+<p class="note-message error">{{ errorMessage }}</p>
   <span v-if="showAnonymousNote" class="note-message">（希望匿名的玩家昵称不会在后续的星星墙上显示）</span>
   <p class="note-message dashed">说明：游戏线上存档会保存在游戏服务器。第一次连接时请记得输入的昵称和邮箱，因为在再次连接时需要昵称与邮箱匹配才可以连接成功。PS：不支持特别冒犯的昵称，系统会定期删你存档。</p>
 </Popup>

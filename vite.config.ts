@@ -26,7 +26,7 @@ export default defineConfig({
   server: {
     proxy: {
         '/api': {
-            target: 'http://47.100.10.147:9146',   //实际请求地址
+            target: 'http://47.100.10.147:9147',   //实际请求地址
             changeOrigin: true,
             rewrite: (path) => path.replace(/^\/api/, '')
         },
