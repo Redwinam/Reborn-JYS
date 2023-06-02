@@ -102,7 +102,7 @@ const savePlay = () => {
     player_id: player.value.id,
     state: toSaveStore,
   }
-  axios.post('/api/plays', {
+  axios.post('https://api.jys-wtf.proxy.mayq.me/plays', {
     player: {
       name: player.value.name,
       email: player.value.email,
@@ -121,7 +121,7 @@ const savePlay = () => {
 }
 
 const linkPlayer = () => {
-  axios.post('/api/players', {
+  axios.post('https://api.jys-wtf.proxy.mayq.me/players', {
     player: link_player.value,
   }).then(res => {
     const player: Player = res.data
@@ -136,7 +136,7 @@ const linkPlayer = () => {
 }
 
 const loadPlay = (id: number) => {
-  axios.get(`/api/plays/${id}`).then(res => {
+  axios.get(`https://api.jys-wtf.proxy.mayq.me/plays/${id}`).then(res => {
     const play: Play = res.data
     store.commit('loadGameState', play.state)
     showSLPopup.value = false
@@ -150,7 +150,7 @@ const loadPlay = (id: number) => {
 }
 
 const deletePlay = (id: number) => {
-  axios.delete(`/api/plays/${id}`, {
+  axios.delete(`https://api.jys-wtf.proxy.mayq.me/plays/${id}`, {
     data: {
       player: {
         id: player.value.id,
@@ -178,7 +178,7 @@ const update_player = ref({
 })
 
 const updatePlayer = () => {
-  axios.put('/api/players/' + player.value.id, {
+  axios.put('https://api.jys-wtf.proxy.mayq.me/players/' + player.value.id, {
     player: {
       id: player.value.id,
       name: update_player.value.name,
@@ -200,7 +200,7 @@ const updatePlayer = () => {
 }
 
 const refreshPlayer = () => {
-  axios.put('/api/players/' + player.value.id, {
+  axios.put('https://api.jys-wtf.proxy.mayq.me/players/' + player.value.id, {
     player: {
       id: player.value.id,
       email: player.value.email,
