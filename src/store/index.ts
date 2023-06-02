@@ -20,7 +20,6 @@ import { typeWriter, typeWriterPopup } from './actions/typeWriter';
 import { Play, Player } from './player'
 
 import { showBreakupDialog, showGameEndDialog } from '../components/composables/gameRefs';
-import { Unlock } from 'lucide-vue-next'
 
 export interface State {
   term: number
@@ -159,10 +158,8 @@ type UpdateAttributePayload = {
 const mutations = {
   incrementRound(state: State) {
     state.round++
-    if (state.round % 36 === 0) { 
-      state.year++
-    }
-    if ( state.year > 2027 ) {
+    state.year = Math.floor((state.round - 1) / 36) + 2012
+    if ( state.year > 2023 ) {
       state.year = 2012
     }
     state.attributes.money += Math.ceil(state.attributes.gold * 0.06 * 360);
@@ -295,7 +292,7 @@ const mutations = {
   incrementTourCount(state: State, index: number) {
     state.tourCount[index] ++
   },
-  updateBattleResult(state: State, payload: { year: number; result: "落选" | "海选" | "八强" | "冠军" }) { 
+  updateBattleResult(state: State, payload: { year: number; result: "落选" | "海选" | "八强" | "冠军" | "Masta" }) { 
     const { year, result } = payload
     if (Array.isArray(state.battleResults)) {
       const index = state.battleResults.findIndex(battleResult => battleResult.year === year);
@@ -568,23 +565,17 @@ const actions = {
 
     if (isNaN(state.attributes.money)) {
       context.commit('updateAttribute', { attribute: "money", value: 0 })
-      if (isNaN(state.attributes.gold)) {
-        context.commit('updateAttribute', { attribute: "gold", value: 0 })
-      } else if (state.attributes.gold > 1000) {
-          context.commit('updateAttribute', { attribute: "gold", value: 2 - state.attributes.gold })
-      }
-      await context.dispatch('typeWriter', '姜云升实在是太有爱心了，你的钱太多了，你无私地把你的钱全部捐给了有需要的人，甚至不需要任何回报，也不需要任何人知晓！姜云升阴德+10');
+      await context.dispatch('typeWriter', '姜云升实在是太有爱心了，你的钱太多了，你无私地把你的钱全部捐给了有需要的人，甚至不需要任何回报，也不需要任何人知晓！姜云升行善积德+10');
 
     } else if ( state.attributes.money > 1000000000000) {
       context.commit('updateAttribute', { attribute: "money", value: -state.attributes.money })
       if (isNaN(state.attributes.gold)) {
         context.commit('updateAttribute', { attribute: "gold", value: 0 })
-      } else if (state.attributes.gold > 1000) {
+      } else if (state.attributes.gold > 2) {
           context.commit('updateAttribute', { attribute: "gold", value: 2 - state.attributes.gold })
       }
-      await context.dispatch('typeWriter', '姜云升实在是太有爱心了，你的钱太多了，你无私地把你的钱全部捐给了有需要的人，甚至不需要任何回报，也不需要任何人知晓！姜云升阴德+10');
+      await context.dispatch('typeWriter', '姜云升实在是太有爱心了，你的钱太多了，你无私地把你的钱全部捐给了有需要的人，甚至不需要任何回报，也不需要任何人知晓！姜云升行善积德+10');
     }
-
 
     if (state.drunk > 0) {
       store.commit('updateDrunk', -1);

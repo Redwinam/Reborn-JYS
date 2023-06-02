@@ -1,6 +1,6 @@
 export interface BattleResult {
   year: number, 
-  result: '落选' | '海选' | '八强' | '冠军' | null,
+  result: '落选' | '海选' | '八强' | '冠军' | 'Masta' | null,
   end?: boolean,
 }
 

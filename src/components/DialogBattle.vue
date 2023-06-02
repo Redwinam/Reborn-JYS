@@ -168,6 +168,9 @@ const currentBattleCondition = battleConditions.find(battleCondition => battleCo
 const showOptions = ref(false)
 
 const battleToText = ref(`欢迎姜云升来到${year}届Battle大赛的现场🎙，给我你的声音🎉和手🤘！这是《重生之我是姜云升》游戏里的第${year-2012+1}场Battle大赛，比赛分为「海选」、「八强之争」和「总决赛」三个阶段，在本年度的九到十二月随时可以报名参加，本届比赛考验选手的${ currentBattleCondition?.condition_note }。请问姜云升要现在就报名参加吗？`)
+if (year == 2023) {
+  battleToText.value = `欢迎姜云升来到${year}届Battle大赛的现场🎙，给我你的声音🎉和手🤘！这是《重生之我是姜云升》游戏里的第${year-2012+1}场Battle大赛，比赛分为「海选」、「八强之争」和「总决赛」三个阶段，在本年度的九到十二月随时可以报名参加。请问姜云升要现在就报名参加吗？`
+}
 const battleOptions = ref(["报名参加！", "再准备准备", "放弃本次比赛"])
 
 onMounted(async () => {
@@ -206,7 +209,7 @@ async function typeWriterFenwei() {
 
 async function battle(battleOption: string) {
   if (currentBattleCondition) {
-    if (battleOption === "报名参加！") {
+    if (battleOption === "报名参加！" && year != 2023) {
       // 检查条件
       await typeWriterFenwei();
       if (isWinning(currentBattleCondition.condition_haixuan)) {
@@ -238,7 +241,6 @@ async function battle(battleOption: string) {
         typeWriterPopup(`很遗憾，姜云升没有通过「八强之争」——你的对手的实力居然达到了惊人的${conditionText(currentBattleCondition.condition_baqiang)}，你的${currentBattleCondition.condition_note}不足以击败对手。你不得不提前离开这个舞台。但你的生命就是这场Battle，继续你的人生吧！`,
         ["离开比赛"])
       }
-
     } else if (battleOption === "进入决赛！") {
       await store.dispatch('typeWriterPopup', "Wow~~！今天晚上获胜的冠军选手是——🏆");
       await new Promise(resolve => setTimeout(resolve, 1000))
@@ -282,6 +284,14 @@ async function battle(battleOption: string) {
       showBattleDialog.value = false
       store.dispatch('typeWriter', `姜云升放弃了本次Battle大赛。无妨，生命是一场更宏大的Battle，继续你的人生吧！`)
     }
+
+  } else if (year === 2023 && battleOption === "报名参加！") {
+    store.commit('updateBattleResult', { year: year, result: 'Masta'})
+    store.commit('updateBattleEnd', { year: year, end: true })
+    showBattleDialog.value = false
+
+    store.dispatch('typeWriter', `姜云升没有参加本届Battle大赛。这一年，你不再是选手，你是地下8英里的Masta、Rapper顾问。你在新人Rapper面前侃侃而谈自己的Battle经历，和身边这些年来一起走过来的或敌或友们碰瓶喝啤酒，你享受着属于你的舞台上的聚光灯，你享受着属于你的舞台下的欢呼声……12年前的姜云升是否曾经在这里看见过自己今天的未来呢。你也陪他一起走到这一步了么？`)
+  } else {
   }
 }
 </script>
