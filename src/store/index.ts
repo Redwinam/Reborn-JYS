@@ -16,10 +16,12 @@ import { purchaseItem, Inventory } from './actions/purchaseItem';
 import { upgradeSkill, SkillLevelMapping } from './actions/upgradeSkill';
 import { typeWriter, typeWriterPopup } from './actions/typeWriter';
 
+import { Play, Player } from './player'
+
 import { showBreakupDialog, showGameEndDialog } from '../components/composables/gameRefs';
 import { Unlock } from 'lucide-vue-next'
 
-interface State {
+export interface State {
   term: number
   year: number
   round: number
@@ -67,7 +69,7 @@ interface State {
   specialEndingAchievement: { name: string; desc: string } | null
 
   textHistory: string[],
-
+  player: Player | null
 }
 
 const state: State = {
@@ -142,6 +144,7 @@ const state: State = {
   specialEndingAchievement: null,
 
   textHistory: [],
+  player: null
 
 }
 
@@ -511,11 +514,12 @@ const mutations = {
   },
   loadGameState(state: State, gameData: State) {
     const { textHistory, ...otherData } = gameData;
-    console.log(textHistory)
-    console.log(state.textHistory)
     Object.assign(state, otherData);
   },
-
+  setPlayer(state: State, player: Player) {
+    state.player = player;
+  }
+  
 }
 
 const actions = {

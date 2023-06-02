@@ -94,7 +94,6 @@ async function sellGold() {
   transition: background-color 0.3s ease;
 }
 
-
 .span_sellGold {
   font-size: 0.8rem;
   cursor: pointer;

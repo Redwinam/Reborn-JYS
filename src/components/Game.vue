@@ -44,6 +44,7 @@
   <button @click="performAction('开直播')" class="action-button action-onlive" v-if="isAtHome" :disabled="isTyping"></button>
   <button @click="performAction('打游戏')" class="action-button action-gaming" v-if="isAtHome" :disabled="isTyping"></button>
   <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome" :disabled="isTyping"></button>
+  <button @click="showSLPopup = true" class="action-button action-save-data" v-if="isAtHome" :disabled="isTyping"><Armchair size="16"></Armchair>存档</button>
   <button v-if="isAtHome" @click="isAtHome = false; typewriter('今天你打算……')" class="action-button action-back" :disabled="isTyping"></button>
 
   <button @click="goToLocation('去吃点东西')" class="action-button action-eat" v-if="isGoingOut" :disabled="isTyping"></button>
@@ -98,6 +99,8 @@
 
 <Dialog :visible="showStartGameDialog" @close="showStartGameDialog = false"><dialog-start-game /></Dialog>
 
+<PopupSL></PopupSL>
+
 <Dialog :visible="showGameEndDialog" class="game-ended-dialog">
   <h2>{{ gameEnded ? '游戏结束' : '游戏结局'}}</h2>
   <p class="desc" v-if="specialEndingAchievement">{{ specialEndingAchievement.desc }}</p>
@@ -137,7 +140,7 @@
 <script setup lang="ts">
 import { useStore } from 'vuex'
 import { computed, ref, nextTick, watch, onMounted } from 'vue'
-import { HelpCircle } from 'lucide-vue-next'
+import { Armchair, HelpCircle } from 'lucide-vue-next'
 
 import Popup from '../components/Popup.vue'
 
@@ -155,6 +158,8 @@ import PopupSubGold from '../components/PopupSubGold.vue'
 import PopupSubUnderground from '../components/PopupSubUnderground.vue'
 import PopupDao from '../components/PopupDao.vue'
 
+import PopupSL from '../components/PopupSL.vue'
+
 import Dialog from '../components/Dialog.vue'
 import DialogBreakup from '../components/DialogBreakup.vue'
 import DialogEvent from '../components/DialogEvent.vue'
@@ -167,7 +172,7 @@ import { attributeNames } from '../store/attributes'
 
 import { isAtHome, isGoingOut, 
   showBreakupDialog, showEventDialog, showSongWritingDialog, showGameEndDialog, showUnsignAgencyDialog, showBattleDialog, 
-  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, showBankPopup, showStartGameDialog,
+  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, showBankPopup, showStartGameDialog, showSLPopup, 
   isTyping
 } from './composables/gameRefs';
 
