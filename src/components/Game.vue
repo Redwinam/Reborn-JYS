@@ -44,7 +44,7 @@
   <button @click="performAction('开直播')" class="action-button action-onlive" v-if="isAtHome" :disabled="isTyping"></button>
   <button @click="performAction('打游戏')" class="action-button action-gaming" v-if="isAtHome" :disabled="isTyping"></button>
   <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome" :disabled="isTyping"></button>
-  <button @click="showSLPopup = true" class="action-button action-save-data" v-if="isAtHome" :disabled="isTyping"><Armchair size="16"></Armchair>存档</button>
+  <button @click="showSLPopup = true" class="action-button action-sl" v-if="isAtHome" :disabled="isTyping"></button>
   <button v-if="isAtHome" @click="isAtHome = false; typewriter('今天你打算……')" class="action-button action-back" :disabled="isTyping"></button>
 
   <button @click="goToLocation('去吃点东西')" class="action-button action-eat" v-if="isGoingOut" :disabled="isTyping"></button>

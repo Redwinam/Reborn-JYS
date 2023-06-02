@@ -176,7 +176,7 @@
 .action-onlive {  background: url('@/assets/button_onlive.png') center / contain no-repeat;  width: 4.8vh;  height: 12vh;  top: 56%;  left: 17%; }
 .action-gaming {  background: url('@/assets/button_gaming.png') center / contain no-repeat;  width: 4.5vh;  height: 13.35vh;  top: 63%;  left: 46%; }
 .action-write-song {  background: url('@/assets/button_write-song.png') center / contain no-repeat;  width: 4.6vh;  height: 11.1vh;  top: 64%;  left: 36%; }
-.action-save-data { width: 4.6vh;  height: 11.1vh;  top: 64%;  left: 66%; }
+.action-sl { background: url('@/assets/button_sl.png') center / contain no-repeat; width: 4.4vh;  height: 4.7vh;  top: 62.5%;  left: 76%; background-color: #cfc3bd; border: 2px solid #1e2228; padding: 0; text-align: center;}
 .action-make-money {  background: url('@/assets/button_make-money.png') center / contain no-repeat;  width: 4.7vh;  height: 9.65vh;  top: 60%;  left: 36%; }
 .action-back {  background: url('@/assets/button_back.png') center / contain no-repeat;  width: 4.4vh;  height: 10.5vh;  top: 68%;  left: 76%; }
 .going-out-back { top: 68%;  left: auto;  right: 5%; }
