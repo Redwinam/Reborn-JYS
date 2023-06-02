@@ -22,5 +22,14 @@ export default defineConfig({
         return 'https://cdn.jys-wtf.proxy.mayq.me/' + filename
       }
     }
+  },
+  server: {
+    proxy: {
+        '/api': {
+            target: 'http://47.100.10.147:9146',   //实际请求地址
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/api/, '')
+        },
+    }
   }
 })
