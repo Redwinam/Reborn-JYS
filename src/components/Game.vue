@@ -7,17 +7,18 @@
   <div class="going-out-background" v-if="isGoingOut"></div>
 </transition>
 
-<div v-if="!gameEnded">
+<div>
 
-<div class="header-container">
+<div class="header-container" v-if="!gameEnded">
   <div class="header" :class="currentTerm>1 ? 'header-l' :''">
     <div class="round-info">
-      {{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }} · 轮次: {{ currentRound }} / {{ totalRounds }}<template v-if="currentTerm>1"> · 第{{ arabicToChinese(currentTerm) }}周目</template>
+      <span v-if="!showStartGameDialog">{{ currentYear }}年{{ currentMonth }}月{{ currentPeriod }} · 轮次: {{ currentRound }} / {{ totalRounds }}<template v-if="currentTerm>1"> · 第{{ arabicToChinese(currentTerm) }}周目</template></span>
+      <span v-else>1996年6月1日 · 轮次: {{ currentRound }} / {{ totalRounds }}</span>
     </div>
   </div>
 </div>
 
-<div class="attributes" :class="isGoingOut? 'going-out-attributes' : ''">
+<div v-if="!showStartGameDialog && !gameEnded" class="attributes" :class="isGoingOut? 'going-out-attributes' : ''">
 
   <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span><span class="attribute-number">红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</span></div>
   <div><span class="attribute-name">{{ attributeNames['money'] }}</span><span class="attribute-number">{{ attributes['money'] }} <span v-if="signedAgency" @click="!isTyping && checkUnsignAgency()"><br>（二八分<small>{{ leftUnsignAgencyMonth }}/12月</small>）</span></span></div>
@@ -27,12 +28,12 @@
   <div v-if="drunk>0"><span class="attribute-name weak">醉酒</span><span class="attribute-number">× {{drunk}}</span></div>
 </div>
 
-<div class="textbox">
+<div class="textbox" :class="showStartGameDialog ? 'hide' : ''">
   <p id="textboxText"> </p>
   <button @click="showTextHistoryPopup = true" class="text-history-button">文本记录</button>
 </div>
 
-<div class="actions" v-if="!showStartGameDialog">
+<div class="actions" v-if="!showStartGameDialog && !gameEnded">
     
   <button @click="performAction('回家')" class="action-button action-back-home" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
   <button @click="performAction('出去鬼混')" class="action-button action-hang-out" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
@@ -269,16 +270,19 @@ function arabicToChinese(number: number): string {
   }
 }
 
-function restartGame(resetData: boolean) {
+async function restartGame(resetData: boolean) {
   showGameEndDialog.value = false
   store.commit('resetGameState', resetData)
+  if (document.getElementById('textboxText')) {
+    await store.dispatch('typeWriter', '【系统】你重生啦！');
+  }
 }
 
 onMounted( async () => {
+
   const savedGameData = document.cookie
   .split(';')
   .find((cookie) => cookie.trim().startsWith('gameData='));
-
 
   if (savedGameData) {
     const splitData = savedGameData.split('=');
@@ -287,7 +291,9 @@ onMounted( async () => {
       try {
         const gameData = JSON.parse(gameDataStr);
         store.commit('loadGameState', gameData);
-        if (document.getElementById('textboxText')) {
+        if (store.state.term == 1 && store.state.round == 1) {
+          showStartGameDialog.value = true
+        } else if (document.getElementById('textboxText')) {
           await store.dispatch('typeWriter', '【系统】你回来啦！');
         }
       } catch (e) {

@@ -9,6 +9,7 @@
 
 <div class="focus-button-container">
   <button class="sl" @click="savePlay()">存档！！</button>
+  
   <div class="button-group">
     <RefreshCw :size="16" @click="refreshPlayer()"></RefreshCw>
     <button class="button-load" @click="showUpdatePlayerPopup = true">设置</button>
@@ -48,8 +49,11 @@
     <span class="player-info"><input v-model="link_player.anonymous" type="checkbox"> <HelpCircle :size="12" @click="showAnonymousNote = true"></HelpCircle></span>
   </div>
   <div><button class="sl" @click="linkPlayer()">确认</button></div>
-<p class="note-message error">{{ errorMessage }}</p>
-  <span v-if="showAnonymousNote" class="note-message">（希望匿名的玩家昵称不会在后续的星星墙上显示）</span>
+  <div class="reset-game-button-container">
+    <button @click="showResetGameConfirmPopup = true" class="reset-game-button">（恢复初始）</button>
+  </div>
+  <p class="note-message error">{{ errorMessage }}</p>
+    <span v-if="showAnonymousNote" class="note-message">（希望匿名的玩家昵称不会在后续的星星墙上显示）</span>
   <p class="note-message dashed">说明：游戏线上存档会保存在游戏服务器。第一次连接时请记得输入的昵称和邮箱，因为在再次连接时需要昵称与邮箱匹配才可以连接成功。PS：不支持特别冒犯的昵称，系统会定期删你存档。</p>
 </Popup>
 
@@ -64,13 +68,25 @@
   </div>
   <div class="player-meta">
     <span class="player-label">匿名</span>
-    <span class="player-info"><input v-model="update_player.anonymous" type="checkbox"></span>
+    <span class="player-info"><input v-model="link_player.anonymous" type="checkbox"> <HelpCircle :size="12" @click="showAnonymousNote = true"></HelpCircle></span>
   </div>
   <div><button class="sl" @click="updatePlayer()">确认</button></div>
+  <div class="reset-game-button-container">
+    <button @click="showResetGameConfirmPopup = true" class="reset-game-button">（恢复初始）</button>
+  </div>
 <p class="note-message error">{{ errorMessage }}</p>
   <span v-if="showAnonymousNote" class="note-message">（希望匿名的玩家昵称不会在后续的星星墙上显示）</span>
   <p class="note-message dashed">说明：游戏线上存档会保存在游戏服务器。第一次连接时请记得输入的昵称和邮箱，因为在再次连接时需要昵称与邮箱匹配才可以连接成功。PS：不支持特别冒犯的昵称，系统会定期删你存档。</p>
 </Popup>
+
+<PopupSub :visible = "showResetGameConfirmPopup" @close = "showResetGameConfirmPopup = false" class="game-ended-dialog">
+  <h3>确认恢复初始游戏数据吗？</h3>
+  <p class="desc">恢复初始会将当前游戏进度恢复到初始状态，不保留任何数据（不影响线上存档），请问确认操作嘛？</p>
+  <div class="game-ended-dialog-buttons">
+    <button class="restart-game-button" @click="resetGame()">确认</button>
+    <button class="confirm-button cancel-button" @click="showResetGameConfirmPopup = false">取消</button>
+  </div>
+</PopupSub>
 
 </template>
 
@@ -80,8 +96,9 @@ import { useStore } from 'vuex'
 import axios from 'axios'
 
 import Popup from '../components/Popup.vue'
+import PopupSub from '../components/PopupSub.vue'
 import { Play, Player } from '../store/player'
-import { showSLPopup } from './composables/gameRefs';
+import { isAtHome, showSLPopup } from './composables/gameRefs';
 import { HelpCircle, RefreshCw } from 'lucide-vue-next'
 
 const store = useStore()
@@ -232,6 +249,15 @@ const timeToString = (time: string) => {
   return new Intl.DateTimeFormat('default', {dateStyle: 'long', timeStyle: 'medium'}).format(date)
 }
 
+const showResetGameConfirmPopup = ref(false)
+
+const resetGame = () => {
+  store.commit('resetGame')
+  isAtHome.value = false
+  showResetGameConfirmPopup.value = false
+  showSLPopup.value = false
+}
+
 </script>
 
 <style scoped>
@@ -322,6 +348,24 @@ const timeToString = (time: string) => {
   margin: 0.25rem auto 0.4rem;
 }
 
+.reset-game-button-container {
+  margin: 0 auto 0.5rem;
+  gap: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reset-game-button-container button.reset-game-button {
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  /* border: none; */
+  background: none;
+  color: #1e2228;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin: 0 auto;
+  width: 72%;
+}
 
 .note-message {
   font-size: 0.7rem;
@@ -341,6 +385,67 @@ const timeToString = (time: string) => {
 .last {
   margin-bottom: 0.9rem;
 
+}
+
+
+.game-ended-dialog .desc {
+  font-size: 0.9rem;
+  margin: 1rem auto;
+  width: 90%;
+  color: #4c4d55;
+}
+
+.game-ended-dialog button.restart-game-button {
+  padding: 0.4rem 1rem;
+  border: 2px solid #1e2228;
+  background-color: #9d4842;
+  color: #fff;
+}
+
+.game-ended-dialog button.continue-game-button {
+  background-color: #262525;
+  color: #fff;
+  padding: 0.4rem 1rem;
+  border: 2px solid #1e2228;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.game-ended-dialog .reset-data-button-container {
+  margin: 0.25rem auto;
+  gap: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-ended-dialog button.reset-data-button {
+  padding: 0.2rem;
+  font-size: 0.8rem;
+  border: none;
+  background: none;
+  color: #1e2228;
+}
+
+
+.game-ended-dialog button.confirm-button {
+  margin-bottom: 0.75rem;
+}
+
+.game-ended-dialog button.cancel-button {
+  margin-left: 0.75rem;
+}
+
+.game-ended-dialog .achievement {
+  font-size: 0.8rem;
+  margin: 1rem 0 0;
+  color: #4c4d55;
+}
+
+.game-ended-dialog .hint {
+  font-size: 0.7rem;
+  color: #666;
+  margin: 0.2rem 0 1rem;
 }
 
 </style>

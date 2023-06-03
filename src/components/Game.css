@@ -143,6 +143,10 @@
   z-index: 1;
 }
 
+.textbox.hide {
+  visibility: hidden;
+}
+
 .textbox p {
   margin: 1rem;
 }

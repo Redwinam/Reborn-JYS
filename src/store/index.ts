@@ -19,7 +19,7 @@ import { typeWriter, typeWriterPopup } from './actions/typeWriter';
 
 import { Play, Player } from './player'
 
-import { showBreakupDialog, showGameEndDialog } from '../components/composables/gameRefs';
+import { showBreakupDialog, showGameEndDialog, showStartGameDialog } from '../components/composables/gameRefs';
 
 export interface State {
   term: number
@@ -74,7 +74,7 @@ export interface State {
   [key: string]: any;
 }
 
-const state: State = {
+const state: State =  {
   term: 1,
   year: 2012,
   round: 1,
@@ -541,6 +541,71 @@ const mutations = {
   },
   setPlayer(state: State, player: Player) {
     state.player = player;
+  },
+  resetGame(state: State) {
+    state.term = 1;
+    state.round = 1;
+    state.year = 2012;
+    state.attributes = {
+      divine: 0,
+      talent: 0,
+      charm: 0,
+      popularity: {
+        red: 0,
+        black: 0,
+      },
+      money: 0,
+      gold: 0,
+      skill: {
+        freestyle: 0,
+        gaming: 0,
+        gamingLevel: 'D',
+        freestyleLevel: 'D'
+      },
+      energy: 100,
+      maxEnergy: 100,
+      mood: 0,
+      fight: {
+        level: 26,
+        attack: 19,
+        defense: 9,
+        hp: 6,
+        mp: 61,
+      },
+      superstition: 0
+    };
+    state.weak = false;
+    state.drunk = 0;
+    state.sleepHours = 0;
+    state.flirtCount = 0;
+    state.girlfriend = null;
+    state.accompanyCount = 0;
+    state.relationRound = 0;
+    state.lastBreakupRound = 0;
+    state.seamlessRelation = false;
+    state.unlockedFoods = [];
+    state.inventory = {};
+    state.lastSpecialItem = null;
+    state.achievementStates = [];
+    state.unlockedAchievementConditions = [];
+    state.battleResults = battleResults;
+    state.undergroundCount = 0;
+    state.tourCount = [0, 0];
+    state.signedAgency = false;
+    state.signedAgencyRound = null;
+    state.goToAgencyTimes = 0;
+    state.songs = [];
+    state.songStages = {};
+    state.unlockedFeiSongs = [];
+    state.unlockedVitamins = [];
+    state.happenedEvents = [];
+    state.gameEnded = false;
+    state.currentEndings = [];
+    state.specialEndingAchievement = null;
+    state.textHistory = [];
+    state.player = null;
+    
+    showStartGameDialog.value = true;
   }
   
 }
