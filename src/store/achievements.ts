@@ -39,4 +39,6 @@ export const achievements: Achievement[] = [
   { name: '拜拜就拜拜', desc: '拜拜就拜拜👋🏻，下一个更乖🥺', condition: '姜云升累计分手或被甩超过10次达成', event: false, ending: false },
   { name: '一首歌的时间', desc: '那天只是状态不好！', condition: '醉酒的时候第一次陪女朋友时达成', event: false, ending: false },
   { name: 'Battle King', desc: '中国Underground比赛，老子哪个没拿过冠。', condition: '在每年的Battle大赛中累计拿冠次数>=3次达成', event: false, ending: false },
+  { name: '第九百步', desc: '完成「第九百步」十三城巡演', condition: '在结束Underground剧情后完成「第九百步」十三城巡演', event: false, ending: false },
+  { name: '命運ONLINE', desc: '完成「命運ONLINE」十三城巡演', condition: '在结束Underground剧情、「第九百步」巡演后完成「命運ONLINE」十三城巡演', event: false, ending: false },
 ]

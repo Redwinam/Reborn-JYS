@@ -263,7 +263,7 @@ async function writeFeiSong() {
   const unlockedFeiSongs = store.state.unlockedFeiSongs;
   const lockedFeiSongs = songFeiLibrary.filter((songFei: { name: any; }) => !unlockedFeiSongs.find((uf: { name: any; }) => uf.name === songFei.name));
   let toMessage = [];
-  if (lockedFeiSongs.length > 0) {
+  if (lockedFeiSongs.length > 1) {
     let songFei = lockedFeiSongs[Math.floor(Math.random() * lockedFeiSongs.length)];
     if (unlockedFeiSongs.length === 0) {
       songFei = lockedFeiSongs[2];
@@ -271,17 +271,17 @@ async function writeFeiSong() {
     store.commit('unlockFeiSong', songFei);
     toMessage.push(`姜云升写了半首《${songFei.name}》，「${songFei.lyrics}」然后说这歌废啦。`);
 
-    if(lockedFeiSongs.length === 1) {      
-      if (!store.getters('unlockedAchievement', '这歌废啦')) {
-        store.commit('unlockAchievement', '这歌废啦');
-        store.commit('updateAttribute', { attribute: 'talent', value: 30 });
-        store.commit('updateAttribute', { attribute: 'charm', value: 30 });
-        store.commit('updateAttribute', { attribute: 'red', value: 300 });
-        toMessage.push('姜云升已经写完了所有废歌，再写废歌就要被打啦！解锁了第' + store.getters.UnlockedAchievementCount + '个成就【这歌废啦】<small>姜云升才华+30，魅力+30，红色人气+300。</small>');
-      }
-    }
   } else {
-    toMessage.push("姜云升废歌 + 1！")
+    const isAchUnlocked = store.getters('unlockedAchievement', '这歌废啦');
+    if (!isAchUnlocked) {
+      store.commit('unlockAchievement', '这歌废啦');
+      store.commit('updateAttribute', { attribute: 'talent', value: 30 });
+      store.commit('updateAttribute', { attribute: 'charm', value: 30 });
+      store.commit('updateAttribute', { attribute: 'red', value: 300 });
+      toMessage.push('姜云升已经写完了所有废歌，再写废歌就要被打啦！解锁了第' + store.getters.UnlockedAchievementCount + '个成就【这歌废啦】<small>姜云升才华+30，魅力+30，红色人气+300。</small>');
+    } else {
+      toMessage.push("姜云升废歌 + 1！")
+    }
   }
 
   store.commit('updateAttribute', { attribute: 'energy', value: -100 });

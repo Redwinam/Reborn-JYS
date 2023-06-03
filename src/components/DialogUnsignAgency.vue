@@ -1,7 +1,7 @@
 <template>
 <p>{{ unsignAgencyText }}</p>
 <div class="button-container">
-  <button v-for="unsignAgencyOption in unsignAgencyOptions" @click="handleUnsignAgency(unsignAgencyOption)">unsignAgencyOption</button>
+  <button v-for="unsignAgencyOption in unsignAgencyOptions" @click="handleUnsignAgency(unsignAgencyOption)">{{unsignAgencyOption}}</button>
 </div>
 </template>
 

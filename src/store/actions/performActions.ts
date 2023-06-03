@@ -229,21 +229,18 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
       const unlockedVitamins = store.state.unlockedVitamins;
       const lockedVitamins = vitaminLibrary.filter((vitamin: { type: any; }) => !unlockedVitamins.find((uv: { type: any; }) => uv.type === vitamin.type));
 
-      if (Math.random() < 0.5) {
-        if (lockedVitamins.length > 0) {
+      if (lockedVitamins.length > 0) {
+        if (Math.random() < 0.3) {
           let vitamin = lockedVitamins[Math.floor(Math.random() * lockedVitamins.length)];
           store.commit('unlockVitamin', vitamin);
-
           context.commit('updateAttribute', { attribute: 'maxEnergy', value: 10 });
           await context.dispatch('typeWriter', ['粉丝们提醒姜姜要吃维生素片噢，【' + vitamin.type + '】' + vitamin.benefits + '。<small>姜云升的体力上限+10！</small>']);
-
-          if (lockedVitamins.length === 1) {
-            const isAchUnlocked = context.getters.unlockedAchievement('谢谢你们提醒我吃维生素')
-            if (!isAchUnlocked) {
-              store.commit('unlockAchievement', '谢谢你们提醒我吃维生素');
-              await context.dispatch('typeWriter', ['姜云升集齐了所有维生素片，解锁了第' + context.getters.UnlockedAchievementCount + '个成就【谢谢你们提醒我吃维生素】！']);
-            }
-          }
+        }
+      } else {
+        const isAchUnlocked = context.getters.unlockedAchievement('谢谢你们提醒我吃维生素')
+        if (!isAchUnlocked) {
+          store.commit('unlockAchievement', '谢谢你们提醒我吃维生素');
+          await context.dispatch('typeWriter', ['姜云升集齐了所有维生素片，解锁了第' + context.getters.UnlockedAchievementCount + '个成就【谢谢你们提醒我吃维生素】！']);
         }
       }
 
