@@ -2,8 +2,8 @@ import { createStore, Store, Commit } from 'vuex'
 import axios from 'axios'
 
 import { Food, eatFood, packFood, eatPackedFood, drinkDrink } from './eats'
-import { achievements, Achievement, AchievementState } from './achievements'
-import { songLibrary, Song, SongFei } from './songs'
+import { achievements, AchievementState } from './achievements'
+import { SongFei } from './songs'
 import { Vitamin } from './vitamins'
 import { battleResults, BattleResult } from './battle'
 

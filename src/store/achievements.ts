@@ -25,11 +25,11 @@ export const achievements: Achievement[] = [
   { name: '我不做人啦', desc: '姜云升心情过于EMO，结束游戏！', condition: '心情<-100结束游戏触发我不做人啦结局达成', event: true, ending: true },
   { name: '汤臣亿品', desc: '“有两套更好，一套给我，一套给我妈……”', condition: '金钱>=100,000,000一个亿时达成', event: false, ending: true },
   { name: '刀削面子', desc: '恭喜姜云升真是好福气啊！', condition: '累计女友数量>=12，发布歌曲《浪漫主义》、《浪漫主义2.0》，且当前还没有被女朋友分手。', event: false, ending: true },
-  { name: '皮卡皮卡', desc: '解锁皮卡丘结局，和皮卡丘快乐地生活在一起！', condition: '拥有皮卡丘玩偶数量>=521个，发布歌曲《皮卡丘》，且没有发布歌曲《3》！', event: false, ending: true },
+  { name: '皮卡皮卡', desc: '「世界上有皮卡丘哒」！', condition: '拥有皮卡丘玩偶数量>=521个，发布歌曲《皮卡丘》，且没有发布歌曲《3》！', event: false, ending: true },
   { name: '一肩明月，两袖清风', desc: '何以为富 身无他物 一肩明月 两袖清风', condition: '结局时金钱<=99999时达成', event: false, ending: true },
   { name: '无法定义的结局', desc: '“你们可以像看一个电视剧一样观看我的人生……”', condition: '完成一个周目的游戏未触发其他特殊结局时达成', event: false, ending: true },
 
-  { name: '小学升戴墨镜', desc: '（不建议戴）', condition: '佩戴墨镜并去剪头发达成', event: false, ending: false },
+  { name: '小学升戴墨镜', desc: '（不建议戴😎）', condition: '佩戴墨镜😎并去剪头发达成', event: false, ending: false },
   { name: '小姜的餐厅', desc: '解锁所有食物！', condition: '外出吃点东西概率解锁所有共18种食物达成', event: false, ending: false },
   { name: '这歌废啦', desc: '解锁所有废歌！', condition: '在家写废歌完成16首废歌后达成', event: false, ending: false },
   { name: '谢谢你们提醒我吃维生素', desc: '集齐所有维生素片！', condition: '在家直播概率解锁所有共13种维生素片达成', event: false, ending: false },

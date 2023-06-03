@@ -13,6 +13,7 @@ export interface Song {
   }
   lyrics: string
   url: string,
+  isFeat?: boolean
 }
 
 export interface SongStage {
@@ -83,6 +84,23 @@ export const songLibrary: Song[] = [{
   effects: { talent: 50, mood: + 100, red: + 1200, black: + 1000, },
   lyrics: '我抬着头当Rapper，也不低头当个IDOL。',
   url: 'https://music.163.com/#/song?id=1315952365',
+}, {
+  title: '皮卡丘',
+  conditions: { talent: 200, charm: 200, },
+  conditionsText: '收集皮卡丘玩偶数量≥520个！',
+  cost: 1000,
+  effects: { talent: 20, charm: 20, mood: 20 },
+  lyrics: '去吧 皮卡丘 尽情去 释放你的闪电 (╯‵□′)╯︵┴─┴',
+  url: 'https://music.163.com/#/song?id=1311635966'
+}, {
+  title: '3',
+  conditions: { talent: 100, charm: 250, },
+  conditions_ne: { mood: 3 },
+  cost: 1000,
+  effects: { talent: 20, charm: 20, mood: -20 },
+  lyrics: '她走以后，我甚至都忘了皮卡丘😞。',
+  url: 'https://music.163.com/#/song?id=1973015445', 
+  isFeat: true,
 }, {
   title: '流量Rapper',
   conditions: { popularity: 3000, },

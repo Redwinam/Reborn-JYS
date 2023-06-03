@@ -6,7 +6,7 @@
         <img :src="'/cover-images/' + song.title + '@0.25x.jpg'" :alt="song.title" />
       </div>
       <div class="song-info">
-        <h3>{{ song.title }}</h3>
+        <h3>{{ song.title }}<span v-if="song.isFeat" class="feat">feat.</span></h3>
         <p>
           <span v-for="(value, key, index) in song.conditions" :key="key">{{ attributeNames[key] }} ≥ {{ value }}<span v-if="index !== Object.keys(song.conditions).length - 1 || song.conditions_ne"> / </span></span>
           <span v-if="song.conditions_ne" v-for="(value, key, index) in song.conditions_ne" :key="key">{{ attributeNames[key] }} ≤ {{ value }}<span v-if="index !== Object.keys(song.conditions_ne).length - 1"> / </span></span>
@@ -114,6 +114,12 @@ function isSongAvailable(song: Song) {
 
     case 'SAD':
       if (store.state.attributes['心情'] > -20 || !store.state.seamlessRelation || store.state.girlfriend) {
+        return false;
+      }
+      break;
+
+    case '皮卡丘':
+      if (!store.state.inventory['皮卡丘玩偶']|| store.state.inventory['皮卡丘玩偶'].quantity < 520) {
         return false;
       }
       break;
@@ -263,7 +269,7 @@ async function writeFeiSong() {
   const unlockedFeiSongs = store.state.unlockedFeiSongs;
   const lockedFeiSongs = songFeiLibrary.filter((songFei: { name: any; }) => !unlockedFeiSongs.find((uf: { name: any; }) => uf.name === songFei.name));
   let toMessage = [];
-  if (lockedFeiSongs.length > 1) {
+  if (lockedFeiSongs && lockedFeiSongs.length > 1) {
     let songFei = lockedFeiSongs[Math.floor(Math.random() * lockedFeiSongs.length)];
     if (unlockedFeiSongs.length === 0) {
       songFei = lockedFeiSongs[2];
@@ -272,7 +278,7 @@ async function writeFeiSong() {
     toMessage.push(`姜云升写了半首《${songFei.name}》，「${songFei.lyrics}」然后说这歌废啦。`);
 
   } else {
-    const isAchUnlocked = store.getters('unlockedAchievement', '这歌废啦');
+    const isAchUnlocked = store.getters.unlockedAchievement('这歌废啦');
     if (!isAchUnlocked) {
       store.commit('unlockAchievement', '这歌废啦');
       store.commit('updateAttribute', { attribute: 'talent', value: 30 });
@@ -343,10 +349,25 @@ function listenSong(song: Song) {
 .song .song-info h3 {
   margin: 0;
   font-size: 0.9rem;
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  flex-wrap: wrap;
+
+}
+
+.song .feat {
+  font-size: 0.7rem;
+  color: #666;
+  margin: 0.25rem 0;
+  border-radius: 0.1rem;
+  padding: 0.25rem 0.4rem;
+  line-height: 0.7rem;
+  background-color: #eee;
 }
 
 .song .song-info p {
-  margin: 0.25rem 0;
+  margin: 0.15rem 0;
   font-size: 0.7rem;
   display: flex;
   gap: 5px;
@@ -387,7 +408,6 @@ function listenSong(song: Song) {
   color: #d3c6c4;
 }
 
-
 .song-modal {
   display: flex;
   align-items: center;
@@ -402,8 +422,6 @@ function listenSong(song: Song) {
   background-color: rgba(0,0,0,0.4);
 }
 
-
-
 .song-modal .modal-header {
   display: flex;
   justify-content: space-between;
@@ -416,6 +434,7 @@ function listenSong(song: Song) {
   justify-content: center;
   gap: 4px
 }
+
 .modal-cover-image {
   width: 100%;
   height: auto;

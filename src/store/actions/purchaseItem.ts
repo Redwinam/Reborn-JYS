@@ -69,7 +69,7 @@ export async function purchaseItem(context: { commit: Commit, dispatch: Function
 
   if (itemName === '墨镜') {
     context.commit('updateAttribute', { attribute: 'charm', value: -10  * quantity });
-    toMessage.value = "，魅力-"+10 * quantity+"。"
+    toMessage.value = "😎，魅力-"+10 * quantity+"。"
   }
 
   await context.dispatch('typeWriterPopup', `姜云升购买了${quantity}${item.quantifier ? item.quantifier : '件'}"${itemName}"${toMessage.value}`);

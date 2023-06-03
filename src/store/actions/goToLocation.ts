@@ -243,9 +243,9 @@ export async function goToLocation(context: {
       if (hasSunglasses && !isAchUnlocked) {
         context.commit('updateAttribute', { attribute: 'charm', value: -100 })
         context.commit('unlockAchievement', '小学升戴墨镜');
-        await context.dispatch('typeWriter', '姜云升戴着墨镜去剪了个新发型，花费100元，魅力-100。解锁了第' + context.getters.UnlockedAchievementCount + '个成就【小学升戴墨镜】（不建议戴）。')
+        await context.dispatch('typeWriter', '姜云升戴着墨镜😎去剪了个新发型，花费100元，魅力-100。解锁了第' + context.getters.UnlockedAchievementCount + '个成就【小学升戴墨镜】（不建议戴）。')
       } else if (hasSunglasses && isAchUnlocked) {
-        await context.dispatch('typeWriter', '姜云升再次戴着墨镜去剪了个新发型，花费100元，魅力-20。')
+        await context.dispatch('typeWriter', '姜云升再次戴着墨镜😎去剪了个新发型，花费100元，魅力-20。')
         context.commit('updateAttribute', { attribute: 'charm', value: -20 })
       } else {
         await context.dispatch('typeWriter', '姜云升出门去剪了个新发型，花费100元，魅力-10。')
