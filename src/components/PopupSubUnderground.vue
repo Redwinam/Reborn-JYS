@@ -80,23 +80,12 @@ async function tour(index: number) {
   )
 
   if (index === 0 && currentTourCount.value === 13) {
-    const isAchUnlocked = store.getters.unlockedAchievement('第九百步')
-    if (!isAchUnlocked) {
-      store.commit('unlockAchievement', '第九百步');
-      await store.dispatch('typeWriter', ['姜云升解锁了第' + store.getters.UnlockedAchievementCount + '个成就【第九百步】。']);
-    }
     await store.dispatch('typeWriter', 
       `这是姜云升「${tourStation[index].name}」巡演的最后一站，现实也许总达不到游戏里这么圆满，太多句「不见不散」最终敌不过明天的意外和「不可抗力」，但正是意外才让我们更加感动于每一次相遇和「好久不见」。第九百步之后的是「命運ONLINE」。`
     )
     store.commit('updateAttribute', { attribute: 'popularity', value: + 1 })
 
   } else if (index === 1 && currentTourCount.value === 13) {
-    
-    const isAchUnlocked = store.getters.unlockedAchievement('命運ONLINE')
-    if (!isAchUnlocked) {
-      store.commit('unlockAchievement', '命運ONLINE');
-      await store.dispatch('typeWriter', ['姜云升解锁了第' + store.getters.UnlockedAchievementCount + '个成就【命運ONLINE】。']);
-    }
     await store.dispatch('typeWriter', 
       `这是姜云升「${tourStation[index].name}」巡演的最后一站，被命运刺痛或戏弄、冲动和梦，这是姜云升「迄今为止的生命」里，是从今而后的再启程的未来。`
     )

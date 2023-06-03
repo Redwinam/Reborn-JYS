@@ -31,7 +31,7 @@ export const achievements: Achievement[] = [
 
   { name: '小学升戴墨镜', desc: '（不建议戴）', condition: '佩戴墨镜并去剪头发达成', event: false, ending: false },
   { name: '小姜的餐厅', desc: '解锁所有食物！', condition: '外出吃点东西概率解锁所有共18种食物达成', event: false, ending: false },
-  { name: '这歌废啦', desc: '解锁所有废歌！', condition: '在家写废歌解锁所有共16首废歌达成', event: false, ending: false },
+  { name: '这歌废啦', desc: '解锁所有废歌！', condition: '在家写废歌完成16首废歌后达成', event: false, ending: false },
   { name: '谢谢你们提醒我吃维生素', desc: '集齐所有维生素片！', condition: '在家直播概率解锁所有共13种维生素片达成', event: false, ending: false },
   { name: '醉酒小姜', desc: '不是酒后吐真言，是借着喝醉说心里话。', condition: '在醉酒状态时陪粉丝开直播达成', event: false, ending: false },
   { name: '我所拥有的人气，又是不是真的？', desc: '都来到我身边，都要我感恩呢。', condition: '人气>1200，其中黑人气>1000时达成', event: false, ending: false },
@@ -39,6 +39,4 @@ export const achievements: Achievement[] = [
   { name: '拜拜就拜拜', desc: '拜拜就拜拜👋🏻，下一个更乖🥺', condition: '姜云升累计分手或被甩超过10次达成', event: false, ending: false },
   { name: '一首歌的时间', desc: '那天只是状态不好！', condition: '醉酒的时候第一次陪女朋友时达成', event: false, ending: false },
   { name: 'Battle King', desc: '中国Underground比赛，老子哪个没拿过冠。', condition: '在每年的Battle大赛中累计拿冠次数>=3次达成', event: false, ending: false },
-  { name: '第九百步', desc: '完成「第九百步」十三城巡演', condition: '在结束Underground剧情后完成「第九百步」十三城巡演', event: false, ending: false },
-  { name: '命運ONLINE', desc: '完成「命運ONLINE」十三城巡演', condition: '在结束Underground剧情、「第九百步」巡演后完成「命運ONLINE」十三城巡演', event: false, ending: false },
 ]
