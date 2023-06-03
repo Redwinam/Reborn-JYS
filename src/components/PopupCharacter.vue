@@ -10,7 +10,7 @@
 
     <div><span class="attribute-name">{{ attributeNames['talent'] }}</span> {{ attributes['talent'] }}</div>
     <div><span class="attribute-name">{{ attributeNames['charm'] }}</span> {{ attributes['charm'] }}</div>
-    <div><span class="attribute-name">{{ attributeNames['divine'] }}<small>/ 封建迷信</small></span> <span>{{ attributes['divine'] }}<small> / {{ attributes['superstition'] }}</small></span></div>
+    <div><span class="attribute-name">{{ attributeNames['divine'] }}</span> <span>{{ attributes['divine'] }}</span></div>
 
     <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span> 红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</div>
     <div>
@@ -61,7 +61,7 @@ const gemini = () => {
   store.commit('updateAttribute', { attribute: "talent", value: + 220 })
   store.commit('updateAttribute', { attribute: "charm", value: + 1200 })
   store.commit('updateAttribute', { attribute: "divine", value: + 1200 })
-  store.commit('updateAttribute', { attribute: "red", value: + 5000 })
+  store.commit('updateAttribute', { attribute: "red", value: + 500000000000 })
 
   store.commit('incrementUndergroundCount');
   store.commit('incrementUndergroundCount');

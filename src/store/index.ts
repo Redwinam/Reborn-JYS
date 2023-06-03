@@ -642,6 +642,21 @@ const actions = {
       await context.dispatch('typeWriter', '姜云升实在是太有爱心了，你的钱太多了，你无私地把你的钱全部捐给了有需要的人，甚至不需要任何回报，也不需要任何人知晓！姜云升行善积德+10');
     }
 
+    if ( state.attributes.popularity.red > 100000000) {
+
+      const red = state.attributes.popularity.red
+      const black = state.attributes.popularity.black
+
+      // math random 将 red 修正到 60000 到 90000 ，red和black比例保持不变
+      const redRandom = Math.floor(Math.random() * 30000) + 60000
+      const blackRandom = Math.max(Math.min(Math.floor(black * redRandom / red), black), Math.floor(Math.random() * 20000) + 60000)
+
+      context.commit('updateAttribute', { attribute: "red", value: redRandom - red })
+      context.commit('updateAttribute', { attribute: "black", value: blackRandom - black })
+      
+      await context.dispatch('typeWriter', '【系统】姜云升操作「清理微博粉丝」~修复了人气数据！');
+    }
+
     if (state.drunk > 0) {
       store.commit('updateDrunk', -1);
       if (state.drunk === 0) {
