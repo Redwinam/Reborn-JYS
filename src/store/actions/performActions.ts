@@ -212,8 +212,20 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
       ];
       const randomLiveStreamingIntro = liveStreamingIntros[Math.floor(Math.random() * liveStreamingIntros.length)];
       context.commit('updateAttribute', { attribute: 'energy', value: -10 });
-      const redValue = 5 + Math.floor(Math.random() * 0.12 * store.state.attributes.popularity.red);
-      const blackValue = 2 + Math.floor(Math.random() * 0.08 * store.state.attributes.popularity.black);
+      // const redValue = 5 + Math.floor(Math.random() * 0.12 * store.state.attributes.popularity.red);
+
+      const maxValue = 6000;
+      const base = 6000;
+      
+      const redPopularity = store.state.attributes.popularity.red;
+      const growthFactor = Math.log(redPopularity + base) / Math.log(maxValue + base);
+      
+      const redValue = 5 + Math.floor(Math.random() * 0.09 * redPopularity * growthFactor);
+
+      const blackPopularity = store.state.attributes.popularity.black;
+      const blackGrowthFactor = Math.log(blackPopularity + base) / Math.log(maxValue + base);
+      const blackValue = 2 + Math.floor(Math.random() * 0.08 * blackPopularity * blackGrowthFactor);
+
       context.commit('updateAttribute', { attribute: 'red', value: redValue });
       context.commit('updateAttribute', { attribute: 'black', value: blackValue });
 

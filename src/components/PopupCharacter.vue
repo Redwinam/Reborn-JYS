@@ -61,7 +61,7 @@ const gemini = () => {
   store.commit('updateAttribute', { attribute: "talent", value: + 220 })
   store.commit('updateAttribute', { attribute: "charm", value: + 1200 })
   store.commit('updateAttribute', { attribute: "divine", value: + 1200 })
-  store.commit('updateAttribute', { attribute: "money", value: + 1000000000000000000000 })
+  store.commit('updateAttribute', { attribute: "red", value: + 5000 })
 
   store.commit('incrementUndergroundCount');
   store.commit('incrementUndergroundCount');

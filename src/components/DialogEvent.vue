@@ -16,8 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { mapActions, useStore } from 'vuex'
+import { useStore } from 'vuex'
 
 import { specialEventDetail } from '../store/actions/specialEvent'
 import { showEventDialog } from './composables/gameRefs';
