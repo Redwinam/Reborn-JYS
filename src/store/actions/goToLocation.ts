@@ -218,11 +218,11 @@ export async function goToLocation(context: {
         }
       }
 
+      context.commit('incrementUndergroundCount');
       if (context.state.term > 1 && context.state.attributes.skill.freestyle >= 15 && !context.state.happenedEvents.includes('二八分')) {
         context.dispatch('specialEvent', '二八分');
       }
 
-      context.commit('incrementUndergroundCount');
       context.dispatch('incrementRound');
       break;
 

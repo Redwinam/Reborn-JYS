@@ -281,13 +281,23 @@ onMounted( async () => {
 
 
   if (savedGameData) {
-    const gameData = JSON.parse(savedGameData.split('=')[1]);
-    store.commit('loadGameState', gameData);
-
-    if (document.getElementById('textboxText')) {
-      await store.dispatch('typeWriter', '【系统】我回来啦！')
+    const splitData = savedGameData.split('=');
+    if (splitData.length > 1) {
+      const gameDataStr = splitData[1];
+      try {
+        const gameData = JSON.parse(gameDataStr);
+        store.commit('loadGameState', gameData);
+        if (document.getElementById('textboxText')) {
+          await store.dispatch('typeWriter', '【系统】你回来啦！');
+        }
+      } catch (e) {
+        const { textHistory, ...toSaveStore } = store.state;
+        document.cookie = `gameData=${JSON.stringify(toSaveStore)}; expires=Thu, 01 Jan 2099 00:00:00 UTC; path=/;`;
+        if (document.getElementById('textboxText')) {
+          await store.dispatch('typeWriter', '【系统】读取本地游戏记录失败，你回来了但没完全回来！（不影响线上存档）');
+        } 
+      }
     }
-
   } else {
     showStartGameDialog.value = true
   }
