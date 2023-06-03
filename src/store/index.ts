@@ -480,7 +480,7 @@ const mutations = {
     state.relationRound = 0
     state.lastBreakupRound = 0
 
-    state.undergroundCount = 0
+    // state.undergroundCount = 0
     state.battleResults = battleResults
 
     state.signedAgency = false
@@ -567,7 +567,7 @@ const actions = {
       context.commit('updateAttribute', { attribute: "money", value: 0 })
       await context.dispatch('typeWriter', '姜云升实在是太有爱心了，你的钱太多了，你无私地把你的钱全部捐给了有需要的人，甚至不需要任何回报，也不需要任何人知晓！姜云升行善积德+10');
 
-    } else if ( state.attributes.money > 1000000000000) {
+    } else if ( state.attributes.money > 10000000000) {
       context.commit('updateAttribute', { attribute: "money", value: -state.attributes.money })
       if (isNaN(state.attributes.gold)) {
         context.commit('updateAttribute', { attribute: "gold", value: 0 })
@@ -593,13 +593,14 @@ const actions = {
     }
 
     if ( state.signedAgency && !Math.floor(state.round % 9) ) {
+      await new Promise(resolve => setTimeout(resolve, 600));
       store.commit('updateAttribute', { attribute: "money", value: 500 * 3 * 5 })
       await context.dispatch('typeWriter', '姜云升签约了公司，到账工资1500元。');
     }
 
-    await new Promise(resolve => setTimeout(resolve, 600));
 
     if ( !Math.floor((state.round - 16) % 36) ) {
+      await new Promise(resolve => setTimeout(resolve, 600));
       await context.dispatch('specialEvent', '生日快乐');
     }
 
@@ -609,17 +610,19 @@ const actions = {
     // }
 
     if ( !Math.floor((state.round - 25) % 36) ) {
+      await new Promise(resolve => setTimeout(resolve, 600));
       await context.dispatch('typeWriter', '今年的Battle比赛已经开放，可以在外出时报名参加比赛了。');
     }
 
     if (state.round === 10 * 36 ) {
+      await new Promise(resolve => setTimeout(resolve, 600));
       await context.dispatch('specialEvent', '十年');
     }
 
     if ((state.attributes.popularity.red + state.attributes.popularity.black) > 1200 && state.attributes.popularity.black > 1000) {
       const isAchUnlocked = context.getters.unlockedAchievement('我所拥有的人气，又是不是真的？');
-
       if ( !isAchUnlocked ) {
+        await new Promise(resolve => setTimeout(resolve, 600));
         context.commit('unlockAchievement', '我所拥有的人气，又是不是真的？');
         await context.dispatch('typeWriter', '人气>1200，黑人气>1000。解锁成就【我所拥有的人气，又是不是真的？】')
       }
@@ -630,20 +633,21 @@ const actions = {
       return
     }
 
-    if (!state.currentEndings.includes('刀削面子') && state.girlfriend && state.breakupTimes >= 11 && state.songStages['浪漫主义'].completedStage && state.songStages['浪漫主义2.0'].completedStage) {
+    if (!state.currentEndings.includes('刀削面子') && state.girlfriend && state.breakupTimes >= 11 && state.songStages['浪漫主义'] && state.songStages['浪漫主义'].completedStage && state.songStages['浪漫主义2.0'] && state.songStages['浪漫主义2.0'].completedStage) {
       context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '刀削面子' });
       return
     }
 
-    if (!state.currentEndings.includes('皮卡皮卡') && state.inventory['皮卡丘玩偶'] && state.inventory['皮卡丘玩偶'].quantity >= 521 && state.songStages['皮卡丘'].completedStage && !state.songStages['3'].completedStage) {
+    if (!state.currentEndings.includes('皮卡皮卡') && state.inventory['皮卡丘玩偶'] && state.inventory['皮卡丘玩偶'].quantity >= 521 && state.songStages['皮卡丘'] && state.songStages['皮卡丘'].completedStage && !(state.songStages['3'] && state.songStages['3'].completedStage)) {
       context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '皮卡皮卡' });
       return
     }
 
-
     if (state.round > state.totalRounds) {
       if (state.currentEndings.length > 0) {
         context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: state.currentEndings });
+        return;
+
       } else {
         
         if (state.attributes.money <= 99999) {
@@ -686,7 +690,8 @@ const getters = {
     return state.attributes
   },
   unlockedAchievement:(state: State) => (achievementName: string) => {
-    return state.achievementStates.find((ach) => ach.name === achievementName && ach.unlocked === true)
+    const achievement = state.achievementStates.find((ach) => ach.name === achievementName)
+    return achievement ? achievement.unlocked : false
   },
   UnlockedAchievementCount(state: State) {
     return state.achievementStates.filter((ach) => ach.unlocked === true).length

@@ -168,7 +168,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
 
       const skill = 'gaming';
       for (const level of SkillLevelMapping) {
-        if (store.state.attributes.skill.gaming === level.max) {
+        if (store.state.attributes.skill.gaming === level.max && level.max !== 24) {
           await context.dispatch('typeWriter', [randomGamingIntro + '<small>姜云升体力-10，心情+20。</small>', '姜云升的游戏技能进入了瓶颈期，需要填空答对问题，考验你对姜云升的游戏水平了不了解的时候到了，要通过这困难的考验才能升级！']);
           await new Promise(resolve => setTimeout(resolve, 1000));
           await context.dispatch('upgradeSkill', { skill, level: level.level });
@@ -176,6 +176,9 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         } else if (store.state.attributes.skill.gaming >= level.min && store.state.attributes.skill.gaming < level.max) {
           context.commit('updateAttribute', { attribute: 'gaming', value: 1 });
           await context.dispatch('typeWriter', [randomGamingIntro + '<small>姜云升体力-10，心情+20，游戏技能值+1，当前游戏技能等级为【' + store.state.attributes.skill.gamingLevel + '】</small>']);
+        } else if (store.state.attributes.skill.gaming === level.max && level.max === 24) {
+          await context.dispatch('typeWriter', [randomGamingIntro + '<small>姜云升体力-10，心情+20。</small>']);
+          break;
         }
       }
     } else if (action === '开直播') {
@@ -235,14 +238,12 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
           await context.dispatch('typeWriter', ['粉丝们提醒姜姜要吃维生素片噢，【' + vitamin.type + '】' + vitamin.benefits + '。<small>姜云升的体力上限+10！</small>']);
 
           if (lockedVitamins.length === 1) {
-            const isAchUnlocked = context.getters.UnlockedAchievement('谢谢你们提醒我吃维生素')
+            const isAchUnlocked = context.getters.unlockedAchievement('谢谢你们提醒我吃维生素')
             if (!isAchUnlocked) {
               store.commit('unlockAchievement', '谢谢你们提醒我吃维生素');
               await context.dispatch('typeWriter', ['姜云升集齐了所有维生素片，解锁了第' + context.getters.UnlockedAchievementCount + '个成就【谢谢你们提醒我吃维生素】！']);
             }
           }
-        } else {
-          await context.dispatch('typeWriter', '粉丝们提醒姜姜要吃维生素ABCDEK噢。');
         }
       }
 

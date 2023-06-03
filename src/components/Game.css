@@ -255,6 +255,10 @@ footer button {
 
 .game-ended-dialog button.continue-game-button {
   background-color: #262525;
+  color: #fff;
+  padding: 0.4rem 1rem;
+  border: 2px solid #1e2228;
+  margin-right: 0.25rem;
   margin-bottom: 0.25rem;
 }
 

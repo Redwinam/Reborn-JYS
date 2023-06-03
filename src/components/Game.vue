@@ -104,7 +104,7 @@
 <Dialog :visible="showGameEndDialog" class="game-ended-dialog">
   <h2>{{ gameEnded ? '游戏结束' : '游戏结局'}}</h2>
   <p class="desc" v-if="specialEndingAchievement">{{ specialEndingAchievement.desc }}</p>
-  <p class="desc" v-else-if="currentEndings.length">12年游戏时间结束，您在本周目达成结局【{{ Object.entries(currentEndings).map((ending) => ending).join('】、【') }}】，愿星辰庇佑于我们！</p>
+  <p class="desc" v-else-if="currentEndings.length">12年游戏时间结束，您在本周目达成结局【{{ Object.entries(currentEndings).map((ending) => ending[1]).join('】、【') }}】，愿星辰庇佑于我们！</p>
   <div class="game-ended-dialog-buttons">
     <button class="continue-game-button" v-if="!gameEnded" @click="showGameEndDialog = false">继续本轮！</button>
     <button class="restart-game-button" @click="restartGame(false)">重新开始</button>
@@ -175,6 +175,7 @@ import { isAtHome, isGoingOut,
   showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, showBankPopup, showStartGameDialog, showSLPopup, 
   isTyping
 } from './composables/gameRefs';
+import { BattleResult } from '../store/battle'
 
 const convertStyle = () => {
     document.body.style.setProperty('height', `${window.innerHeight}px`);
@@ -251,7 +252,10 @@ const currentPeriod = computed(() => {
 })
 
 const isBattleOpen = () => {
-  return currentMonth.value >= 9 && currentMonth.value <= 12
+  // 当前year的battle的状态 不为 end 且 当前月份为 9-12月
+  const isEnd = Array.isArray(store.state.battleResults) && store.state.battleResults.find((battleResult: BattleResult) => battleResult.year === currentYear.value)?.end;
+  return currentMonth.value >= 9 && currentMonth.value <= 12 && !isEnd
+
 }
 
 // loadGame();

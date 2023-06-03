@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { useStore, Commit } from 'vuex';
+import { Commit } from 'vuex';
 import { showEventDialog } from '../../components/composables/gameRefs';
 import { Achievement } from '../achievements';
 
@@ -8,8 +8,6 @@ interface SpecialEventDetail {
   intro: string;
   options: string[];
 }
-
-const store = useStore();
 
 export const specialEventDetail = ref<SpecialEventDetail | null>(null);
 
@@ -75,7 +73,7 @@ export async function specialEvent(context: { rootState: any; commit: Commit, di
   }
 
   else if (event === '二八分') {
-    const isAchUnlocked = context.getters.UnlockedAchievement('二八分')
+    const isAchUnlocked = context.getters.unlockedAchievement('二八分')
     if (!isAchUnlocked) {
       specialEventDetail.value  = {
         title: '二八分',
@@ -115,9 +113,8 @@ export async function specialEventOptionChosen(context: {
   }
 
   else if (payload.event === '生日快乐') {
-    console.log('生日快乐1')
+    console.log('生日快乐')
     if (context.rootState.round === 16 && context.rootState.term === 1) {
-      console.log('生日快乐2')
 
       context.commit('unlockAchievement', payload.event);
       await context.dispatch('typeWriter', ['姜云升的生日过得很开心，恭喜，姜云升解锁了第' + context.getters.UnlockedAchievementCount + '个成就【' + payload.event + '】。']);

@@ -92,8 +92,6 @@ const classifiedAchievements = computed(() => {
       groups['其他成就'].push(achievement)
     }
   })
-
-  console.log(groups)
   return groups
 })
 

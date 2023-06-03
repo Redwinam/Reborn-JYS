@@ -205,8 +205,7 @@ async function dao(action: string) {
           const lastSpecialItemEffect = specialItems.find(item => item.name === lastSpecialItem.value)?.effect ;
           if (lastSpecialItemEffect) {
               let randomEffect = lastSpecialItemEffect[Math.floor(Math.random() * lastSpecialItemEffect.length)];
-              console.log
-
+              
             store.commit('updateAttribute', { attribute: 'divine', value: 90 })
             await store.dispatch('typeWriter', `姜云升获得了新的道具${lastSpecialItem.value}——${randomEffect}。姜云升探索到了山的第${FightLevelMapping[currentFightLevelIndex.value].level}层。<small>姜云升的神秘属性+90，等级+5，当前等级为${store.state.attributes.fight.level}级</small>`)
           }

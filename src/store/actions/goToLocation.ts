@@ -218,7 +218,7 @@ export async function goToLocation(context: {
         }
       }
 
-      if (context.state.term > 1 && context.state.skills.freestyle >= 15 && !context.state.happenedEvents.includes('二八分')) {
+      if (context.state.term > 1 && context.state.attributes.skill.freestyle >= 15 && !context.state.happenedEvents.includes('二八分')) {
         context.dispatch('specialEvent', '二八分');
       }
 

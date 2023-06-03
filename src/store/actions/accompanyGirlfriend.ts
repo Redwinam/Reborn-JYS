@@ -83,7 +83,7 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
       context.dispatch('typeWriter', toMessage.value);
 
       if (isAtHome.value) {
-        const isAchUnlocked_playgood = context.getters.UnlockedAchievement('姜哥，玩挺好')
+        const isAchUnlocked_playgood = context.getters.unlockedAchievement('姜哥，玩挺好')
         if (!isAchUnlocked_playgood && !store.state.happenedEvents.includes('姜哥，玩挺好')) {
           if (Math.random() < 0.15 * store.state.relationRound) {
             context.dispatch('specialEvent', '姜哥，玩挺好');
