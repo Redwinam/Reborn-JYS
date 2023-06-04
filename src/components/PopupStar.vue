@@ -13,7 +13,7 @@
   </template>
   
   <script setup lang="ts">
-	import { computed, ref } from "vue";
+	import { computed, ref, CSSProperties } from "vue";
 	import axios from "axios";
   
 	const stars = ref([]);
@@ -41,19 +41,18 @@
 	Math.random() * 10000
 	)}`;
 	createKeyframes(randomKeyframeName);
-	return {
-	position: "absolute",
-	left: `${Math.random() * 200}%`,
-	top: `${Math.random() * 200}%`,
-	color: "#fffff3",
-	fontSize: `${(Math.random() * 2 + 1) / 10}rem`,
-	whiteSpace: "nowrap",
-	animation: `${randomKeyframeName} ${animationDuration}s infinite`,
-	animationDelay: `${Math.random()}s`,
-	transform: `translate(${Math.random() * 100 - 50}%, ${Math.random() * 100 - 50}%)`
-
-
-	} as CSSStyleDeclaration;
+	const cssStyle: CSSProperties = {
+		position: "absolute",
+		left: `${Math.random() * 200}%`,
+		top: `${Math.random() * 200}%`,
+		color: "#fffff3",
+		fontSize: `${(Math.random() * 3 + 1) / 6}rem`,
+		whiteSpace: "nowrap",
+		animation: `${randomKeyframeName} ${animationDuration}s infinite`,
+		animationDelay: `${Math.random()}s`,
+		transform: `translate(${Math.random() * 100 - 50}%, ${Math.random() * 100 - 50}%)`
+	}
+	return [cssStyle]
 };
 
 const createKeyframes = (name: string) => {
