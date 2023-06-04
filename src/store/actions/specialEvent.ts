@@ -175,26 +175,47 @@ export async function specialEventOptionChosen(context: {
 
     if (payload.option === '【签约】') {
 
-      context.commit('unlockAchievement', payload.event);
-      await context.dispatch('typeWriter', ['姜云升签约了经纪公司，专业资源和知名度都有所提升，每月还能拿500块基本工资。姜云升解锁了第' + context.getters.UnlockedAchievementCount + '个成就【' + payload.event + '】（公司会抽取你接下来所有收入的80%，需一年后才可以申请解约）', '<small>姜云升金钱+500，人气+250。</small>']);
+      const isAchUnlocked = context.getters.unlockedAchievement(payload.event);
+      if (!isAchUnlocked) {
+        context.commit('unlockAchievement', payload.event);
+        await context.dispatch('typeWriter', ['姜云升签约了经纪公司，专业资源和知名度都有所提升，每月还能拿500块基本工资。姜云升解锁了第' + context.getters.UnlockedAchievementCount + '个成就【' + payload.event + '】（公司会抽取你接下来所有收入的80%，需一年后才可以申请解约）', '<small>姜云升金钱+500，人气+250。</small>']);
+      } else {
+        await context.dispatch('typeWriter', ['姜云升签约了经纪公司，专业资源和知名度都有所提升，每月还能拿500块基本工资。（公司会抽取你接下来所有收入的80%，需一年后才可以申请解约）', '<small>姜云升金钱+500，人气+250。</small>']);
+      }
 
       context.commit('setSignedAgency', true);
       context.commit('updateAttribute', { attribute: 'money', value: 500 * 5 });
       context.commit('updateAttribute', { attribute: 'red', value: 250 });
+      context.dispatch('incrementRound');
+
 
     } else if (payload.option === '【再考虑下】') {
 
-      context.commit('unlockAchievement', payload.event);
-      await context.dispatch('typeWriter', ['经过慎重考虑，姜云升还是决定签约经纪公司，姜云升专业资源和知名度都有所提升，每月还能拿500块基本工资。姜云升解锁了第' + context.getters.UnlockedAchievementCount + '个成就【' + payload.event + '】（公司会抽取你接下来所有收入的80%，需一年后才可以申请解约）', '<small>姜云升金钱+500，人气+250。</small>']);
+      const isAchUnlocked = context.getters.unlockedAchievement(payload.event);
+      if (!isAchUnlocked) {
+        context.commit('unlockAchievement', payload.event);
+        await context.dispatch('typeWriter', ['经过慎重考虑，姜云升还是决定签约经纪公司，姜云升专业资源和知名度都有所提升，每月还能拿500块基本工资。姜云升解锁了第' + context.getters.UnlockedAchievementCount + '个成就【' + payload.event + '】（公司会抽取你接下来所有收入的80%，需一年后才可以申请解约）', '<small>姜云升金钱+500，人气+250。</small>']);
+      } else {
+        await context.dispatch('typeWriter', ['经过慎重考虑，姜云升还是决定签约经纪公司，姜云升专业资源和知名度都有所提升，每月还能拿500块基本工资。（公司会抽取你接下来所有收入的80%，需一年后才可以申请解约）', '<small>姜云升金钱+500，人气+250。</small>']);
+      }
       
       context.commit('setSignedAgency', true);
       context.commit('updateAttribute', { attribute: 'money', value: 500 * 5 });
       context.commit('updateAttribute', { attribute: 'red', value: 250 });
+      context.dispatch('incrementRound');
+
 
     } else if (payload.option === '【自己开公司】') {
 
-      context.commit('unlockAchievement', '风炎文化');
-      await context.dispatch('typeWriter', ['“没上过一天正经班，我直接成为董事长。建立个特别的公司，我知道我们能有市场”，姜云升选择自己开一家不一样的经纪公司，解锁成就【风炎文化】。']);
+      const isAchUnlocked = context.getters.unlockedAchievement(payload.event);
+      if (!isAchUnlocked) {
+        context.commit('unlockAchievement', payload.event);
+        await context.dispatch('typeWriter', ['“没上过一天正经班，我直接成为董事长。建立个特别的公司，我知道我们能有市场”，姜云升选择自己开一家不一样的经纪公司，解锁成就【风炎文化】。']);
+      } else {
+        await context.dispatch('typeWriter', ['“没上过一天正经班，我直接成为董事长。建立个特别的公司，我知道我们能有市场”，姜云升选择自己开一家不一样的经纪公司——风炎文化。']);
+      }
+      context.dispatch('incrementRound');
+
     }
   }
 }

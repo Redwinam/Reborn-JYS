@@ -12,12 +12,18 @@
     <button class="button-dao" :disabled="lastFight().value" @click="dao('上山打怪')">上山打怪</button>
     <span class="note-fight">当前在第{{ FightLevelMapping[currentFightLevelIndex].level }}层 | 等级：{{ fight.level }}级</span>
     <hr>
+    <button class="button-dao" @click="showStarPopup = true">看星星</button>
     <p class="note-message">如月之恒，如日之升</p>
     <button class="button_cancel" @click="showDaoPopup = false">返回</button>
   </div>
 </div>
 
 </PopupSub>
+
+<Popup title="看星星" :visible="showDaoPopup" @close="showDaoPopup = false">
+<popup-star></popup-star>
+</Popup>
+
 </template>
 
 <script setup lang="ts">
@@ -25,6 +31,8 @@ import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
 import PopupSub from '../components/PopupSub.vue'
+import Popup from '../components/PopupSub.vue'
+import PopupStar from '../components/PopupStar.vue'
 import { showDaoPopup } from './composables/gameRefs';
 
 const FightLevelMapping = [
@@ -224,6 +232,7 @@ async function dao(action: string) {
   store.dispatch('incrementRound');
 }
 
+const showStarPopup = ref(false);
 
 </script>
 

@@ -1,6 +1,6 @@
 <template>
-<p>{{ unsignAgencyText }}</p>
-<div class="button-container">
+<p id="textboxEvent">{{ unsignAgencyText }}</p>
+<div class="event-dialog__options">
   <button v-for="unsignAgencyOption in unsignAgencyOptions" @click="handleUnsignAgency(unsignAgencyOption)">{{unsignAgencyOption}}</button>
 </div>
 </template>
@@ -73,3 +73,37 @@ const handleUnsignAgency = async (unsignAgencyOption: string) => {
   }
 }
 </script>
+
+<style scoped>
+
+#textboxEvent {
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.event-dialog__options {
+  display: flex;
+  justify-content: space-around;
+  margin: 0.5rem 0;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.event-dialog__options button {
+  padding: 0.5rem 1rem;
+  background-color: #f3f3f3;
+  color: #1e2228;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.event-dialog__options button:hover {
+  background-color: #964742;
+  outline:2px solid #1e2228;
+  color: #fff;
+}
+
+</style>

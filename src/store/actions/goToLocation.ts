@@ -213,9 +213,8 @@ export async function goToLocation(context: {
 
             default:
               context.commit('incrementUndergroundCount');
-              if (context.state.term > 1 && context.state.attributes.skill.freestyle >= 15 && (!context.state.happenedEvents.includes('二八分') || !context.getters.unlockedAchievement('二八分'))) {
+              if (context.state.attributes.skill.freestyle >= 15 && (!context.state.happenedEvents.includes('二八分') || !context.getters.unlockedAchievement('二八分'))) {
                 context.dispatch('specialEvent', '二八分');
-                context.dispatch('incrementRound');
               } else {
                 showUndergroundPopup.value = true;
               }
@@ -228,9 +227,10 @@ export async function goToLocation(context: {
       context.commit('incrementUndergroundCount');
       if (context.state.term > 1 && context.state.attributes.skill.freestyle >= 15 && !context.state.happenedEvents.includes('二八分')) {
         context.dispatch('specialEvent', '二八分');
+      } else {
+        context.dispatch('incrementRound');
       }
 
-      context.dispatch('incrementRound');
       break;
 
     case '去剪头发':

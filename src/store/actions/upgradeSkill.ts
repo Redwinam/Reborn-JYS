@@ -129,7 +129,7 @@ export function handleFail() {
   const { skill, level } = currentQuestionsAndAnswers.value!;
   currentQuestionsAndAnswers.value = null;
   showUpgradeSkillDialog.value = false;
-  store.dispatch('typeWriter', `嘤嘤嘤，回答错误，${skill}技能升级失败了`);
+  store.dispatch('typeWriter', `嘤嘤嘤，回答错误，${skill}技能升级失败了！`);
 }
 
 export function getCurrentQuestionsAndAnswers() {

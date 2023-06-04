@@ -1,17 +1,17 @@
 <template>
-  <div class="items-container">
-    <ul class="inventory">
-      <li class="item" v-for="(quantity, name) in inventory" :key="name">
-        <div class="item-info">
-          <div>
-            <h4>{{ name }} <span> × {{ quantity.quantity }} {{ quantity.isFood? "份" : getQuantifier(String(name)) }}</span></h4>
-          </div>
-          <button v-if="quantity.isFood" @click="eatPackedFood(String(name))">吃掉</button>
+<div class="items-container">
+  <ul class="inventory">
+    <li class="item" v-for="(quantity, name) in inventory" :key="name">
+      <div class="item-info">
+        <div>
+          <h4>{{ name }} <span> × {{ quantity.quantity }} {{ quantity.isFood? "份" : getQuantifier(String(name)) }}</span></h4>
         </div>
-      </li>
-    </ul>
-    <p v-if="Object.keys(inventory).length === 0">（物品栏里空空如也）</p>
-  </div>
+        <button v-if="quantity.isFood" @click="eatPackedFood(String(name))">吃掉</button>
+      </div>
+    </li>
+  </ul>
+  <p v-if="Object.keys(inventory).length === 0">（物品栏里空空如也）</p>
+</div>
 </template>
 
 <script setup lang="ts">
@@ -27,7 +27,6 @@ const eatPackedFood = (food: string) => {
 }
 
 </script>
-
 
 <style scoped>
 
