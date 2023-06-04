@@ -12,10 +12,10 @@
     <div><span class="attribute-name">{{ attributeNames['charm'] }}</span> {{ attributes['charm'] }}</div>
     <div><span class="attribute-name">{{ attributeNames['divine'] }}</span> <span>{{ attributes['divine'] }}</span></div>
 
-    <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span> 红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</div>
+    <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span> 红 {{ Math.round(attributes['popularity']['red']) }} / 黑 {{ Math.round(attributes['popularity']['black']) }}</div>
     <div>
       <span class="attribute-name">{{ attributeNames['money'] }}</span> 
-      <span>￥{{ attributes['money'] }}  | {{ attributes['gold'] }}枚金条
+      <span>￥{{ Math.round(attributes['money']) }}  | {{ attributes['gold'] }}枚金条
         <button class="button_buyGold" @click="showBuyGoldPopup = true">买</button> / <button class="button_sellGold" @click="showSellGoldPopup = true">卖</button>
       </span>
     </div>

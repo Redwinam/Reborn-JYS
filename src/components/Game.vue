@@ -20,8 +20,8 @@
 
 <div v-if="!showStartGameDialog && !gameEnded" class="attributes" :class="isGoingOut? 'going-out-attributes' : ''">
 
-  <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span><span class="attribute-number">红 {{ attributes['popularity']['red'] }} / 黑 {{ attributes['popularity']['black'] }}</span></div>
-  <div><span class="attribute-name">{{ attributeNames['money'] }}</span><span class="attribute-number">{{ attributes['money'] }} <span v-if="signedAgency" @click="!isTyping && checkUnsignAgency()"><br>（二八分<small>{{ leftUnsignAgencyMonth }}/12月</small>）</span></span></div>
+  <div><span class="attribute-name">{{ attributeNames['popularity'] }}</span><span class="attribute-number">红 {{ Math.round(attributes['popularity']['red']) }} / 黑 {{ Math.round(attributes['popularity']['black']) }}</span></div>
+  <div><span class="attribute-name">{{ attributeNames['money'] }}</span><span class="attribute-number">{{ Math.round(attributes['money']) }} <span v-if="signedAgency" @click="!isTyping && checkUnsignAgency()"><br>（二八分<small>{{ leftUnsignAgencyMonth }}/12月</small>）</span></span></div>
   <div v-if="attributes['energy'] >= 0"><span class="attribute-name">{{ attributeNames['energy'] }}</span><span class="attribute-number">{{ attributes['energy'] }}<template v-if="weak">（虚弱！）</template></span></div>
   <div v-else><span class="attribute-name weak">体力透支</span><span class="attribute-number">{{ attributes['energy'] }} <template v-if="weak">（虚弱！）</template></span></div>
   <div><span class="attribute-name">{{ attributeNames['mood'] }}</span><span class="attribute-number">{{ attributes['mood'] }}</span></div>

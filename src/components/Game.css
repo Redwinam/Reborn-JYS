@@ -186,14 +186,14 @@
 .going-out-back { top: 68%;  left: auto;  right: 5%; }
 .action-accompany-girlfriend {  background: url('@/assets/button_accompany-girlfriend.png') center / contain no-repeat;  width: 5vh;  height: 15.9vh;  top: 72%;  left: 21%; }
 .action-eat {  background: url('@/assets/button_eat.png') center / contain no-repeat;  width: 4.4vh;  height: 15.4vh;  top: 24%;  left: 16%; }
-.action-drink {  background: url('@/assets/button_drinking.png') center / contain no-repeat;  width: 4.6vh;  height: 14.95vh;  top: 54%;  left: 32%; }
+.action-drink {  background: url('@/assets/button_drinking.png') center / contain no-repeat;  width: 4.6vh;  height: 14.95vh;  top: 54%;  left: 31%; }
 .action-shopping {  background: url('@/assets/button_shopping.png') center / contain no-repeat;   width: 4.5vh;  height: 12.35vh;  top: 16%;  left: 38%; border: 1px solid #e7e0df; border-radius: 0.2rem;}
-.action-buy-gold {  background: url('@/assets/button_buy-gold.png') center / contain no-repeat;   width: 4.5vh;  height: 13.35vh;  top: 60%;  left: 47%; border: 1px solid #e7e0df; border-radius: 0.2rem;}
-.action-agency {  background: url('@/assets/button_agency.png') center / contain no-repeat;   width: 4.4vh;  height: 8.75vh;  top: 74%;  left: 28.4%; }
+.action-buy-gold {  background: url('@/assets/button_buy-gold.png') center / contain no-repeat;   width: 4.5vh;  height: 13.35vh;  top: 60%;  left: 46%; border: 1px solid #e7e0df; border-radius: 0.2rem;}
+.action-agency {  background: url('@/assets/button_agency.png') center / contain no-repeat;   width: 4.4vh;  height: 8.75vh;  top: 74%;  left: 28.4%; border: 1px solid #e7e0df; border-radius: 0.2rem;}
 .action-cut-hair {  background: url('@/assets/button_cut-hair.png') center / contain no-repeat;  width: 4.8vh;  height: 12vh;  top: 24%;  left: 56%; }
 .action-dao {  background: url('@/assets/button_Dao.png') center / contain no-repeat;   width: 4.9vh;  height: 9vh;  top: 27%;  right: 14%; }
 .action-underground {  background: url('@/assets/button_Underground.png') center / contain no-repeat;  width: 5.3vh;  height: 13.6vh;  top: 72%;  left: 12%; }
-.action-battle {  background: url('@/assets/button_Battle.png') center / contain no-repeat;  width: 7.15vh;  height: 7.3vh;  top: 70%;  left: 60%; border: 1px solid #e7e0df; border-radius: 0.2rem; }
+.action-battle {  background: url('@/assets/button_Battle.png') center / contain no-repeat;  width: 8.25vh;  height: 7.7vh;  top: 70%;  left: 60%; }
 
 /* Styling for pop-ups */
 .popup {

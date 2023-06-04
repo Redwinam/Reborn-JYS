@@ -20,7 +20,7 @@
 
 </PopupSub>
 
-<Popup title="看星星" :visible="showDaoPopup" @close="showDaoPopup = false">
+<Popup title="看星星" :visible="showStarPopup" @close="showStarPopup = false">
 <popup-star></popup-star>
 </Popup>
 
@@ -31,7 +31,7 @@ import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
 import PopupSub from '../components/PopupSub.vue'
-import Popup from '../components/PopupSub.vue'
+import Popup from '../components/Popup.vue'
 import PopupStar from '../components/PopupStar.vue'
 import { showDaoPopup } from './composables/gameRefs';
 
