@@ -212,8 +212,15 @@ export async function goToLocation(context: {
               break;
 
             default:
-              showUndergroundPopup.value = true;
+              context.commit('incrementUndergroundCount');
+              if (context.state.term > 1 && context.state.attributes.skill.freestyle >= 15 && (!context.state.happenedEvents.includes('二八分') || !context.getters.unlockedAchievement('二八分'))) {
+                context.dispatch('specialEvent', '二八分');
+                context.dispatch('incrementRound');
+              } else {
+                showUndergroundPopup.value = true;
+              }
               return;
+
           }
         }
       }

@@ -232,10 +232,16 @@ const showAchievementsPopup = ref(false)
 const showGameEndNotePopup = ref(false)
 const showGameEndConfirmPopup = ref(false)
 
-const leftUnsignAgencyMonth = Math.max(Math.ceil((36 - (store.state.round - store.state.signedAgencyRound)) / 3), 0 )
+const leftUnsignAgencyMonth = computed(() => 
+  Math.max(Math.ceil((36 - (store.state.round - store.state.signedAgencyRound)) / 3), 0 )
+)
+
+// Math.max(Math.ceil((36 - (store.state.round - store.state.signedAgencyRound)) / 3), 0 )
+
+
 const checkUnsignAgency = async () => {
-  if (leftUnsignAgencyMonth > 0) {
-    typewriter('签约公司后需要1年后才可以解约，当前剩余' + leftUnsignAgencyMonth + '个月。')
+  if (leftUnsignAgencyMonth.value > 0) {
+    typewriter('签约公司后需要1年后才可以解约，当前剩余' + leftUnsignAgencyMonth.value + '个月。')
   } else {
     await typewriter('姜云升可以和原来签约的公司解约了。要去公司看看吗？')
     await new Promise(resolve => setTimeout(resolve, 1000))

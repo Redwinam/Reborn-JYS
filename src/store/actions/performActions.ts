@@ -196,8 +196,10 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
         context.commit('updateAttribute', { attribute: 'divine', value: 9 });
         context.commit('unlockAchievement', '醉酒小姜');
         await context.dispatch('typeWriter', ['姜云升今天喝醉了，却还是开了直播，讲了好多平时不会讲的话。酒渐醒，拉开窗帘，窗外是日出。', '姜云升的人气增加了，一项神秘的属性增加了。', '解锁了第' + context.getters.UnlockedAchievementCount + '个成就【醉酒小姜】']);
-      } else if (store.state.drunk > 0 && !isAchUnlocked) {
+        return;
+      } else if (store.state.drunk > 0 && isAchUnlocked) {
         await context.dispatch('typeWriter', '姜云升今天喝醉了，就不开直播了。');
+        return;
       }
 
       const liveStreamingIntros = [
