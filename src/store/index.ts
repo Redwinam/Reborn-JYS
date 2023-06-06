@@ -712,9 +712,9 @@ const actions = {
       context.commit('updateAttribute', { attribute: "money", value: investYearIncome })
 
       if (investedProjects.length > 1) {
-        await context.dispatch('typeWriter', '【投资年报】年底啦，恭喜投资奇才姜云升获得了【' + investedProjectNames + '】几大投资项目的年收益【' + investYearIncome + '】元！');
+        await context.dispatch('typeWriter', '【投资年报】「付出没有结果，这事我不相信！」年底啦，恭喜投资奇才姜云升获得了【' + investedProjectNames + '】几大投资项目的年收益【' + investYearIncome + '】元！');
       } else if (investedProjects.length === 1) {
-        await context.dispatch('typeWriter', '【投资年报】年底啦，恭喜投资奇才姜云升获得了【' + investedProjectNames + '】项目的年收益【' + investYearIncome + '】元！');
+        await context.dispatch('typeWriter', '【投资年报】「付出没有结果，这事我不相信！」年底啦，恭喜投资奇才姜云升获得了【' + investedProjectNames + '】项目的年收益【' + investYearIncome + '】元！');
       }
     }
 

@@ -124,9 +124,9 @@ const InvestmentProjects = [
   { name: '在钓鱼岛升国旗', cost: 60000000, income: 60000000 },
 ]
 
-function invest(projectName: string) {
+async function invest(projectName: string) {
   if (store.state.investedProjects.includes(projectName)) {
-    store.dispatch('typeWriterPopup', '【系统】姜云升已经投资过这个项目啦，本项目不支持复投！')
+    await store.dispatch('typeWriterPopup', '【系统】姜云升已经投资过这个项目啦，本项目不支持复投！')
   } else {
     const project = InvestmentProjects.find(project => project.name === projectName)
     if (project) {
@@ -135,13 +135,21 @@ function invest(projectName: string) {
           store.commit('investProject', { name: project.name, income: project.income, cost: project.cost })
 
           if (project.income > 10000) {
-            store.dispatch('typeWriterPopup', '【系统】姜云升支出了' + project.cost/10000 + '万金钱💸，投资了【' + project.name + '】项目，不愧是投资奇才！预计该项目在接下来每年投资回报整整' + project.income/10000 + '万元。')
+            await store.dispatch('typeWriterPopup', '【系统】姜云升支出了' + project.cost/10000 + '万金钱💸，投资了【' + project.name + '】项目，不愧是投资奇才！预计该项目在接下来每年投资回报整整' + project.income/10000 + '万元。')
           } else {
-            store.dispatch('typeWriterPopup', '【系统】姜云升支出了' + project.cost/10000 + '万金钱💸，投资了【' + project.name + '】项目，不愧是投资奇才！预计该项目在接下来每年投资回报整整' + project.income + '元。')
+            await store.dispatch('typeWriterPopup', '【系统】姜云升支出了' + project.cost/10000 + '万金钱💸，投资了【' + project.name + '】项目，不愧是投资奇才！预计该项目在接下来每年投资回报整整' + project.income + '元。')
+          }
+
+          if (store.state.investedProjects.length === InvestmentProjects.length) {
+            const isAchUnlocked = store.getters.unlockedAchievement('重生之投资奇才');
+            if (!isAchUnlocked) {
+              store.commit('unlockAchievement', '重生之投资奇才');
+              await store.dispatch('typeWriterPopup', ['恭喜姜云升已经投资了交易所的所有投资项目，解锁了第' + store.getters.UnlockedAchievementCount + '个成就【重生之投资奇才】（DLC）！感谢重生的姜云升为祖国大江南北的建设做出的卓越贡献！']);
+            }
           }
         }
       } else {
-        store.dispatch('typeWriterPopup', '【系统】姜云升还不够有钱💴，投资不起这个项目。')
+        await store.dispatch('typeWriterPopup', '【系统】姜云升还不够有钱💴，投资不起这个项目。')
       }
     }
   }
