@@ -102,13 +102,13 @@ const activity = async (activityName: string) => {
       // 才华 +30 魅力 + 30
       store.commit('updateAttribute', { attribute: 'talent', value: + 30 })
       store.commit('updateAttribute', { attribute: 'charm', value: + 30 })
-      store.commit('updateAttribute', { attribute: 'money', value: + 10000 })
+      store.commit('updateAttribute', { attribute: 'money', value: + 20000 })
       store.commit('updateAttribute', { attribute: 'red', value: + 1000 })
       if (store.state.attributes.skill.freestyleLevel !== "SSS") {
         store.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
-        await store.dispatch('typeWriter', ['姜云升用1个月的时间参加了一档说唱类综艺节目，又是一个不一样的他。<small>姜云升才华+30，魅力+30，金钱+10000，人气+1000freestyle技能值+1，当前freestyle技能等级为【' + store.state.attributes.skill.freestyleLevel + '】</small>']);
+        await store.dispatch('typeWriter', ['姜云升用1个月的时间参加了一档说唱类综艺节目，又是一个不一样的他。<small>姜云升才华+30，魅力+30，金钱+20000，人气+1000freestyle技能值+1，当前freestyle技能等级为【' + store.state.attributes.skill.freestyleLevel + '】</small>']);
       } else {
-        await store.dispatch('typeWriter', ['姜云升用1个月的时间参加了一档说唱类综艺节目，又是一个不一样的他。<small>姜云升才华+30，魅力+30，金钱+10000，人气+1000</small>']);
+        await store.dispatch('typeWriter', ['姜云升用1个月的时间参加了一档说唱类综艺节目，又是一个不一样的他。<small>姜云升才华+30，魅力+30，金钱+20000，人气+1000</small>']);
       }
       store.dispatch('incrementRound');
       store.dispatch('incrementRound');
@@ -117,17 +117,19 @@ const activity = async (activityName: string) => {
 
     case '上音乐节':
       showUndergroundPopup.value = false
-      const musicFestivals = ['星巢秘境音乐节', '仙人掌音乐节', 'Heloy音乐节', '迷笛音乐节', '太湖湾音乐节', '奇幻音乐节', '海潮宇宙音乐节', 'AYO!音乐节', '麦田音乐节', '星空音乐节', '楠溪江音乐节', '长江潮音乐节', '星动音乐节', '绿野音乐节', '禧都音乐节', '二次元音乐节', 'MDSK音乐节', '麦浪音乐节']
+      const musicFestivals = ['星巢秘境音乐节', '仙人掌音乐节', 'Heloy音乐节', '迷笛音乐节', '太湖湾音乐节', '奇幻音乐节', '海潮宇宙音乐节', 'AYO!音乐节', '麦田音乐节', '星空音乐节', '楠溪江音乐节', '长江潮音乐节', '星动音乐节', '绿野音乐节', '禧都音乐节', '二次元音乐节', 'MDSK音乐节', '麦浪音乐节', '龙宫音乐节', 'LHC音乐节']
       const musicFestival = musicFestivals[Math.floor(Math.random() * musicFestivals.length)]
       // 才华 +10 魅力 + 10
       store.commit('updateAttribute', { attribute: 'talent', value: + 10 })
       store.commit('updateAttribute', { attribute: 'charm', value: + 10 })
-      store.commit('updateAttribute', { attribute: 'money', value: + 10000 })
+      store.commit('updateAttribute', { attribute: 'money', value: + 100000 })
       store.commit('updateAttribute', { attribute: 'red', value: + 200 })
 
       await store.dispatch('typeWriter', [
-        `姜云升来到了${musicFestival}的舞台上，为现场的观众们带来了一场印象深刻的演出。<small>姜云升才华+10，魅力+10，金钱+10000，人气+200。</small>`
+        `姜云升来到了${musicFestival}的舞台上，为现场的观众们带来了一场印象深刻的演出。<small>姜云升才华+10，魅力+10，金钱+100000，人气+200。</small>`
       ])
+
+
       store.dispatch('incrementRound');
       break;
   }

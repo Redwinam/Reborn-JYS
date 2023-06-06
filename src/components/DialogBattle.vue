@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, customRef, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import { BattleResult } from '../store/battle'
 import { songLibrary, Song } from '../store/songs'

@@ -13,7 +13,6 @@ import { computed } from 'vue'
 import { useStore } from 'vuex'
 
 import { showBreakupDialog } from '../components/composables/gameRefs'
-import { Achievement } from '../store/achievements'
 
 const store = useStore()
 
