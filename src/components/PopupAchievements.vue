@@ -1,6 +1,7 @@
 <template>
 <div class="achievement-container">
   <div v-for="(achievementGroup, key) in classifiedAchievements" :key="key">
+  <template v-if="key != 'DLC' || store.getters.unlockedAchievement('汤臣亿品')">
     <h3>{{ key }}</h3>
     <ul class="achievements">
       <li class="achievement" v-for="achievement in achievementGroup" :key="achievement.name" :class="achievement.unlocked ? 'achievement-unlocked' : ''" @click="showAchievementCondition(achievement)" >
@@ -13,6 +14,7 @@
         </div>
       </li>
     </ul>
+  </template>
   </div>
 
   <p v-if="UnlockedAchievementCount == achievements.length" class="game-maker">制作人：@千啾略</p>
@@ -66,6 +68,7 @@ interface AchievementLib {
   condition?: string;
   event?: boolean;
   ending?: boolean;
+  dlc?: boolean;
   unlocked?: boolean;
   unlockTerm?: number;
 }
@@ -74,7 +77,8 @@ const classifiedAchievements = computed(() => {
   const groups = {
     '事件成就': [],
     '结局成就': [],
-    '其他成就': []
+    '其他成就': [],
+    'DLC': [],
   } as Record<string, AchievementLib[]>
 
   achievements.forEach((ach) => {
@@ -88,6 +92,8 @@ const classifiedAchievements = computed(() => {
       groups['结局成就'].push(achievement)
     } else if (achievement.event) {
       groups['事件成就'].push(achievement)
+    } else if (achievement.dlc) {
+      groups['DLC'].push(achievement)
     } else {
       groups['其他成就'].push(achievement)
     }

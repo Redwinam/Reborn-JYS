@@ -21,6 +21,9 @@ export const showAchievementNotePopup = ref(false);
 export const showBankPopup = ref(false);
 export const showBuyGoldPopup = ref(false);
 export const showSellGoldPopup = ref(false);
+export const showRealEstatePopup = ref(false);
+export const showStockMarketPopup = ref(false);
+export const showInvestmentPopup = ref(true);
 
 export const showUndergroundPopup = ref(false);
 export const showDaoPopup = ref(false);

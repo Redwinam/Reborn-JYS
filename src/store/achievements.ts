@@ -42,8 +42,8 @@ export const achievements: Achievement[] = [
   { name: '一首歌的时间', desc: '那天只是状态不好！', condition: '醉酒的时候第一次陪女朋友时达成', event: false, ending: false },
   { name: 'Battle King', desc: '中国Underground比赛，老子哪个没拿过冠。', condition: '在每年的Battle大赛中累计拿冠次数>=3次达成', event: false, ending: false },
 
-  { name: '重生之地产大亨', desc: '姜云升的地产帝国！', condition: '在地产界面累计购买地产数量>=10个达成', event: false, ending: false, dlc: true },
-  { name: '重生之绝对股神', desc: '姜云升的股票帝国！', condition: '在股票界面累计购买股票收益率>=300%达成', event: false, ending: false, dlc: true },
-  { name: '重生之投资奇才', desc: '姜云升的投资帝国！', condition: '在投资界面累计投资项目数量>=10个达成', event: false, ending: false, dlc: true },
-  // { name: '重生之大预言家', desc: '姜云升的预言帝国！', condition: '在预言界面累计预言数量>=10个达成', event: false, ending: false, dlc: true },
+  { name: '重生之地产大亨', desc: '姜云升的地产帝国！', condition: '在交易所之地产版块累计购买地产数量>=10个达成', event: false, ending: false, dlc: true },
+  { name: '重生之绝对股神', desc: '姜云升的股票帝国！', condition: '在交易所之炒股版块累计购买股票收益率>=300%达成', event: false, ending: false, dlc: true },
+  { name: '重生之投资奇才', desc: '姜云升的投资帝国！', condition: '在交易所之投资版块完成所有投资项目后达成', event: false, ending: false, dlc: true },
+  { name: '重生之大预言家', desc: '姜门永存！', condition: '在预言界面累计预言数量>=10个达成', event: false, ending: false, dlc: true },
 ]

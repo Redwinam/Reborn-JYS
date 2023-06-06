@@ -45,7 +45,8 @@ export interface State {
 
   achievementStates: AchievementState[]
   unlockedAchievementConditions: string[]
-  
+  happenedEvents: string[]
+
   battleResults: BattleResult[]
 
   undergroundCount: number
@@ -58,11 +59,12 @@ export interface State {
   songs: string[]
   songStages: Record<string, { completedStage: string | null, unlocked: boolean }>
   unlockedFeiSongs: SongFei[]
-
-
   unlockedVitamins: Vitamin[]
 
-  happenedEvents: string[]
+  realEstate: string[]
+  investedProjects: string[]
+  investYearIncome: number
+  currentStock: boolean
 
   gameEnded: boolean
   currentEndings: string[]
@@ -124,6 +126,7 @@ const state: State =  {
 
   achievementStates: [],
   unlockedAchievementConditions: [],
+  happenedEvents: [],
 
   battleResults: battleResults,
   undergroundCount: 0,
@@ -136,10 +139,12 @@ const state: State =  {
   songs: [],
   songStages: {},
   unlockedFeiSongs: [],
-
   unlockedVitamins: [],
 
-  happenedEvents: [],
+  realEstate: [],
+  investedProjects: [],
+  investYearIncome: 0,
+  currentStock: false,
 
   gameEnded: false,
   currentEndings: [],
@@ -309,9 +314,7 @@ const mutations = {
         state.battleResults[index].end = end;
       }
     }
-
   },
-
   setSignedAgency(state: State, payload: boolean) {
     state.signedAgency = payload
     if (payload) {
@@ -321,12 +324,10 @@ const mutations = {
   incrementGoToAgencyTimes(state: State) {
     state.goToAgencyTimes++
   },
-
   buyGold(state: State, payload: number) {
     state.attributes.gold += payload
     state.attributes.money -= 360 * payload
   },
-
   updateItem(state: State, payload: { itemName: string; quantity: number }) {
     const { itemName, quantity } = payload
     if (itemName === '麦克风大锤' || itemName === '恶魔「S」之链' || itemName === '反穿之甲' || itemName === '虚无之裤' || itemName === '黄色卡车' || itemName === '巴黎之靴') {
@@ -350,7 +351,6 @@ const mutations = {
       }
     }
   },
-
   packFood(state: State, { food, quantity }: { food: string, quantity: number }) {
     if (state.inventory[food]) {
       state.inventory[food].quantity += quantity;
@@ -361,7 +361,6 @@ const mutations = {
       };
     }
   },
-
   decreaseInventory(state: State, { itemName, quantity }: { itemName: string; quantity: number }) {
     if (state.inventory[itemName]) {
       state.inventory[itemName].quantity -= quantity
@@ -370,11 +369,9 @@ const mutations = {
       }
     }
   },
-
   addHappenedEvent(state: State, event: string) {
     state.happenedEvents.push(event);
   },
-
   unlockSong(state: State, songTitle: string) {
     if (state.songStages[songTitle]) {
       state.songStages[songTitle].unlocked = true;
@@ -385,7 +382,6 @@ const mutations = {
       };
     }
   },
-
   setSongStages(state: State, songStages: { songTitle: string; stage: string }) {
     if (state.songStages[songStages.songTitle]) {
       state.songStages[songStages.songTitle].completedStage = songStages.stage;
@@ -431,6 +427,12 @@ const mutations = {
       return;
     }
     state.unlockedAchievementConditions.push(achievementName);
+  },
+
+  investProject(state: State, project: { name: string; income: number; cost: number}) {
+    state.investedProjects.push(project.name);
+    state.investYearIncome += project.income;
+    state.attributes.money -= project.cost;
   },
 
   addTextToHistory(state: State, message: string | string[]) {
@@ -523,6 +525,11 @@ const mutations = {
       state.unlockedVitamins = []
       state.unlockedFoods = []
 
+      state.realEstate = [];
+      state.investedProjects = [];
+      state.investYearIncome = 0;
+      state.currentStock = false;
+
     } else {
       state.attributes.talent = Math.floor(state.attributes.talent * 0.2)
       state.attributes.charm = Math.floor(state.attributes.charm * 0.2)
@@ -588,6 +595,7 @@ const mutations = {
     state.lastSpecialItem = null;
     state.achievementStates = [];
     state.unlockedAchievementConditions = [];
+    state.happenedEvents = [];
     state.battleResults = battleResults;
     state.undergroundCount = 0;
     state.tourCount = [0, 0];
@@ -598,7 +606,9 @@ const mutations = {
     state.songStages = {};
     state.unlockedFeiSongs = [];
     state.unlockedVitamins = [];
-    state.happenedEvents = [];
+    state.realEstate = [];
+    state.investedProjects = [];
+    state.currentStock = false;
     state.gameEnded = false;
     state.currentEndings = [];
     state.specialEndingAchievement = null;
@@ -692,6 +702,20 @@ const actions = {
     if ( !Math.floor((state.round - 25) % 36) ) {
       await new Promise(resolve => setTimeout(resolve, 600));
       await context.dispatch('typeWriter', '今年的Battle比赛已经开放，可以在外出时报名参加比赛了。');
+    }
+
+    if ( !Math.floor((state.round) % 36) ) {
+      await new Promise(resolve => setTimeout(resolve, 600));
+      const investedProjects = state.investedProjects;
+      const investYearIncome =  state.investYearIncome;
+      const investedProjectNames = investedProjects.map((project: any) => project.name).join('】、【');
+      context.commit('updateAttribute', { attribute: "money", value: investYearIncome })
+
+      if (investedProjects.length > 1) {
+        await context.dispatch('typeWriter', '【投资年报】年底啦，恭喜投资奇才姜云升获得了【' + investedProjectNames + '】几大投资项目的年收益【' + investYearIncome + '】元！');
+      } else if (investedProjects.length === 1) {
+        await context.dispatch('typeWriter', '【投资年报】年底啦，恭喜投资奇才姜云升获得了【' + investedProjectNames + '】项目的年收益【' + investYearIncome + '】元！');
+      }
     }
 
     if (state.round === 10 * 36 ) {
