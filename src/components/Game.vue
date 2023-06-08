@@ -53,7 +53,8 @@
   <button @click="goToLocation('买东西')" class="action-button action-shopping" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('地下钱庄之暴富金铺')" class="action-button action-buy-gold" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('公司')" class="action-button action-agency" v-if="isGoingOut && signedAgency" :disabled="isTyping"></button>
-  <button @click="showFengyanPopup = true" class="action-button action-agency" v-if="isGoingOut && openFengyan" :disabled="isTyping">风炎文化</button>
+  <!-- <button @click="showFengyanPopup = true" class="action-button action-fengyan" v-if="isGoingOut && openFengyan" :disabled="isTyping">风炎文化</button> -->
+  <button @click="showFengyanPopup = true" class="action-button action-fengyan" :disabled="isTyping"></button>
 
   <button @click="goToLocation('去剪头发')" class="action-button action-cut-hair" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut" :disabled="isTyping"></button>

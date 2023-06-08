@@ -64,7 +64,7 @@ export interface State {
 
   openFengyan: boolean
   artists: Artist[]
-  thisSeasonArtist: { move: { name: string; type: string } | null, dispatch: string[] }
+  thisSeasonArtist: { move: { name: string; action: string } | null, dispatch: string[] }
 
   realEstate: string[]
   investedProjects: string[]
@@ -423,7 +423,7 @@ const mutations = {
     let artist = state.artists.find(artist => artist.name === artistName)
     if(artist && state.thisSeasonArtist.move === null) {
       artist.level += 1
-      state.thisSeasonArtist.move = { name: artistName, type: '招募' }
+      state.thisSeasonArtist.move = { name: artistName, action: '招募' }
       state.attributes.money -= 800000; // 支出公司运营费用
     }
   },
@@ -431,7 +431,7 @@ const mutations = {
     let artist = state.artists.find(artist => artist.name === artistName)
     if(artist && artist.level > 0 && state.thisSeasonArtist.move === null) {
       artist.level += 1
-      state.thisSeasonArtist.move = { name: artistName, type: '锻炼' }
+      state.thisSeasonArtist.move = { name: artistName, action: '锻炼' }
       state.attributes.money -= 800000; // 支出公司运营费用
     }
   },
@@ -762,23 +762,23 @@ const actions = {
           let activity = '';
           switch (artist.level) {
             case 1:
-              activity = '【' + artist.name + '】<small>（ ' + artist.level + ' 级）</small>参加了《男生女生向前冲》，收获冰箱1台';
+              activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了《男生女生向前冲》，收获冰箱1台';
               break;
             case 2:
               income += 8000; // level 2 的艺人增加收入8000
-              activity = '【' + artist.name + '】<small>（ ' + artist.level + ' 级）</small>在LiveHouse嘉宾助演，';
+              activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>在Livehouse嘉宾助演，';
               break;
             case 3:
               income += 80000; // level 3 的艺人增加收入8万
-              activity = '【' + artist.name + '】<small>（ ' + artist.level + ' 级）</small>参加了音乐节演出';
+              activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了音乐节演出';
               break;
             case 4:
               income += 180000; // level 4 的艺人增加收入18万
-              activity = '【' + artist.name + '】<small>（ ' + artist.level + ' 级）</small>参加了音乐节演出';
+              activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了音乐节演出';
               break;
             case 5:
               income += 280000; // level 5 的艺人增加收入28万
-              activity = '【' + artist.name + '】<small>（ ' + artist.level + ' 级）</small>参加了音乐节演出';
+              activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了音乐节演出';
               break;
           }
   
