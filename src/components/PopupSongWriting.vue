@@ -100,7 +100,7 @@ function isSongAvailable(song: Song) {
 
   switch (song.title) {
     case '孤独面店':
-      if (store.state.breakupTimes < 2 || store.state.flirtCount > 0 || (store.state.term - store.state.lastBreakupTerm) < 9) {
+      if (store.state.breakupTimes < 2 || store.state.flirtCount > 0 || (store.state.round - store.state.lastBreakupRound) < 9) {
         return false;
       }
       break;
@@ -118,7 +118,7 @@ function isSongAvailable(song: Song) {
       break;
 
     case '想你':
-      if (!store.state.artists.find((artist: Artist) => artist.name === '丙丙') || store.state.artists.find((artist: Artist) => artist.name === '丙丙').level < 3 || (store.state.term - store.state.lastBreakupTerm) > 3) {
+      if (!store.state.artists.find((artist: Artist) => artist.name === '丙丙') || store.state.artists.find((artist: Artist) => artist.name === '丙丙').level < 3 || (store.state.round - store.state.lastBreakupRound) > 3) {
         return false;
       }
       break;

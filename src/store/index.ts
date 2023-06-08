@@ -194,6 +194,7 @@ const mutations = {
       } else {
         (state.attributes[attribute] as number) += value
       }
+      state.attributes.money = Math.round(state.attributes.money)
 
     } else if (attribute === 'gold') {
       if (isNaN(state.attributes.gold)) {
@@ -763,44 +764,45 @@ const actions = {
       await context.dispatch('typeWriter', '姜云升签约了公司，到账工资1500元。');
     }
 
-    if (state.thisSeasonArtist.dispatch.length > 0 && !Math.floor(state.round % 9)) {
+    if (!Math.floor(state.round % 9)) {
 
-      let income = 0;
-      let activities = [];
+      if (state.thisSeasonArtist.dispatch.length > 0){
 
-      for (const artistName of state.thisSeasonArtist.dispatch) {
-        const artist = state.artists.find(artist => artist.name === artistName);
-        if (artist && artist.level > 0) {
-          let activity = '';
-          switch (artist.level) {
-            case 1:
-              activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了《男生女生向前冲》，收获冰箱1台';
-              break;
-            case 2:
-              income += 8000; // level 2 的艺人增加收入8000
-              activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>在Livehouse嘉宾助演';
-              break;
-            case 3:
-              income += 80000; // level 3 的艺人增加收入8万
-              activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了音乐节演出';
-              break;
-            case 4:
-              income += 180000; // level 4 的艺人增加收入18万
-              activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了音乐节演出';
-              break;
-            case 5:
-              income += 280000; // level 5 的艺人增加收入28万
-              activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了音乐节演出';
-              break;
+        let income = 0;
+        let activities = [];
+
+        for (const artistName of state.thisSeasonArtist.dispatch) {
+          const artist = state.artists.find(artist => artist.name === artistName);
+          if (artist && artist.level > 0) {
+            let activity = '';
+            switch (artist.level) {
+              case 1:
+                activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了《男生女生向前冲》，收获冰箱1台';
+                break;
+              case 2:
+                income += 8000; // level 2 的艺人增加收入8000
+                activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>在Livehouse嘉宾助演';
+                break;
+              case 3:
+                income += 80000; // level 3 的艺人增加收入8万
+                activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了音乐节演出';
+                break;
+              case 4:
+                income += 180000; // level 4 的艺人增加收入18万
+                activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了音乐节演出';
+                break;
+              case 5:
+                income += 280000; // level 5 的艺人增加收入28万
+                activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了音乐节演出';
+                break;
+            }
+            activities.push(activity);
           }
-  
-          activities.push(activity);
         }
+        context.commit('updateAttribute', { attribute: 'money', value: income }); //更新总收入
+        await context.dispatch('typeWriter', `【风炎经营季报】本季度风炎文化艺人${activities.join('；')}——风炎文化有限公司艺人演出本季度累计收益二八分得${income}元！`);
+
       }
-
-      context.commit('updateAttribute', { attribute: 'money', value: income }); //更新总收入
-      await context.dispatch('typeWriter', `【风炎经营季报】本季度风炎文化艺人${activities.join('；')}——风炎文化有限公司艺人演出本季度累计收益二八分得${income}元！`);
-
       context.commit('resetThisSeasonArtist');
 
     }

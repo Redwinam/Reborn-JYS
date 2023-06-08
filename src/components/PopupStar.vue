@@ -23,7 +23,6 @@
 		.get("https://api.jys-wtf.proxy.mayq.me/players")
 		.then((res) => {
 		  stars.value = res.data;
-		  console.log(res.data);
 		  errorMessage.value = "";
 		})
 		.catch((error) => {

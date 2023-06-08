@@ -40,7 +40,7 @@ const recruitArtist = async (artistName: string) => {
     store.commit('recruitArtist', artistName);
     // 统计现在已有几位艺人level>0 的数量
     const recruitedArtistCount = artists.value.filter((artist: Artist) => artist.level > 0).length;
-    await store.dispatch('typeWriterPopup', `「告诉我你也想火🔥吗，想成为下一个我吗？」恭喜！你成功招募了【${artistName}】为风炎文化的第${recruitedArtistCount}位艺人，你可以派遣你的艺人去参加活动赚大钱你们一起买房买车了！你支出了本季度风炎文化有限公司的经营费用80万元。`);
+    await store.dispatch('typeWriterPopup', `「告诉我你也想火🔥吗，想成为下一个我吗？」恭喜！你成功招募了【${artistName}】为风炎文化的第${recruitedArtistCount}位艺人，你可以派遣你的艺人去参加活动赚大钱你们一起买房买车了！你支出了本季度风炎文化有限公司的经营费用80万元💸。`);
   } else if (thisSeasonArtist.value.move) {
     await store.dispatch('typeWriterPopup', `本季度风炎文化已经${thisSeasonArtist.value.move.action}了艺人【${artistName}】，已经满负荷运转啦，下季度再招募或锻炼艺人吧！`);
   } else {

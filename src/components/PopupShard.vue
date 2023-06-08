@@ -52,7 +52,7 @@ const props = defineProps({
 }
 
 .shard-message {
-  font-size: 0.7rem;
+  font-size: 0.84rem;
   color: #666;
   margin-top: 0.5rem;
   display: flex;

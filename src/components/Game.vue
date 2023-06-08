@@ -326,7 +326,6 @@ onMounted( async () => {
     delete copiedState.player.plays;
 
     // 存储游戏状态数据到 cookies
-    console.log(copiedState)
     document.cookie = `gameData=${JSON.stringify(copiedState)}; expires=Thu, 01 Jan 2099 00:00:00 UTC; path=/;`;
   });
 
