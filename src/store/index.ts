@@ -812,7 +812,7 @@ const actions = {
       await new Promise(resolve => setTimeout(resolve, 600));
       const investedProjects = state.investedProjects;
       const investYearIncome =  state.investYearIncome;
-      const investedProjectNames = investedProjects.map((project: any) => project.name).join('】、【');
+      const investedProjectNames = investedProjects.map((project: string) => project).join('】、【');
       context.commit('updateAttribute', { attribute: "money", value: investYearIncome })
 
       if (investedProjects.length > 1) {
