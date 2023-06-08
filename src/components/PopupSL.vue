@@ -91,7 +91,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { useStore } from 'vuex'
 import axios from 'axios'
 
@@ -257,6 +257,14 @@ const resetGame = () => {
   showResetGameConfirmPopup.value = false
   showSLPopup.value = false
 }
+
+watch(showSLPopup, (newValue, oldValue) => {
+  if(newValue && player.value) {
+    errorMessage.value = "加载中……"
+    refreshPlayer()
+    errorMessage.value = ""
+  }
+})
 
 </script>
 

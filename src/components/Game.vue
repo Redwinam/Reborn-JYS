@@ -316,12 +316,18 @@ onMounted( async () => {
   } else {
     showStartGameDialog.value = true
   }
-
+  
   store.subscribe(() => {
-    // 存储游戏状态数据到 cookies
-    const { textHistory, ...toSaveStore } = store.state;
-    document.cookie = `gameData=${JSON.stringify(toSaveStore)}; expires=Thu, 01 Jan 2099 00:00:00 UTC; path=/;`;
+    // 深复制状态
+    const copiedState = JSON.parse(JSON.stringify(store.state));
+    
+    // 删除不想存储的状态部分
+    delete copiedState.textHistory;
+    delete copiedState.player.plays;
 
+    // 存储游戏状态数据到 cookies
+    console.log(copiedState)
+    document.cookie = `gameData=${JSON.stringify(copiedState)}; expires=Thu, 01 Jan 2099 00:00:00 UTC; path=/;`;
   });
 
 })
