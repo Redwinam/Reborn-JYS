@@ -325,8 +325,8 @@ onMounted( async () => {
     const copiedState = JSON.parse(JSON.stringify(store.state));
     
     // 删除不想存储的状态部分
-    delete copiedState.textHistory;
-    delete copiedState.player.plays;
+    if (copiedState.textHistory) delete copiedState.textHistory;
+    if (copiedState.player && copiedState.player.plays) delete copiedState.player.plays;
 
     // 存储游戏状态数据到 cookies
     document.cookie = `gameData=${JSON.stringify(copiedState)}; expires=Thu, 01 Jan 2099 00:00:00 UTC; path=/;`;

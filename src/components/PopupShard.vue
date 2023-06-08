@@ -3,11 +3,15 @@
   <div class="shard">
     <div v-if="shardName ==='晚霞和云' || shardName ==='秋天的第一片晚霞'">
       <video class="shard-video" controls muted>
-        <source :src="'/shards/' + shardName + '.mp4'" type="video/mp4">
+        <source :src="'/shards/' + shardName + '.mp4'" type="video/mp4" @loadeddata="shardLoaded = true" @error="shardError = true">
       </video>
+      <!-- <div v-if="!shardLoaded && !shardLoaded" class="loading">（碎片加载中...）</div>
+      <div v-if="shardError" class="error">（碎片加载失败）</div> -->
     </div>
     <div v-else>
-      <img class="shard-image" :src="'/shards/' + shardName + '.jpg'" alt="shard">
+      <img class="shard-image" :src="'/shards/' + shardName + '.jpg'" alt="shard" @load="shardLoaded = true" @error="shardError = true">
+      <!-- <div v-if="!shardLoaded && !shardLoaded" class="loading">（碎片加载中...）</div>
+      <div v-if="shardError" class="error">（碎片加载失败）</div> -->
     </div>
     <p class="shard-message"><span>「日出·晚霞」碎片之——</span><span>《{{ shardName }}》</span></p>
   
@@ -16,12 +20,16 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import Popup from '../components/Popup.vue'
 import { showShardPopup } from './composables/gameRefs';
 
 const props = defineProps({
   shardName: String,
 })
+
+const shardLoaded = ref(false)
+const shardError = ref(false)
 
 </script>
 
