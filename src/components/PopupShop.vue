@@ -68,7 +68,15 @@ const splitArrayInHalf = (arr: Array<any>) => {
   return [left, right];
 };
 
-const [specialItemsLeft, specialItemsRight] = splitArrayInHalf(specialItems.value);
+const splitArrayInAlternatingOrder = (arr: Array<any>) => {
+  return arr.reduce((acc, val, i) => {
+    acc[i % 2].push(val);
+    return acc;
+  }, [[], []]);
+};
+
+
+const [specialItemsLeft, specialItemsRight] = splitArrayInAlternatingOrder(specialItems.value);
 const [normalItemsLeft, normalItemsRight] = splitArrayInHalf(normalItems.value);
 
 const inventory = computed(() => store.state.inventory);

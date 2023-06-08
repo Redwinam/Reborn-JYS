@@ -177,6 +177,7 @@
 .action-go-out {  background: url('@/assets/button_go-out.png') center / contain no-repeat;  width: 5vh;  height: 12.3vh;  top: 70%;  right: 12%; }
 .action-hang-out {  background: url('@/assets/button_hang-out.png') center / contain no-repeat;  width: 5vh;  height: 13.6vh;  top: 69%;  left: 11%; }
 .action-sleep-rest {  background: url('@/assets/button_sleep-rest.png') center / contain no-repeat;  width: 4.6vh;  height: 13.5vh;  top: 24%;  left: 18%; }
+.action-guahua {  background: url('@/assets/挂画.png') center / contain no-repeat;  width: 7.136vh;  height: 5.904vh;  top: 6.6%;  left: 48%; }
 .action-onlive {  background: url('@/assets/button_onlive.png') center / contain no-repeat;  width: 4.8vh;  height: 12vh;  top: 56%;  left: 17%; }
 .action-gaming {  background: url('@/assets/button_gaming.png') center / contain no-repeat;  width: 4.5vh;  height: 13.35vh;  top: 63%;  left: 46%; }
 .action-write-song {  background: url('@/assets/button_write-song.png') center / contain no-repeat;  width: 4.6vh;  height: 11.1vh;  top: 64%;  left: 36%; }

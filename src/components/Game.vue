@@ -42,6 +42,7 @@
   <button @click="performAction('赚钱')" class="action-button action-make-money" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
 
   <button @click="performAction('睡觉休息')" class="action-button action-sleep-rest" v-if="isAtHome" :disabled="isTyping"></button>
+  <button @click="typewriter('的确不如。')" class="action-button action-guahua" v-if="isAtHome && haveGuaHua" :disabled="isTyping"></button>
   <button @click="performAction('开直播')" class="action-button action-onlive" v-if="isAtHome" :disabled="isTyping"></button>
   <button @click="performAction('打游戏')" class="action-button action-gaming" v-if="isAtHome" :disabled="isTyping"></button>
   <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome" :disabled="isTyping"></button>
@@ -203,6 +204,8 @@ const weak = computed(() => store.state.weak)
 const drunk = computed(() => store.state.drunk)
 const signedAgency = computed(() => store.state.signedAgency)
 const openFengyan = computed(() => store.state.openFengyan)
+
+const haveGuaHua = computed(() => { return store.state.inventory['挂画'] && store.state.inventory['挂画'].quantity > 0 })
 
 const textHistory = computed(() => {
   const history = store.state.textHistory
