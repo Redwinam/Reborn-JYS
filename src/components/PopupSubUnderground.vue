@@ -129,8 +129,8 @@ const activity = async (activityName: string) => {
         `姜云升来到了${musicFestival}的舞台上，为现场的观众们带来了一场印象深刻的演出。<small>姜云升才华+10，魅力+10，金钱+100000，人气+200。</small>`
       ])
 
-      const allShards = ['晚霞和云', '秋天的第一片晚霞', '晚霞分享艺术家'];
-      const unCollectedShards = allShards.filter(shard => !store.state.shards.includes(shard));
+      const allAfterglows = ['晚霞和云', '秋天的第一片晚霞', '晚霞分享艺术家'];
+      const unCollectedShards = allAfterglows.filter(shard => !store.state.shards.includes(shard));
     
       if (unCollectedShards.length > 0 && Math.random() < 0.2) {
         const randomIndex = Math.floor(Math.random() * unCollectedShards.length);

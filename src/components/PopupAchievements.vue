@@ -17,6 +17,17 @@
   </template>
   </div>
 
+  <div v-if="store.state.shards && store.state.shards.length > 0">
+    <h3>「日出·晚霞」</h3>
+    <ul class="shards">
+      <li class="shard" v-for="shard in allShards" @click="collectShard(shard) && (shardName = shard, showShardPopup = true)">
+        <img v-if="collectShard(shard)" :src="'/shards/spot/'+ shard + '.jpg'" />
+        <img v-else class="hide" :src="'/shards/spot/'+ shard + '.jpg'" />
+        <p v-if="!collectShard(shard)" class="grey-out">（未解锁）</p>
+      </li>
+    </ul>
+  </div>
+
   <p v-if="UnlockedAchievementCount == achievements.length" class="game-maker">制作人：@千啾略</p>
 </div>
 
@@ -54,7 +65,7 @@ import { useStore } from 'vuex'
 
 import PopupSub from '../components/PopupSub.vue'
 import { achievements, Achievement, AchievementState } from '../store/achievements'
-import { showAchievementNotePopup } from '../components/composables/gameRefs'
+import { showAchievementNotePopup, showShardPopup, shardName } from '../components/composables/gameRefs'
 
 const store = useStore()
 const achievementStates = computed(() => store.state.achievementStates)
@@ -120,6 +131,11 @@ const unlockAchievementCondition = (achievement: Achievement) => {
   showAchievementConditionPopup.value = true
 }
 
+const allShards = ['日出', '晚霞和云', '秋天的第一片晚霞', '晚霞分享艺术家']
+const collectShard = (shardName: string) => {
+  return store.state.shards.includes(shardName)
+}
+
 </script>
 
 <style scoped>
@@ -133,14 +149,15 @@ const unlockAchievementCondition = (achievement: Achievement) => {
   margin: 0;
 }
 
-.achievements {
+.achievements, .shards {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 0;
 }
 
-.achievement {
+.achievement, .shard {
+  position: relative; 
   flex: 0 0 calc(50% - 30px);
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -151,6 +168,24 @@ const unlockAchievementCondition = (achievement: Achievement) => {
   align-items: center;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
+}
+
+.shards {
+  justify-content: space-around; 
+}
+
+.shard {
+  justify-content: center; 
+}
+
+.shard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shard img.hide {
+  opacity: 0.09;
 }
 
 .achievement-badge {
@@ -176,13 +211,20 @@ const unlockAchievementCondition = (achievement: Achievement) => {
   font-weight: bold;
 }
 
-.achievement-info p {
+.achievement-info p, .shard p {
   margin: 0;
   font-size: 0.8rem;
 }
 
 .grey-out {
   color: #ccc;
+}
+
+.shard .grey-out {
+  position: absolute; /* 将 .grey-out 定位到 .shard 的中心 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 使其完全居中 */
 }
 
 .achievement-note .desc {
