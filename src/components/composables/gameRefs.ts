@@ -13,7 +13,7 @@ export const showBattleDialog = ref(false);
 export const showFoodPopup = ref(false);
 export const showDrinkPopup = ref(false);
 export const showShopPopup = ref(false);
-export const showFengyanPopup = ref(true);
+export const showFengyanPopup = ref(false);
 
 export const isTyping = ref(false);
 

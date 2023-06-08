@@ -787,7 +787,7 @@ const actions = {
       }
 
       context.commit('updateAttribute', { attribute: 'money', value: income }); //更新总收入
-      await context.dispatch('typeWriter', `【风炎经营季报】本季度风炎文化艺人${activities.join('；')}——风炎文化有限公司艺人演出本季度累计收益二八分得${income}元`);
+      await context.dispatch('typeWriter', `【风炎经营季报】本季度风炎文化艺人${activities.join('；')}——风炎文化有限公司艺人演出本季度累计收益二八分得${income}元！`);
 
       context.commit('resetThisSeasonArtist');
 

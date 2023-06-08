@@ -147,7 +147,10 @@ async function unlockSongs() {
   for (const song of songLibrary) {
     if (isSongAvailable(song) && (!store.state.songStages[song.title] || !store.state.songStages[song.title].unlocked)) {
       store.commit('unlockSong', song.title);
-      await store.dispatch('typeWriterPopup', [`解锁了新歌曲《${song.title}》！`]);
+      const textboxPopup = document.getElementById('textboxPopup')
+      if (textboxPopup) {
+        await store.dispatch('typeWriterPopup', [`解锁了新歌曲《${song.title}》！`]);
+      }
     }
   }
 }
