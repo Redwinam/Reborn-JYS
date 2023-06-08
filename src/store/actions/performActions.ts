@@ -1,7 +1,7 @@
 import { Commit } from 'vuex';
 import { store } from '../index';
 
-import { isAtHome, isGoingOut, showBreakupDialog, showSongWritingDialog } from '../../components/composables/gameRefs';
+import { isAtHome, isGoingOut, showSongWritingDialog, showShardPopup, shardName } from '../../components/composables/gameRefs';
 import { girlfriendTypes } from '../girlfriend';
 import { SkillLevelMapping } from './upgradeSkill';
 import { vitaminLibrary } from '../vitamins';
@@ -190,12 +190,20 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
 
       const isAchUnlocked = context.getters.unlockedAchievement('醉酒小姜');
 
-      if (store.state.drunk > 0 && !isAchUnlocked) {
+      if (store.state.drunk > 0 && (!isAchUnlocked || !store.state.shards.includes('日出'))) {
         context.commit('updateAttribute', { attribute: 'energy', value: -10 });
         context.commit('updateAttribute', { attribute: 'red', value: (300 + Math.floor(Math.random() * 0.12 * store.state.attributes.popularity.red)) });
         context.commit('updateAttribute', { attribute: 'divine', value: 9 });
         context.commit('unlockAchievement', '醉酒小姜');
         await context.dispatch('typeWriter', ['姜云升今天喝醉了，却还是开了直播，讲了好多平时不会讲的话。酒渐醒，拉开窗帘，窗外是日出。', '姜云升的人气增加了，一项神秘的属性增加了。', '解锁了第' + context.getters.UnlockedAchievementCount + '个成就【醉酒小姜】']);
+        await context.dispatch('waitAndType', 200);
+        if (!store.state.shards.includes('日出')) {
+          store.commit('collectShard', '日出');
+          shardName.value = '日出';
+          await store.dispatch('typeWriter', `你收集了一枚日出碎片……`);
+          await store.dispatch('waitAndType', 600);
+          showShardPopup.value = true;
+        }
         return;
       } else if (store.state.drunk > 0 && isAchUnlocked) {
         await context.dispatch('typeWriter', '姜云升今天喝醉了，就不开直播了。');

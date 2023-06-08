@@ -93,6 +93,8 @@
 <PopupSubUnderground></PopupSubUnderground>
 <PopupDao></PopupDao>
 
+<popup-shard :shardName="shardName"></popup-shard>
+
 <Popup title="历史记录" :visible="showTextHistoryPopup" @close="showTextHistoryPopup = false">
   <div class="textHistory" ref="textHistoryContainer">
     <p v-for="text in textHistory" :key="text">{{ text }}</p>
@@ -162,6 +164,7 @@ import PopupSubGold from '../components/PopupSubGold.vue'
 import PopupSubUnderground from '../components/PopupSubUnderground.vue'
 import PopupDao from '../components/PopupDao.vue'
 import PopupFengyan from '../components/PopupFengyan.vue'
+import PopupShard from '../components/PopupShard.vue'
 
 import PopupSL from '../components/PopupSL.vue'
 
@@ -174,10 +177,9 @@ import DialogBattle from '../components/DialogBattle.vue'
 import DialogStartGame from '../components/DialogStartGame.vue'
 
 import { attributeNames } from '../store/attributes'
-
 import { isAtHome, isGoingOut, 
   showBreakupDialog, showEventDialog, showSongWritingDialog, showGameEndDialog, showUnsignAgencyDialog, showBattleDialog, 
-  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, showBankPopup, showStartGameDialog, showSLPopup, showFengyanPopup,
+  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, showBankPopup, showStartGameDialog, showSLPopup, showFengyanPopup, showShardPopup, shardName, 
   isTyping
 } from './composables/gameRefs';
 import { BattleResult } from '../store/battle'

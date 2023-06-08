@@ -17,8 +17,6 @@
 </div>
 
 </PopupSub>
-
-<popup-shard :shardName="shardName"></popup-shard>
 </template>
 
 <script setup lang="ts">
@@ -26,8 +24,7 @@ import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
 import PopupSub from '../components/PopupSub.vue'
-import PopupShard from '../components/PopupShard.vue'
-import { showUndergroundPopup, showShardPopup } from './composables/gameRefs';
+import { showUndergroundPopup, showShardPopup, shardName } from './composables/gameRefs';
 
 const store = useStore()
 
@@ -97,8 +94,6 @@ async function tour(index: number) {
 
   await store.dispatch('incrementRound');
 }
-
-const shardName = ref('')
 
 const activity = async (activityName: string) => {
   switch (activityName) {
