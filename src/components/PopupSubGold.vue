@@ -78,7 +78,7 @@
       <div class="project-price">{{ store.state.investedProjects.includes(project.name) ? '成功投资' : '起投金额' }} <button class="button_invest" :class="store.state.investedProjects.includes(project.name) ? 'button_invested' : ''"  @click="!isTyping && invest(project.name)">￥{{ project.cost/10000 }}万元</button></div>
       
     </div>
-    <p id="textboxPopup"></p>
+    <p id="textboxPopup">欢迎姜云升先生来到交易所·投资中心！</p>
     <p class="note-message">请挑选你想要投资的项目，每年初会获得对应的项目收益。投资有风险，入市须谨慎！项目与现实无关，仅代表游戏效果，不构成投资建议。</p>
   </div>
 </Popup>
@@ -151,7 +151,7 @@ const InvestmentProjects = [
 
 async function invest(projectName: string) {
   if (store.state.investedProjects.includes(projectName)) {
-    await store.dispatch('typeWriterPopup', '【系统】姜云升已经投资过这个项目啦，本项目不支持复投！')
+    await store.dispatch('typeWriterPopup', '【系统】姜云升已经投资过【' + projectName + '】项目啦，本项目不支持复投！')
   } else {
     const project = InvestmentProjects.find(project => project.name === projectName)
     if (project) {
@@ -278,10 +278,11 @@ async function invest(projectName: string) {
 #textboxPopup {
   font-size: 0.9em;
   color: #1e2228;
-  padding: 0;
+  padding: 10px;
   margin-top: 25px;
-  margin-bottom: -20px;
   font-weight: bold;
+  border: 1px dashed #4c4d55;
+  border-radius: 0.5rem;
 }
 
 .invest-project .project {
@@ -289,7 +290,7 @@ async function invest(projectName: string) {
   align-items: center;
   gap: 10px;
   justify-content: space-between;
-  margin: 10px 0;
+  margin: 10px;
   white-space: nowrap;
 }
 
@@ -320,6 +321,12 @@ async function invest(projectName: string) {
   background-color: #1e2228;
 }
 
+
+.invest-project .note-message {
+  border-top: none;
+  margin-top: 0.2rem;
+  padding-top: 0.2rem;
+}
 
 
 </style>
