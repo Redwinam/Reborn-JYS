@@ -2,7 +2,7 @@ import { Commit } from 'vuex';
 import { allFoods } from '../eats';
 import { Achievement } from '../achievements';
 import { SkillLevelMapping } from './upgradeSkill';
-import { showFoodPopup, showDrinkPopup, showShopPopup, showBankPopup, showUnsignAgencyDialog, showBattleDialog, showUndergroundPopup, showDaoPopup } from '../../components/composables/gameRefs';
+import { showFoodPopup, showDrinkPopup, showShopPopup, showBankPopup, showUnsignAgencyDialog, showBattleDialog, showUndergroundPopup, showExchangePopup, showDaoPopup } from '../../components/composables/gameRefs';
 import store from '..';
 
 export async function goToLocation(context: {
@@ -271,6 +271,11 @@ export async function goToLocation(context: {
     case '地下钱庄之暴富金铺':
       await context.dispatch('waitAndType', 600);
       showBankPopup.value = true;
+      break;
+
+    case '交易所':
+      await context.dispatch('waitAndType', 600);
+      showExchangePopup.value = true;
       break;
 
     case '公司':

@@ -11,6 +11,7 @@
       <p id="textboxPopup" v-if="title ==='写歌'">一起写歌吧！</p>
       <p id="textboxPopup" v-if="title ==='物品'"></p>
       <p id="textboxPopup" v-if="title ==='风炎文化'"></p>
+      <p id="textboxPopup" v-if="title ==='交易所'">【系统】恭喜姜云升已解锁成就【汤臣亿品】，地下钱庄已升级为交易所🔑向您开放，现已开放区域有交易所北市·地下钱庄（原）、交易所西市·投资中心！</p>
       <button v-if="showCloseButton" @click="$emit('close')" class="close-button"><X></X></button>
     </div>
   </div>

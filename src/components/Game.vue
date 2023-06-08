@@ -52,7 +52,8 @@
   <button @click="goToLocation('去吃点东西')" class="action-button action-eat" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('去喝点东西')" class="action-button action-drink" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('买东西')" class="action-button action-shopping" v-if="isGoingOut" :disabled="isTyping"></button>
-  <button @click="goToLocation('地下钱庄之暴富金铺')" class="action-button action-buy-gold" v-if="isGoingOut" :disabled="isTyping"></button>
+  <button @click="goToLocation('地下钱庄之暴富金铺')" class="action-button action-buy-gold" v-if="isGoingOut && !store.getters.unlockedAchievement('汤臣亿品')" :disabled="isTyping"></button>
+  <button @click="goToLocation('交易所')" class="action-button action-exchange" v-if="isGoingOut && store.getters.unlockedAchievement('汤臣亿品')" :disabled="isTyping"></button>
   <button @click="goToLocation('公司')" class="action-button action-agency" v-if="isGoingOut && signedAgency" :disabled="isTyping"></button>
   <button @click="showFengyanPopup = true" class="action-button action-fengyan" v-if="isGoingOut && openFengyan" :disabled="isTyping"></button>
 
@@ -81,6 +82,7 @@
 <Popup title="客官今天打算吃点什么？" :visible="showFoodPopup" @close="showFoodPopup = false; store.dispatch('incrementRound');"><popup-food /></Popup>
 <Popup title="买喝的！" :visible="showDrinkPopup" @close="showDrinkPopup = false; store.dispatch('incrementRound'); "><popup-drink /></Popup>
 <Popup title="买东西！" :visible="showShopPopup" @close="showShopPopup = false; store.dispatch('incrementRound');"><popup-shop /></Popup>
+<Popup title="交易所" :visible="showExchangePopup" @close="showExchangePopup = false"><popup-exchange /></Popup>
 <Popup title="地下钱庄" :visible="showBankPopup" @close="showBankPopup = false"><popup-bank /></Popup>
 <Popup title="风炎文化" :visible="showFengyanPopup" @close="showFengyanPopup = false"><popup-fengyan /></Popup>
 
@@ -162,6 +164,7 @@ import PopupDrink from '../components/PopupDrink.vue'
 import PopupShop from '../components/PopupShop.vue'
 import PopupBank from '../components/PopupBank.vue'
 import PopupSubGold from '../components/PopupSubGold.vue'
+import PopupExchange from '../components/PopupExchange.vue'
 import PopupSubUnderground from '../components/PopupSubUnderground.vue'
 import PopupDao from '../components/PopupDao.vue'
 import PopupFengyan from '../components/PopupFengyan.vue'
@@ -180,7 +183,7 @@ import DialogStartGame from '../components/DialogStartGame.vue'
 import { attributeNames } from '../store/attributes'
 import { isAtHome, isGoingOut, 
   showBreakupDialog, showEventDialog, showSongWritingDialog, showGameEndDialog, showUnsignAgencyDialog, showBattleDialog, 
-  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, showBankPopup, showStartGameDialog, showSLPopup, showFengyanPopup, showShardPopup, shardName, 
+  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, showBankPopup, showStartGameDialog, showSLPopup, showFengyanPopup, showExchangePopup, shardName, 
   isTyping
 } from './composables/gameRefs';
 import { BattleResult } from '../store/battle'

@@ -169,7 +169,7 @@ async function invest(projectName: string) {
             const isAchUnlocked = store.getters.unlockedAchievement('重生之投资奇才');
             if (!isAchUnlocked) {
               store.commit('unlockAchievement', '重生之投资奇才');
-              await store.dispatch('typeWriterPopup', ['恭喜姜云升已经投资了交易所的所有投资项目，解锁了第' + store.getters.UnlockedAchievementCount + '个成就【重生之投资奇才】（DLC）！感谢重生的姜云升为祖国大江南北的建设做出的卓越贡献！']);
+              await store.dispatch('typeWriterPopup', ['恭喜姜云升已经投资了交易所的所有投资项目，解锁了第' + store.getters.UnlockedAchievementCount + '个成就【重生之投资奇才】（DLC）！感谢姜云升先生为祖国大江南北的建设做出的贡献！']);
             }
           }
         }

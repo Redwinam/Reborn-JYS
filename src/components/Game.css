@@ -190,6 +190,7 @@
 .action-drink {  background: url('@/assets/button_drinking.png') center / contain no-repeat;  width: 4.6vh;  height: 14.95vh;  top: 54%;  left: 31%; }
 .action-shopping {  background: url('@/assets/button_shopping.png') center / contain no-repeat;   width: 4.5vh;  height: 12.35vh;  top: 16%;  left: 38%; border: 1px solid #e7e0df; border-radius: 0.2rem;}
 .action-buy-gold {  background: url('@/assets/button_buy-gold.png') center / contain no-repeat;   width: 4.5vh;  height: 13.35vh;  top: 60%;  left: 46%; border: 1px solid #e7e0df; border-radius: 0.2rem;}
+.action-exchange {  background: url('@/assets/button_exchange.png') center / contain no-repeat;   width: 4.5vh;  height: 11.05vh;  top: 60%;  left: 46%; outline: 1px solid #e7e0df; border-radius: 0.2rem;}
 .action-agency {  background: url('@/assets/button_agency.png') center / contain no-repeat;   width: 4.4vh;  height: 8.75vh;  top: 74%;  left: 28.4%; border: 1px solid #e7e0df; border-radius: 0.2rem;}
 .action-fengyan {  background: url('@/assets/button_Fengyan.png') center / contain no-repeat;   width: 5.3vh;  height: 8.2vh;  top: 52%;  left: 12%; outline: 1px solid #e7e0df; border-radius: 0.2rem;}
 .action-cut-hair {  background: url('@/assets/button_cut-hair.png') center / contain no-repeat;  width: 4.8vh;  height: 12vh;  top: 24%;  left: 56%; }
