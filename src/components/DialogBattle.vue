@@ -175,7 +175,7 @@ const battleOptions = ref(["报名参加！", "再准备准备", "放弃本次�
 onMounted(async () => {
   if (document.getElementById('textboxPopup')) {
     await store.dispatch('typeWriterPopup', battleToText.value);
-    await new Promise(resolve => setTimeout(resolve, 200))
+    await store.dispatch('waitAndType', 200)
     showOptions.value = true
   }
 });
@@ -186,7 +186,7 @@ async function typeWriterPopup (text: string, options: string[]) {
     textboxPopup.innerHTML = ""
     showOptions.value = false
     await store.dispatch('typeWriterPopup', text);
-    await new Promise(resolve => setTimeout(resolve, 600))
+    await store.dispatch('waitAndType', 600)
     battleOptions.value = options
     showOptions.value = true
   }
@@ -202,7 +202,7 @@ async function typeWriterFenwei() {
     await store.dispatch('typeWriterPopup', "「🙌！！」");
     await store.dispatch('typeWriterPopup', "「Motherf**ker!」…「WTF!」……「不好意思』…🎉！");
     await store.dispatch('typeWriterPopup', "Wow~~！今天晚上获胜的选手是——🏆");
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await store.dispatch('waitAndType', 1000)
   }
 }
 
@@ -228,7 +228,7 @@ async function battle(battleOption: string) {
       
     } else if (battleOption === "继续参赛！") {
       await store.dispatch('typeWriterPopup', "Wow~~！今天晚上决胜出的八强是——🏆");
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await store.dispatch('waitAndType', 1000)
       if (isWinning(currentBattleCondition.condition_baqiang)) {
         // updateBattleResult
         store.commit('updateBattleResult', { year: year, result: '八强'})
@@ -242,7 +242,7 @@ async function battle(battleOption: string) {
       }
     } else if (battleOption === "进入决赛！") {
       await store.dispatch('typeWriterPopup', "Wow~~！今天晚上获胜的冠军选手是——🏆");
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await store.dispatch('waitAndType', 1000)
       if (isWinning(currentBattleCondition.condition_zongjuesai)) {
         // updateBattleResult
         store.commit('updateBattleResult', { year: year, result: '冠军'})
@@ -261,7 +261,7 @@ async function battle(battleOption: string) {
       store.commit('updateBattleEnd', { year: year, end: true })
       showBattleDialog.value = false
       await battleReward()
-      store.dispatch('incrementRound');
+      await store.dispatch('incrementRound');
 
     } else if (battleOption === "结束比赛") {
       store.commit('updateBattleEnd', { year: year, end: true })
@@ -274,33 +274,33 @@ async function battle(battleOption: string) {
           await store.dispatch('typeWriter', ['恭喜姜云升累计在Battle大赛中拿下3次冠军奖杯，解锁了第' + store.getters.UnlockedAchievementCount + '个成就【Battle King】！']);
         }
       }
-      store.dispatch('incrementRound');
+      await store.dispatch('incrementRound');
 
     } else if (battleOption === "再准备准备") {
       showBattleDialog.value = false
-      store.dispatch('typeWriter', `胜利是留给有准备的人的！记得留意本届Battle大赛的结束时间是在本年度的12月，如未完成比赛，将无法获得比赛名次奖励。`)
-      store.dispatch('incrementRound');
+      await store.dispatch('typeWriter', `胜利是留给有准备的人的！记得留意本届Battle大赛的结束时间是在本年度的12月，如未完成比赛，将无法获得比赛名次奖励。`)
+      await store.dispatch('incrementRound');
 
     } else if (battleOption === "放弃本次比赛") {
       store.commit('updateBattleEnd', { year: year, end: true })
       showBattleDialog.value = false
-      store.dispatch('typeWriter', `姜云升放弃了本次Battle大赛。无妨，生命是一场更宏大的Battle，继续你的人生吧！`)
+      await store.dispatch('typeWriter', `姜云升放弃了本次Battle大赛。无妨，生命是一场更宏大的Battle，继续你的人生吧！`)
     }
 
   } else if (year === 2023 && battleOption === "报名参加！") {
     store.commit('updateBattleResult', { year: year, result: 'Masta'})
     store.commit('updateBattleEnd', { year: year, end: true })
     showBattleDialog.value = false
-    store.dispatch('typeWriter', `姜云升没有参加本届Battle大赛。这一年，你不再是选手，你是地下8英里的Masta、Rapper顾问。你在新人Rapper面前侃侃而谈自己的Battle经历，和身边这些年来一起走过来的或敌或友们碰瓶喝啤酒，你享受着属于你的舞台上的聚光灯，你享受着属于你的舞台下的欢呼声……12年前的姜云升是否曾经在这里看见过自己今天的未来呢。你也陪他一起走到这一步了么？`)
+    await store.dispatch('typeWriter', `姜云升没有参加本届Battle大赛。这一年，你不再是选手，你是地下8英里的Masta、Rapper顾问。你在新人Rapper面前侃侃而谈自己的Battle经历，和身边这些年来一起走过来的或敌或友们碰瓶喝啤酒，你享受着属于你的舞台上的聚光灯，你享受着属于你的舞台下的欢呼声……12年前的姜云升是否曾经在这里看见过自己今天的未来呢。你也陪他一起走到这一步了么？`)
   } else if (year === 2023 && battleOption === "再准备准备") {
     showBattleDialog.value = false
-    store.dispatch('typeWriter', `胜利是留给有准备的人的！记得留意本届Battle大赛的结束时间是在本年度的12月，如未完成比赛，将无法获得比赛名次奖励。`)
-    store.dispatch('incrementRound');
+    await store.dispatch('typeWriter', `胜利是留给有准备的人的！记得留意本届Battle大赛的结束时间是在本年度的12月，如未完成比赛，将无法获得比赛名次奖励。`)
+    await store.dispatch('incrementRound');
 
   } else if (year === 2023 && battleOption === "放弃本次比赛") {
     store.commit('updateBattleEnd', { year: year, end: true })
     showBattleDialog.value = false
-    store.dispatch('typeWriter', `姜云升放弃了本次Battle大赛。无妨，生命是一场更宏大的Battle，继续你的人生吧！`)
+    await store.dispatch('typeWriter', `姜云升放弃了本次Battle大赛。无妨，生命是一场更宏大的Battle，继续你的人生吧！`)
   }
 }
 </script>

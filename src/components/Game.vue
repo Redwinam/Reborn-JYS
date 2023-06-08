@@ -53,8 +53,7 @@
   <button @click="goToLocation('买东西')" class="action-button action-shopping" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('地下钱庄之暴富金铺')" class="action-button action-buy-gold" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('公司')" class="action-button action-agency" v-if="isGoingOut && signedAgency" :disabled="isTyping"></button>
-  <!-- <button @click="showFengyanPopup = true" class="action-button action-fengyan" v-if="isGoingOut && openFengyan" :disabled="isTyping">风炎文化</button> -->
-  <button @click="showFengyanPopup = true" class="action-button action-fengyan" :disabled="isTyping"></button>
+  <button @click="showFengyanPopup = true" class="action-button action-fengyan" v-if="isGoingOut && openFengyan" :disabled="isTyping"></button>
 
   <button @click="goToLocation('去剪头发')" class="action-button action-cut-hair" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut" :disabled="isTyping"></button>
@@ -243,7 +242,7 @@ const checkUnsignAgency = async () => {
     typewriter('签约公司后需要1年后才可以解约，当前剩余' + leftUnsignAgencyMonth.value + '个月。')
   } else {
     await typewriter('姜云升可以和原来签约的公司解约了。要去公司看看吗？')
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await store.dispatch('waitAndType', 1000)
     isAtHome.value = false
     isGoingOut.value = true
     goToLocation('公司')

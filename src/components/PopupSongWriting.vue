@@ -56,11 +56,10 @@ import { useStore } from 'vuex'
 import { Edit3, Eraser, Mic2, Play, Radio, BatteryWarning } from 'lucide-vue-next'
 
 import { attributeNames } from '../store/attributes'
-import { Achievement, AchievementState } from '../store/achievements'
 import { Song, songLibrary, songFeiLibrary } from '../store/songs'
+import { Artist } from '../store/artists'
 import { isTyping } from './composables/gameRefs'
 import Popup from '../components/Popup.vue'
-
 
 const store = useStore()
 const songStages = computed(() => store.state.songStages)
@@ -114,6 +113,19 @@ function isSongAvailable(song: Song) {
 
     case 'SAD':
       if (store.state.attributes['心情'] > -20 || !store.state.seamlessRelation || store.state.girlfriend) {
+        return false;
+      }
+      break;
+
+    case '想你':
+      if (!store.state.artists.find((artist: Artist) => artist.name === '丙丙') || store.state.artists.find((artist: Artist) => artist.name === '丙丙').level < 3 || (store.state.term - store.state.lastBreakupTerm) > 3) {
+        return false;
+      }
+      break;
+
+    case '爱の小曲':
+      const afterglows = store.state.shards.filter((shard: string) => shard === '晚霞和云' || shard === '秋天的第一片晚霞' || shard === '晚霞分享艺术家')
+      if (!store.state.artists.find((artist: Artist) => artist.name === '空空') || store.state.artists.find((artist: Artist) => artist.name === '空空').level < 2 || afterglows.length < 2) {
         return false;
       }
       break;
@@ -183,7 +195,7 @@ async function writeSong(stage: string, song: Song) {
     const conditions = [`歌曲《${song.title}》未达成所有条件——`]
     // 连接songonditions(song)数组
     conditions.push(...songConditions(song))
-    store.dispatch('typeWriterPopup', conditions)
+    await store.dispatch('typeWriterPopup', conditions)
     return
   }
 
@@ -212,15 +224,15 @@ async function writeSong(stage: string, song: Song) {
       return `${attributeNames[key]}${sign}${value}`;
     })
     .join('、');
-    store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经完成DEMO啦，姜云升属性 ${attributesChangeStr} 。`)
+    await store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经完成DEMO啦，姜云升属性 ${attributesChangeStr} 。`)
 
   } else if (stage === 'record' && currentStage.completedStage === 'demo') {
     if (store.state.attributes.money >= song.cost) {
       store.commit('updateAttribute', { attribute: 'money', value: -song.cost })
       store.commit('setSongStages', { songTitle: song.title, stage: 'record' })
-      store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经录好啦，花费了姜云升 ${song.cost} 元编曲制作费。`)
+      await store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经录好啦，花费了姜云升 ${song.cost} 元编曲制作费。`)
     } else {
-      store.dispatch('typeWriterPopup', `姜云升没有足够的钱录歌，录这首歌需要 ${song.cost} 元编曲制作费。`)
+      await store.dispatch('typeWriterPopup', `姜云升没有足够的钱录歌，录这首歌需要 ${song.cost} 元编曲制作费。`)
     }
 
   } else if (stage === 'release' && currentStage.completedStage === 'record') {
@@ -251,21 +263,21 @@ async function writeSong(stage: string, song: Song) {
       let sign = value >= 0 ? '+' : '';
       return `${attributeNames[key]}${sign}${value}`;
     }).join('、');
-    store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经上线啦，姜云升属性 ${attributesChangeStr} 。${store.state.signedAgency ? '由于姜云升签约了经纪公司，这首歌的版权归属公司，姜云升没有收入。' : ''}`)
+    await store.dispatch('typeWriterPopup', `歌曲《${song.title}》已经上线啦，姜云升属性 ${attributesChangeStr} 。${store.state.signedAgency ? '由于姜云升签约了经纪公司，这首歌的版权归属公司，姜云升没有收入。' : ''}`)
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await store.dispatch('waitAndType', 1000);
     
     currentSong.value = song;
     showReleaseSongModal.value = true
 
   } else {
-    store.dispatch('typeWriterPopup', '无法执行当前阶段，请按顺序完成写歌任务。')
+    await store.dispatch('typeWriterPopup', '无法执行当前阶段，请按顺序完成写歌任务。')
   }
 }
 
 async function writeFeiSong() {
   if (store.state.attributes.energy <= 0) {
-    store.dispatch('typeWriterPopup', '姜云升体力不足，需要休息才能写歌啦。')
+    await store.dispatch('typeWriterPopup', '姜云升体力不足，需要休息才能写歌啦。')
     return
   }
 
@@ -302,7 +314,7 @@ async function writeFeiSong() {
   store.commit('updateAttribute', { attribute: 'charm', value: 20 });
   toMessage.push('<small>姜云升体力-100，人气红值+' + redValue + '，黑值+' + blackValue + '，才华+20，魅力+20。</small>');
   await store.dispatch('typeWriterPopup', toMessage);
-  store.dispatch('incrementRound');
+  await store.dispatch('incrementRound');
 }
 
 function listenSong(song: Song) {

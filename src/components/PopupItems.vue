@@ -22,8 +22,8 @@ import { getQuantifier } from '../store/actions/purchaseItem'
 const store = useStore()
 const inventory = computed(() => store.state.inventory)
 
-const eatPackedFood = (food: string) => {
-  store.dispatch('eatPackedFood', {food, quantity: 1});
+const eatPackedFood = async (food: string) => {
+  await store.dispatch('eatPackedFood', {food, quantity: 1});
 }
 
 </script>

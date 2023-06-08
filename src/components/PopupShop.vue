@@ -73,16 +73,16 @@ const [normalItemsLeft, normalItemsRight] = splitArrayInHalf(normalItems.value);
 
 const inventory = computed(() => store.state.inventory);
 
-const purchaseItem = (itemName: string, quantity: number) => {
-  store.dispatch('purchaseItem', { itemName, quantity });
+const purchaseItem = async (itemName: string, quantity: number) => {
+  await store.dispatch('purchaseItem', { itemName, quantity });
 }
 
 let showQuantityPopup = ref(false);
 let itemToBuy = ref('');
 let quantityToBuy = ref(1);
 
-const confirmPurchase = () => {
-  store.dispatch('purchaseItem', { itemName: itemToBuy.value, quantity: quantityToBuy.value });
+const confirmPurchase = async () => {
+  await store.dispatch('purchaseItem', { itemName: itemToBuy.value, quantity: quantityToBuy.value });
   showQuantityPopup.value = false;
   quantityToBuy.value = 1;
 }

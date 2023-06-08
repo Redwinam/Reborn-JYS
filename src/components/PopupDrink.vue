@@ -19,8 +19,8 @@ import { allDrinks } from '../store/eats'
 
 const store = useStore()
 
-const drinkDrink = (drink: string, amount: number) => {
-  store.dispatch('drinkDrink', {drink, amount});
+const drinkDrink = async (drink: string, amount: number) => {
+  await store.dispatch('drinkDrink', {drink, amount});
 }
 </script>
 

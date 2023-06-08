@@ -20,7 +20,7 @@ const showStartButton = ref(false)
 onMounted(async () => {
   if (document.getElementById('textboxPopup')) {
     await store.dispatch('typeWriterPopup', ['【系统】这是一个六月的夏天，你睁开了你的大眼睛🥺，你惊呆了！因为你重生了……', '【系统】你重生成了姜云升！', '【系统】你决定——'])
-    await new Promise(resolve => setTimeout(resolve, 200))
+    await store.dispatch('waitAndType', 200)
     showStartButton.value = true
   }
 });
@@ -28,13 +28,13 @@ onMounted(async () => {
 const startGame = async () => {
   showStartGameDialog.value = false
   await store.dispatch('typeWriter', '【系统】你选择了开始游戏！')
-  await new Promise(resolve => setTimeout(resolve, 200))
+  await store.dispatch('waitAndType', 200)
   await store.dispatch('typeWriter', '【系统】你哭得很大声！')
-  await new Promise(resolve => setTimeout(resolve, 200))
+  await store.dispatch('waitAndType', 200)
   await store.dispatch('typeWriter', '【系统】你哭你的懵懂出生，你哭你的前途未卜，这一世，你要卷土重来，你获得了初始属性：【虚弱】')
-  await new Promise(resolve => setTimeout(resolve, 1000))
+  await store.dispatch('waitAndType', 1000)
   await store.dispatch('typeWriter', '【系统】你哭得更大声了！')
-  await new Promise(resolve => setTimeout(resolve, 200))
+  await store.dispatch('waitAndType', 200)
   await store.dispatch('typeWriter', '【系统】终于到了十五岁，你长成了风一样的少年，这一天，你决定去——')
 }
 

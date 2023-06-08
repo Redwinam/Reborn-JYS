@@ -61,15 +61,15 @@ const currentQuestion = computed(() => {
 });
 const userAnswer = ref('');
 
-function submitAnswer() {
+async function submitAnswer() {
   if (userAnswer.value === currentQuestion.value?.answer) {
     if (currentQuestionsAndAnswers.value && currentQuestionIndex.value === currentQuestionsAndAnswers.value.questions?.length - 1) {
-      handleUpgrade();
+      await handleUpgrade();
     } else {
       currentQuestionIndex.value++;
     }
   } else {
-    handleFail();
+    await handleFail();
   }
   userAnswer.value = '';
 }

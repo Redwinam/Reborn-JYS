@@ -115,21 +115,21 @@ export function upgradeSkill(context: { commit: Commit, dispatch: Function }, { 
   }
 }
 
-export function handleUpgrade() {
+export async function handleUpgrade() {
   const { skill } = currentQuestionsAndAnswers.value!;
   store.commit('upgradeSkillLevel', skill);
   currentQuestionsAndAnswers.value = null;
   showUpgradeSkillDialog.value = false;
   const skillLevel = store.state.attributes.skill[`${skill}Level` as keyof typeof store.state.attributes.skill];
   skillLevel === 'SSS' ? store.dispatch('typeWriter', `恭喜姜云升的${skill==="gaming" ? '游戏' : 'freestyle'}技能升级达到了顶级${skillLevel}级，姜云升已经是这个世界上${skill==="gaming" ? '游戏' : 'freestyle'}最强的人了！`) :
-  store.dispatch('typeWriter', `恭喜！姜云升通过了考验！姜云升的${skill==="gaming" ? '游戏' : 'freestyle'}技能升级到${skillLevel}级啦！再接再厉噢`);
+  await store.dispatch('typeWriter', `恭喜！姜云升通过了考验！姜云升的${skill==="gaming" ? '游戏' : 'freestyle'}技能升级到${skillLevel}级啦！再接再厉噢`);
 }
 
-export function handleFail() {
+export async function handleFail() {
   const { skill, level } = currentQuestionsAndAnswers.value!;
   currentQuestionsAndAnswers.value = null;
   showUpgradeSkillDialog.value = false;
-  store.dispatch('typeWriter', `嘤嘤嘤，回答错误，${skill}技能升级失败了！`);
+  await store.dispatch('typeWriter', `嘤嘤嘤，回答错误，${skill}技能升级失败了！`);
 }
 
 export function getCurrentQuestionsAndAnswers() {

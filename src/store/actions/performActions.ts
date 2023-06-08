@@ -170,7 +170,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
       for (const level of SkillLevelMapping) {
         if (store.state.attributes.skill.gaming === level.max && level.max !== 24) {
           await context.dispatch('typeWriter', [randomGamingIntro + '<small>姜云升体力-10，心情+20。</small>', '姜云升的游戏技能进入了瓶颈期，需要填空答对问题，考验你对姜云升的游戏水平了不了解的时候到了，要通过这困难的考验才能升级！']);
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await context.dispatch('waitAndType', 1000);
           await context.dispatch('upgradeSkill', { skill, level: level.level });
           break;
         } else if (store.state.attributes.skill.gaming >= level.min && store.state.attributes.skill.gaming < level.max) {
@@ -259,6 +259,6 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
       }
 
     } 
-    context.dispatch('incrementRound');
+    await context.dispatch('incrementRound');
   }
 }  

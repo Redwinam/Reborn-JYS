@@ -40,13 +40,13 @@ export async function goToLocation(context: {
         }
       }
       // 等待1秒钟
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await context.dispatch('waitAndType', 1000);
       // 显示已解锁食物的列表，让玩家选择
       showFoodPopup.value = true;
       break;
 
     case '去喝点东西':
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await context.dispatch('waitAndType', 200);
       // 椰奶咖啡
       // await context.dispatch('typeWriter', '姜云升去了酒吧，喝了一顿酒。')
       // context.commit('updateAttribute', { attribute: 'energy', value: 10 })
@@ -57,9 +57,9 @@ export async function goToLocation(context: {
       const skill = 'freestyle';
       for (const level of SkillLevelMapping) {
         if (context.state.attributes.skill.freestyle === level.max && level.max !== 24) {
-          await new Promise(resolve => setTimeout(resolve, 200));
+          await context.dispatch('waitAndType', 200);
           await context.dispatch('typeWriter', ['姜云升的freestyle技能进入了瓶颈期，考验你会不会freestyle的时候到了，需要答对所有歌词才能升级！']);
-          await new Promise(resolve => setTimeout(resolve, 600));
+          await context.dispatch('waitAndType', 600);
           await context.dispatch('upgradeSkill', { skill, level: level.level });
           return;
 
@@ -74,7 +74,7 @@ export async function goToLocation(context: {
     
             case 1:
               await context.dispatch('typeWriter', '咦？又走到了这里。姜云升再次被这里的力量吸引，忽然……')
-              await new Promise(resolve => setTimeout(resolve, 1000));
+              await context.dispatch('waitAndType', 1000);
               context.dispatch('specialEvent', '去看热闹');
               break;
     
@@ -264,12 +264,12 @@ export async function goToLocation(context: {
       
       
     case '买东西':
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await context.dispatch('waitAndType', 200);
       showShopPopup.value = true;
       break;
 
     case '地下钱庄之暴富金铺':
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await context.dispatch('waitAndType', 600);
       showBankPopup.value = true;
       break;
 
@@ -338,12 +338,12 @@ export async function goToLocation(context: {
         await context.dispatch('typeWriter', "姜云升体力<0，上不动山啦！");
         return
       }
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await context.dispatch('waitAndType', 200);
       showDaoPopup.value = true;
       break;
 
     case 'Battle大赛':
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await context.dispatch('waitAndType', 200);
       showBattleDialog.value = true;
       break;
   }

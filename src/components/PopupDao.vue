@@ -158,7 +158,7 @@ async function dao(action: string) {
       store.commit('updateAttribute', { attribute: 'talent', value: 10 })
       store.commit('updateAttribute', { attribute: 'divine', value: 10 })
       await store.dispatch('typeWriter', '姜云升今天诵读经书。才华+10，神秘属性+10')
-      store.dispatch('incrementRound')
+      await store.dispatch('incrementRound')
       break;
 
     case '学习法术':
@@ -166,13 +166,13 @@ async function dao(action: string) {
       store.commit('updateAttribute', { attribute: 'talent', value: 10 })
       store.commit('updateAttribute', { attribute: 'divine', value: 12 })
       store.commit('updateAttribute', { attribute: 'superstition', value: 10 })
-      store.dispatch('incrementRound')
+      await store.dispatch('incrementRound')
       break;
 
     case '潜心修行':
       await store.dispatch('typeWriter', '姜云升今天潜心修行。一项神秘的属性+10')
       store.commit('updateAttribute', { attribute: 'divine', value: 20 })
-      store.dispatch('incrementRound')
+      await store.dispatch('incrementRound')
       break;
 
     // case '抽背经文':
@@ -186,7 +186,7 @@ async function dao(action: string) {
         store.commit('updateAttribute', { attribute: 'energy', value: -60 })
         store.commit('updateAttribute', { attribute: 'divine', value: 1 })
         await store.dispatch('typeWriter', `这是姜云升第一次来到这座山里，一项神秘的属性值增加了。<small>姜云升的等级+1，当前等级为${store.state.attributes.fight.level}级</small>`)
-        store.dispatch('incrementRound');
+        await store.dispatch('incrementRound');
 
         return;
       } 
@@ -229,7 +229,7 @@ async function dao(action: string) {
   }
 
 
-  store.dispatch('incrementRound');
+  await store.dispatch('incrementRound');
 }
 
 const showStarPopup = ref(false);

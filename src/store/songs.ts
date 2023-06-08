@@ -78,6 +78,22 @@ export const songLibrary: Song[] = [{
   lyrics: '当你是长夜里寂寞没诚意的梦……',
   url: 'https://music.163.com/#/song?id=1874158536',
 }, {
+  title: '想你',
+  conditions: { charm: 600, money: 200000 },
+  conditionsText: '招募艺人【丙丙】等级 ≥ 3级，被分手1个月之内',
+  cost: 250,
+  effects: { charm: 50,  talent: 20, red: + 600, black: + 600, money: 200000 },
+  lyrics: '我明明知道你是骗子，但我就想给你骗。',
+  url: 'https://music.163.com/#/song?id=1949052976',
+}, {
+  title: '爱の小曲',
+  conditions: { charm: 500, talent: 600 },
+  conditionsText: '招募艺人【空空】等级 ≥ 2级，收集晚霞碎片 ≥ 2片',
+  cost: 250,
+  effects: { charm: 50,  talent: 30, red: + 700, black: + 700, },
+  lyrics: '你爱他 / 所以拍了晚霞发给他 / 那是你表达爱的抽象画',
+  url: 'https://music.163.com/#/song?id=2021434933',
+}, {
   title: '这首歌没唱直接听',
   conditions: { freestyle: 21, },
   cost: 200,

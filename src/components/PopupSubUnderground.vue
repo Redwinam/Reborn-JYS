@@ -17,6 +17,8 @@
 </div>
 
 </PopupSub>
+
+<popup-shard :shardName="shardName"></popup-shard>
 </template>
 
 <script setup lang="ts">
@@ -24,7 +26,8 @@ import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
 import PopupSub from '../components/PopupSub.vue'
-import { showUndergroundPopup } from './composables/gameRefs';
+import PopupShard from '../components/PopupShard.vue'
+import { showUndergroundPopup, showShardPopup } from './composables/gameRefs';
 
 const store = useStore()
 
@@ -92,8 +95,10 @@ async function tour(index: number) {
     store.commit('updateAttribute', { attribute: 'popularity', value: + 1 })
   }
 
-  store.dispatch('incrementRound');
+  await store.dispatch('incrementRound');
 }
+
+const shardName = ref('')
 
 const activity = async (activityName: string) => {
   switch (activityName) {
@@ -110,9 +115,9 @@ const activity = async (activityName: string) => {
       } else {
         await store.dispatch('typeWriter', ['姜云升用1个月的时间参加了一档说唱类综艺节目，又是一个不一样的他。<small>姜云升才华+30，魅力+30，金钱+20000，人气+1000</small>']);
       }
-      store.dispatch('incrementRound');
-      store.dispatch('incrementRound');
-      store.dispatch('incrementRound');
+      await store.dispatch('incrementRound');
+      await store.dispatch('incrementRound');
+      await store.dispatch('incrementRound');
       break;
 
     case '上音乐节':
@@ -129,8 +134,21 @@ const activity = async (activityName: string) => {
         `姜云升来到了${musicFestival}的舞台上，为现场的观众们带来了一场印象深刻的演出。<small>姜云升才华+10，魅力+10，金钱+100000，人气+200。</small>`
       ])
 
+      const allShards = ['晚霞和云', '秋天的第一片晚霞', '晚霞分享艺术家'];
+      const unCollectedShards = allShards.filter(shard => !store.state.shards.includes(shard));
+    
+      if (unCollectedShards.length > 0 && Math.random() < 0.2) {
+        const randomIndex = Math.floor(Math.random() * unCollectedShards.length);
+      // store.commit  collectShard(state: State, shard: string) {
+        store.commit('collectShard', unCollectedShards[randomIndex]);
+        shardName.value = unCollectedShards[randomIndex];
+        await store.dispatch('typeWriter', `你在音乐节演出的旅途中发现了一片晚霞碎片……`);
+        await store.dispatch('waitAndType', 600);
+        showShardPopup.value = true;
+        
+      }
 
-      store.dispatch('incrementRound');
+      await store.dispatch('incrementRound');
       break;
   }
 }

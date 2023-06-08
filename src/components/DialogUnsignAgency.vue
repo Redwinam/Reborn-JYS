@@ -26,31 +26,31 @@ const handleUnsignAgency = async (unsignAgencyOption: string) => {
   } else if (unsignAgencyOption === "再签一年！") {
     store.commit('setSignedAgency', true)
     showUnsignAgencyDialog.value = false
-    store.dispatch('typeWriter', '想法很怪，但姜云升和原公司续约成功！')
+    await store.dispatch('typeWriter', '想法很怪，但姜云升和原公司续约成功！')
   } else if (unsignAgencyOption === "接受") {
     showUnsignAgencyDialog.value = false
     await store.dispatch('typeWriter', '姜云升选择接受公司的要求。')
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await store.dispatch('waitAndType', 1000)
 
     // 支付违约金
     store.commit('updateAttribute', { attribute: 'money', value: -6000000 })
     await store.dispatch('typeWriter', '姜云升支付了600万违约金。')
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await store.dispatch('waitAndType', 1000)
     store.commit('updateAttribute', { attribute: 'money', value: -360000 })
     await store.dispatch('typeWriter', '姜云升支付了36万元经济成本。')
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await store.dispatch('waitAndType', 1000)
 
     // 如果当前money<0
     if (store.state.money > 0) {
       store.commit('updateAttribute', { attribute: 'money', value: -store.state.money })
       await store.dispatch('typeWriter', `姜云升支付了所有的金钱${store.state.money}元演艺事业成本作为合同解约金。`)
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await store.dispatch('waitAndType', 1000)
     } else {
       await store.dispatch('typeWriter', `姜云升没能支付所有的解约金，公司没有同意解约。`)
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await store.dispatch('waitAndType', 1000)
     }
     await store.dispatch('typeWriter', '姜云升从此不再使用「姜云升」作为艺名，《重生之我是姜云升》游戏也不再存在，游戏结束。')
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await store.dispatch('waitAndType', 1000)
     store.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '被敲碎的小金猪' });
 
   } else if (unsignAgencyOption === "告他丫的！") {
@@ -59,17 +59,17 @@ const handleUnsignAgency = async (unsignAgencyOption: string) => {
 
     store.commit('updateAttribute', { attribute: 'money', value: -6000000 })
     await store.dispatch('typeWriter', '姜云升支付了600万违约金。')
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await store.dispatch('waitAndType', 1000)
     store.commit('updateAttribute', { attribute: 'money', value: -360000 })
     await store.dispatch('typeWriter', '姜云升支付了36万元经济成本。')
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await store.dispatch('waitAndType', 1000)
     // 解锁成就被敲碎的小金猪
     store.commit('unlockAchievement', '被敲碎的小金猪')
     await store.dispatch('typeWriter', '姜云升解锁了成就【被敲碎的小金猪】。')
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await store.dispatch('waitAndType', 1000)
 
-    store.dispatch('typeWriter', '而对于其他要求，姜云升选择告他丫的！和原公司打官司。相信法律。')
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await store.dispatch('typeWriter', '而对于其他要求，姜云升选择告他丫的！和原公司打官司。相信法律。')
+    await store.dispatch('waitAndType', 1000)
   }
 }
 </script>

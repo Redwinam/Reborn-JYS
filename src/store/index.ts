@@ -20,7 +20,7 @@ import { typeWriter, typeWriterPopup } from './actions/typeWriter';
 
 import { Player } from './player'
 
-import { showBreakupDialog, showGameEndDialog, showStartGameDialog } from '../components/composables/gameRefs';
+import { isTyping, showBreakupDialog, showGameEndDialog, showStartGameDialog } from '../components/composables/gameRefs';
 
 export interface State {
   term: number
@@ -62,6 +62,7 @@ export interface State {
   unlockedFeiSongs: SongFei[]
   unlockedVitamins: Vitamin[]
 
+  shards: string[]
   openFengyan: boolean
   artists: Artist[]
   thisSeasonArtist: { move: { name: string; action: string } | null, dispatch: string[] }
@@ -146,6 +147,7 @@ const state: State =  {
   unlockedFeiSongs: [],
   unlockedVitamins: [],
 
+  shards: [],
   openFengyan: false,
   artists: artists,
   thisSeasonArtist: { move: null, dispatch: [] },
@@ -462,6 +464,10 @@ const mutations = {
     state.thisSeasonArtist = { move: null, dispatch: [] }
   },
 
+  collectShard(state: State, shard: string) {
+    state.shards.push(shard);
+  },
+
   unlockAchievement(state: State, achievementName: string) {
     const achievement = achievements.find(
       (ach) => ach.name === achievementName
@@ -582,7 +588,7 @@ const mutations = {
       state.unlockedFeiSongs = []
       state.unlockedVitamins = []
       state.unlockedFoods = []
-
+      state.shards = [];
       state.artists = artists,
 
       state.realEstate = [];
@@ -659,6 +665,7 @@ const mutations = {
     state.battleResults = battleResults;
     state.undergroundCount = 0;
     state.tourCount = [0, 0];
+    state.shards = [];
     state.openFengyan = false;
     state.artists = artists,
     state.thisSeasonArtist = { move: null, dispatch: [] },
@@ -695,6 +702,11 @@ const actions = {
   specialEvent,
   specialEventOptionChosen,
   typeWriter,
+  async waitAndType(context: { commit: Commit; state: State; dispatch: Function; getters: any }, waitTime = 1000) {
+    isTyping.value = true;
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+    isTyping.value = false;
+  },
   typeWriterPopup,
   upgradeSkill,
 
@@ -733,20 +745,20 @@ const actions = {
     if (state.drunk > 0) {
       store.commit('updateDrunk', -1);
       if (state.drunk === 0) {
-        await new Promise(resolve => setTimeout(resolve, 600));
+        await store.dispatch('waitAndType', 600);
         await context.dispatch('typeWriter', '姜云升的酒醒了。');
       }
     }
 
     if ( state.relationRound > 15) {
       if (Math.random() < 0.52) {
-        await new Promise(resolve => setTimeout(resolve, 600));
+        await store.dispatch('waitAndType', 600);
         showBreakupDialog.value = true
       }
     }
 
     if ( state.signedAgency && !Math.floor(state.round % 9) ) {
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await store.dispatch('waitAndType', 600);
       store.commit('updateAttribute', { attribute: "money", value: 500 * 3 * 5 })
       await context.dispatch('typeWriter', '姜云升签约了公司，到账工资1500元。');
     }
@@ -766,7 +778,7 @@ const actions = {
               break;
             case 2:
               income += 8000; // level 2 的艺人增加收入8000
-              activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>在Livehouse嘉宾助演，';
+              activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>在Livehouse嘉宾助演';
               break;
             case 3:
               income += 80000; // level 3 的艺人增加收入8万
@@ -794,7 +806,7 @@ const actions = {
     }
 
     if ( !Math.floor((state.round - 16) % 36) ) {
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await store.dispatch('waitAndType', 600);
       await context.dispatch('specialEvent', '生日快乐');
     }
 
@@ -804,12 +816,12 @@ const actions = {
     // }
 
     if ( !Math.floor((state.round - 25) % 36) ) {
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await store.dispatch('waitAndType', 600);
       await context.dispatch('typeWriter', '今年的Battle比赛已经开放，可以在外出时报名参加比赛了。');
     }
 
     if ( !Math.floor((state.round) % 36) ) {
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await store.dispatch('waitAndType', 600);
       const investedProjects = state.investedProjects;
       const investYearIncome =  state.investYearIncome;
       const investedProjectNames = investedProjects.map((project: string) => project).join('】、【');
@@ -823,14 +835,14 @@ const actions = {
     }
 
     if (state.round === 10 * 36 ) {
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await store.dispatch('waitAndType', 600);
       await context.dispatch('specialEvent', '十年');
     }
 
     if ((state.attributes.popularity.red + state.attributes.popularity.black) > 1200 && state.attributes.popularity.black > 1000) {
       const isAchUnlocked = context.getters.unlockedAchievement('我所拥有的人气，又是不是真的？');
       if ( !isAchUnlocked ) {
-        await new Promise(resolve => setTimeout(resolve, 600));
+        await store.dispatch('waitAndType', 600);
         context.commit('unlockAchievement', '我所拥有的人气，又是不是真的？');
         await context.dispatch('typeWriter', '人气>1200，黑人气>1000。解锁成就【我所拥有的人气，又是不是真的？】')
       }

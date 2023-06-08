@@ -39,12 +39,12 @@ const store = useStore()
 
 const unlockedFoods = computed(() => store.state.unlockedFoods);
 
-const eatFood = (food: string) => {
-  store.dispatch('eatFood', food);
+const eatFood = async (food: string) => {
+  await store.dispatch('eatFood', food);
 }
 
-const packFood = (food: string, quantity: number) => {
-  store.dispatch('packFood', {food, quantity});
+const packFood = async (food: string, quantity: number) => {
+  await store.dispatch('packFood', {food, quantity});
 }
 
 let showQuantityPopup = ref(false);
