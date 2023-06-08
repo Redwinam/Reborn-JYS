@@ -210,8 +210,10 @@ export async function specialEventOptionChosen(context: {
       const isAchUnlocked = context.getters.unlockedAchievement(payload.event);
       if (!isAchUnlocked) {
         context.commit('unlockAchievement', payload.event);
+        context.commit('openFengyan', true);
         await context.dispatch('typeWriter', ['“没上过一天正经班，我直接成为董事长。建立个特别的公司，我知道我们能有市场”，姜云升选择自己开一家不一样的经纪公司，解锁成就【风炎文化】。']);
       } else {
+        context.commit('openFengyan', true);
         await context.dispatch('typeWriter', ['“没上过一天正经班，我直接成为董事长。建立个特别的公司，我知道我们能有市场”，姜云升选择自己开一家不一样的经纪公司——风炎文化。']);
       }
       context.dispatch('incrementRound');

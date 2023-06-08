@@ -53,6 +53,8 @@
   <button @click="goToLocation('买东西')" class="action-button action-shopping" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('地下钱庄之暴富金铺')" class="action-button action-buy-gold" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('公司')" class="action-button action-agency" v-if="isGoingOut && signedAgency" :disabled="isTyping"></button>
+  <button @click="showFengyanPopup = true" class="action-button action-agency" v-if="isGoingOut && openFengyan" :disabled="isTyping">风炎文化</button>
+
   <button @click="goToLocation('去剪头发')" class="action-button action-cut-hair" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut" :disabled="isTyping"></button>
   <button @click="goToLocation('Underground')" class="action-button action-underground" v-if="isGoingOut" :disabled="isTyping"></button>
@@ -79,6 +81,7 @@
 <Popup title="买喝的！" :visible="showDrinkPopup" @close="showDrinkPopup = false; store.dispatch('incrementRound'); "><popup-drink /></Popup>
 <Popup title="买东西！" :visible="showShopPopup" @close="showShopPopup = false; store.dispatch('incrementRound');"><popup-shop /></Popup>
 <Popup title="地下钱庄" :visible="showBankPopup" @close="showBankPopup = false"><popup-bank /></Popup>
+<Popup title="风炎文化" :visible="showFengyanPopup" @close="showFengyanPopup = false"><popup-fengyan /></Popup>
 
 <Popup title="写歌" :visible="showSongWritingDialog" @close="showSongWritingDialog = false"><popup-song-writing /></Popup>
 <Popup title="角色" :visible="showCharacterPopup" @close="showCharacterPopup = false"><popup-character /></Popup>
@@ -141,7 +144,7 @@
 <script setup lang="ts">
 import { useStore } from 'vuex'
 import { computed, ref, nextTick, watch, onMounted } from 'vue'
-import { Armchair, HelpCircle } from 'lucide-vue-next'
+import { HelpCircle } from 'lucide-vue-next'
 
 import Popup from '../components/Popup.vue'
 
@@ -158,6 +161,7 @@ import PopupBank from '../components/PopupBank.vue'
 import PopupSubGold from '../components/PopupSubGold.vue'
 import PopupSubUnderground from '../components/PopupSubUnderground.vue'
 import PopupDao from '../components/PopupDao.vue'
+import PopupFengyan from '../components/PopupFengyan.vue'
 
 import PopupSL from '../components/PopupSL.vue'
 
@@ -173,7 +177,7 @@ import { attributeNames } from '../store/attributes'
 
 import { isAtHome, isGoingOut, 
   showBreakupDialog, showEventDialog, showSongWritingDialog, showGameEndDialog, showUnsignAgencyDialog, showBattleDialog, 
-  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, showBankPopup, showStartGameDialog, showSLPopup, 
+  showFoodPopup, showDrinkPopup, showShopPopup, showUpgradeSkillDialog, showBankPopup, showStartGameDialog, showSLPopup, showFengyanPopup,
   isTyping
 } from './composables/gameRefs';
 import { BattleResult } from '../store/battle'
@@ -196,6 +200,7 @@ const attributes = computed(() => store.state.attributes)
 const weak = computed(() => store.state.weak)
 const drunk = computed(() => store.state.drunk)
 const signedAgency = computed(() => store.state.signedAgency)
+const openFengyan = computed(() => store.state.openFengyan)
 
 const textHistory = computed(() => {
   const history = store.state.textHistory
@@ -223,7 +228,6 @@ const goToLocation = (location: string) => { store.dispatch('goToLocation', loca
 const performAction = (action: string) => { store.dispatch('performAction', action) }
 const typewriter = async (message: string | string[]) => { await store.dispatch('typeWriter', message) }
 
-
 const showCharacterPopup = ref(false)
 const showItemsPopup = ref(false)
 const showSkillsPopup = ref(false)
@@ -232,13 +236,7 @@ const showAchievementsPopup = ref(false)
 const showGameEndNotePopup = ref(false)
 const showGameEndConfirmPopup = ref(false)
 
-const leftUnsignAgencyMonth = computed(() => 
-  Math.max(Math.ceil((36 - (store.state.round - store.state.signedAgencyRound)) / 3), 0 )
-)
-
-// Math.max(Math.ceil((36 - (store.state.round - store.state.signedAgencyRound)) / 3), 0 )
-
-
+const leftUnsignAgencyMonth = computed(() => Math.max(Math.ceil((36 - (store.state.round - store.state.signedAgencyRound)) / 3), 0 ))
 const checkUnsignAgency = async () => {
   if (leftUnsignAgencyMonth.value > 0) {
     typewriter('签约公司后需要1年后才可以解约，当前剩余' + leftUnsignAgencyMonth.value + '个月。')

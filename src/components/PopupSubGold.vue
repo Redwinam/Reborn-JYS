@@ -48,19 +48,25 @@
   </div>
 </Popup>
 
-<Popup title="交易所东市·股票" :visible="showStockMarketPopup" @close="showStockMarketPopup = false">
+<Popup title="交易所东市·股市" :visible="showStockMarketPopup" @close="showStockMarketPopup = false">
   <div class="buy-gold">
+    <!-- 显示历年的股指 -->
+    <div v-for="stockIndex in StockIndex" class="stock-index">
+      <template v-if="year > stockIndex.year">
+        <label :for="'stock-index'+year">{{ stockIndex.year }}年收盘股指</label>
+        <!-- 根据 const StockIndex = [ { year: 2011, index: 2199.42 }, 显示index-->
+        <span :key="stockIndex.year" class="stock-index-year" :id="'stock-index'+stockIndex.year">{{ stockIndex.index }}</span>
+      </template>
+    </div>
     <div class="gold-amount">
-      <label for="gold-amount">购买数量</label>
-      <input type="number" id="gold-amount" min="1" max="10000" v-model="goldAmount" /> 克
-      <div class="gold-price">/ 总价：￥{{ goldAmount * 360 }}</div>
+      <label for="gold-amount">预测今年 {{ year }} 年度股指</label>
     </div>
-    <p v-if="goldAmount * 360 > attributes.money" class="error-message">金钱不足，买不起这么多金条</p>
     <div class="button-group">
-      <button class="button_buyGold" :disabled="goldAmount * 360 > attributes.money" @click="buyGold">购买</button>
-      <button class="button_cancel" @click="showBuyGoldPopup = false">取消</button>
+      <button class="button_buyGold" :disabled="goldAmount * 360 > attributes.money" @click="buyGold">看多</button>
+      <button class="button_cancel" @click="showBuyGoldPopup = false">看空</button>
     </div>
-    <p class="note-message">1枚金条 = 360金钱，金条每轮次享有固定的6%利息收益。金价与现实无关，仅代表游戏效果，不构成投资建议。</p>
+    <p id="textboxPopup">重生·姜云升来到了股市的交易大厅！姜云升本年的操作选项将决定本年度的收益率。姜云升的的股市投资总收益率决定了重生·姜云升究竟有没有资格获得「绝对股神」的称号！</p>
+    <p class="note-message">作为大亨，入场交易所股市要求验资5000万。当前金钱数值小于5千万时，将无法完成股市交易。</p>
   </div>
 </Popup>
 
@@ -110,6 +116,25 @@ async function sellGold() {
     }
   }
 }
+
+const StockIndex = [
+  { year: 2011, index: 2199.42 },
+  { year: 2012, index: 2269.13 },
+  { year: 2013, index: 2115.98 },
+  { year: 2014, index: 3234.68 },
+  { year: 2015, index: 3539.18 },
+  { year: 2016, index: 3103.64 },
+  { year: 2017, index: 3373.96 },
+  { year: 2018, index: 2493.90 },
+  { year: 2019, index: 3050.12 },
+  { year: 2020, index: 3473.07 },
+  { year: 2021, index: 3639.78 },
+  { year: 2022, index: 3089.26 },
+  { year: 2023, index: 3204.63 }
+]
+
+const year = computed(() => store.state.year)
+
 
 const InvestmentProjects = [
   { name: '给长城贴瓷砖', cost: 25000000, income: 250 },

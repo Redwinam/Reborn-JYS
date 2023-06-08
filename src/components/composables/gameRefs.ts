@@ -13,6 +13,7 @@ export const showBattleDialog = ref(false);
 export const showFoodPopup = ref(false);
 export const showDrinkPopup = ref(false);
 export const showShopPopup = ref(false);
+export const showFengyanPopup = ref(true);
 
 export const isTyping = ref(false);
 
@@ -23,7 +24,7 @@ export const showBuyGoldPopup = ref(false);
 export const showSellGoldPopup = ref(false);
 export const showRealEstatePopup = ref(false);
 export const showStockMarketPopup = ref(false);
-export const showInvestmentPopup = ref(true);
+export const showInvestmentPopup = ref(false);
 
 export const showUndergroundPopup = ref(false);
 export const showDaoPopup = ref(false);
