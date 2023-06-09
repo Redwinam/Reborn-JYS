@@ -305,6 +305,8 @@ onMounted( async () => {
         store.commit('loadGameState', gameData);
         if (store.state.term == 1 && store.state.round == 1) {
           showStartGameDialog.value = true
+        } else if (store.state.gameEnded) {
+          showGameEndDialog.value = true
         } else if (document.getElementById('textboxText')) {
           await store.dispatch('typeWriter', '【系统】你回来啦！');
         }
