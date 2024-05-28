@@ -1,88 +1,88 @@
-import { createStore, Store, Commit } from 'vuex'
-import axios from 'axios'
+import { createStore, Store, Commit } from "vuex";
+import axios from "axios";
 
-import { Food, eatFood, packFood, eatPackedFood, drinkDrink } from './eats'
-import { achievements, AchievementState } from './achievements'
-import { SongFei } from './songs'
-import { Vitamin } from './vitamins'
-import { battleResults, BattleResult } from './battle'
-import { artists, Artist } from './artists'
+import { Food, eatFood, packFood, eatPackedFood, drinkDrink } from "./eats";
+import { achievements, AchievementState } from "./achievements";
+import { SongFei } from "./songs";
+import { Vitamin } from "./vitamins";
+import { battleResults, BattleResult } from "./battle";
+import { artists, Artist } from "./artists";
 
-import { Attributes } from '../store/attributes'
-import { Girlfriend } from './girlfriend'
-import { accompanyGirlfriend } from './actions/accompanyGirlfriend';
-import { goToLocation } from './actions/goToLocation';
-import { specialEvent, specialEventOptionChosen } from './actions/specialEvent';
-import { performAction } from './actions/performActions';
-import { purchaseItem, Inventory } from './actions/purchaseItem';
-import { upgradeSkill, SkillLevelMapping } from './actions/upgradeSkill';
-import { typeWriter, typeWriterPopup } from './actions/typeWriter';
+import { Attributes } from "../store/attributes";
+import { Girlfriend } from "./girlfriend";
+import { accompanyGirlfriend } from "./actions/accompanyGirlfriend";
+import { goToLocation } from "./actions/goToLocation";
+import { specialEvent, specialEventOptionChosen } from "./actions/specialEvent";
+import { performAction } from "./actions/performActions";
+import { purchaseItem, Inventory } from "./actions/purchaseItem";
+import { upgradeSkill, SkillLevelMapping } from "./actions/upgradeSkill";
+import { typeWriter, typeWriterPopup } from "./actions/typeWriter";
 
-import { Player } from './player'
+import { Player } from "./player";
 
-import { isTyping, showBreakupDialog, showGameEndDialog, showStartGameDialog } from '../components/composables/gameRefs';
+import { isTyping, showBreakupDialog, showGameEndDialog, showStartGameDialog } from "../components/composables/gameRefs";
 
 export interface State {
-  term: number
-  year: number
-  round: number
-  totalRounds: number
-  attributes: Attributes
-  weak: boolean
-  drunk: number
-  sleepHours: number
+  term: number;
+  year: number;
+  round: number;
+  totalRounds: number;
+  attributes: Attributes;
+  weak: boolean;
+  drunk: number;
+  sleepHours: number;
 
-  girlfriend: Girlfriend | null
-  flirtCount: number
-  accompanyCount: number
-  relationRound: number
-  breakupTimes: number
-  lastBreakupRound: number | null
-  seamlessRelation: boolean
+  girlfriend: Girlfriend | null;
+  flirtCount: number;
+  accompanyCount: number;
+  relationRound: number;
+  breakupTimes: number;
+  lastBreakupRound: number | null;
+  seamlessRelation: boolean;
 
-  unlockedFoods: Food[]
-  inventory: Inventory
-  lastSpecialItem: string | null
+  unlockedFoods: Food[];
+  inventory: Inventory;
+  lastSpecialItem: string | null;
 
-  achievementStates: AchievementState[]
-  unlockedAchievementConditions: string[]
-  happenedEvents: string[]
+  achievementStates: AchievementState[];
+  unlockedAchievementConditions: string[];
+  happenedEvents: string[];
 
-  battleResults: BattleResult[]
+  battleResults: BattleResult[];
 
-  undergroundCount: number
-  tourCount: number[]
+  undergroundCount: number;
+  tourCount: number[];
 
-  signedAgency: boolean
-  signedAgencyRound: number | null
-  goToAgencyTimes: number
+  signedAgency: boolean;
+  signedAgencyRound: number | null;
+  goToAgencyTimes: number;
 
-  songs: string[]
-  songStages: Record<string, { completedStage: string | null, unlocked: boolean }>
-  unlockedFeiSongs: SongFei[]
-  unlockedVitamins: Vitamin[]
+  songs: string[];
+  songStages: Record<string, { completedStage: string | null; unlocked: boolean }>;
+  unlockedFeiSongs: SongFei[];
+  unlockedVitamins: Vitamin[];
 
-  shards: string[]
-  openFengyan: boolean
-  artists: Artist[]
-  thisSeasonArtist: { move: { name: string; action: string } | null, dispatch: string[] }
+  shards: string[];
+  openFengyan: boolean;
+  artists: Artist[];
+  thisSeasonArtist: { move: { name: string; action: string } | null; dispatch: string[] };
 
-  realEstate: string[]
-  investedProjects: string[]
-  investYearIncome: number
-  currentStock: boolean
+  realEstate: string[];
+  investedProjects: string[];
+  investYearIncome: number;
+  currentStock: boolean;
 
-  gameEnded: boolean
-  currentEndings: string[]
-  specialEndingAchievement: { name: string; desc: string } | null
+  gameEnded: boolean;
+  currentEndings: string[];
+  specialEndingAchievement: { name: string; desc: string } | null;
 
-  textHistory: string[],
-  player: Player | null
+  textHistory: string[];
+  player: Player | null;
 
   [key: string]: any;
 }
 
-const state: State =  {
+const state: State = {
   term: 1,
   year: 2012,
   round: 1,
@@ -100,8 +100,8 @@ const state: State =  {
     skill: {
       freestyle: 0,
       gaming: 0,
-      gamingLevel: 'D',
-      freestyleLevel: 'D'
+      gamingLevel: "D",
+      freestyleLevel: "D",
     },
     energy: 100,
     maxEnergy: 100,
@@ -112,7 +112,7 @@ const state: State =  {
       defense: 9,
       hp: 6,
       mp: 61,
-    }, 
+    },
     superstition: 0,
   },
   weak: false,
@@ -136,12 +136,12 @@ const state: State =  {
 
   battleResults: battleResults,
   undergroundCount: 0,
-  tourCount: [0,0],
+  tourCount: [0, 0],
 
   signedAgency: false,
   signedAgencyRound: null,
   goToAgencyTimes: 0,
-  
+
   songs: [],
   songStages: {},
   unlockedFeiSongs: [],
@@ -162,105 +162,98 @@ const state: State =  {
   specialEndingAchievement: null,
 
   textHistory: [],
-  player: null
-
-}
+  player: null,
+};
 
 type UpdateAttributePayload = {
-  attribute: keyof Attributes | "red" | "black" | "gaming" | "freestyle" | 'fightLevel'
-  value: number
-}
+  attribute: keyof Attributes | "red" | "black" | "gaming" | "freestyle" | "fightLevel";
+  value: number;
+};
 
 const mutations = {
   incrementRound(state: State) {
-    state.round++
-    state.year = Math.floor((state.round - 1) / 36) + 2012
-    if ( state.year > 2023 ) {
-      state.year = 2012
+    state.round++;
+    state.year = Math.floor((state.round - 1) / 36) + 2012;
+    if (state.year > 2024) {
+      state.year = 2012;
     }
     state.attributes.money += Math.ceil(state.attributes.gold * 0.06 * 360);
-    if (state.girlfriend) { state.relationRound++; }
+    if (state.girlfriend) {
+      state.relationRound++;
+    }
   },
-  
-  async updateAttribute(state: State, payload: UpdateAttributePayload) {
-    const { attribute, value } = payload
 
-    if (attribute === 'money') {
+  async updateAttribute(state: State, payload: UpdateAttributePayload) {
+    const { attribute, value } = payload;
+
+    if (attribute === "money") {
       if (isNaN(state.attributes.money)) {
         state.attributes.money = 0;
         state.attributes.gold = 2;
       } else if (state.signedAgency && value > 0) {
-        (state.attributes[attribute] as number) += value * 0.2
+        (state.attributes[attribute] as number) += value * 0.2;
       } else {
-        (state.attributes[attribute] as number) += value
+        (state.attributes[attribute] as number) += value;
       }
-      state.attributes.money = Math.round(state.attributes.money)
-
-    } else if (attribute === 'gold') {
+      state.attributes.money = Math.round(state.attributes.money);
+    } else if (attribute === "gold") {
       if (isNaN(state.attributes.gold)) {
         state.attributes.money = 0;
         state.attributes.gold = 2;
       } else {
-        state.attributes.gold += value
+        state.attributes.gold += value;
       }
-
     } else if (attribute === "popularity") {
       if (value > 0) {
-        state.attributes.popularity.red += value
+        state.attributes.popularity.red += value;
       } else {
-        state.attributes.popularity.black += value
+        state.attributes.popularity.black += value;
       }
-    }
-    else if (attribute === 'red') {
-      state.attributes.popularity.red += value
-    } else if (attribute === 'black') {
-      state.attributes.popularity.black += value
-
-    } else if (attribute === 'gaming' || attribute === 'freestyle') {
+    } else if (attribute === "red") {
+      state.attributes.popularity.red += value;
+    } else if (attribute === "black") {
+      state.attributes.popularity.black += value;
+    } else if (attribute === "gaming" || attribute === "freestyle") {
       const skill = attribute;
 
-      const currentLevel = SkillLevelMapping.find(level => level.level === state.attributes.skill[`${skill}Level`]);
+      const currentLevel = SkillLevelMapping.find((level) => level.level === state.attributes.skill[`${skill}Level`]);
       const currentLevelMax = currentLevel ? currentLevel.max : 0;
       state.attributes.skill[skill] = Math.min(state.attributes.skill[skill] + value, currentLevelMax);
-
-    } else if (attribute === 'fightLevel') {
+    } else if (attribute === "fightLevel") {
       const currentLevel = state.attributes.fight.level;
       const currentLevelMax = 81;
       state.attributes.fight.level = Math.min(currentLevel + value, currentLevelMax);
-    }
-    else {
-      (state.attributes[attribute] as number) += value
-      
-      if (attribute === 'energy') {
+    } else {
+      (state.attributes[attribute] as number) += value;
+
+      if (attribute === "energy") {
         if (state.attributes.energy > state.attributes.maxEnergy) {
-          state.attributes.energy = state.attributes.maxEnergy
+          state.attributes.energy = state.attributes.maxEnergy;
         }
 
         if (state.attributes.energy < 0 && !state.weak) {
-          state.weak = true
+          state.weak = true;
           // if (!state.weak) {
-            
+
           //   await store.dispatch('typeWriter', '体力<0，姜云升进入了虚弱状态。')
           // } else {
           //   await store.dispatch('typeWriter', '体力<0，姜云升正处于虚弱状态。')
           // }
-          
         } else if (state.attributes.energy >= 0 && state.weak) {
-          state.weak = false
+          state.weak = false;
           // await store.dispatch('typeWriter', '体力>0，姜云升从虚弱状态恢复啦。')
         }
-
       }
     }
   },
 
   addSleepHours(state: State, payload: number) {
-    state.sleepHours += payload
+    state.sleepHours += payload;
   },
 
-  upgradeSkillLevel(state: State, skill: 'gaming' | 'freestyle') {
-    if ( skill === 'gaming' || skill === 'freestyle' ) {
-      state.attributes.skill[skill] ++;
+  upgradeSkillLevel(state: State, skill: "gaming" | "freestyle") {
+    if (skill === "gaming" || skill === "freestyle") {
+      state.attributes.skill[skill]++;
       for (const level of SkillLevelMapping) {
         if (state.attributes.skill[skill] >= level.min && state.attributes.skill[skill] <= level.max) {
           state.attributes.skill[`${skill}Level`] = level.level;
@@ -269,101 +262,101 @@ const mutations = {
       }
     }
   },
-  
+
   setWeak(state: State, payload: boolean) {
-    state.weak = payload
+    state.weak = payload;
   },
 
   updateDrunk(state: State, payload: number) {
-    state.drunk += payload
+    state.drunk += payload;
   },
 
   setGirlfriend(state: State, payload: { type: string; effect: keyof Attributes; breakupReasons: string[] } | null) {
-    state.girlfriend = payload
+    state.girlfriend = payload;
     if (payload === null) {
-      state.breakupTimes++
-      state.lastBreakupRound = state.round
+      state.breakupTimes++;
+      state.lastBreakupRound = state.round;
     }
   },
   incrementFlirtCount(state: State) {
-    state.flirtCount += 1
+    state.flirtCount += 1;
   },
   resetFlirtCount(state: State) {
-    state.flirtCount = 0
+    state.flirtCount = 0;
   },
   resetRelationRound(state: State) {
-    state.relationRound = 0
+    state.relationRound = 0;
   },
   setSeamlessRelation(state: State, payload: boolean) {
-    state.seamlessRelation = payload
+    state.seamlessRelation = payload;
   },
   incrementAccompanyCount(state: State) {
-    state.accompanyCount++
+    state.accompanyCount++;
   },
   resetAccompanyCount(state: State) {
-    state.accompanyCount = 0
+    state.accompanyCount = 0;
   },
   incrementUndergroundCount(state: State) {
-    state.undergroundCount ++
+    state.undergroundCount++;
   },
   incrementTourCount(state: State, index: number) {
-    state.tourCount[index] ++
+    state.tourCount[index]++;
   },
-  updateBattleResult(state: State, payload: { year: number; result: "落选" | "海选" | "八强" | "冠军" | "Masta" }) { 
-    const { year, result } = payload
+  updateBattleResult(state: State, payload: { year: number; result: "落选" | "海选" | "八强" | "冠军" | "Masta" }) {
+    const { year, result } = payload;
     if (Array.isArray(state.battleResults)) {
-      const index = state.battleResults.findIndex(battleResult => battleResult.year === year);
+      const index = state.battleResults.findIndex((battleResult) => battleResult.year === year);
       if (index !== -1) {
         state.battleResults[index].result = result;
       }
     }
   },
   updateBattleEnd(state: State, payload: { year: number; end: boolean }) {
-    const { year, end } = payload
+    const { year, end } = payload;
     if (Array.isArray(state.battleResults)) {
-      const index = state.battleResults.findIndex(battleResult => battleResult.year === year);
+      const index = state.battleResults.findIndex((battleResult) => battleResult.year === year);
       if (index !== -1) {
         state.battleResults[index].end = end;
       }
     }
   },
   setSignedAgency(state: State, payload: boolean) {
-    state.signedAgency = payload
+    state.signedAgency = payload;
     if (payload) {
-      state.signedAgencyRound = state.round
+      state.signedAgencyRound = state.round;
     }
   },
   incrementGoToAgencyTimes(state: State) {
-    state.goToAgencyTimes++
+    state.goToAgencyTimes++;
   },
   buyGold(state: State, payload: number) {
-    state.attributes.gold += payload
-    state.attributes.money -= 360 * payload
+    state.attributes.gold += payload;
+    state.attributes.money -= 360 * payload;
   },
   updateItem(state: State, payload: { itemName: string; quantity: number }) {
-    const { itemName, quantity } = payload
-    if (itemName === '麦克风大锤' || itemName === '恶魔「S」之链' || itemName === '反穿之甲' || itemName === '虚无之裤' || itemName === '黄色卡车' || itemName === '巴黎之靴') {
+    const { itemName, quantity } = payload;
+    if (itemName === "麦克风大锤" || itemName === "恶魔「S」之链" || itemName === "反穿之甲" || itemName === "虚无之裤" || itemName === "黄色卡车" || itemName === "巴黎之靴") {
       if (state.inventory[itemName] && state.inventory[itemName].quantity > 0) {
-        state.inventory[itemName].quantity = 1
+        state.inventory[itemName].quantity = 1;
       } else {
         state.inventory[itemName] = {
           quantity: 1,
           isFood: false,
-        }
-        state.lastSpecialItem = itemName
+        };
+        state.lastSpecialItem = itemName;
       }
     } else {
       if (state.inventory[itemName]) {
-        state.inventory[itemName].quantity += quantity
+        state.inventory[itemName].quantity += quantity;
       } else {
         state.inventory[itemName] = {
           quantity: quantity,
           isFood: false,
-        }
+        };
       }
     }
   },
-  packFood(state: State, { food, quantity }: { food: string, quantity: number }) {
+  packFood(state: State, { food, quantity }: { food: string; quantity: number }) {
     if (state.inventory[food]) {
       state.inventory[food].quantity += quantity;
     } else {
@@ -375,7 +368,7 @@ const mutations = {
   },
   decreaseInventory(state: State, { itemName, quantity }: { itemName: string; quantity: number }) {
     if (state.inventory[itemName]) {
-      state.inventory[itemName].quantity -= quantity
+      state.inventory[itemName].quantity -= quantity;
       if (state.inventory[itemName].quantity <= 0) {
         delete state.inventory[itemName];
       }
@@ -390,7 +383,7 @@ const mutations = {
     } else {
       state.songStages[songTitle] = {
         completedStage: null,
-        unlocked: true
+        unlocked: true,
       };
     }
   },
@@ -400,7 +393,7 @@ const mutations = {
     } else {
       state.songStages[songStages.songTitle] = {
         completedStage: songStages.stage,
-        unlocked: true
+        unlocked: true,
       };
     }
   },
@@ -423,25 +416,25 @@ const mutations = {
   },
 
   recruitArtist(state: State, artistName: string) {
-    let artist = state.artists.find(artist => artist.name === artistName)
-    if(artist && state.thisSeasonArtist.move === null) {
-      artist.level += 1
-      state.thisSeasonArtist.move = { name: artistName, action: '招募' }
+    let artist = state.artists.find((artist) => artist.name === artistName);
+    if (artist && state.thisSeasonArtist.move === null) {
+      artist.level += 1;
+      state.thisSeasonArtist.move = { name: artistName, action: "招募" };
       state.attributes.money -= 800000; // 支出公司运营费用
     }
   },
   trainArtist(state: State, artistName: string) {
-    let artist = state.artists.find(artist => artist.name === artistName)
-    if(artist && artist.level > 0 && state.thisSeasonArtist.move === null) {
-      artist.level += 1
-      state.thisSeasonArtist.move = { name: artistName, action: '锻炼' }
+    let artist = state.artists.find((artist) => artist.name === artistName);
+    if (artist && artist.level > 0 && state.thisSeasonArtist.move === null) {
+      artist.level += 1;
+      state.thisSeasonArtist.move = { name: artistName, action: "锻炼" };
       state.attributes.money -= 800000; // 支出公司运营费用
     }
   },
   dispatchArtist(state: State, artistName: string) {
-    let artist = state.artists.find(artist => artist.name === artistName)
-    if(artist && artist.level > 0 && !state.thisSeasonArtist.dispatch.includes(artistName)) {
-      state.thisSeasonArtist.dispatch.push(artistName)
+    let artist = state.artists.find((artist) => artist.name === artistName);
+    if (artist && artist.level > 0 && !state.thisSeasonArtist.dispatch.includes(artistName)) {
+      state.thisSeasonArtist.dispatch.push(artistName);
       // 根据艺人等级，给予收益
       switch (artist.level) {
         case 1:
@@ -462,7 +455,7 @@ const mutations = {
     }
   },
   resetThisSeasonArtist(state: State) {
-    state.thisSeasonArtist = { move: null, dispatch: [] }
+    state.thisSeasonArtist = { move: null, dispatch: [] };
   },
 
   collectShard(state: State, shard: string) {
@@ -470,12 +463,8 @@ const mutations = {
   },
 
   unlockAchievement(state: State, achievementName: string) {
-    const achievement = achievements.find(
-      (ach) => ach.name === achievementName
-    )
-    const achievementState = state.achievementStates.find(
-      (ach) => ach.name === achievementName
-    )
+    const achievement = achievements.find((ach) => ach.name === achievementName);
+    const achievementState = state.achievementStates.find((ach) => ach.name === achievementName);
     if (achievement && !achievementState) {
       state.achievementStates.push({
         name: achievement.name,
@@ -492,14 +481,14 @@ const mutations = {
     state.unlockedAchievementConditions.push(achievementName);
   },
 
-  investProject(state: State, project: { name: string; income: number; cost: number}) {
+  investProject(state: State, project: { name: string; income: number; cost: number }) {
     state.investedProjects.push(project.name);
     state.investYearIncome += project.income;
     state.attributes.money -= project.cost;
   },
 
   addTextToHistory(state: State, message: string | string[]) {
-    if (typeof message === 'string') {
+    if (typeof message === "string") {
       state.textHistory.push(message);
     } else {
       message.forEach((m) => state.textHistory.push(m));
@@ -507,51 +496,47 @@ const mutations = {
   },
 
   setGameEnded(state: State, payload: { gameEnded: boolean; specialEndingAchievementName: string | string[] }) {
-    
-    if (typeof payload.specialEndingAchievementName === 'string') {
-      if (!payload.gameEnded) state.currentEndings.push(payload.specialEndingAchievementName)
-      store.commit('unlockAchievement', payload.specialEndingAchievementName)
-      const specialEndingAchievement = achievements.find(
-        (ach) => ach.name === payload.specialEndingAchievementName
-      )
-      state.specialEndingAchievement = specialEndingAchievement || null
+    if (typeof payload.specialEndingAchievementName === "string") {
+      if (!payload.gameEnded) state.currentEndings.push(payload.specialEndingAchievementName);
+      store.commit("unlockAchievement", payload.specialEndingAchievementName);
+      const specialEndingAchievement = achievements.find((ach) => ach.name === payload.specialEndingAchievementName);
+      state.specialEndingAchievement = specialEndingAchievement || null;
     } else {
-      state.specialEndingAchievement = null
+      state.specialEndingAchievement = null;
     }
 
-    state.gameEnded = payload.gameEnded
-    showGameEndDialog.value = true
-
+    state.gameEnded = payload.gameEnded;
+    showGameEndDialog.value = true;
   },
 
   resetGameState(state: State, resetData: boolean) {
-    state.term ++
-    state.round = 1
-    state.year = 2012
-    state.gameEnded = false
-    state.currentEndings = []
-    state.specialEndingAchievement = null
-    state.happenedEvents = []
-    state.textHistory = []
+    state.term++;
+    state.round = 1;
+    state.year = 2012;
+    state.gameEnded = false;
+    state.currentEndings = [];
+    state.specialEndingAchievement = null;
+    state.happenedEvents = [];
+    state.textHistory = [];
 
-    state.weak = false
-    state.drunk = 0
-    state.sleepHours = 0
+    state.weak = false;
+    state.drunk = 0;
+    state.sleepHours = 0;
 
-    state.girlfriend = null
-    state.flirtCount = 0
+    state.girlfriend = null;
+    state.flirtCount = 0;
 
-    state.accompanyCount = 0
-    state.relationRound = 0
-    state.lastBreakupRound = 0
+    state.accompanyCount = 0;
+    state.relationRound = 0;
+    state.lastBreakupRound = 0;
 
     // state.undergroundCount = 0
-    state.battleResults = battleResults
+    state.battleResults = battleResults;
     state.openFengyan = false;
-    state.thisSeasonArtist = { move: null, dispatch: [] }
+    state.thisSeasonArtist = { move: null, dispatch: [] };
 
-    state.signedAgency = false
-    state.signedAgencyRound = null
+    state.signedAgency = false;
+    state.signedAgencyRound = null;
 
     if (resetData) {
       state.attributes = {
@@ -567,8 +552,8 @@ const mutations = {
         skill: {
           freestyle: 0,
           gaming: 0,
-          gamingLevel: 'D',
-          freestyleLevel: 'D'
+          gamingLevel: "D",
+          freestyleLevel: "D",
         },
         energy: 100,
         maxEnergy: 100,
@@ -580,33 +565,30 @@ const mutations = {
           hp: 6,
           mp: 61,
         },
-        superstition: 0
-      }
+        superstition: 0,
+      };
 
-      state.inventory = {}
-      state.lastSpecialItem = null
-      state.songStages = {}
-      state.unlockedFeiSongs = []
-      state.unlockedVitamins = []
-      state.unlockedFoods = []
+      state.inventory = {};
+      state.lastSpecialItem = null;
+      state.songStages = {};
+      state.unlockedFeiSongs = [];
+      state.unlockedVitamins = [];
+      state.unlockedFoods = [];
       state.shards = [];
-      state.artists = artists,
-
-      state.realEstate = [];
+      (state.artists = artists), (state.realEstate = []);
       state.investedProjects = [];
       state.investYearIncome = 0;
       state.currentStock = false;
-
     } else {
-      state.attributes.talent = Math.floor(state.attributes.talent * 0.2)
-      state.attributes.charm = Math.floor(state.attributes.charm * 0.2)
-      state.attributes.divine = Math.floor(state.attributes.divine * 0.2)
-      state.attributes.popularity.red = Math.floor(state.attributes.popularity.red * 0.2)
-      state.attributes.popularity.black = Math.floor(state.attributes.popularity.black * 0.2)
-      state.attributes.money = Math.floor(state.attributes.money * 0.2)
-      state.attributes.maxEnergy = Math.floor((state.attributes.maxEnergy - 100) * 0.2 + 100)
-      state.attributes.energy = state.attributes.maxEnergy
-      state.attributes.mood = 0
+      state.attributes.talent = Math.floor(state.attributes.talent * 0.2);
+      state.attributes.charm = Math.floor(state.attributes.charm * 0.2);
+      state.attributes.divine = Math.floor(state.attributes.divine * 0.2);
+      state.attributes.popularity.red = Math.floor(state.attributes.popularity.red * 0.2);
+      state.attributes.popularity.black = Math.floor(state.attributes.popularity.black * 0.2);
+      state.attributes.money = Math.floor(state.attributes.money * 0.2);
+      state.attributes.maxEnergy = Math.floor((state.attributes.maxEnergy - 100) * 0.2 + 100);
+      state.attributes.energy = state.attributes.maxEnergy;
+      state.attributes.mood = 0;
     }
   },
   loadGameState(state: State, gameData: State) {
@@ -633,8 +615,8 @@ const mutations = {
       skill: {
         freestyle: 0,
         gaming: 0,
-        gamingLevel: 'D',
-        freestyleLevel: 'D'
+        gamingLevel: "D",
+        freestyleLevel: "D",
       },
       energy: 100,
       maxEnergy: 100,
@@ -646,7 +628,7 @@ const mutations = {
         hp: 6,
         mp: 61,
       },
-      superstition: 0
+      superstition: 0,
     };
     state.weak = false;
     state.drunk = 0;
@@ -668,9 +650,7 @@ const mutations = {
     state.tourCount = [0, 0];
     state.shards = [];
     state.openFengyan = false;
-    state.artists = artists,
-    state.thisSeasonArtist = { move: null, dispatch: [] },
-    state.signedAgency = false;
+    (state.artists = artists), (state.thisSeasonArtist = { move: null, dispatch: [] }), (state.signedAgency = false);
     state.signedAgencyRound = null;
     state.goToAgencyTimes = 0;
     state.songs = [];
@@ -685,131 +665,124 @@ const mutations = {
     state.specialEndingAchievement = null;
     state.textHistory = [];
     state.player = null;
-    
+
     showStartGameDialog.value = true;
-  }
-  
-}
+  },
+};
 
 const actions = {
   accompanyGirlfriend,
   goToLocation,
   performAction,
-  purchaseItem, 
+  purchaseItem,
   eatFood,
   packFood,
   eatPackedFood,
-  drinkDrink, 
+  drinkDrink,
   specialEvent,
   specialEventOptionChosen,
   typeWriter,
   async waitAndType(context: { commit: Commit; state: State; dispatch: Function; getters: any }, waitTime = 1000) {
     isTyping.value = true;
-    await new Promise(resolve => setTimeout(resolve, waitTime));
+    await new Promise((resolve) => setTimeout(resolve, waitTime));
     isTyping.value = false;
   },
   typeWriterPopup,
   upgradeSkill,
 
   async incrementRound(context: { commit: Commit; state: State; dispatch: Function; getters: any }) {
-    context.commit('incrementRound');
+    context.commit("incrementRound");
 
     if (isNaN(state.attributes.money)) {
-      context.commit('updateAttribute', { attribute: "money", value: 0 })
-      await context.dispatch('typeWriter', '姜云升实在是太有爱心了，你的钱太多了，你无私地把你的钱全部捐给了有需要的人，甚至不需要任何回报，也不需要任何人知晓！姜云升行善积德+10');
-
-    } else if ( state.attributes.money > 10000000000) {
-      context.commit('updateAttribute', { attribute: "money", value: -state.attributes.money })
+      context.commit("updateAttribute", { attribute: "money", value: 0 });
+      await context.dispatch("typeWriter", "姜云升实在是太有爱心了，你的钱太多了，你无私地把你的钱全部捐给了有需要的人，甚至不需要任何回报，也不需要任何人知晓！姜云升行善积德+10");
+    } else if (state.attributes.money > 10000000000) {
+      context.commit("updateAttribute", { attribute: "money", value: -state.attributes.money });
       if (isNaN(state.attributes.gold)) {
-        context.commit('updateAttribute', { attribute: "gold", value: 0 })
+        context.commit("updateAttribute", { attribute: "gold", value: 0 });
       } else if (state.attributes.gold > 2) {
-          context.commit('updateAttribute', { attribute: "gold", value: 2 - state.attributes.gold })
+        context.commit("updateAttribute", { attribute: "gold", value: 2 - state.attributes.gold });
       }
-      await context.dispatch('typeWriter', '姜云升实在是太有爱心了，你的钱太多了，你无私地把你的钱全部捐给了有需要的人，甚至不需要任何回报，也不需要任何人知晓！姜云升行善积德+10');
+      await context.dispatch("typeWriter", "姜云升实在是太有爱心了，你的钱太多了，你无私地把你的钱全部捐给了有需要的人，甚至不需要任何回报，也不需要任何人知晓！姜云升行善积德+10");
     }
 
-    if ( state.attributes.popularity.red > 100000000) {
-
-      const red = state.attributes.popularity.red
-      const black = state.attributes.popularity.black
+    if (state.attributes.popularity.red > 100000000) {
+      const red = state.attributes.popularity.red;
+      const black = state.attributes.popularity.black;
 
       // math random 将 red 修正到 60000 到 90000 ，red和black比例保持不变
-      const redRandom = Math.floor(Math.random() * 30000) + 60000
-      const blackRandom = Math.max(Math.min(Math.floor(black * redRandom / red), black), Math.floor(Math.random() * 20000) + 60000)
+      const redRandom = Math.floor(Math.random() * 30000) + 60000;
+      const blackRandom = Math.max(Math.min(Math.floor((black * redRandom) / red), black), Math.floor(Math.random() * 20000) + 60000);
 
-      context.commit('updateAttribute', { attribute: "red", value: redRandom - red })
-      context.commit('updateAttribute', { attribute: "black", value: blackRandom - black })
-      
-      await context.dispatch('typeWriter', '【系统】姜云升操作「清理微博粉丝」~修复了人气数据！');
+      context.commit("updateAttribute", { attribute: "red", value: redRandom - red });
+      context.commit("updateAttribute", { attribute: "black", value: blackRandom - black });
+
+      await context.dispatch("typeWriter", "【系统】姜云升操作「清理微博粉丝」~修复了人气数据！");
     }
 
     if (state.drunk > 0) {
-      store.commit('updateDrunk', -1);
+      store.commit("updateDrunk", -1);
       if (state.drunk === 0) {
-        await store.dispatch('waitAndType', 600);
-        await context.dispatch('typeWriter', '姜云升的酒醒了。');
+        await store.dispatch("waitAndType", 600);
+        await context.dispatch("typeWriter", "姜云升的酒醒了。");
       }
     }
 
-    if ( state.relationRound > 15) {
+    if (state.relationRound > 15) {
       if (Math.random() < 0.52) {
-        await store.dispatch('waitAndType', 600);
-        showBreakupDialog.value = true
+        await store.dispatch("waitAndType", 600);
+        showBreakupDialog.value = true;
       }
     }
 
-    if ( state.signedAgency && !Math.floor(state.round % 9) ) {
-      await store.dispatch('waitAndType', 600);
-      store.commit('updateAttribute', { attribute: "money", value: 500 * 3 * 5 })
-      await context.dispatch('typeWriter', '姜云升签约了公司，到账工资1500元。');
+    if (state.signedAgency && !Math.floor(state.round % 9)) {
+      await store.dispatch("waitAndType", 600);
+      store.commit("updateAttribute", { attribute: "money", value: 500 * 3 * 5 });
+      await context.dispatch("typeWriter", "姜云升签约了公司，到账工资1500元。");
     }
 
     if (!Math.floor(state.round % 9)) {
-
-      if (state.thisSeasonArtist.dispatch.length > 0){
-
+      if (state.thisSeasonArtist.dispatch.length > 0) {
         let income = 0;
         let activities = [];
 
         for (const artistName of state.thisSeasonArtist.dispatch) {
-          const artist = state.artists.find(artist => artist.name === artistName);
+          const artist = state.artists.find((artist) => artist.name === artistName);
           if (artist && artist.level > 0) {
-            let activity = '';
+            let activity = "";
             switch (artist.level) {
               case 1:
-                activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了《男生女生向前冲》，收获冰箱1台';
+                activity = "【" + artist.name + "】<small>（" + artist.level + "级）</small>参加了《男生女生向前冲》，收获冰箱1台";
                 break;
               case 2:
                 income += 8000; // level 2 的艺人增加收入8000
-                activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>在Livehouse嘉宾助演';
+                activity = "【" + artist.name + "】<small>（" + artist.level + "级）</small>在Livehouse嘉宾助演";
                 break;
               case 3:
                 income += 80000; // level 3 的艺人增加收入8万
-                activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了音乐节演出';
+                activity = "【" + artist.name + "】<small>（" + artist.level + "级）</small>参加了音乐节演出";
                 break;
               case 4:
                 income += 180000; // level 4 的艺人增加收入18万
-                activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了音乐节演出';
+                activity = "【" + artist.name + "】<small>（" + artist.level + "级）</small>参加了音乐节演出";
                 break;
               case 5:
                 income += 280000; // level 5 的艺人增加收入28万
-                activity = '【' + artist.name + '】<small>（' + artist.level + '级）</small>参加了音乐节演出';
+                activity = "【" + artist.name + "】<small>（" + artist.level + "级）</small>参加了音乐节演出";
                 break;
             }
             activities.push(activity);
           }
         }
-        context.commit('updateAttribute', { attribute: 'money', value: income }); //更新总收入
-        await context.dispatch('typeWriter', `【风炎经营季报】本季度风炎文化艺人${activities.join('；')}——风炎文化有限公司艺人演出本季度累计收益二八分得${income}元！`);
-
+        context.commit("updateAttribute", { attribute: "money", value: income }); //更新总收入
+        await context.dispatch("typeWriter", `【风炎经营季报】本季度风炎文化艺人${activities.join("；")}——风炎文化有限公司艺人演出本季度累计收益二八分得${income}元！`);
       }
-      context.commit('resetThisSeasonArtist');
-
+      context.commit("resetThisSeasonArtist");
     }
 
-    if ( !Math.floor((state.round - 16) % 36) ) {
-      await store.dispatch('waitAndType', 600);
-      await context.dispatch('specialEvent', '生日快乐');
+    if (!Math.floor((state.round - 16) % 36)) {
+      await store.dispatch("waitAndType", 600);
+      await context.dispatch("specialEvent", "生日快乐");
     }
 
     // 第三年2月的时候，触发继承家业任务
@@ -817,114 +790,123 @@ const actions = {
     //   context.dispatch('specialEvent', '继承家业');
     // }
 
-    if ( !Math.floor((state.round - 25) % 36) ) {
-      await store.dispatch('waitAndType', 600);
-      await context.dispatch('typeWriter', '今年的Battle比赛已经开放，可以在外出时报名参加比赛了。');
+    if (!Math.floor((state.round - 25) % 36)) {
+      await store.dispatch("waitAndType", 600);
+      await context.dispatch("typeWriter", "今年的Battle比赛已经开放，可以在外出时报名参加比赛了。");
     }
 
-    if ( !Math.floor((state.round) % 36) ) {
-      await store.dispatch('waitAndType', 600);
+    if (!Math.floor(state.round % 36)) {
+      await store.dispatch("waitAndType", 600);
       const investedProjects = state.investedProjects;
-      const investYearIncome =  state.investYearIncome;
-      const investedProjectNames = investedProjects.map((project: string) => project).join('】、【');
-      context.commit('updateAttribute', { attribute: "money", value: investYearIncome })
+      const investYearIncome = state.investYearIncome;
+      const investedProjectNames = investedProjects.map((project: string) => project).join("】、【");
+      context.commit("updateAttribute", { attribute: "money", value: investYearIncome });
 
       if (investedProjects.length > 1) {
-        await context.dispatch('typeWriter', '【投资年报】「付出没有结果，这事我不相信！」年底啦，恭喜投资奇才姜云升获得了【' + investedProjectNames + '】几大投资项目的年收益【' + investYearIncome + '】元！');
+        await context.dispatch("typeWriter", "【投资年报】「付出没有结果，这事我不相信！」年底啦，恭喜投资奇才姜云升获得了【" + investedProjectNames + "】几大投资项目的年收益【" + investYearIncome + "】元！");
       } else if (investedProjects.length === 1) {
-        await context.dispatch('typeWriter', '【投资年报】「付出没有结果，这事我不相信！」年底啦，恭喜投资奇才姜云升获得了【' + investedProjectNames + '】项目的年收益【' + investYearIncome + '】元！');
+        await context.dispatch("typeWriter", "【投资年报】「付出没有结果，这事我不相信！」年底啦，恭喜投资奇才姜云升获得了【" + investedProjectNames + "】项目的年收益【" + investYearIncome + "】元！");
       }
     }
 
-    if (state.round === 10 * 36 ) {
-      await store.dispatch('waitAndType', 600);
-      await context.dispatch('specialEvent', '十年');
+    if (state.round === 10 * 36) {
+      await store.dispatch("waitAndType", 600);
+      await context.dispatch("specialEvent", "十年");
     }
 
-    if ((state.attributes.popularity.red + state.attributes.popularity.black) > 1200 && state.attributes.popularity.black > 1000) {
-      const isAchUnlocked = context.getters.unlockedAchievement('我所拥有的人气，又是不是真的？');
-      if ( !isAchUnlocked ) {
-        await store.dispatch('waitAndType', 600);
-        context.commit('unlockAchievement', '我所拥有的人气，又是不是真的？');
-        await context.dispatch('typeWriter', '人气>1200，黑人气>1000。解锁成就【我所拥有的人气，又是不是真的？】')
+    if (state.attributes.popularity.red + state.attributes.popularity.black > 1200 && state.attributes.popularity.black > 1000) {
+      const isAchUnlocked = context.getters.unlockedAchievement("我所拥有的人气，又是不是真的？");
+      if (!isAchUnlocked) {
+        await store.dispatch("waitAndType", 600);
+        context.commit("unlockAchievement", "我所拥有的人气，又是不是真的？");
+        await context.dispatch("typeWriter", "人气>1200，黑人气>1000。解锁成就【我所拥有的人气，又是不是真的？】");
       }
     }
 
-    if ( !state.currentEndings.includes('汤臣亿品') && state.attributes.money >= 100000000) {
-      context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '汤臣亿品' });
-      return
+    if (!state.currentEndings.includes("汤臣亿品") && state.attributes.money >= 100000000) {
+      context.commit("setGameEnded", { gameEnded: false, specialEndingAchievementName: "汤臣亿品" });
+      return;
     }
 
-    if (!state.currentEndings.includes('刀削面子') && state.girlfriend && state.breakupTimes >= 11 && state.songStages['浪漫主义'] && state.songStages['浪漫主义'].completedStage && state.songStages['浪漫主义2.0'] && state.songStages['浪漫主义2.0'].completedStage) {
-      context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '刀削面子' });
-      return
+    if (
+      !state.currentEndings.includes("刀削面子") &&
+      state.girlfriend &&
+      state.breakupTimes >= 11 &&
+      state.songStages["浪漫主义"] &&
+      state.songStages["浪漫主义"].completedStage &&
+      state.songStages["浪漫主义2.0"] &&
+      state.songStages["浪漫主义2.0"].completedStage
+    ) {
+      context.commit("setGameEnded", { gameEnded: false, specialEndingAchievementName: "刀削面子" });
+      return;
     }
 
-    if (!state.currentEndings.includes('皮卡皮卡') && state.inventory['皮卡丘玩偶'] && state.inventory['皮卡丘玩偶'].quantity >= 521 && state.songStages['皮卡丘'] && state.songStages['皮卡丘'].completedStage && !(state.songStages['3'] && state.songStages['3'].completedStage)) {
-      context.commit('setGameEnded', { gameEnded: false, specialEndingAchievementName: '皮卡皮卡' });
-      return
+    if (
+      !state.currentEndings.includes("皮卡皮卡") &&
+      state.inventory["皮卡丘玩偶"] &&
+      state.inventory["皮卡丘玩偶"].quantity >= 521 &&
+      state.songStages["皮卡丘"] &&
+      state.songStages["皮卡丘"].completedStage &&
+      !(state.songStages["3"] && state.songStages["3"].completedStage)
+    ) {
+      context.commit("setGameEnded", { gameEnded: false, specialEndingAchievementName: "皮卡皮卡" });
+      return;
     }
 
     if (state.round > state.totalRounds) {
       if (state.currentEndings.length > 0) {
-        context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: state.currentEndings });
+        context.commit("setGameEnded", { gameEnded: true, specialEndingAchievementName: state.currentEndings });
         return;
-
       } else {
-        
         if (state.attributes.money <= 99999) {
-          context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '一肩明月，两袖清风' });
+          context.commit("setGameEnded", { gameEnded: true, specialEndingAchievementName: "一肩明月，两袖清风" });
           return;
-
         } else {
-          context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '无法定义的结局' });
+          context.commit("setGameEnded", { gameEnded: true, specialEndingAchievementName: "无法定义的结局" });
           return;
         }
-
       }
     }
 
     if (state.attributes.energy <= -100) {
-      context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '姜云升虚弱' });
+      context.commit("setGameEnded", { gameEnded: true, specialEndingAchievementName: "姜云升虚弱" });
       return;
     }
 
     if (state.attributes.mood <= -100) {
-      context.commit('setGameEnded', { gameEnded: true, specialEndingAchievementName: '我不做人啦' });
+      context.commit("setGameEnded", { gameEnded: true, specialEndingAchievementName: "我不做人啦" });
       return;
     }
-
   },
-
-}
+};
 
 const getters = {
   currentYear(state: State) {
-    return state.year
+    return state.year;
   },
   currentRound(state: State) {
-    return state.round
+    return state.round;
   },
   totalRounds(state: State) {
-    return state.totalRounds
+    return state.totalRounds;
   },
   attributes(state: State) {
-    return state.attributes
+    return state.attributes;
   },
-  unlockedAchievement:(state: State) => (achievementName: string) => {
-    const achievement = state.achievementStates.find((ach) => ach.name === achievementName)
-    return achievement ? achievement.unlocked : false
+  unlockedAchievement: (state: State) => (achievementName: string) => {
+    const achievement = state.achievementStates.find((ach) => ach.name === achievementName);
+    return achievement ? achievement.unlocked : false;
   },
   UnlockedAchievementCount(state: State) {
-    return state.achievementStates.filter((ach) => ach.unlocked === true).length
+    return state.achievementStates.filter((ach) => ach.unlocked === true).length;
   },
-}
+};
 
 export const store: Store<State> = createStore({
   state,
   mutations,
   actions,
   getters,
-})
+});
 
-export default store
+export default store;

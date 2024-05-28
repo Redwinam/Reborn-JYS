@@ -153,7 +153,7 @@ export async function performAction(context: { commit: Commit, dispatch: Functio
     } else if (action === '打游戏') {
 
       const gamingIntros = [
-        '姜云升一回家就开了一把《有间永劫》！',
+        '姜云升一回家就开了一把《永劫有间》！',
         '姜云升今天在游戏里被一个人干翻了，那人昵称叫“不如姜云升”！',
         '姜云升在家，内心忽然有个声音和他说，“打会儿游戏吧”！',
         '工作太累了，来把游戏吧！',
