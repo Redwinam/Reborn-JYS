@@ -177,6 +177,13 @@ const activity = async (activityName: string) => {
       await store.dispatch("typeWriter", [`姜云升来到了${musicFestival}的舞台上，为现场的观众们带来了一场印象深刻的演出。<small>姜云升才华+10，魅力+10，金钱+100000，人气+200。</small>`]);
 
       if (store.getters.unlockedAchievement("迄今为止的生命里")) {
+        if (musicFestival == "氧气BAOBAO音乐节") {
+          await store.dispatch("waitAndType", 600);
+          await store.dispatch("typeWriter", `姜云升收到了主办方的小笼包！很喜欢吃！`);
+          store.commit("packFood", { food: "小笼包", quantity: 6 });
+        }
+
+        await store.dispatch("waitAndType", 600);
         const bigFlag = Math.floor(Math.random() * 9) + 1;
         store.commit("updateItem", { itemName: "大旗", quantity: bigFlag });
         await store.dispatch("typeWriter", `姜云升收到了粉丝签满名字的${bigFlag}面大旗，祝大家「暴富」！`);
@@ -186,6 +193,7 @@ const activity = async (activityName: string) => {
       const unCollectedShards = allAfterglows.filter((shard) => !store.state.shards.includes(shard));
 
       if (unCollectedShards.length > 0 && Math.random() < 0.2) {
+        await store.dispatch("waitAndType", 600);
         const randomIndex = Math.floor(Math.random() * unCollectedShards.length);
         // store.commit  collectShard(state: State, shard: string) {
         store.commit("collectShard", unCollectedShards[randomIndex]);
