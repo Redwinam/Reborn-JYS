@@ -12,7 +12,8 @@ export interface Song {
     [key: string]: number;
   };
   lyrics: string;
-  url: string;
+  wyyId: number;
+  // url: string;
   isFeat?: boolean;
 }
 
@@ -28,7 +29,8 @@ export const songLibrary: Song[] = [
     cost: 500,
     effects: { charm: 100, talent: 100, divine: 100, red: +2000, black: +1000 },
     lyrics: "大概我承受过的一切，都是为如今和你遇见。",
-    url: "https://music.163.com/#/song?id=1887917182",
+    // url: "https://music.163.com/#/song?id=1887917182",
+    wyyId: 1887917182,
   },
   {
     title: "浪漫主义2.0",
@@ -36,7 +38,8 @@ export const songLibrary: Song[] = [
     cost: 500,
     effects: { charm: 100, talent: 50, energy: -100, red: +1000, black: +500 },
     lyrics: "你听我说，只要是你，都OK的。",
-    url: "https://music.163.com/#/song?id=1920025919",
+    // url: "https://music.163.com/#/song?id=1920025919",
+    wyyId: 1920025919,
   },
   {
     title: "你一定能够成为你想要去成为的人",
@@ -45,7 +48,8 @@ export const songLibrary: Song[] = [
     cost: 500,
     effects: { talent: 100, red: +2000 },
     lyrics: "你一定能够成为你想要去成为的人。",
-    url: "https://music.163.com/#/song?id=1414783972",
+    // url: "https://music.163.com/#/song?id=1414783972",
+    wyyId: 1414783972,
   },
   {
     title: "孤独面店",
@@ -54,7 +58,8 @@ export const songLibrary: Song[] = [
     cost: 1000,
     effects: { talent: +100, charm: +50, mood: +100, red: +1000, money: +10000 },
     lyrics: "如果这是孤独，那我就敬孤独万岁。",
-    url: "https://music.163.com/#/song?id=1909021556",
+    // url: "https://music.163.com/#/song?id=1909021556",
+    wyyId: 1909021556,
   },
   {
     title: "迄今为止的生命里",
@@ -63,7 +68,18 @@ export const songLibrary: Song[] = [
     cost: 260,
     effects: { charm: 90, talent: 90, red: +2000, black: +600 },
     lyrics: "回忆中昆明的夏天，是故事起点的那端……",
-    url: "https://music.163.com/#/song?id=2050620264",
+    // url: "https://music.163.com/#/song?id=2050620264",
+    wyyId: 2050620264,
+  },
+  {
+    title: "黑白灰",
+    conditions: { talent: 600, charm: 800 },
+    conditionsText: "在音乐节解锁来自朋友赠予的道具「水枪」🔫",
+    cost: 0,
+    effects: { charm: 100, talent: 100, red: +1000 },
+    lyrics: "烧一把大火 来对抗黑夜。",
+    // url: "https://music.163.com/#/song?id=2104008755",
+    wyyId: 2104008755,
   },
   {
     title: "网易云",
@@ -72,7 +88,8 @@ export const songLibrary: Song[] = [
     cost: 1000,
     effects: { talent: 50, red: +800 },
     lyrics: "你今夜为了什么戴上耳机？",
-    url: "https://music.163.com/#/song?id=1307591526",
+    // url: "https://music.163.com/#/song?id=1307591526",
+    wyyId: 1307591526,
   },
   {
     title: "真没睡",
@@ -81,7 +98,8 @@ export const songLibrary: Song[] = [
     cost: 250,
     effects: { charm: -100, talent: 100, red: +1000, black: +1000 },
     lyrics: "你衣服包包给你换新的，先别动手，先好好听着！",
-    url: "https://music.163.com/#/song?id=1358276770",
+    // url: "https://music.163.com/#/song?id=1358276770",
+    wyyId: 1358276770,
   },
   {
     title: "SAD",
@@ -91,7 +109,8 @@ export const songLibrary: Song[] = [
     cost: 1000,
     effects: { charm: 50, talent: 50, mood: +100, red: +1000, black: +200 },
     lyrics: "当你是长夜里寂寞没诚意的梦……",
-    url: "https://music.163.com/#/song?id=1874158536",
+    // url: "https://music.163.com/#/song?id=1874158536",
+    wyyId: 1874158536,
   },
   {
     title: "想你",
@@ -100,7 +119,8 @@ export const songLibrary: Song[] = [
     cost: 5000,
     effects: { charm: 50, talent: 20, red: +600, black: +600, money: 200000 },
     lyrics: "我明明知道你是骗子，但我就想给你骗。",
-    url: "https://music.163.com/#/song?id=1949052976",
+    // url: "https://music.163.com/#/song?id=1949052976",
+    wyyId: 1949052976,
   },
   {
     title: "爱の小曲",
@@ -109,7 +129,8 @@ export const songLibrary: Song[] = [
     cost: 6000,
     effects: { charm: 50, talent: 30, red: +700, black: +700 },
     lyrics: "你爱他 / 所以拍了晚霞发给他 / 那是你表达爱的抽象画",
-    url: "https://music.163.com/#/song?id=2021434933",
+    // url: "https://music.163.com/#/song?id=2021434933",
+    wyyId: 2021434933,
   },
   {
     title: "这首歌没唱直接听",
@@ -117,7 +138,8 @@ export const songLibrary: Song[] = [
     cost: 200,
     effects: { talent: 50, mood: +100, red: +1200, black: +1000 },
     lyrics: "我抬着头当Rapper，也不低头当个IDOL。",
-    url: "https://music.163.com/#/song?id=1315952365",
+    // url: "https://music.163.com/#/song?id=1315952365",
+    wyyId: 1315952365,
   },
   {
     title: "皮卡丘",
@@ -126,7 +148,8 @@ export const songLibrary: Song[] = [
     cost: 1000,
     effects: { talent: 20, charm: 20, mood: 20 },
     lyrics: "去吧 皮卡丘 尽情去 释放你的闪电 (╯‵□′)╯︵┴─┴",
-    url: "https://music.163.com/#/song?id=1311635966",
+    // url: "https://music.163.com/#/song?id=1311635966",
+    wyyId: 1311635966,
   },
   {
     title: "3",
@@ -135,7 +158,8 @@ export const songLibrary: Song[] = [
     cost: 1000,
     effects: { talent: 20, charm: 20, mood: -20 },
     lyrics: "她走以后，我甚至都忘了皮卡丘😞。",
-    url: "https://music.163.com/#/song?id=1973015445",
+    // url: "https://music.163.com/#/song?id=1973015445",
+    wyyId: 1973015445,
     isFeat: true,
   },
   {
@@ -144,7 +168,8 @@ export const songLibrary: Song[] = [
     cost: 1000,
     effects: { talent: 50, charm: 50, red: +800, black: +500, money: +10000 },
     lyrics: "靠HIPHOP的大树赚钱，老子就是那棵树。",
-    url: "https://music.163.com/#/song?id=1981589542",
+    // url: "https://music.163.com/#/song?id=1981589542",
+    wyyId: 1981589542,
   },
   {
     title: "自白书",
@@ -153,7 +178,8 @@ export const songLibrary: Song[] = [
     cost: 100,
     effects: { talent: 50, charm: 50, red: +800, black: +500, money: +100 },
     lyrics: "Hey 很高兴和你相见",
-    url: "https://music.163.com/#/song?id=440090070",
+    // url: "https://music.163.com/#/song?id=440090070",
+    wyyId: 440090070,
   },
 ];
 

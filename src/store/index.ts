@@ -211,8 +211,14 @@ const mutations = {
       }
     } else if (attribute === "red") {
       state.attributes.popularity.red += value;
+      if (state.attributes.popularity.red < 0) {
+        state.attributes.popularity.red = 0;
+      }
     } else if (attribute === "black") {
       state.attributes.popularity.black += value;
+      if (state.attributes.popularity.black < 0) {
+        state.attributes.popularity.black = 0;
+      }
     } else if (attribute === "gaming" || attribute === "freestyle") {
       const skill = attribute;
 

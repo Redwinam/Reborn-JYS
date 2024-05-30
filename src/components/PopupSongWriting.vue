@@ -7,7 +7,10 @@
         </div>
         <div class="song-info">
           <h3>{{ song.title }}<span v-if="song.isFeat" class="feat">feat.</span></h3>
-          <p>
+          <p v-if="songStages[song.title] && songStages[song.title].completedStage === 'release'">
+            <span>{{ song.lyrics }}</span>
+          </p>
+          <p v-else>
             <span v-for="(value, key, index) in song.conditions" :key="key">{{ attributeNames[key] }} ≥ {{ value }}<span v-if="index !== Object.keys(song.conditions).length - 1 || song.conditions_ne"> / </span></span>
             <span v-if="song.conditions_ne" v-for="(value, key, index) in song.conditions_ne" :key="key"
               >{{ attributeNames[key] }} ≤ {{ value }}<span v-if="index !== Object.keys(song.conditions_ne).length - 1"> / </span></span
@@ -55,9 +58,17 @@
   <Popup title="" :visible="showReleaseSongModal" @close="showReleaseSongModal = false" class="song-modal" v-if="currentSong">
     <img :src="'/cover-images/' + currentSong.title + '.jpg'" :alt="currentSong.title" class="modal-cover-image" />
     <p>{{ currentSong.lyrics }}</p>
+
     <div class="modal-header">
-      <button @click="currentSong && listenSong(currentSong)"><Play :size="16"></Play> 播放</button>
+      <span>
+        <button class="play-button" @click="() => {}"><Play :size="16"></Play> 播放</button>
+        <button class="link-button" @click="currentSong && listenSong(currentSong)"><SquareArrowOutUpRight :size="16"></SquareArrowOutUpRight></button>
+      </span>
       <h3>——《{{ currentSong.title }}》</h3>
+    </div>
+
+    <div style="margin: 0 -0.6em">
+      <iframe style="width: 100%" frameborder="no" border="0" marginwidth="0" marginheight="0" height="86" :src="`//music.163.com/outchain/player?type=2&id=${currentSong.wyyId}&auto=1&height=66`"></iframe>
     </div>
   </Popup>
 </template>
@@ -65,7 +76,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { Edit3, Eraser, Mic2, Play, Radio, BatteryWarning } from "lucide-vue-next";
+import { Edit3, Eraser, Mic2, SquareArrowOutUpRight, Play, Radio, BatteryWarning } from "lucide-vue-next";
 
 import { attributeNames } from "../store/attributes";
 import { Song, songLibrary, songFeiLibrary } from "../store/songs";
@@ -113,6 +124,12 @@ function isSongAvailable(song: Song) {
   switch (song.title) {
     case "迄今为止的生命里":
       if (!store.getters.unlockedAchievement("迄今为止的生命里")) {
+        return false;
+      }
+      break;
+
+    case "黑白灰":
+      if (!store.state.inventory["水枪"]) {
         return false;
       }
       break;
@@ -337,7 +354,7 @@ async function writeFeiSong() {
 }
 
 function listenSong(song: Song) {
-  window.open(song.url);
+  window.open("https://music.163.com/#/song?id=" + song.wyyId);
 }
 </script>
 
@@ -457,6 +474,8 @@ function listenSong(song: Song) {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px dashed #ccc;
+  margin-bottom: 0.6rem;
 }
 
 .song-modal .modal-header button {
@@ -464,6 +483,19 @@ function listenSong(song: Song) {
   align-items: center;
   justify-content: center;
   gap: 4px;
+}
+
+.song-modal .modal-header span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.song-modal .modal-header .link-button {
+  background: none;
+  /* gap: 0; */
+  margin-left: -6px;
+  /* padding: 0; */
 }
 
 .modal-cover-image {

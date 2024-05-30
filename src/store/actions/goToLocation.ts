@@ -280,14 +280,14 @@ export async function goToLocation(
 
             case 21:
               await context.dispatch("typeWriter", "行李箱滚轮和布满碎石子的路面摩擦，咯哒咯哒的声音传出老远。");
-              await context.dispatch("typeWriter", "第一百步，接到母亲的电话，她怕我跌在黑暗里头破血流，更怕我一去不返。");
-              await context.dispatch("typeWriter", "第二百步，听到背后的揶揄，傲睨自若，视我如草芥。");
+              await context.dispatch("typeWriter", "第一百步，接到母亲的电话，她怕你跌在黑暗里头破血流，更怕你一去不返。");
+              await context.dispatch("typeWriter", "第二百步，听到背后的揶揄，傲睨自若，视你如草芥。");
               await context.dispatch("typeWriter", "第三百步，飘来颓坏的腐气，唯见木然的瞳孔。");
               await context.dispatch("typeWriter", "第四百步，同行者或三五结伴，或形单影只。快或慢，远或近，大多消失在岔路口。");
-              await context.dispatch("typeWriter", "第五百步，你弃我如敝履。");
-              await context.dispatch("typeWriter", "第六百步，我走不动了。");
+              await context.dispatch("typeWriter", "第五百步，弃你如敝履。");
+              await context.dispatch("typeWriter", "第六百步，你走不动了。");
               await context.dispatch("typeWriter", "第七百步，于绝望中看到北辰，强撑着爬起来，丢掉行李再启程。");
-              await context.dispatch("typeWriter", "第八百步，狂笑声从头顶传来，探头一瞥，镶嵌金边的窗内人影憧憧，美酒，美食，美人，主人开门请我入座。");
+              await context.dispatch("typeWriter", "第八百步，狂笑声从头顶传来，探头一瞥，镶嵌金边的窗内人影憧憧，美酒，美食，美人，主人开门请你入座。");
               await context.dispatch("typeWriter", "第九百步，昏黄之光点此刻已如太阳。<br><small>——习作《深巷》 / 姜云升</small>");
               break;
 

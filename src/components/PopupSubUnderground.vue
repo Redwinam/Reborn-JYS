@@ -7,8 +7,12 @@
         <button class="button-tour" :disabled="finishTour(0).value" @click="tour(0)">巡演「第九百步」</button>
         <button v-if="finishTour(0).value" class="button-tour" :disabled="finishTour(1).value" @click="tour(1)">巡演「命運ONLINE」</button>
         <hr />
-        <button class="button-activity" @click="activity('上节目')">上节目（1个月）</button>
-        <button class="button-activity" @click="activity('上音乐节')">上音乐节</button>
+        <div style="margin-bottom: -5px">
+          <button class="button-activity" @click="activity('上节目')">上节目（1个月）</button>
+          <br v-if="store.getters.unlockedAchievement('迄今为止的生命里')" />
+          <button class="button-activity" @click="activity('上音乐节')">上音乐节</button>
+          <button v-if="store.getters.unlockedAchievement('迄今为止的生命里')" class="button-activity" @click="activity('带乐队上音乐节')">带乐队上音乐节！</button>
+        </div>
         <hr />
         <p class="note-message">姜云升可以选择<span>开启巡演 / 参加节目 / 参加音乐节</span>了</p>
         <button class="button_cancel" @click="showUndergroundPopup = false">返回</button>
@@ -119,16 +123,12 @@ const activity = async (activityName: string) => {
       break;
 
     case "上音乐节":
+    case "带乐队上音乐节":
       showUndergroundPopup.value = false;
-      const musicFestivals = store.getters.unlockedAchievement("迄今为止的生命里")
+      const isQijin = activityName == "带乐队上音乐节";
+      const musicFestivals = isQijin
         ? [
-            "抖音奇妙音乐派对",
-            "芒禾音乐节",
-            "新青年城市超级音乐节",
-            "青潮永乐音乐节",
-            "蓝鲸音乐节",
             "泡泡岛音乐节",
-            "矩浪音乐节",
             "糖Sweet音乐节",
             "星巢秘境音乐节",
             "氧气BAOBAO音乐节",
@@ -143,7 +143,7 @@ const activity = async (activityName: string) => {
             "银河左岸音乐节",
             "仙草音乐节",
             "无限音乐节",
-            "乐向潮见音乐节",
+            "乐向潮见音乐嘉年华",
           ]
         : [
             "星巢秘境音乐节",
@@ -166,27 +166,51 @@ const activity = async (activityName: string) => {
             "麦浪音乐节",
             "龙宫音乐节",
             "LHC音乐节",
+            "抖音奇妙音乐派对",
+            "芒禾音乐节",
+            "新青年城市超级音乐节",
+            "青潮永乐音乐节",
+            "蓝鲸音乐节",
+            "矩浪音乐节",
           ];
       const musicFestival = musicFestivals[Math.floor(Math.random() * musicFestivals.length)];
-      // 才华 +10 魅力 + 10
-      store.commit("updateAttribute", { attribute: "talent", value: +10 });
-      store.commit("updateAttribute", { attribute: "charm", value: +10 });
-      store.commit("updateAttribute", { attribute: "money", value: +100000 });
-      store.commit("updateAttribute", { attribute: "red", value: +200 });
 
-      await store.dispatch("typeWriter", [`姜云升来到了${musicFestival}的舞台上，为现场的观众们带来了一场印象深刻的演出。<small>姜云升才华+10，魅力+10，金钱+100000，人气+200。</small>`]);
-
-      if (store.getters.unlockedAchievement("迄今为止的生命里")) {
-        if (musicFestival == "氧气BAOBAO音乐节") {
-          await store.dispatch("waitAndType", 600);
-          await store.dispatch("typeWriter", `姜云升收到了主办方的小笼包！很喜欢吃！`);
-          store.commit("packFood", { food: "小笼包", quantity: 6 });
-        }
-
-        await store.dispatch("waitAndType", 600);
+      if (!isQijin) {
+        store.commit("updateAttribute", { attribute: "talent", value: +10 });
+        store.commit("updateAttribute", { attribute: "charm", value: +10 });
+        store.commit("updateAttribute", { attribute: "money", value: +100000 });
+        store.commit("updateAttribute", { attribute: "red", value: +200 });
+        await store.dispatch("typeWriter", `姜云升来到了${musicFestival}的舞台上，为现场的观众们带来了一场印象深刻的演出。<small>姜云升才华+10，魅力+10，金钱+100000，人气+200。</small>`);
+      } else {
+        store.commit("updateAttribute", { attribute: "talent", value: +20 });
+        store.commit("updateAttribute", { attribute: "charm", value: +20 });
+        store.commit("updateAttribute", { attribute: "money", value: +200000 });
+        store.commit("updateAttribute", { attribute: "red", value: +600 });
+        store.commit("updateAttribute", { attribute: "black", value: -200 });
+        const festivalWord = [`姜云升🎤带着乐队🎸🎸🥁🎹来到了${musicFestival}的舞台上，为现场的观众们带来了一场印象深刻的演出！`];
         const bigFlag = Math.floor(Math.random() * 9) + 1;
-        store.commit("updateItem", { itemName: "大旗", quantity: bigFlag });
-        await store.dispatch("typeWriter", `姜云升收到了粉丝签满名字的${bigFlag}面大旗，祝大家「暴富」！`);
+
+        if (musicFestival == "氧气BAOBAO音乐节") {
+          await store.dispatch("typeWriter", festivalWord);
+          await store.dispatch("waitAndType", 600);
+          store.commit("packFood", { food: "小笼包", quantity: 6 });
+          await store.dispatch("typeWriter", `姜云升收到了主办方的小笼包！很喜欢吃！`);
+          await store.dispatch("waitAndType", 600);
+          store.commit("updateItem", { itemName: "大旗", quantity: bigFlag });
+          await store.dispatch("typeWriter", `姜云升收到了粉丝签满名字的${bigFlag}面大旗，祝大家「暴富」！<small>姜云升才华+20，魅力+20，金钱+200000，红人气+600，黑人气-200。</small>`);
+        } else if (musicFestival == "乐向潮见音乐嘉年华" && !store.state.inventory["水枪"]) {
+          await store.dispatch("typeWriter", festivalWord);
+          await store.dispatch("waitAndType", 600);
+          store.commit("updateItem", { itemName: "水枪", quantity: 1 });
+          await store.dispatch("typeWriter", `姜云升收到了朋友送的一把水枪🔫！BiuBiuBiu！超开心！`);
+          await store.dispatch("waitAndType", 600);
+          store.commit("updateItem", { itemName: "大旗", quantity: bigFlag });
+          await store.dispatch("typeWriter", `姜云升收到了粉丝签满名字的${bigFlag}面大旗，祝大家「暴富」！<small>姜云升才华+20，魅力+20，金钱+200000，红人气+600，黑人气-200。</small>`);
+        } else {
+          store.commit("updateItem", { itemName: "大旗", quantity: bigFlag });
+          festivalWord.push(`姜云升收到了粉丝签满名字的${bigFlag}面大旗，祝大家「暴富」！<small>姜云升才华+20，魅力+20，金钱+200000，红人气+600，黑人气-200。</small>`);
+          await store.dispatch("typeWriter", festivalWord);
+        }
       }
 
       const allAfterglows = ["晚霞和云", "秋天的第一片晚霞", "晚霞分享艺术家"];
@@ -238,6 +262,7 @@ const activity = async (activityName: string) => {
   font-size: 0.9rem;
   cursor: pointer;
   margin-left: 10px;
+  margin-bottom: 5px;
   transition: background-color 0.3s ease;
 }
 
