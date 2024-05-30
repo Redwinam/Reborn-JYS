@@ -24,7 +24,7 @@
     <div>
       <span class="attribute-name">{{ attributeNames["money"] }}</span>
       <span
-        >￥{{ Math.round(attributes["money"]) }} | {{ attributes["gold"] }}枚金条 <button class="button_buyGold" @click="showBuyGoldPopup = true">买</button> /
+        >￥{{ Math.round(attributes["money"]) }} | {{ attributes["gold"] }}根金条 <button class="button_buyGold" @click="showBuyGoldPopup = true">买</button> /
         <button class="button_sellGold" @click="showSellGoldPopup = true">卖</button>
       </span>
     </div>
@@ -89,9 +89,9 @@ const gemini = () => {
   // store.commit('upgradeSkillLevel', 'freestyle');
   // store.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
 
-  // for (let i = 0; i < 10; i++) {
-  //   store.commit("incrementRound");
-  // }
+  for (let i = 0; i < 10; i++) {
+    store.commit("incrementRound");
+  }
 
   // 体力-200
   // store.commit('updateAttribute', { attribute: "energy", value: - 200 })

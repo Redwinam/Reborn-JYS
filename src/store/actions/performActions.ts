@@ -25,6 +25,13 @@ export async function performAction(context: { commit: Commit; dispatch: Functio
           }
         }
       }
+
+      if (Math.ceil((store.state.round % 36) / 3) == 1 && store.state.attributes["gold"] > 0) {
+        const isAchUnlocked = context.getters.unlockedAchievement("记姜云升账上");
+        if (!isAchUnlocked && !store.state.happenedEvents.includes("记姜云升账上")) {
+          context.dispatch("specialEvent", "记姜云升账上");
+        }
+      }
     } else {
       await context.dispatch("typeWriter", "体力小于零，无法外出。");
     }

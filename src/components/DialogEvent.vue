@@ -1,34 +1,26 @@
 <template>
+  <p id="textboxEvent">{{ specialEventDetail && specialEventDetail.intro }}</p>
 
-<p id="textboxEvent">{{ specialEventDetail && specialEventDetail.intro }}</p>
-
-<div class="event-dialog__options">
-
-  <button v-if="specialEventDetail && specialEventDetail.options && specialEventDetail.options.length"
-    v-for="option in specialEventDetail.options"
-    :key="option"
-    @click="specialEventOptionChosen(option)"
-  >
-    {{ option }}
-  </button>
-</div>
-
+  <div class="event-dialog__options">
+    <button v-if="specialEventDetail && specialEventDetail.options && specialEventDetail.options.length" v-for="option in specialEventDetail.options" :key="option" @click="specialEventOptionChosen(option)">
+      {{ option }}
+    </button>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { useStore } from 'vuex'
+import { useStore } from "vuex";
 
-import { specialEventDetail } from '../store/actions/specialEvent'
-import { showEventDialog } from './composables/gameRefs';
+import { specialEventDetail } from "../store/actions/specialEvent";
+import { showEventDialog } from "./composables/gameRefs";
 
-const store = useStore()
+const store = useStore();
 
 const specialEventOptionChosen = (option: string) => {
   if (!specialEventDetail.value) return;
-  store.dispatch('specialEventOptionChosen', { event: specialEventDetail.value.title, option });
   showEventDialog.value = false;
-}
-
+  store.dispatch("specialEventOptionChosen", { event: specialEventDetail.value.title, option });
+};
 </script>
 
 <style scoped>
@@ -58,7 +50,7 @@ const specialEventOptionChosen = (option: string) => {
 
 .event-dialog__options button:hover {
   background-color: #964742;
-  outline:2px solid #1e2228;
+  outline: 2px solid #1e2228;
   color: #fff;
 }
 </style>

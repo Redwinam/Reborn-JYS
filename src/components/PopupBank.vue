@@ -1,12 +1,12 @@
 <template>
-<button class="button_buyGold" @click="showBuyGoldPopup = true">买金子！</button> / <button class="button_sellGold" @click="showSellGoldPopup = true">出售</button>
-<p class="bank-note">当前拥有：￥{{ attributes['money'] }}  | {{ attributes['gold'] }}枚金条</p>
+  <button class="button_buyGold" @click="showBuyGoldPopup = true">买金子！</button> / <button class="button_sellGold" @click="showSellGoldPopup = true">出售</button>
+  <p class="bank-note">当前拥有：￥{{ attributes["money"] }} | {{ attributes["gold"] }}根金条</p>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import { useStore } from "vuex";
-import { showBuyGoldPopup, showSellGoldPopup } from './composables/gameRefs';
+import { showBuyGoldPopup, showSellGoldPopup } from "./composables/gameRefs";
 
 const store = useStore();
 const attributes = computed(() => store.state.attributes);
@@ -40,5 +40,4 @@ const attributes = computed(() => store.state.attributes);
   padding-bottom: 1rem;
   border-bottom: 1px dashed #666;
 }
-
 </style>

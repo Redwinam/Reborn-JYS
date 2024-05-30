@@ -45,6 +45,12 @@ export async function specialEvent(context: { rootState: any; commit: Commit; di
       intro: "春暖花开，万物复苏，你的好朋友约你出门旅游，要去散散心吗？",
       options: ["【去丽江旅游】", "【打死不去】"],
     };
+  } else if (event === "记姜云升账上") {
+    specialEventDetail.value = {
+      title: "记姜云升账上",
+      intro: "你的好朋友邀请你参加他的婚礼，你要去参加吗？",
+      options: ["【去参加！】", "【谨慎参加】"],
+    };
   } else if (event === "二八分") {
     const isAchUnlocked = context.getters.unlockedAchievement("二八分");
     if (!isAchUnlocked) {
@@ -156,6 +162,39 @@ export async function specialEventOptionChosen(
       await context.dispatch("typeWriter", ["姜云升解锁了第" + context.getters.UnlockedAchievementCount + "个成就【放松，呼吸】。"]);
     } else {
       await context.dispatch("typeWriter", ["姜云升选择了不去丽江旅游，避免了一次巨大的伤害。"]);
+    }
+  } else if (payload.event === "记姜云升账上") {
+    if (payload.option === "【去参加！】" || payload.option === "【谨慎参加】") {
+      if (context.rootState.attributes["gold"] > 1) {
+        specialEventDetail.value = {
+          title: "记姜云升账上",
+          intro: "你穿着你的樱花西装🌸带着祝福参加了你的好朋友的婚礼！你守着你的酒瓶子，婚礼现场十分精彩，不愧是Rapper的婚礼！十分地黑怕！",
+          options: ["【随一根金条】", "【全随了！】"],
+        };
+      } else {
+        specialEventDetail.value = {
+          title: "记姜云升账上",
+          intro: "你穿着你的樱花西装🌸带着祝福参加了你的好朋友的婚礼！你守着你的酒瓶子，婚礼现场十分精彩，不愧是Rapper的婚礼！十分地黑怕！",
+          options: ["【随一根金条】"],
+        };
+      }
+      showEventDialog.value = true;
+    } else if (payload.option === "【随一根金条】") {
+      context.commit("updateAttribute", { attribute: "gold", value: -1 });
+      context.commit("unlockAchievement", payload.event);
+      await context.dispatch("typeWriter", [
+        "你随了一根金条，祝福你的朋友们长长久久！",
+        "你的粉丝也随了许多金条，全都记在你的账上啦。",
+        "恭喜，姜云升解锁了第" + context.getters.UnlockedAchievementCount + "个成就【" + payload.event + "】。",
+      ]);
+    } else {
+      context.commit("updateAttribute", { attribute: "gold", value: -context.rootState.attributes.gold });
+      context.commit("unlockAchievement", payload.event);
+      await context.dispatch("typeWriter", [
+        "老板大气！你随了你所有的金条，祝福你的朋友们长长久久！",
+        "你的粉丝也随了许多金条，全都记在你的账上啦！",
+        "恭喜，姜云升解锁了第" + context.getters.UnlockedAchievementCount + "个成就【" + payload.event + "】。",
+      ]);
     }
   } else if (payload.event === "二八分") {
     if (payload.option === "【签约】") {

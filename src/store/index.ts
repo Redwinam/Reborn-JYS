@@ -170,6 +170,8 @@ type UpdateAttributePayload = {
   value: number;
 };
 
+const goldPrice = 552;
+
 const mutations = {
   incrementRound(state: State) {
     state.round++;
@@ -177,7 +179,7 @@ const mutations = {
     if (state.year > 2024) {
       state.year = 2012;
     }
-    state.attributes.money += Math.ceil(state.attributes.gold * 0.06 * 360);
+    state.attributes.money += Math.ceil(state.attributes.gold * 0.06 * goldPrice);
     if (state.girlfriend) {
       state.relationRound++;
     }
@@ -337,7 +339,7 @@ const mutations = {
   },
   buyGold(state: State, payload: number) {
     state.attributes.gold += payload;
-    state.attributes.money -= 360 * payload;
+    state.attributes.money -= goldPrice * payload;
   },
   updateItem(state: State, payload: { itemName: string; quantity: number }) {
     const { itemName, quantity } = payload;
@@ -381,7 +383,9 @@ const mutations = {
     }
   },
   addHappenedEvent(state: State, event: string) {
-    state.happenedEvents.push(event);
+    if (!state.happenedEvents.includes(event)) {
+      state.happenedEvents.push(event);
+    }
   },
   unlockSong(state: State, songTitle: string) {
     if (state.songStages[songTitle]) {
