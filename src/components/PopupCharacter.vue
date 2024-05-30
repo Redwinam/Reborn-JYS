@@ -68,6 +68,7 @@ const gemini = () => {
   // setagency
   // store.commit('setSignedAgency', true)
   // 才华 + 100
+  store.commit("openFengyan", true);
   store.commit("updateAttribute", { attribute: "talent", value: +220 });
   // store.commit('updateAttribute', { attribute: "charm", value: + 1200 })
   // store.commit('updateAttribute', { attribute: "divine", value: + 1200 })

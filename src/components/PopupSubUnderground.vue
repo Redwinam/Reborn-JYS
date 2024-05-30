@@ -170,12 +170,6 @@ const activity = async (activityName: string) => {
         showShardPopup.value = true;
       }
 
-      if (store.getters.unlockedAchievement("风炎文化")) {
-        if (Math.random() < 0.15) {
-          await store.dispatch("typeWriter", `姜云升路遇粉丝，收到了一本《不会带团队，你就只能干到死》`);
-        }
-      }
-
       await store.dispatch("incrementRound");
       break;
   }

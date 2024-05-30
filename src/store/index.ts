@@ -6,7 +6,7 @@ import { achievements, AchievementState } from "./achievements";
 import { SongFei } from "./songs";
 import { Vitamin } from "./vitamins";
 import { battleResults, BattleResult } from "./battle";
-import { artists, Artist } from "./artists";
+import { allArtists, Artist } from "./artists";
 
 import { Attributes } from "../store/attributes";
 import { Girlfriend } from "./girlfriend";
@@ -149,7 +149,7 @@ const state: State = {
 
   shards: [],
   openFengyan: false,
-  artists: artists,
+  artists: allArtists,
   thisSeasonArtist: { move: null, dispatch: [] },
 
   realEstate: [],
@@ -414,7 +414,9 @@ const mutations = {
   openFengyan(state: State, payload: boolean) {
     state.openFengyan = payload;
   },
-
+  initArtist(state: State, artistName: string) {
+    state.artists.push({ name: artistName, level: 0 });
+  },
   recruitArtist(state: State, artistName: string) {
     let artist = state.artists.find((artist) => artist.name === artistName);
     if (artist && state.thisSeasonArtist.move === null) {
@@ -575,7 +577,7 @@ const mutations = {
       state.unlockedVitamins = [];
       state.unlockedFoods = [];
       state.shards = [];
-      (state.artists = artists), (state.realEstate = []);
+      (state.artists = allArtists), (state.realEstate = []);
       state.investedProjects = [];
       state.investYearIncome = 0;
       state.currentStock = false;
@@ -650,7 +652,7 @@ const mutations = {
     state.tourCount = [0, 0];
     state.shards = [];
     state.openFengyan = false;
-    (state.artists = artists), (state.thisSeasonArtist = { move: null, dispatch: [] }), (state.signedAgency = false);
+    (state.artists = allArtists), (state.thisSeasonArtist = { move: null, dispatch: [] }), (state.signedAgency = false);
     state.signedAgencyRound = null;
     state.goToAgencyTimes = 0;
     state.songs = [];
