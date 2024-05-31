@@ -154,7 +154,7 @@ export async function specialEventOptionChosen(
     if (payload.option === "【去丽江旅游】") {
       // 和女朋友和平分手
       context.rootState.hasGirlfriend = false;
-      await context.dispatch("waitAndType", 1000);
+      await context.dispatch("waitAndType", 900);
       // 她女朋友还找人打他，姜云升体力-60，心情-99
       context.commit("updateAttribute", { attribute: "energy", value: Math.max(context.rootState.attributes.energy - 60, -90) });
       context.commit("updateAttribute", { attribute: "mood", value: Math.max(context.rootState.attributes.mood - 99, -99) });
@@ -163,7 +163,7 @@ export async function specialEventOptionChosen(
         "<small>姜云升体力-60，心情-99。</small>",
       ]);
 
-      await context.dispatch("waitAndType", 1000);
+      await context.dispatch("waitAndType", 900);
       context.commit("unlockAchievement", payload.event);
       await context.dispatch("typeWriter", ["姜云升解锁了第" + context.getters.UnlockedAchievementCount + "个成就【放松，呼吸】。"]);
     } else {
@@ -174,13 +174,13 @@ export async function specialEventOptionChosen(
       if (context.rootState.attributes["gold"] > 1) {
         specialEventDetail.value = {
           title: "记姜云升账上",
-          intro: "你穿着你的樱花西装🌸带着祝福参加了你的好朋友的婚礼！你守着你的酒瓶子，婚礼现场十分精彩，不愧是Rapper的婚礼！十分地黑怕！",
+          intro: "你穿着你的樱花西装🌸，带着祝福参加了你的好朋友的婚礼！你守着你的酒瓶子，婚礼现场十分精彩，不愧是Rapper的婚礼！十分地黑怕！",
           options: ["【随一根金条】", "【全随了！】"],
         };
       } else {
         specialEventDetail.value = {
           title: "记姜云升账上",
-          intro: "你穿着你的樱花西装🌸带着祝福参加了你的好朋友的婚礼！你守着你的酒瓶子，婚礼现场十分精彩，不愧是Rapper的婚礼！十分地黑怕！",
+          intro: "你穿着你的樱花西装🌸，带着祝福参加了你的好朋友的婚礼！你守着你的酒瓶子，婚礼现场十分精彩，不愧是Rapper的婚礼！十分地黑怕！",
           options: ["【随一根金条】"],
         };
       }
@@ -205,7 +205,7 @@ export async function specialEventOptionChosen(
   } else if (payload.event === "包剪锤之王") {
     if (payload.option === "【当然】") {
       await context.dispatch("typeWriter", ["这是姜云升最喜欢的游戏，姜云升要让所有人见识见识自己的高超的包剪锤实力！对手出招了，第一局——"]);
-      await context.dispatch("waitAndType", 1000);
+      await context.dispatch("waitAndType", 900);
       specialEventDetail.value = {
         title: "包剪锤之王",
         intro: "【第一局】",
