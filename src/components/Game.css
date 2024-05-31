@@ -239,7 +239,7 @@ footer button {
 
 .textHistory {
   font-size: 0.9rem;
-  max-height: 75vh;
+  max-height: 70vh;
   overflow-y: auto;
   text-align: left;
 }
