@@ -380,29 +380,35 @@ async function restartGame(resetData: boolean) {
   }
 }
 
+// 保存游戏数据到localStorage
+function saveGameData(data: any) {
+  localStorage.setItem("gameData", JSON.stringify(data));
+}
+
+// 从localStorage读取游戏数据
+function loadGameData() {
+  const data = localStorage.getItem("gameData");
+  return data ? JSON.parse(data) : null;
+}
+
 onMounted(async () => {
-  const savedGameData = document.cookie.split(";").find((cookie) => cookie.trim().startsWith("gameData="));
+  const savedGameData = loadGameData();
 
   if (savedGameData) {
-    const splitData = savedGameData.split("=");
-    if (splitData.length > 1) {
-      const gameDataStr = splitData[1];
-      try {
-        const gameData = JSON.parse(gameDataStr);
-        store.commit("loadGameState", gameData);
-        if (store.state.term == 1 && store.state.round == 1) {
-          showStartGameDialog.value = true;
-        } else if (store.state.gameEnded) {
-          showGameEndDialog.value = true;
-        } else if (document.getElementById("textboxText")) {
-          await store.dispatch("typeWriter", "【系统】你回来啦！");
-        }
-      } catch (e) {
-        const { textHistory, ...toSaveStore } = store.state;
-        document.cookie = `gameData=${JSON.stringify(toSaveStore)}; expires=Thu, 01 Jan 2099 00:00:00 UTC; path=/;`;
-        if (document.getElementById("textboxText")) {
-          await store.dispatch("typeWriter", "【系统】读取本地游戏记录失败，你回来了但没完全回来！（不影响线上存档）");
-        }
+    try {
+      store.commit("loadGameState", savedGameData);
+      if (store.state.term == 1 && store.state.round == 1) {
+        showStartGameDialog.value = true;
+      } else if (store.state.gameEnded) {
+        showGameEndDialog.value = true;
+      } else if (document.getElementById("textboxText")) {
+        await store.dispatch("typeWriter", "【系统】你回来啦！");
+      }
+    } catch (e) {
+      console.error("加载游戏数据时发生错误:", e);
+      saveGameData(store.state);
+      if (document.getElementById("textboxText")) {
+        await store.dispatch("typeWriter", "【系统】读取本地游戏记录失败，你回来了但没完全回来！（不影响线上存档）");
       }
     }
   } else {
@@ -410,15 +416,9 @@ onMounted(async () => {
   }
 
   store.subscribe(() => {
-    // 深复制状态
     const copiedState = JSON.parse(JSON.stringify(store.state));
-
-    // 删除不想存储的状态部分
-    if (copiedState.textHistory) delete copiedState.textHistory;
-    if (copiedState.player && copiedState.player.plays) delete copiedState.player.plays;
-
-    // 存储游戏状态数据到 cookies
-    document.cookie = `gameData=${JSON.stringify(copiedState)}; expires=Thu, 01 Jan 2099 00:00:00 UTC; path=/;`;
+    delete copiedState.textHistory; // 删除不想存储的部分
+    saveGameData(copiedState);
   });
 });
 </script>
