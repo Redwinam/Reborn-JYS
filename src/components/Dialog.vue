@@ -9,29 +9,27 @@
       </div>
     </div>
   </transition>
-  
 </template>
 
 <script setup lang="ts">
-import { useStore } from 'vuex';
-import { showStartGameDialog } from './composables/gameRefs';
+import { useStore } from "vuex";
+import { showStartGameDialog } from "./composables/gameRefs";
 
-const store = useStore()
+const store = useStore();
 
 const quickStartGame = async () => {
-  showStartGameDialog.value = false
-  await store.dispatch('typeWriter', '【系统】终于到了十五岁，你长成了风一样的少年，这一天，你决定去——')
-
-}
+  showStartGameDialog.value = false;
+  await store.dispatch("typeWriter", "【系统】终于到了十五岁，你长成了风一样的少年，这一天，你决定去——");
+};
 
 const props = defineProps({
   title: String,
   visible: Boolean,
   showCloseButton: {
     type: Boolean,
-    default: true
-  }
-})
+    default: true,
+  },
+});
 </script>
 
 <style scoped>
@@ -53,7 +51,7 @@ const props = defineProps({
   background-color: white;
   border-radius: 5px;
   padding: 20px;
-  width: 80%;
+  width: 42vh;
   max-width: 500px;
   border: 2px solid #1e2228;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -78,7 +76,6 @@ const props = defineProps({
   opacity: 0;
 }
 
-
 .quick-start-button-container {
   margin: 0.25rem auto 0.3rem;
   gap: 0.25rem;
@@ -98,6 +95,4 @@ button.quick-start-button {
   background: none;
   color: #fcfcfc;
 }
-
-
 </style>
