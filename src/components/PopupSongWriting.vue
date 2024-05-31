@@ -368,7 +368,7 @@ function listenSong(song: Song) {
 
 <style scoped>
 .song-container {
-  max-height: 64vh;
+  max-height: 61vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;

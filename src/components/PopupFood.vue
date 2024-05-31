@@ -6,13 +6,21 @@
           <p>{{ food.name }}</p>
           <span>¥{{ food.cost }}</span>
         </div>
-        <span class="food-note">饱食度+{{food.energy}}</span>
+        <span class="food-note">饱食度+{{ food.energy }}</span>
       </div>
       <div class="select-buttons">
         <div class="buttons-container">
           <button class="round-button" @click="eatFood(food.name)">堂食</button>
-          <button class="left-button" @click="packFood(food.name,1 )">打包</button>
-          <button class="right-button" @click="foodToPack = food.name; showQuantityPopup = true">+</button>
+          <button class="left-button" @click="packFood(food.name, 1)">打包</button>
+          <button
+            class="right-button"
+            @click="
+              foodToPack = food.name;
+              showQuantityPopup = true;
+            "
+          >
+            +
+          </button>
         </div>
       </div>
     </div>
@@ -20,7 +28,7 @@
 
   <PopupSub :visible="showQuantityPopup" @close="showQuantityPopup = false">
     <div class="quantity-popup">
-      <div>{{ foodToPack }} <input v-model.number="quantityToBuy" type="number" min="1"> 份</div>
+      <div>{{ foodToPack }} <input v-model.number="quantityToBuy" type="number" min="1" /> 份</div>
       <div>
         <button @click="confirmPurchase">打包</button>
         <button class="cancel-button" @click="showQuantityPopup = false">取消</button>
@@ -30,33 +38,32 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 
-import PopupSub from '../components/PopupSub.vue'
+import PopupSub from "../components/PopupSub.vue";
 
-const store = useStore()
+const store = useStore();
 
 const unlockedFoods = computed(() => store.state.unlockedFoods);
 
 const eatFood = async (food: string) => {
-  await store.dispatch('eatFood', food);
-}
+  await store.dispatch("eatFood", food);
+};
 
 const packFood = async (food: string, quantity: number) => {
-  await store.dispatch('packFood', {food, quantity});
-}
+  await store.dispatch("packFood", { food, quantity });
+};
 
 let showQuantityPopup = ref(false);
-let foodToPack = ref('');
+let foodToPack = ref("");
 let quantityToBuy = ref(1);
 
 const confirmPurchase = () => {
-  packFood( foodToPack.value, quantityToBuy.value );
+  packFood(foodToPack.value, quantityToBuy.value);
   showQuantityPopup.value = false;
   quantityToBuy.value = 1;
-}
-
+};
 </script>
 
 <style scoped>
@@ -66,7 +73,7 @@ const confirmPurchase = () => {
   justify-content: space-around;
   align-items: flex-start;
   width: 100%;
-  max-height: 75vh;
+  max-height: 61vh;
   overflow-y: auto;
   gap: 10px;
 }
@@ -110,7 +117,6 @@ const confirmPurchase = () => {
 .food-note {
   font-size: 0.76rem;
   line-height: 16px;
-
 }
 
 .food-item .select-buttons {
@@ -136,8 +142,8 @@ const confirmPurchase = () => {
 
 .food-item .select-buttons {
   display: flex;
-  flex-direction: column;  /* stack price and buttons vertically */
-  align-items: flex-end;  /* align price and buttons to the right */
+  flex-direction: column; /* stack price and buttons vertically */
+  align-items: flex-end; /* align price and buttons to the right */
   justify-content: space-between; /* distribute price and buttons vertically */
 }
 
