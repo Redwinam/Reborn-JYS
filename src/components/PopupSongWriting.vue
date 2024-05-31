@@ -61,6 +61,14 @@
 
     <div class="modal-header">
       <span>
+        <button class="play-button" @click="currentSong && listenSong(currentSong)"><Play :size="16"></Play> 播放</button>
+        <!-- <button class="link-button" @click="currentSong && listenSong(currentSong)"><SquareArrowOutUpRight :size="16"></SquareArrowOutUpRight></button> -->
+      </span>
+      <h3>——《{{ currentSong.title }}》</h3>
+    </div>
+
+    <!-- <div class="modal-header">
+      <span>
         <button class="play-button" @click="() => {}"><Play :size="16"></Play> 播放</button>
         <button class="link-button" @click="currentSong && listenSong(currentSong)"><SquareArrowOutUpRight :size="16"></SquareArrowOutUpRight></button>
       </span>
@@ -68,8 +76,8 @@
     </div>
 
     <div style="margin: 0 -0.6em">
-      <iframe style="width: 100%" frameborder="no" border="0" marginwidth="0" marginheight="0" height="86" :src="`//music.163.com/outchain/player?type=2&id=${currentSong.wyyId}&auto=1&height=66`"></iframe>
-    </div>
+      <iframe style="width: 100%" frameborder="no" border="0" marginwidth="0" marginheight="0" height="86" :src="`https://music.163.com/outchain/player?type=2&id=${currentSong.wyyId}&auto=1&height=66`"></iframe>
+    </div> -->
   </Popup>
 </template>
 
@@ -360,7 +368,7 @@ function listenSong(song: Song) {
 
 <style scoped>
 .song-container {
-  max-height: 69vh;
+  max-height: 64vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -474,8 +482,8 @@ function listenSong(song: Song) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px dashed #ccc;
-  margin-bottom: 0.6rem;
+  /* border-bottom: 1px dashed #ccc; */
+  /* margin-bottom: 0.6rem; */
 }
 
 .song-modal .modal-header button {
