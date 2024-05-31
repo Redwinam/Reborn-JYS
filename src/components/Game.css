@@ -1,24 +1,27 @@
 
 #game-container {
   position: relative;
-  height: 100vh; /* 高度设置为 100vh */
-  height: -webkit-fill-available;
+  height: 100%;
 
-  max-width: 50vh;
+  max-width:50vh;
   background-size: cover;
   background-position: top center;
   margin: 0 auto; /* 水平居中 */
   overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
 }
 
 .game-container {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   font-family: 'Arial', sans-serif;
   background-image: url('@/assets/bg_titled.jpg');
-
 }
+
 .going-out-background {
   position: absolute;
   top: 0;
@@ -226,6 +229,12 @@ footer button {
   border: none;
   outline: none;
   cursor: pointer;
+}
+
+.header-container, .footer {
+  width: 100%;
+  z-index: 10; /* 确保它们在其他元素之上 */
+  flex-shrink: 0; /* 防止被压缩 */
 }
 
 .textHistory {
