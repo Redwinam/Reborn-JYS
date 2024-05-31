@@ -102,6 +102,12 @@ export async function performAction(context: { commit: Commit; dispatch: Functio
       await context.dispatch("typeWriter", message);
     } else if (action === "出去鬼混") {
       if (!store.state.girlfriend) {
+        if (((store.state.flirtCount > 1 && !store.state.lastBreakupRound) || store.state.lastBreakupRound) && (Math.random() < 0.7 || (context.getters.unlockedAchievement("包剪锤之王") && Math.random() < 0.4))) {
+          // if (Math.random() < 0.7) {
+          context.dispatch("specialEvent", "包剪锤之王");
+          return;
+        }
+
         const toMessage = [];
         context.commit("updateAttribute", { attribute: "energy", value: -10 });
         context.commit("updateAttribute", { attribute: "charm", value: 10 });

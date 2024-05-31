@@ -19,6 +19,7 @@ export const achievements: Achievement[] = [
   { name: "姜哥，玩挺好", desc: "从此，姜云升记住了点外卖不留名。", condition: "在家陪女朋友且体力≥50时概率触发特殊事件选项达成", event: true, ending: false },
   { name: "放松，呼吸", desc: "山里有位老神仙，他对我说……", condition: "在第二年后的每一年的春天（2-5月）有女朋友时外出概率触发特殊事件选项达成", event: true, ending: false },
   { name: "记姜云升账上", desc: "随一根大金条", condition: "在拥有金条时的1月外出参加朋友的婚礼后触发", event: true, ending: false },
+  { name: "包剪锤之王", desc: "✊✌️🖐️", condition: "在包剪锤大赛中连胜五局后达成", event: true, ending: false },
   { name: "二八分", desc: "告诉我你也想火吗？", condition: "在说唱技能值到达A级后或，在地下签约经纪公司后达成", event: true, ending: false },
   { name: "风炎文化", desc: "因为淋过雨，所以想为他人撑伞。", condition: "在第二次触发二八分事件时选择自己开公司", event: true, ending: false },
   { name: "被敲碎的小金猪", desc: "没等到光明的未来，就背了几百万的债……", condition: "二八分事件一年后与公司解约触发", event: true, ending: false },

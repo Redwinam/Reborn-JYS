@@ -66,6 +66,12 @@ export async function specialEvent(context: { rootState: any; commit: Commit; di
         options: ["【签约】", "【再考虑下】", "【自己开公司】"],
       };
     }
+  } else if (event === "包剪锤之王") {
+    specialEventDetail.value = {
+      title: "包剪锤之王",
+      intro: "姜云升今天没有搭讪妹子，姜云升今天想玩包剪锤，要玩吗？",
+      options: ["【当然】", "【不感兴趣】"],
+    };
   } else {
     return;
   }
@@ -195,6 +201,129 @@ export async function specialEventOptionChosen(
         "你的粉丝也随了许多金条，全都记在你的账上啦！",
         "恭喜，姜云升解锁了第" + context.getters.UnlockedAchievementCount + "个成就【" + payload.event + "】。",
       ]);
+    }
+  } else if (payload.event === "包剪锤之王") {
+    if (payload.option === "【当然】") {
+      await context.dispatch("typeWriter", ["这是姜云升最喜欢的游戏，姜云升要让所有人见识见识自己的高超的包剪锤实力！对手出招了，第一局——"]);
+      await context.dispatch("waitAndType", 600);
+      specialEventDetail.value = {
+        title: "包剪锤之王",
+        intro: "【第一局】",
+        options: ["✊", "✌️", "🖐️"],
+      };
+      showEventDialog.value = true;
+    } else if (payload.option === "✊" || payload.option === "✌️" || payload.option === "🖐️") {
+      let intro = specialEventDetail.value?.intro || "";
+      let matchRound = 5;
+      switch (intro) {
+        case "【第一局】":
+          matchRound = 1;
+          break;
+        case "【第二局】":
+          matchRound = 2;
+          break;
+        case "【第三局】":
+          matchRound = 3;
+          break;
+        case "【第四局】":
+          matchRound = 4;
+          break;
+        case "【第五局】":
+          matchRound = 5;
+          break;
+        default:
+          matchRound = 5;
+          break;
+      }
+
+      const choices = ["✊", "✌️", "🖐️"];
+      const opponentChoiceOriginal = choices[Math.floor(Math.random() * choices.length)];
+      let opponentChoice = opponentChoiceOriginal;
+      const playerChoice = payload.option;
+
+      // 获取玩家的 divine 属性
+      const divine = context.rootState.attributes.divine || 0;
+
+      // 判断对手原来的选择是否会赢玩家
+      let opponentWins = false;
+      if ((opponentChoiceOriginal === "✊" && playerChoice === "✌️") || (opponentChoiceOriginal === "✌️" && playerChoice === "🖐️") || (opponentChoiceOriginal === "🖐️" && playerChoice === "✊")) {
+        opponentWins = true;
+      }
+
+      // 如果对手会赢，并且随机概率小于玩家的 divine/999，则改变对手的选择
+      if (opponentWins && Math.random() < divine / 999) {
+        if (opponentChoiceOriginal === "✊") {
+          opponentChoice = "🖐️"; // 对手出✊会赢，则改成🖐️
+        } else if (opponentChoiceOriginal === "✌️") {
+          opponentChoice = "✊"; // 对手出✌️会赢，则改成✊
+        } else if (opponentChoiceOriginal === "🖐️") {
+          opponentChoice = "✌️"; // 对手出🖐️会赢，则改成✌️
+        }
+      }
+
+      if ((playerChoice === "✊" && opponentChoice === "✌️") || (playerChoice === "✌️" && opponentChoice === "🖐️") || (playerChoice === "🖐️" && opponentChoice === "✊")) {
+        if (matchRound < 5) {
+          let nextIntro = "";
+          switch (matchRound) {
+            case 1:
+              nextIntro = "【第二局】";
+              break;
+            case 2:
+              nextIntro = "【第三局】";
+              break;
+            case 3:
+              nextIntro = "【第四局】";
+              break;
+            case 4:
+              nextIntro = "【第五局】";
+              break;
+            default:
+              nextIntro = "【第一局】";
+          }
+
+          context.commit("updateAttribute", { attribute: "charm", value: 10 * matchRound });
+
+          if (opponentWins) {
+            await context.dispatch("typeWriter", `${intro}姜云升出了${playerChoice}，对手不知道为什么出了${opponentChoice}，姜云升赢了这局包剪锤比赛！姜云升魅力+${10 * matchRound}。下一局——`);
+          } else {
+            await context.dispatch("typeWriter", `${intro}姜云升出了${playerChoice}，对手出了${opponentChoice}，姜云升赢了这局包剪锤比赛！姜云升魅力+${10 * matchRound}。下一局——`);
+          }
+          await context.dispatch("waitAndType", 600);
+          specialEventDetail.value = {
+            title: "包剪锤之王",
+            intro: nextIntro,
+            options: ["✊", "✌️", "🖐️"],
+          };
+          showEventDialog.value = true;
+        } else {
+          context.commit("updateAttribute", { attribute: "charm", value: 10 * matchRound });
+          context.commit("unlockAchievement", "包剪锤之王");
+          await context.dispatch(
+            "typeWriter",
+            `${intro}姜云升出了${playerChoice}，对手出了${opponentChoice}，姜云升赢了这局包剪锤大赛！姜云升魅力+${10 * matchRound}。姜云升终于让人见识到了自己的包剪锤实力！恭喜姜云升解锁了第${
+              context.getters.UnlockedAchievementCount
+            }个成就【包剪锤之王】。`
+          );
+        }
+      } else if (playerChoice === opponentChoice) {
+        await context.dispatch("typeWriter", `${intro}姜云升出了${playerChoice}，对手也出了${opponentChoice}，这一局打成平手！再来——`);
+        await context.dispatch("waitAndType", 600);
+        specialEventDetail.value = {
+          title: "包剪锤之王",
+          intro: intro,
+          options: ["✊", "✌️", "🖐️"],
+        };
+        showEventDialog.value = true;
+      } else {
+        await context.dispatch("typeWriter", `${intro}姜云升出了${playerChoice}，对手出了${opponentChoice}，姜云升遗憾地输了这局包剪锤大赛！愿赌服输，罚酒一杯，姜云升伤心地喝醉了。`);
+        context.commit("updateDrunk", 1);
+      }
+    } else {
+      if (context.getters.unlockedAchievement("包剪锤之王")) {
+        await context.dispatch("typeWriter", ["幼稚的游戏。已经是包剪锤之王的姜云升高冷地离开了。"]);
+      } else {
+        await context.dispatch("typeWriter", ["幼稚的游戏。姜云升高冷地离开了。"]);
+      }
     }
   } else if (payload.event === "二八分") {
     if (payload.option === "【签约】") {
