@@ -205,7 +205,7 @@ export async function specialEventOptionChosen(
   } else if (payload.event === "包剪锤之王") {
     if (payload.option === "【当然】") {
       await context.dispatch("typeWriter", ["这是姜云升最喜欢的游戏，姜云升要让所有人见识见识自己的高超的包剪锤实力！对手出招了，第一局——"]);
-      await context.dispatch("waitAndType", 600);
+      await context.dispatch("waitAndType", 1000);
       specialEventDetail.value = {
         title: "包剪锤之王",
         intro: "【第一局】",
@@ -288,7 +288,7 @@ export async function specialEventOptionChosen(
           } else {
             await context.dispatch("typeWriter", `${intro}姜云升出了${playerChoice}，对手出了${opponentChoice}，姜云升赢了这局包剪锤比赛！姜云升魅力+${10 * matchRound}。下一局——`);
           }
-          await context.dispatch("waitAndType", 600);
+          await context.dispatch("waitAndType", 1000);
           specialEventDetail.value = {
             title: "包剪锤之王",
             intro: nextIntro,
@@ -307,7 +307,7 @@ export async function specialEventOptionChosen(
         }
       } else if (playerChoice === opponentChoice) {
         await context.dispatch("typeWriter", `${intro}姜云升出了${playerChoice}，对手也出了${opponentChoice}，这一局打成平手！再来——`);
-        await context.dispatch("waitAndType", 600);
+        await context.dispatch("waitAndType", 1000);
         specialEventDetail.value = {
           title: "包剪锤之王",
           intro: intro,
