@@ -28,6 +28,7 @@ export const itemsList = [
   { name: "巴黎之靴", quantifier: "双", price: 15000, isSpecial: true, desc: "穿上这双跳跳鞋，再也无法抵挡我在舞台上刷步数" }, // 敏捷度
   { name: "黄色卡车", quantifier: "辆", price: 2800000, isSpecial: true, desc: "黑夜中，看星空，飘着一个个的梦" }, // 治愈
   { name: "挂画", quantifier: "幅", price: 350, isSpecial: true, desc: "「不如姜云升」定制挂画" },
+  { name: "跑步机", quantifier: "台", price: 5000, isSpecial: true, desc: "每天五分钟！" },
 
   { name: "玫瑰花", quantifier: "朵", price: 10, isSpecial: false, desc: "虽然她送了我玫瑰花！……" },
   { name: "皮卡丘玩偶", price: 15, isSpecial: false, desc: "黄皮耗子 + 1" },
