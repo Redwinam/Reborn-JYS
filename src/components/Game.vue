@@ -51,7 +51,9 @@
 
       <div class="textbox" :class="showStartGameDialog ? 'hide' : ''">
         <p id="textboxText"></p>
-        <button @click="showTextHistoryPopup = true" class="text-history-button">文本记录</button>
+        <button @click="handleHistoryClick" class="text-history-button" :disabled="isLoading">
+          {{ isLoading ? '游戏加载中……' : '文本记录' }}
+        </button>
       </div>
 
       <div class="actions" v-if="!showStartGameDialog && !gameEnded">
@@ -268,6 +270,7 @@ import {
   isTyping,
 } from "./composables/gameRefs";
 import { BattleResult } from "../store/battle";
+import { preloadAssets } from '../utils/preload';
 
 const convertStyle = () => {
   document.body.style.setProperty("height", `${window.innerHeight}px`);
@@ -391,6 +394,14 @@ function loadGameData() {
   return data ? JSON.parse(data) : null;
 }
 
+const isLoading = ref(true);
+
+const handleHistoryClick = () => {
+  if (!isLoading.value) {
+    showTextHistoryPopup.value = true;
+  }
+};
+
 onMounted(async () => {
   const savedGameData = loadGameData();
 
@@ -420,6 +431,15 @@ onMounted(async () => {
     delete copiedState.textHistory; // 删除不想存储的部分
     saveGameData(copiedState);
   });
+
+  // 添加预加载逻辑
+  try {
+    await preloadAssets();
+  } catch (error) {
+    console.error('资源预加载失败:', error);
+  } finally {
+    isLoading.value = false;
+  }
 });
 </script>
 
