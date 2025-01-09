@@ -595,7 +595,8 @@ const mutations = {
 
     state.signedAgency = false;
     state.signedAgencyRound = null;
-
+    state.currentLyricIndex = -1;
+    
     if (resetData) {
       state.attributes = {
         divine: 0,
@@ -723,6 +724,8 @@ const mutations = {
     state.specialEndingAchievement = null;
     state.textHistory = [];
     state.player = null;
+
+    state.currentLyricIndex = -1;
 
     showStartGameDialog.value = true;
   },
