@@ -24,9 +24,9 @@ export async function preloadAssets() {
   // 收集所有需要加载的图片URL
   const imagePromises = [
     // 加载 assets 目录的图片
-    ...Object.keys(assetsContext).map(path => {
-      // 保持原始的 /src/assets/ 路径
-      return preloadImage(path);
+    ...Object.entries(assetsContext).map(([path, module]) => {
+      // @ts-ignore
+      return preloadImage(module.default);
     }),
     
     // 加载 public 目录下的图片
