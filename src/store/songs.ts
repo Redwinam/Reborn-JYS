@@ -82,6 +82,15 @@ export const songLibrary: Song[] = [
     wyyId: 2104008755,
   },
   {
+    title: "致素未谋面却如此相似的我们",
+    conditions: { talent: 100, charm: 100 },
+    conditionsText: "时间定在圣诞节的12月",
+    cost: 200,
+    effects: { charm: 100, talent: 100, divine: 100 },
+    lyrics: "张开双手风会替我抱紧你，你就活在我生命的倒影里。",
+    wyyId: 257064622,
+  },
+  {
     title: "网易云",
     conditions: { talent: 80 },
     conditions_ne: { mood: 0 },

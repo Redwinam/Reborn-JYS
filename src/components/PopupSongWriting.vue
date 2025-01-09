@@ -184,6 +184,13 @@ function isSongAvailable(song: Song) {
         return false;
       }
       break;
+
+    case "致素未谋面却如此相似的我们":
+      const currentMonth = Math.ceil((store.state.round % 36) / 3) || 12;
+      if (currentMonth !== 12) {
+        return false;
+      }
+      break;
   }
 
   return true;

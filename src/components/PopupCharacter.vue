@@ -71,8 +71,8 @@ const gemini = () => {
   // store.commit("openFengyan", true);
   // store.commit("upgradeSkillLevel", "freestyle");
   // store.commit("updateAttribute", { attribute: "freestyle", value: 100 });
-  // store.commit("updateAttribute", { attribute: "talent", value: +220 });
-  // store.commit("updateAttribute", { attribute: "charm", value: +1200 });
+  store.commit("updateAttribute", { attribute: "talent", value: +100 });
+  store.commit("updateAttribute", { attribute: "charm", value: +100 });
   store.commit("updateAttribute", { attribute: "divine", value: +300 });
   // store.commit('updateAttribute', { attribute: "red", value: + 500000000000 })
   // store.commit("updateAttribute", { attribute: "money", value: +1000000 });
