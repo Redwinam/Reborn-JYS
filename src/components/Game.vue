@@ -4,7 +4,7 @@
       <div class="home-background" v-if="isAtHome"></div>
     </transition>
     <transition name="fade">
-      <div class="going-out-background" v-if="isGoingOut"></div>
+      <div class="going-out-background" v-if="isGoingOut" @click="handleBackgroundClick"></div>
     </transition>
 
     <div>
@@ -217,6 +217,7 @@
 import { useStore } from "vuex";
 import { computed, ref, nextTick, watch, onMounted } from "vue";
 import { HelpCircle } from "lucide-vue-next";
+import { skyTreeLyrics } from "../store";
 
 import Popup from "../components/Popup.vue";
 
@@ -323,7 +324,7 @@ const accompanyGirlfriend = () => {
 const goToLocation = (location: string) => {
   store.dispatch("goToLocation", location);
 };
-const performAction = (action: string) => {
+const performAction = async (action: string) => {
   store.dispatch("performAction", action);
 };
 const typewriter = async (message: string | string[]) => {
@@ -399,6 +400,16 @@ const isLoading = ref(true);
 const handleHistoryClick = () => {
   if (!isLoading.value) {
     showTextHistoryPopup.value = true;
+  }
+};
+
+const handleBackgroundClick = async () => {
+  if (isGoingOut.value && store.state.songStages["致素未谋面却如此相似的我们"]?.completedStage === "release") {
+    if (store.state.currentLyricIndex !== -1) {
+      await store.dispatch("typeWriter", skyTreeLyrics[store.state.currentLyricIndex]);
+      store.commit("incrementLyricIndex");
+
+    }
   }
 };
 

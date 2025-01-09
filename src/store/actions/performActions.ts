@@ -1,5 +1,6 @@
 import { Commit } from "vuex";
-import { store } from "../index";
+import { store } from "..";
+import { skyTreeLyrics } from "..";
 
 import { isAtHome, isGoingOut, showSongWritingDialog, showShardPopup, shardName } from "../../components/composables/gameRefs";
 import { girlfriendTypes } from "../girlfriend";
@@ -10,8 +11,15 @@ export async function performAction(context: { commit: Commit; dispatch: Functio
   if (action === "外出") {
     if (store.state.attributes.energy >= 0) {
       isGoingOut.value = true;
-      await context.dispatch("typeWriter", "打算出发去……");
-
+      
+      if (store.state.songStages["致素未谋面却如此相似的我们"]?.completedStage === "release" && 
+          store.state.currentLyricIndex === -1) {
+        store.commit("incrementLyricIndex");
+        store.commit("incrementLyricIndex");
+        await context.dispatch("typeWriter", skyTreeLyrics[0]);
+      } else {
+        await context.dispatch("typeWriter", "打算出发去……");
+      }
       if (store.state.year > 2012 && store.state.girlfriend) {
         const isAchUnlocked = context.getters.unlockedAchievement("放松，呼吸");
         if (!isAchUnlocked && !store.state.happenedEvents.includes("放松，呼吸")) {
@@ -160,13 +168,10 @@ export async function performAction(context: { commit: Commit; dispatch: Functio
     } else if (action === "打游戏") {
       const gamingIntros = [
         "姜云升一回家就开了一把《永劫有间》！",
-        "姜云升今天在游戏里被一个人干翻了，那人昵称叫“不如姜云升”！",
-        "姜云升在家，内心忽然有个声音和他说，“打会儿游戏吧”！",
+        "姜云升今天在游戏里被一个人干翻了，那人昵称叫「不如姜云升」！",
+        "姜云升在家，内心忽然有个声音和他说，「打会儿游戏吧」！",
         "工作太累了，来把游戏吧！",
         "姜云升今天想和粉丝一起玩，在游戏里开了个房间。",
-        "姜云升今天要让粉丝见识见识自己的游戏水平，开了个房间。",
-        "今天游戏版本更新啦，姜云升要去看看。",
-        "姜云升今天单排赢了游戏，但他总感觉自己输了人生。",
       ];
       const randomGamingIntro = gamingIntros[Math.floor(Math.random() * gamingIntros.length)];
       context.commit("updateAttribute", { attribute: "energy", value: -10 });

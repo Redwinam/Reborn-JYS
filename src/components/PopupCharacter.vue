@@ -74,6 +74,8 @@ const gemini = () => {
   store.commit("updateAttribute", { attribute: "talent", value: +100 });
   store.commit("updateAttribute", { attribute: "charm", value: +100 });
   store.commit("updateAttribute", { attribute: "divine", value: +300 });
+
+  store.state.currentLyricIndex = -1
   // store.commit('updateAttribute', { attribute: "red", value: + 500000000000 })
   // store.commit("updateAttribute", { attribute: "money", value: +1000000 });
 
