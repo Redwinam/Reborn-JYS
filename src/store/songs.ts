@@ -87,7 +87,7 @@ export const songLibrary: Song[] = [
     conditionsText: "时间定在圣诞节的12月",
     cost: 100,
     effects: { charm: 100, talent: 100, divine: 100 },
-    lyrics: "你就活在我生命的倒影里。",
+    lyrics: "张开双手风会替我抱紧你，你就活在我生命的倒影里。",
     wyyId: 2657136754,
   },
   {
