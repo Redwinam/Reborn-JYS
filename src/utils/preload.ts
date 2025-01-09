@@ -1,3 +1,5 @@
+import { songLibrary } from '../store/songs';
+
 export async function preloadAssets() {
   // 获取 assets 目录下的所有图片
   const assetsContext = import.meta.glob('/src/assets/**/*.{png,jpg,jpeg,gif,webp}', { eager: true });
@@ -7,27 +9,28 @@ export async function preloadAssets() {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve(null);
-      img.onerror = reject;
+      img.onerror = (e) => {
+        console.error(`Failed to load image: ${url}`);
+        reject(e);
+      };
       img.src = url;
     });
   };
 
+  // 从 songLibrary 获取歌名列表
+  const coverImages = songLibrary
+    .map(song => `/cover-images/${song.title}@0.25x.jpg`);
+
   // 收集所有需要加载的图片URL
   const imagePromises = [
     // 加载 assets 目录的图片
-    ...Object.keys(assetsContext).map(path => 
-      preloadImage(path.replace('/src', ''))
-    ),
+    ...Object.keys(assetsContext).map(path => {
+      // 保持原始的 /src/assets/ 路径
+      return preloadImage(path);
+    }),
     
-    // 加载 cover-images 中的 0.25x 图片
-    ...Array.from({ length: 12 }, (_, i) => 
-      preloadImage(`/cover-images/${i + 1}-0.25x.jpg`)
-    ),
-    
-    // 加载 shards/spot 下的所有图片
-    ...Array.from({ length: 9 }, (_, i) => 
-      preloadImage(`/shards/spot/${i + 1}.png`)
-    )
+    // 加载 public 目录下的图片
+    ...coverImages.map(path => preloadImage(path))
   ];
 
   try {
