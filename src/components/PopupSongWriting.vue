@@ -8,7 +8,7 @@
         <div class="song-info">
           <h3>{{ song.title }}<span v-if="song.isFeat" class="feat">feat.</span></h3>
           <p v-if="songStages[song.title] && songStages[song.title].completedStage === 'release'">
-            <span>{{ song.lyrics }}</span>
+            {{ song.lyrics }}
           </p>
           <p v-else>
             <span v-for="(value, key, index) in song.conditions" :key="key">{{ attributeNames[key] }} ≥ {{ value }}<span v-if="index !== Object.keys(song.conditions).length - 1 || song.conditions_ne"> / </span></span>
