@@ -93,6 +93,7 @@
 import { computed, watch, ref } from "vue";
 import { useStore } from "vuex";
 import axios from "axios";
+import { API_BASE_URL } from '../config/api';
 
 import Popup from "../components/Popup.vue";
 import PopupSub from "../components/PopupSub.vue";
@@ -119,7 +120,7 @@ const savePlay = () => {
     state: toSaveStore,
   };
   axios
-    .post("https://api.jys-wtf.proxy.mayq.me/plays", {
+    .post(`${API_BASE_URL}/plays`, {
       player: {
         name: player.value.name,
         email: player.value.email,
@@ -142,7 +143,7 @@ const savePlay = () => {
 
 const linkPlayer = () => {
   axios
-    .post("https://api.jys-wtf.proxy.mayq.me/players", {
+    .post(`${API_BASE_URL}/players`, {
       player: link_player.value,
     })
     .then((res) => {
@@ -161,7 +162,7 @@ const linkPlayer = () => {
 
 const loadPlay = (id: number) => {
   axios
-    .get(`https://api.jys-wtf.proxy.mayq.me/plays/${id}`)
+    .get(`${API_BASE_URL}/plays/${id}`)
     .then(async (res) => {
       const play: Play = res.data;
       store.commit("loadGameState", play.state);
@@ -180,7 +181,7 @@ const loadPlay = (id: number) => {
 
 const deletePlay = (id: number) => {
   axios
-    .delete(`https://api.jys-wtf.proxy.mayq.me/plays/${id}`, {
+    .delete(`${API_BASE_URL}/plays/${id}`, {
       data: {
         player: {
           id: player.value.id,
@@ -212,7 +213,7 @@ const update_player = ref({
 
 const updatePlayer = () => {
   axios
-    .put("https://api.jys-wtf.proxy.mayq.me/players/" + player.value.id, {
+    .put(`${API_BASE_URL}/players/${player.value.id}`, {
       player: {
         id: player.value.id,
         name: update_player.value.name,
@@ -237,7 +238,7 @@ const updatePlayer = () => {
 
 const refreshPlayer = () => {
   axios
-    .put("https://api.jys-wtf.proxy.mayq.me/players/" + player.value.id, {
+    .put(`${API_BASE_URL}/players/${player.value.id}`, {
       player: {
         id: player.value.id,
         email: player.value.email,

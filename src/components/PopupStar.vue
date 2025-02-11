@@ -8,12 +8,13 @@
 <script setup lang="ts">
 import { computed, ref, CSSProperties } from "vue";
 import axios from "axios";
+import { API_BASE_URL } from '../config/api';
 
 const stars = ref([]);
 
 function weAreStars() {
   axios
-    .get("https://api.jys-wtf.proxy.mayq.me/players")
+    .get(`${API_BASE_URL}/players`)
     .then((res) => {
       stars.value = res.data;
       errorMessage.value = "";
