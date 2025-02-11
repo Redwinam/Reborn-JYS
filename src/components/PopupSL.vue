@@ -10,17 +10,17 @@
 
       <div class="button-group">
         <RefreshCw :size="16" @click="refreshPlayer()"></RefreshCw>
-        <button class="button-load" @click="showUpdatePlayerPopup = true">设置</button>
+        <button class="button-load" @click="openUpdatePlayerPopup">设置</button>
         <button class="button-delete" @click="logoutPlayer()">退出</button>
       </div>
     </div>
     <p class="note-message error">{{ errorMessage }}</p>
 
     <div class="play-list" v-if="player.plays && player.plays.length">
-      <div class="play-item" v-for="play in player.plays">
+      <div class="play-item" v-for="play in sortedPlays">
         <span class="play-name"
           ><p class="play-id">存档{{ play.id }}</p>
-          <p class="play-time">{{ timeToString(play.created_at) }}</p></span
+          <p class="play-time">{{ timeToString(play.createdAt || play.created_at) }}</p></span
         >
         <div class="button-group">
           <button class="button-load" @click="loadPlay(play.id)">读取</button>
@@ -68,7 +68,7 @@
     </div>
     <div class="player-meta">
       <span class="player-label">匿名</span>
-      <span class="player-info"><input v-model="link_player.anonymous" type="checkbox" /> <HelpCircle :size="12" @click="showAnonymousNote = true"></HelpCircle></span>
+      <span class="player-info"><input v-model="update_player.anonymous" type="checkbox" /> <HelpCircle :size="12" @click="showAnonymousNote = true"></HelpCircle></span>
     </div>
     <div><button class="sl" @click="updatePlayer()">确认</button></div>
     <div class="reset-game-button-container">
@@ -207,36 +207,57 @@ const showAnonymousNote = ref(false);
 const showUpdatePlayerPopup = ref(false);
 
 const update_player = ref({
-  name: player.value ? player.value.name : "",
-  anonymous: player.value ? player.value.anonymous : false,
+  name: "",
+  anonymous: false,
 });
 
+const openUpdatePlayerPopup = () => {
+  if (player.value) {
+    const anonymousValue = player.value.anonymous === true || 
+                            player.value.anonymous === 'true' || 
+                            player.value.anonymous === 1
+
+    update_player.value.name = player.value.name
+    update_player.value.anonymous = anonymousValue
+
+    showUpdatePlayerPopup.value = true
+  }
+}
+
 const updatePlayer = () => {
+  if (!player.value) return;
+
+  const updateData = {
+    name: update_player.value.name,
+    email: player.value.email,
+    anonymous: update_player.value.anonymous,
+  };
+
   axios
     .put(`${API_BASE_URL}/players/${player.value.id}`, {
-      player: {
-        id: player.value.id,
-        name: update_player.value.name,
-        email: player.value.email,
-        anonymous: update_player.value.anonymous,
-      },
+      player: updateData,
       update: true,
     })
     .then((res) => {
-      const player: Player = res.data;
-      store.commit("setPlayer", player);
+      const updatedPlayer: Player = res.data;
+      store.commit("setPlayer", updatedPlayer);
       showUpdatePlayerPopup.value = false;
+      errorMessage.value = "";
     })
     .catch((error) => {
       if (error.response && error.response.data && error.response.data.error) {
         errorMessage.value = error.response.data.error;
       } else {
-        errorMessage.value = "由于未知错误，加载失败……";
+        errorMessage.value = "由于未知错误，更新失败……";
       }
     });
 };
 
 const refreshPlayer = () => {
+  if (!player.value?.id) {
+    errorMessage.value = "玩家信息无效，请重新登录";
+    return;
+  }
   axios
     .put(`${API_BASE_URL}/players/${player.value.id}`, {
       player: {
@@ -263,9 +284,39 @@ const logoutPlayer = () => {
   store.commit("setPlayer", null);
 };
 
-const timeToString = (time: string) => {
-  const date = new Date(time);
-  return new Intl.DateTimeFormat("default", { dateStyle: "long", timeStyle: "medium" }).format(date);
+const timeToString = (time: string | Date) => {
+  try {
+    // 如果是字符串，尝试多种解析方式
+    if (typeof time === 'string') {
+      // 尝试解析 ISO 格式
+      let parsedTime = new Date(time)
+
+      // 如果解析失败，尝试解析 created_at 格式
+      if (isNaN(parsedTime.getTime())) {
+        parsedTime = new Date(time.replace(' ', 'T'))
+      }
+
+      // 如果仍然解析失败，返回原始字符串
+      if (isNaN(parsedTime.getTime())) {
+        console.warn('Invalid time format:', time)
+        return time
+      }
+
+      return new Intl.DateTimeFormat("default", {
+        dateStyle: "long",
+        timeStyle: "medium"
+      }).format(parsedTime)
+    }
+
+    // 如果已经是 Date 对象
+    return new Intl.DateTimeFormat("default", {
+      dateStyle: "long",
+      timeStyle: "medium"
+    }).format(time)
+  } catch (error) {
+    console.error('Error parsing time:', error)
+    return String(time)
+  }
 };
 
 const showResetGameConfirmPopup = ref(false);
@@ -276,6 +327,17 @@ const resetGame = () => {
   showResetGameConfirmPopup.value = false;
   showSLPopup.value = false;
 };
+
+const sortedPlays = computed(() => {
+  if (!player.value?.plays) return []
+  
+  // 按创建时间倒序排序
+  return [...player.value.plays].sort((a, b) => {
+    const dateA = new Date(a.createdAt || a.created_at).getTime()
+    const dateB = new Date(b.createdAt || b.created_at).getTime()
+    return dateB - dateA
+  })
+})
 
 watch(showSLPopup, (newValue, oldValue) => {
   if (newValue && player.value) {
