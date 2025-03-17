@@ -93,7 +93,7 @@
 import { computed, watch, ref } from "vue";
 import { useStore } from "vuex";
 import axios from "axios";
-import { API_BASE_URL } from '../config/api';
+import { API_BASE_URL } from "../config/api";
 
 import Popup from "../components/Popup.vue";
 import PopupSub from "../components/PopupSub.vue";
@@ -115,10 +115,20 @@ const errorMessage = ref("");
 const savePlay = () => {
   if (!player.value) return;
   const { textHistory, ...toSaveStore } = store.state;
+
+  // 深拷贝状态，避免修改原始state
+  const cleanState = JSON.parse(JSON.stringify(toSaveStore));
+
+  // 删除冗余数据
+  delete cleanState.player; // 移除player字段
+  // 如果state中嵌套了plays数组，也移除它
+  if (cleanState.plays) delete cleanState.plays;
+
   const play = {
     player_id: player.value.id,
-    state: toSaveStore,
+    state: cleanState,
   };
+
   axios
     .post(`${API_BASE_URL}/plays`, {
       player: {
@@ -213,16 +223,14 @@ const update_player = ref({
 
 const openUpdatePlayerPopup = () => {
   if (player.value) {
-    const anonymousValue = player.value.anonymous === true || 
-                            player.value.anonymous === 'true' || 
-                            player.value.anonymous === 1
+    const anonymousValue = player.value.anonymous === true || player.value.anonymous === "true" || player.value.anonymous === 1;
 
-    update_player.value.name = player.value.name
-    update_player.value.anonymous = anonymousValue
+    update_player.value.name = player.value.name;
+    update_player.value.anonymous = anonymousValue;
 
-    showUpdatePlayerPopup.value = true
+    showUpdatePlayerPopup.value = true;
   }
-}
+};
 
 const updatePlayer = () => {
   if (!player.value) return;
@@ -287,35 +295,35 @@ const logoutPlayer = () => {
 const timeToString = (time: string | Date) => {
   try {
     // 如果是字符串，尝试多种解析方式
-    if (typeof time === 'string') {
+    if (typeof time === "string") {
       // 尝试解析 ISO 格式
-      let parsedTime = new Date(time)
+      let parsedTime = new Date(time);
 
       // 如果解析失败，尝试解析 created_at 格式
       if (isNaN(parsedTime.getTime())) {
-        parsedTime = new Date(time.replace(' ', 'T'))
+        parsedTime = new Date(time.replace(" ", "T"));
       }
 
       // 如果仍然解析失败，返回原始字符串
       if (isNaN(parsedTime.getTime())) {
-        console.warn('Invalid time format:', time)
-        return time
+        console.warn("Invalid time format:", time);
+        return time;
       }
 
       return new Intl.DateTimeFormat("default", {
         dateStyle: "long",
-        timeStyle: "medium"
-      }).format(parsedTime)
+        timeStyle: "medium",
+      }).format(parsedTime);
     }
 
     // 如果已经是 Date 对象
     return new Intl.DateTimeFormat("default", {
       dateStyle: "long",
-      timeStyle: "medium"
-    }).format(time)
+      timeStyle: "medium",
+    }).format(time);
   } catch (error) {
-    console.error('Error parsing time:', error)
-    return String(time)
+    console.error("Error parsing time:", error);
+    return String(time);
   }
 };
 
@@ -329,15 +337,15 @@ const resetGame = () => {
 };
 
 const sortedPlays = computed(() => {
-  if (!player.value?.plays) return []
-  
+  if (!player.value?.plays) return [];
+
   // 按创建时间倒序排序
   return [...player.value.plays].sort((a, b) => {
-    const dateA = new Date(a.createdAt || a.created_at).getTime()
-    const dateB = new Date(b.createdAt || b.created_at).getTime()
-    return dateB - dateA
-  })
-})
+    const dateA = new Date(a.createdAt || a.created_at).getTime();
+    const dateB = new Date(b.createdAt || b.created_at).getTime();
+    return dateB - dateA;
+  });
+});
 
 watch(showSLPopup, (newValue, oldValue) => {
   if (newValue && player.value) {

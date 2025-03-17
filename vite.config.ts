@@ -10,24 +10,4 @@ export default defineConfig({
       "@": "/src",
     },
   },
-  // experimental: {
-  //   renderBuiltUrl(filename: string, { hostId, hostType, type }: { hostId: string; hostType: "js" | "css" | "html"; type: "public" | "asset" }) {
-  //     if (type === "public") {
-  //       return "https://cdn.jys-wtf.proxy.mayq.me/" + filename;
-  //     } else if (path.extname(hostId) === ".js") {
-  //       return { runtime: `window.__assetsPath(${JSON.stringify(filename)})` };
-  //     } else {
-  //       return "https://cdn.jys-wtf.proxy.mayq.me/" + filename;
-  //     }
-  //   },
-  // },
-  server: {
-    proxy: {
-      "/api": {
-        target: "http://47.100.10.147:9147",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
-      },
-    },
-  },
 });
