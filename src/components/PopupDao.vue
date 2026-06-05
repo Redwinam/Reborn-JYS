@@ -1,5 +1,5 @@
 <template>
-  <PopupSub title="上山·修行" :visible="showDaoPopup" @close="showDaoPopup = false">
+  <PopupSub title="上山 · 修行" :visible="showDaoPopup" @close="showDaoPopup = false">
     <div class="underground-dao">
       <!-- <p class="dao-message">如月</p> -->
 
@@ -12,6 +12,7 @@
         <span class="note-fight">当前在第{{ FightLevelMapping[currentFightLevelIndex].level }}层 | 等级：{{ fight.level }}级</span>
         <hr />
         <button class="button-dao" @click="showStarPopup = true">看星星</button>
+        <button class="button-dao" @click="showFlowerPopup = true">限定 · 繁花</button>
         <p class="note-message">如月之恒，如日之升</p>
         <button class="button_cancel" @click="showDaoPopup = false">返回</button>
       </div>
@@ -20,6 +21,10 @@
 
   <Popup title="看星星" :visible="showStarPopup" @close="showStarPopup = false">
     <popup-star></popup-star>
+  </Popup>
+
+  <Popup title="限定 · 繁花" :visible="showFlowerPopup" @close="showFlowerPopup = false">
+    <popup-flower></popup-flower>
   </Popup>
 </template>
 
@@ -30,6 +35,7 @@ import { useStore } from "vuex";
 import PopupSub from "../components/PopupSub.vue";
 import Popup from "../components/Popup.vue";
 import PopupStar from "../components/PopupStar.vue";
+import PopupFlower from "../components/PopupFlower.vue";
 import { showDaoPopup } from "./composables/gameRefs";
 
 const FightLevelMapping = [
@@ -228,6 +234,7 @@ async function dao(action: string) {
 }
 
 const showStarPopup = ref(false);
+const showFlowerPopup = ref(false);
 </script>
 
 <style scoped>
