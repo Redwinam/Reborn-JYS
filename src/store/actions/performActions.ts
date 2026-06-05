@@ -110,8 +110,11 @@ export async function performAction(context: { commit: Commit; dispatch: Functio
       await context.dispatch("typeWriter", message);
     } else if (action === "出去鬼混") {
       if (!store.state.girlfriend) {
-        if (((store.state.flirtCount > 1 && !store.state.lastBreakupRound) || store.state.lastBreakupRound) && (Math.random() < 0.7 || (context.getters.unlockedAchievement("包剪锤之王") && Math.random() < 0.4))) {
-          // if (Math.random() < 0.7) {
+        // 累计分手次数 > 1 才会触发包剪锤（一开始让玩家先体验搭讪逻辑）；
+        // 且避开刚分手的轮次，让玩家先走下面「刚分手就出来鬼混」的搭讪分支。
+        const enoughBreakups = store.state.breakupTimes > 1;
+        const justBrokeUp = !!store.state.lastBreakupRound && store.state.round - store.state.lastBreakupRound < 2;
+        if (enoughBreakups && !justBrokeUp && (Math.random() < 0.7 || (context.getters.unlockedAchievement("包剪锤之王") && Math.random() < 0.4))) {
           context.dispatch("specialEvent", "包剪锤之王");
           return;
         }
