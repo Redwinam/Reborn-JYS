@@ -171,8 +171,15 @@ const linkPlayer = () => {
 };
 
 const loadPlay = (id: number) => {
+  if (!player.value) return;
+
   axios
-    .get(`${API_BASE_URL}/plays/${id}`)
+    .get(`${API_BASE_URL}/plays/${id}`, {
+      params: {
+        playerId: player.value.id,
+        email: player.value.email,
+      },
+    })
     .then(async (res) => {
       const play: Play = res.data;
       store.commit("loadGameState", play.state);

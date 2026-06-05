@@ -1,4 +1,3 @@
-export const API_BASE_URL = import.meta.env.PROD
-  ? 'https://api.jys.wtf'
-  : 'https://api.jys.wtf'
-  // : 'http://localhost:3001'
+const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "");
+
+export const API_BASE_URL = configuredApiBaseUrl || "/api";
