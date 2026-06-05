@@ -144,7 +144,7 @@ export async function performAction(context: { commit: Commit; dispatch: Functio
 
         await context.dispatch("typeWriter", toMessage);
       } else {
-        await context.dispatch("typeWriter", "姜云升已经有女朋友了，不能再出来鬼混把妹了。快去陪陪你的女朋友吧！");
+        await context.dispatch("typeWriter", "姜云升已经有女朋友了，不能再出来鬼混了。快去陪陪你的女朋友吧！");
         return;
       }
     } else if (action === "睡觉休息") {
