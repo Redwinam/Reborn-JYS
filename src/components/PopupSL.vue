@@ -18,13 +18,15 @@
 
     <div class="play-list" v-if="player.plays && player.plays.length">
       <div class="play-item" v-for="play in sortedPlays">
-        <span class="play-name"
-          ><p class="play-id">存档{{ play.id }}</p>
-          <p class="play-time">{{ timeToString(play.createdAt || play.created_at) }}</p></span
-        >
-        <div class="button-group">
-          <button class="button-load" @click="loadPlay(play.id)">读取</button>
-          <button class="button-delete" @click="deletePlay(play.id)">删除</button>
+        <div class="play-item-content">
+          <span class="play-name"
+            ><p class="play-id">存档{{ play.id }}</p>
+            <p class="play-time">{{ timeToString(play.createdAt || play.created_at) }}</p></span
+          >
+          <div class="button-group">
+            <button class="button-load" @click="loadPlay(play.id)">读取</button>
+            <button class="button-delete" @click="deletePlay(play.id)">删除</button>
+          </div>
         </div>
       </div>
     </div>
@@ -410,14 +412,21 @@ watch(showSLPopup, (newValue, oldValue) => {
   margin: 0.5rem 0;
   max-height: 50vh;
   overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 
 .play-item {
+  padding: 0.25rem 0;
+  border-bottom: 1px dashed #aaa;
+}
+
+.play-item-content {
   display: flex;
   align-items: center;
-  margin: 0.25rem auto;
-  justify-content: center;
-  border-bottom: 1px dashed #aaa;
+  justify-content: space-between;
+  gap: 0.25rem;
+  max-width: 16rem;
+  margin: 0 auto;
 }
 
 .play-item p {
