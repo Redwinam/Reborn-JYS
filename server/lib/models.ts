@@ -1,5 +1,5 @@
-import { ApiError } from "./errors";
-import { generateId, getCurrentTimestamp, getRedis } from "./redis";
+import { ApiError } from "./errors.js";
+import { generateId, getCurrentTimestamp, getRedis } from "./redis.js";
 
 const maxPlaysPerPlayer = 99;
 const inlineStateMaxBytes = 750_000;

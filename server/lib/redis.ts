@@ -1,5 +1,5 @@
 import { Redis } from "@upstash/redis";
-import { ServerConfigError } from "./errors";
+import { ServerConfigError } from "./errors.js";
 
 let redisClient: Redis | null = null;
 

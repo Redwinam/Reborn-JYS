@@ -1,4 +1,4 @@
-import { ApiError } from "./errors";
+import { ApiError } from "./errors.js";
 
 const jsonHeaders = {
   "Content-Type": "application/json; charset=utf-8",

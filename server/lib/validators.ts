@@ -1,4 +1,4 @@
-import { ApiError } from "./errors";
+import { ApiError } from "./errors.js";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const controlCharactersPattern = /[\u0000-\u001f\u007f]/;

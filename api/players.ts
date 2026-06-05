@@ -1,7 +1,7 @@
-import { ApiError } from "../server/lib/errors";
-import { handleApi, isRecord, json, readJsonBody } from "../server/lib/http";
-import { PlayerModel } from "../server/lib/models";
-import { parseOptionalBoolean, validateEmail, validatePlayerName } from "../server/lib/validators";
+import { ApiError } from "../server/lib/errors.js";
+import { handleApi, isRecord, json, readJsonBody } from "../server/lib/http.js";
+import { PlayerModel } from "../server/lib/models.js";
+import { parseOptionalBoolean, validateEmail, validatePlayerName } from "../server/lib/validators.js";
 
 interface PlayerCreateBody {
   player?: {
