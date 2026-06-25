@@ -1,14 +1,136 @@
 # 重生之我是姜云升
 
-文字游戏，选择玩家角色姜云升行动，在2012年-2023年共计432个轮次中，体验一些简单的小故事。
-设计单周目游玩时长约5-15分钟。
+文字游戏，选择玩家角色姜云升行动，在 2012 年-2023 年共计 432 个轮次中，体验一些简单的小故事。
+设计单周目游玩时长约 5-15 分钟。
 
 游玩地址：https://jys.wtf
 
 ## 界面截图
 
-<img src="https://redwinam.coding.net/p/jysx/shared-depot/reborn-as-jiangyunsheng/git/raw/master/src/assets/demo-1.png" alt="游戏主页" width="40%" />
-<img src="https://redwinam.coding.net/p/jysx/shared-depot/reborn-as-jiangyunsheng/git/raw/master/src/assets/demo-home.png" alt="回家" width="40%" />
+<img src="src/assets/demo-1.png" alt="游戏主页" width="40%" />
+<img src="src/assets/demo-home.png" alt="回家" width="40%" />
+
+## 技术架构
+
+项目已**完全迁移至 [Vercel](https://vercel.com) 部署**。前端静态站点与后端接口同源托管，后端接口由 **Vercel Serverless Functions** 提供，并**直接读写 [Upstash KV（Redis）](https://upstash.com)**。
+
+> 迁移前为「前端 + 独立后端 API 服务（`api.jys.wtf`）+ Docker/Nginx/Jenkins」架构；现已不再需要独立后端服务与跨域 API，Serverless 函数直连 KV 数据库。仓库中残留的 `Dockerfile`、`Jenkinsfile`、`.htaccess` 仅为历史遗留，不再用于部署。
+
+### 数据流
+
+```
+浏览器 (Vue 3 SPA)
+     │  axios → /api/*
+     ▼
+Vercel Serverless Functions  (api/*.ts，Web 标准 Request/Response)
+     │  @upstash/redis (REST)
+     ▼
+Upstash KV (Redis)           ← 玩家与存档数据
+```
+
+本地开发时，Vite 会把 `/api` 反向代理到 `VITE_API_PROXY_TARGET`（默认 `https://api.jys.wtf`）；生产环境中 `/api/*` 由同域的 Vercel 函数直接处理。
+
+### 技术栈
+
+| 层 | 技术 |
+| --- | --- |
+| 前端 | Vue 3、Vuex 4、TypeScript、Vite、axios、lucide-vue-next、typeit |
+| 接口 | Vercel Serverless Functions（TypeScript，原生 `Request`/`Response`） |
+| 数据库 | Upstash KV（Redis），通过 `@upstash/redis` REST 客户端访问 |
+| 部署 | Vercel（静态构建产物 + Serverless Functions） |
+
+### 目录结构
+
+```
+.
+├── api/                    # Vercel Serverless Functions（路由即文件）
+│   ├── players.ts          # GET 玩家列表 / POST 连接或创建玩家
+│   ├── players/[id].ts     # PUT 更新玩家
+│   ├── plays.ts            # POST 新建存档
+│   └── plays/[id].ts       # GET 读取存档 / DELETE 删除存档
+├── server/lib/             # 接口共享逻辑（被 api/ 引用）
+│   ├── redis.ts            # Upstash Redis 客户端（单例）+ 自增 ID
+│   ├── models.ts           # PlayerModel / PlayModel 数据模型
+│   ├── http.ts             # JSON 响应、错误处理、请求解析
+│   ├── validators.ts       # 昵称 / 邮箱 / 布尔值校验
+│   └── errors.ts           # ApiError / ServerConfigError
+├── src/                    # 前端 Vue 应用
+│   ├── components/          # 游戏界面与各类弹窗组件
+│   ├── store/               # Vuex store（游戏核心逻辑、行动、内容数据）
+│   ├── config/api.ts        # 前端 API base url（默认 /api）
+│   └── ...
+├── vercel.json             # 函数配置（maxDuration）与安全响应头
+├── tsconfig.api.json       # api/ 与 server/ 的类型检查配置
+└── vite.config.ts          # 前端构建与 /api 本地代理
+```
+
+### 数据存储（Upstash KV）
+
+接口直接对 Redis 进行读写，主要 key 设计如下：
+
+| Key | 类型 | 说明 |
+| --- | --- | --- |
+| `counter:player` / `counter:play` | string (INCR) | 玩家 / 存档自增 ID |
+| `players:{id}` | JSON | 玩家信息 |
+| `players:email:{email}` | string | 邮箱 → 玩家 ID 索引（同时保存原始与小写两份） |
+| `players:all` | set | 全部「非匿名」玩家 ID 集合（用于排行 / 名单展示） |
+| `plays:{id}` | JSON | 存档元数据（不含 state） |
+| `plays:player:{id}` | list | 某玩家的存档 ID 列表（单玩家上限 99 条） |
+| `plays:{id}:state` | JSON | 存档状态（体积较小时内联存储） |
+| `plays:{id}:meta` + `plays:{id}:chunk:{i}` | JSON + string | 大体积存档的分片存储 |
+
+存档体积策略：state 序列化后 ≤ 750KB 直接内联保存；超过则按 200K 字符分片写入多个 chunk；硬上限 5MB，超过即拒绝保存。保存前会清理冗余字段（`player`、`plays`、`textHistory` 等）以减小体积。
+
+### API 接口
+
+| 方法 | 路径 | 说明 |
+| --- | --- | --- |
+| `GET` | `/api/players` | 返回所有非匿名玩家昵称 |
+| `POST` | `/api/players` | 连接已有账号或创建新玩家（按邮箱匹配） |
+| `PUT` | `/api/players/:id` | 更新玩家（昵称 / 匿名设置，需邮箱校验） |
+| `POST` | `/api/plays` | 新建存档（需玩家 ID + 邮箱校验） |
+| `GET` | `/api/plays/:id?playerId=&email=` | 读取存档完整 state |
+| `DELETE` | `/api/plays/:id` | 删除存档（需玩家 ID + 邮箱校验） |
+
+账号体系无密码，以「昵称 + 邮箱」作为弱身份凭证：所有写操作都会校验请求邮箱与库中玩家邮箱（大小写不敏感）是否一致。
+
+## 本地开发
+
+### 环境变量
+
+接口运行需要 Upstash 凭据（任选一组，优先读取 `KV_REST_API_*`）：
+
+```bash
+KV_REST_API_URL=...            # 或 UPSTASH_REDIS_REST_URL
+KV_REST_API_TOKEN=...          # 或 UPSTASH_REDIS_REST_TOKEN
+```
+
+前端可选环境变量：
+
+```bash
+VITE_API_BASE_URL=...          # 覆盖前端请求的 API base，默认 /api
+VITE_API_PROXY_TARGET=...      # 本地 dev 时 /api 的代理目标，默认 https://api.jys.wtf
+```
+
+### 安装与启动
+
+```bash
+npm install
+npm run dev        # 启动 Vite 开发服务器
+npm run typecheck  # 前端（vue-tsc）+ 接口（tsconfig.api.json）类型检查
+npm run build      # 类型检查并产出生产构建到 dist/
+```
+
+> 若希望本地同时调试 Serverless Functions（连真实 Upstash KV），可使用 `vercel dev`（需安装 Vercel CLI 并配置上述环境变量）。
+
+## 部署（Vercel）
+
+1. 在 Vercel 导入本仓库，框架预设为 Vite（构建命令 `npm run build`，输出目录 `dist`）。
+2. 在 Vercel 项目中配置 Upstash KV 集成或手动填入 `KV_REST_API_URL` / `KV_REST_API_TOKEN` 环境变量。
+3. `api/` 下的文件会被自动识别为 Serverless Functions（见 `vercel.json`，单函数最长执行 10s）。
+4. 推送到对应分支即可触发自动部署（`dev` 分支生成预览部署，`master` 为生产）。
+
+---
 
 ## 机制设计
 - [x] 人物属性机制
@@ -21,6 +143,8 @@
 - [x] 成就机制
 - [x] 物品机制
 - [x] 购物、交易机制
+- [x] 存档 / 读档机制（云端，基于 Upstash KV）
+
 ## 内容设计
 - [ ] 成就图鉴
 - [ ] 歌曲清单（已列） - 开发中
@@ -35,7 +159,7 @@
   skill: '技能',
   energy: '体力',
   mood: '心情',
-  
+
 隐藏属性(1)
 
 ## 写歌设计
@@ -89,7 +213,7 @@ Freestyle 技能（共计28点）：
 
 
 游戏技能：
-   - 常规升级方式：回家休息打游戏提升 
+   - 常规升级方式：回家休息打游戏提升
    - 特殊升级方式：事件触发
    - 晋级提问
       合成大西瓜
@@ -135,17 +259,3 @@ Freestyle 技能（共计28点）：
 -[x] 【时间很长】指的是姜云升的睡眠时间很长，在一轮游戏中累计睡眠时间达到500个小时。
 -[x] 【醉酒小姜】不是酒后吐真言，是借着喝醉说心里话。
 -[x] 【十年】游戏进程达到10年。
-
-
-## 编译部署
-
-```
-yarn build
-docker build -t reborn-jysx-image .
-docker save -o reborn-jysx-image.tar reborn-jysx-image
-docker load -i /mnt/JYSX/Reborn/reborn-jysx-image.tar
-docker run -d --name reborn-jysx-container -p 9147:80 reborn-jysx-image
-
-docker stop reborn-jysx-container
-docker rm reborn-jysx-container
-```
