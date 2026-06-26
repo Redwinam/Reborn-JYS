@@ -20,6 +20,8 @@ import { typeWriter, typeWriterPopup } from "./actions/typeWriter";
 
 import { Player } from "./player";
 
+import { SAVE_VERSION, migrateSave } from "./migrations";
+
 import { isTyping, showBreakupDialog, showGameEndDialog, showStartGameDialog } from "../components/composables/gameRefs";
 
 export const skyTreeLyrics = [
@@ -123,6 +125,8 @@ export interface State {
 
   currentLyricIndex: number;
 
+  version: number;
+
   [key: string]: any;
 }
 
@@ -209,6 +213,8 @@ const state: State = {
   player: null,
 
   currentLyricIndex: -1,
+
+  version: SAVE_VERSION,
 };
 
 type UpdateAttributePayload = {
@@ -651,7 +657,8 @@ const mutations = {
     }
   },
   loadGameState(state: State, gameData: State) {
-    const { textHistory, ...otherData } = gameData;
+    const migrated = migrateSave(gameData);
+    const { textHistory, ...otherData } = migrated;
     Object.assign(state, otherData);
   },
   setPlayer(state: State, player: Player) {
