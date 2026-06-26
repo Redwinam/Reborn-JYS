@@ -15,7 +15,7 @@
             class="right-button"
             @click="dispatchArtist(artist.name)"
             v-if="artist.level > 0"
-            :disabled="(thisSeasonArtist.move && (thisSeasonArtist.move as any).artist === artist.name && thisSeasonArtist.move.action === '锻炼') || thisSeasonArtist.dispatch.includes(artist.name)"
+            :disabled="(thisSeasonArtist.move && thisSeasonArtist.move.name === artist.name && thisSeasonArtist.move.action === '锻炼') || thisSeasonArtist.dispatch.includes(artist.name)"
           >
             派遣
           </button>
@@ -78,7 +78,7 @@ const trainArtist = async (artistName: string) => {
 
 const dispatchArtist = async (artistName: string) => {
   const artist = artists.value.find((artist: Artist) => artist.name === artistName)!;
-  if (artist.level > 0 && !(thisSeasonArtist.value.move && (thisSeasonArtist.value.move as any).artist === artist.name && thisSeasonArtist.value.move.action === "锻炼") && !thisSeasonArtist.value.dispatch.includes(artistName)) {
+  if (artist.level > 0 && !(thisSeasonArtist.value.move && thisSeasonArtist.value.move.name === artist.name && thisSeasonArtist.value.move.action === "锻炼") && !thisSeasonArtist.value.dispatch.includes(artistName)) {
     let activity;
     switch (artist.level) {
       case 1:
@@ -94,7 +94,7 @@ const dispatchArtist = async (artistName: string) => {
     }
     store.commit("dispatchArtist", artistName);
     await store.dispatch("typeWriterPopup", `你派遣了艺人【${artistName}】<small>（${artist.level}级）</small>${activity}`);
-  } else if (thisSeasonArtist.value.move && (thisSeasonArtist.value.move as any).artist === artist.name && thisSeasonArtist.value.move.action === "锻炼") {
+  } else if (thisSeasonArtist.value.move && thisSeasonArtist.value.move.name === artist.name && thisSeasonArtist.value.move.action === "锻炼") {
     await store.dispatch("typeWriterPopup", `艺人【${artistName}】已经在本季度安排锻炼，无法再安排派遣。`);
   } else if (thisSeasonArtist.value.dispatch.includes(artistName)) {
     await store.dispatch("typeWriterPopup", `艺人【${artistName}】已经在本季度安排派遣，无法再安排派遣。`);

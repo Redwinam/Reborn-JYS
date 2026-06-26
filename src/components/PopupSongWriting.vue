@@ -155,7 +155,7 @@ function isSongAvailable(song: Song) {
       break;
 
     case "SAD":
-      if ((store.state.character.attributes as any)["心情"] > -20 || !store.state.relationship.seamlessRelation || store.state.relationship.girlfriend) {
+      if (store.state.character.attributes.mood > -20 || !store.state.relationship.seamlessRelation || store.state.relationship.girlfriend) {
         return false;
       }
       break;
