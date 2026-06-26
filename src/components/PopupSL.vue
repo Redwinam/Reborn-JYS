@@ -21,7 +21,7 @@
         <div class="play-item-content">
           <span class="play-name"
             ><p class="play-id">存档{{ play.id }}</p>
-            <p class="play-time">{{ timeToString(play.createdAt || play.created_at) }}</p></span
+            <p class="play-time">{{ timeToString(play.createdAt) }}</p></span
           >
           <div class="button-group">
             <button class="button-load" @click="loadPlay(play.id)">读取</button>
@@ -94,12 +94,10 @@
 <script setup lang="ts">
 import { computed, watch, ref } from "vue";
 import { useStore } from "vuex";
-import axios from "axios";
-import { API_BASE_URL } from "../config/api";
+import { playerApi, playApi, extractApiError } from "../services/api";
 
 import Popup from "../components/Popup.vue";
 import PopupSub from "../components/PopupSub.vue";
-import { Play, Player } from "../store/player";
 import { isAtHome, showSLPopup } from "./composables/gameRefs";
 import { HelpCircle, RefreshCw } from "lucide-vue-next";
 
@@ -114,112 +112,62 @@ const link_player = ref({
 
 const errorMessage = ref("");
 
-const savePlay = () => {
+const savePlay = async () => {
   if (!player.value) return;
   const { textHistory, ...toSaveStore } = store.state;
 
-  // 深拷贝状态，避免修改原始state
+  // 深拷贝状态，避免修改原始 state
   const cleanState = JSON.parse(JSON.stringify(toSaveStore));
 
   // 删除冗余数据
-  delete cleanState.player; // 移除player字段
-  // 如果state中嵌套了plays数组，也移除它
+  delete cleanState.player;
   if (cleanState.plays) delete cleanState.plays;
 
-  const play = {
-    player_id: player.value.id,
-    state: cleanState,
-  };
-
-  axios
-    .post(`${API_BASE_URL}/plays`, {
-      player: {
-        name: player.value.name,
-        email: player.value.email,
-      },
-      play,
-    })
-    .then((res) => {
-      const player: Player = res.data;
-      store.commit("setPlayer", player);
-      errorMessage.value = "";
-    })
-    .catch((error) => {
-      if (error.response && error.response.data && error.response.data.error) {
-        errorMessage.value = error.response.data.error;
-      } else {
-        errorMessage.value = "由于未知错误，加载失败……";
-      }
-    });
+  try {
+    const updated = await playApi.save(
+      { name: player.value.name, email: player.value.email },
+      { player_id: player.value.id, state: cleanState }
+    );
+    store.commit("setPlayer", updated);
+    errorMessage.value = "";
+  } catch (error) {
+    errorMessage.value = extractApiError(error, "由于未知错误，加载失败……");
+  }
 };
 
-const linkPlayer = () => {
-  axios
-    .post(`${API_BASE_URL}/players`, {
-      player: link_player.value,
-    })
-    .then((res) => {
-      const player: Player = res.data;
-      store.commit("setPlayer", player);
-      errorMessage.value = "";
-    })
-    .catch((error) => {
-      if (error.response && error.response.data && error.response.data.error) {
-        errorMessage.value = error.response.data.error;
-      } else {
-        errorMessage.value = "由于未知错误，加载失败……";
-      }
-    });
+const linkPlayer = async () => {
+  try {
+    const updated = await playerApi.link(link_player.value);
+    store.commit("setPlayer", updated);
+    errorMessage.value = "";
+  } catch (error) {
+    errorMessage.value = extractApiError(error, "由于未知错误，加载失败……");
+  }
 };
 
-const loadPlay = (id: number) => {
+const loadPlay = async (id: number) => {
   if (!player.value) return;
 
-  axios
-    .get(`${API_BASE_URL}/plays/${id}`, {
-      params: {
-        playerId: player.value.id,
-        email: player.value.email,
-      },
-    })
-    .then(async (res) => {
-      const play: Play = res.data;
-      store.commit("loadGameState", play.state);
-      showSLPopup.value = false;
-      errorMessage.value = "";
-      await store.dispatch("typeWriter", "【系统】存档读取成功！你回来啦！");
-    })
-    .catch((error) => {
-      if (error.response && error.response.data && error.response.data.error) {
-        errorMessage.value = error.response.data.error;
-      } else {
-        errorMessage.value = "由于未知错误，加载失败……";
-      }
-    });
+  try {
+    const play = await playApi.load(id, player.value.id, player.value.email);
+    store.commit("loadGameState", play.state);
+    showSLPopup.value = false;
+    errorMessage.value = "";
+    await store.dispatch("typeWriter", "【系统】存档读取成功！你回来啦！");
+  } catch (error) {
+    errorMessage.value = extractApiError(error, "由于未知错误，加载失败……");
+  }
 };
 
-const deletePlay = (id: number) => {
-  axios
-    .delete(`${API_BASE_URL}/plays/${id}`, {
-      data: {
-        player: {
-          id: player.value.id,
-          email: player.value.email,
-        },
-      },
-    })
-    .then((res) => {
-      const player: Player = res.data;
-      store.commit("setPlayer", player);
-      errorMessage.value = "";
-    })
-    .catch((error) => {
-      if (error.response && error.response.data && error.response.data.error) {
-        errorMessage.value = error.response.data.error;
-      } else {
-        errorMessage.value = "由于未知错误，加载失败……";
-      }
-    });
+const deletePlay = async (id: number) => {
+  if (!player.value) return;
+  try {
+    const updated = await playApi.remove(id, { id: player.value.id, email: player.value.email });
+    store.commit("setPlayer", updated);
+    errorMessage.value = "";
+  } catch (error) {
+    errorMessage.value = extractApiError(error, "由于未知错误，加载失败……");
+  }
 };
 
 const showAnonymousNote = ref(false);
@@ -241,60 +189,35 @@ const openUpdatePlayerPopup = () => {
   }
 };
 
-const updatePlayer = () => {
+const updatePlayer = async () => {
   if (!player.value) return;
 
-  const updateData = {
-    name: update_player.value.name,
-    email: player.value.email,
-    anonymous: update_player.value.anonymous,
-  };
-
-  axios
-    .put(`${API_BASE_URL}/players/${player.value.id}`, {
-      player: updateData,
-      update: true,
-    })
-    .then((res) => {
-      const updatedPlayer: Player = res.data;
-      store.commit("setPlayer", updatedPlayer);
-      showUpdatePlayerPopup.value = false;
-      errorMessage.value = "";
-    })
-    .catch((error) => {
-      if (error.response && error.response.data && error.response.data.error) {
-        errorMessage.value = error.response.data.error;
-      } else {
-        errorMessage.value = "由于未知错误，更新失败……";
-      }
+  try {
+    const updated = await playerApi.update(player.value.id, {
+      name: update_player.value.name,
+      email: player.value.email,
+      anonymous: update_player.value.anonymous,
     });
+    store.commit("setPlayer", updated);
+    showUpdatePlayerPopup.value = false;
+    errorMessage.value = "";
+  } catch (error) {
+    errorMessage.value = extractApiError(error, "由于未知错误，更新失败……");
+  }
 };
 
-const refreshPlayer = () => {
+const refreshPlayer = async () => {
   if (!player.value?.id) {
     errorMessage.value = "玩家信息无效，请重新登录";
     return;
   }
-  axios
-    .put(`${API_BASE_URL}/players/${player.value.id}`, {
-      player: {
-        id: player.value.id,
-        email: player.value.email,
-      },
-      update: false,
-    })
-    .then((res) => {
-      const player: Player = res.data;
-      store.commit("setPlayer", player);
-      showUpdatePlayerPopup.value = false;
-    })
-    .catch((error) => {
-      if (error.response && error.response.data && error.response.data.error) {
-        errorMessage.value = error.response.data.error;
-      } else {
-        errorMessage.value = "由于未知错误，加载失败……";
-      }
-    });
+  try {
+    const updated = await playerApi.refresh(player.value.id, player.value.email);
+    store.commit("setPlayer", updated);
+    showUpdatePlayerPopup.value = false;
+  } catch (error) {
+    errorMessage.value = extractApiError(error, "由于未知错误，加载失败……");
+  }
 };
 
 const logoutPlayer = () => {
@@ -350,8 +273,8 @@ const sortedPlays = computed(() => {
 
   // 按创建时间倒序排序
   return [...player.value.plays].sort((a, b) => {
-    const dateA = new Date(a.createdAt || a.created_at).getTime();
-    const dateB = new Date(b.createdAt || b.created_at).getTime();
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
     return dateB - dateA;
   });
 });

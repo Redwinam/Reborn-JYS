@@ -1,18 +1,2 @@
-import { State } from './index';
-
-export interface Player {
-  id: number, 
-  name: string,
-  email: string,
-  anonymous: boolean,
-  created_at: string,
-  updated_at: string,
-  plays: Play[]
-}
-
-export interface Play {
-  id: number,
-  player_id: number,
-  state: State
-}
-
+// 前端复用的玩家/存档契约类型，统一来自前后端共享定义，避免与后端漂移。
+export type { Player, PlaySummary, Play, PlayerResponse } from "../../shared/types";

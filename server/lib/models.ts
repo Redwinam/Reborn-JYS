@@ -1,35 +1,13 @@
 import { ApiError } from "./errors.js";
 import { generateId, getCurrentTimestamp, getRedis } from "./redis.js";
+import type { Player, Play, PlayerResponse } from "../../shared/types.js";
 
 const maxPlaysPerPlayer = 99;
 const inlineStateMaxBytes = 750_000;
 const stateChunkCharLength = 200_000;
 const maxStateBytes = 5_000_000;
 
-export interface Player {
-  id: number;
-  name: string;
-  email: string;
-  anonymous: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Play {
-  id: number;
-  playerId: number;
-  state: unknown;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface PlayerResponse extends Player {
-  plays: Array<{
-    id: number;
-    createdAt: string;
-    updatedAt: string;
-  }>;
-}
+export type { Player, Play, PlayerResponse };
 
 interface StateMeta {
   chunked: boolean;

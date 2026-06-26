@@ -18,7 +18,7 @@ import { purchaseItem, Inventory } from "./actions/purchaseItem";
 import { upgradeSkill, SkillLevelMapping } from "./actions/upgradeSkill";
 import { typeWriter, typeWriterPopup } from "./actions/typeWriter";
 
-import { Player } from "./player";
+import { PlayerResponse } from "./player";
 
 import { SAVE_VERSION, migrateSave } from "./migrations";
 import { GOLD_PRICE, GOLD_INTEREST_RATE, AGENCY_INCOME_RATE, START_YEAR, ROUNDS_PER_YEAR, SPECIAL_ITEMS } from "./constants";
@@ -122,7 +122,7 @@ export interface State {
   specialEndingAchievement: { name: string; desc: string } | null;
 
   textHistory: string[];
-  player: Player | null;
+  player: PlayerResponse | null;
 
   currentLyricIndex: number;
 
@@ -660,7 +660,7 @@ const mutations = {
     const { textHistory, ...otherData } = migrated;
     Object.assign(state, otherData);
   },
-  setPlayer(state: State, player: Player) {
+  setPlayer(state: State, player: PlayerResponse | null) {
     state.player = player;
   },
   resetGame(state: State) {
