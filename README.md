@@ -137,15 +137,15 @@ Freestyle 技能（共计28点）：
 -[x] 【十年】游戏进程达到10年。
 
 
-## 编译部署
+## 开发与部署
 
-```
-yarn build
-docker build -t reborn-jysx-image .
-docker save -o reborn-jysx-image.tar reborn-jysx-image
-docker load -i /mnt/JYSX/Reborn/reborn-jysx-image.tar
-docker run -d --name reborn-jysx-container -p 9147:80 reborn-jysx-image
+本地开发：
 
-docker stop reborn-jysx-container
-docker rm reborn-jysx-container
+```bash
+npm install
+npm run dev        # 启动开发服务器（/api 代理到线上后端）
+npm run test:run   # 运行测试（Vitest）
+npm run build      # 类型检查 + 构建到 dist/
 ```
+
+部署：前端与 `api/` 下的 Serverless Functions 一同部署在 Vercel，存档使用 Upstash Redis。推送到主分支即触发部署，无需手动构建镜像。

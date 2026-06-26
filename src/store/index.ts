@@ -21,6 +21,7 @@ import { typeWriter, typeWriterPopup } from "./actions/typeWriter";
 import { Player } from "./player";
 
 import { SAVE_VERSION, migrateSave } from "./migrations";
+import { GOLD_PRICE, GOLD_INTEREST_RATE, AGENCY_INCOME_RATE, START_YEAR, ROUNDS_PER_YEAR, SPECIAL_ITEMS } from "./constants";
 
 import { isTyping, showBreakupDialog, showGameEndDialog, showStartGameDialog } from "../components/composables/gameRefs";
 
@@ -132,7 +133,7 @@ export interface State {
 
 const state: State = {
   term: 1,
-  year: 2012,
+  year: START_YEAR,
   round: 1,
   totalRounds: 432,
   attributes: {
@@ -222,16 +223,14 @@ type UpdateAttributePayload = {
   value: number;
 };
 
-const goldPrice = 552;
-
 const mutations = {
   incrementRound(state: State) {
     state.round++;
-    state.year = Math.floor((state.round - 1) / 36) + 2012;
+    state.year = Math.floor((state.round - 1) / ROUNDS_PER_YEAR) + START_YEAR;
     if (state.year > 2024) {
-      state.year = 2012;
+      state.year = START_YEAR;
     }
-    state.attributes.money += Math.ceil(state.attributes.gold * 0.06 * goldPrice);
+    state.attributes.money += Math.ceil(state.attributes.gold * GOLD_INTEREST_RATE * GOLD_PRICE);
     if (state.girlfriend) {
       state.relationRound++;
     }
@@ -245,7 +244,7 @@ const mutations = {
         state.attributes.money = 0;
         state.attributes.gold = 2;
       } else if (state.signedAgency && value > 0) {
-        (state.attributes[attribute] as number) += value * 0.2;
+        (state.attributes[attribute] as number) += value * AGENCY_INCOME_RATE;
       } else {
         (state.attributes[attribute] as number) += value;
       }
@@ -391,11 +390,11 @@ const mutations = {
   },
   buyGold(state: State, payload: number) {
     state.attributes.gold += payload;
-    state.attributes.money -= goldPrice * payload;
+    state.attributes.money -= GOLD_PRICE * payload;
   },
   updateItem(state: State, payload: { itemName: string; quantity: number }) {
     const { itemName, quantity } = payload;
-    if (itemName === "麦克风大锤" || itemName === "恶魔「S」之链" || itemName === "反穿之甲" || itemName === "虚无之裤" || itemName === "黄色卡车" || itemName === "巴黎之靴") {
+    if ((SPECIAL_ITEMS as readonly string[]).includes(itemName)) {
       if (state.inventory[itemName] && state.inventory[itemName].quantity > 0) {
         state.inventory[itemName].quantity = 1;
       } else {
@@ -576,7 +575,7 @@ const mutations = {
   resetGameState(state: State, resetData: boolean) {
     state.term++;
     state.round = 1;
-    state.year = 2012;
+    state.year = START_YEAR;
     state.gameEnded = false;
     state.currentEndings = [];
     state.specialEndingAchievement = null;
@@ -667,7 +666,7 @@ const mutations = {
   resetGame(state: State) {
     state.term = 1;
     state.round = 1;
-    state.year = 2012;
+    state.year = START_YEAR;
     state.attributes = {
       divine: 0,
       talent: 0,

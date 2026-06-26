@@ -91,11 +91,12 @@ import { useStore } from "vuex";
 import Popup from "../components/Popup.vue";
 import PopupSub from "../components/PopupSub.vue";
 import { showBankPopup, showBuyGoldPopup, showSellGoldPopup, showRealEstatePopup, showStockMarketPopup, showInvestmentPopup, isTyping } from "./composables/gameRefs";
+import { GOLD_PRICE } from "../store/constants";
 
 const store = useStore();
 const attributes = computed(() => store.state.attributes);
 
-const goldPrice = 552; // 360
+const goldPrice = GOLD_PRICE;
 const goldAmount = ref(1);
 async function buyGold() {
   if (goldAmount.value * goldPrice <= attributes.value.money) {
