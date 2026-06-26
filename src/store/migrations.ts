@@ -28,3 +28,71 @@ export function migrateSave(raw: RawSave): RawSave {
   data.version = SAVE_VERSION;
   return data;
 }
+
+/**
+ * Phase 3b：把扁平的 v1 存档映射为命名空间 module 的 v2 嵌套结构。
+ *
+ * 根级保留元数据（version / player；textHistory 不入存档），5 个领域 module 承载游戏数据
+ * （ui module 不持久化）。当前为纯函数 + 测试先行，待 store 改为命名空间 module 后接入
+ * migrateSave 的迁移管线（v1 -> v2）。
+ */
+export function migrateV1toV2(flat: RawSave): RawSave {
+  const a: RawSave = flat ?? {};
+  return {
+    version: 2,
+    player: a.player ?? null,
+    gameLoop: {
+      term: a.term,
+      year: a.year,
+      round: a.round,
+      totalRounds: a.totalRounds,
+      gameEnded: a.gameEnded,
+      currentEndings: a.currentEndings,
+      specialEndingAchievement: a.specialEndingAchievement,
+      currentLyricIndex: a.currentLyricIndex,
+    },
+    character: {
+      attributes: a.attributes,
+      weak: a.weak,
+      drunk: a.drunk,
+      sleepHours: a.sleepHours,
+    },
+    relationship: {
+      girlfriend: a.girlfriend,
+      flirtCount: a.flirtCount,
+      accompanyCount: a.accompanyCount,
+      relationRound: a.relationRound,
+      breakupTimes: a.breakupTimes,
+      lastBreakupRound: a.lastBreakupRound,
+      seamlessRelation: a.seamlessRelation,
+    },
+    progress: {
+      unlockedFoods: a.unlockedFoods,
+      inventory: a.inventory,
+      lastSpecialItem: a.lastSpecialItem,
+      achievementStates: a.achievementStates,
+      unlockedAchievementConditions: a.unlockedAchievementConditions,
+      happenedEvents: a.happenedEvents,
+      battleResults: a.battleResults,
+      undergroundCount: a.undergroundCount,
+      tourCount: a.tourCount,
+      songs: a.songs,
+      songStages: a.songStages,
+      unlockedFeiSongs: a.unlockedFeiSongs,
+      unlockedVitamins: a.unlockedVitamins,
+      shards: a.shards,
+    },
+    business: {
+      signedAgency: a.signedAgency,
+      signedAgencyRound: a.signedAgencyRound,
+      goToAgencyTimes: a.goToAgencyTimes,
+      openFengyan: a.openFengyan,
+      artists: a.artists,
+      thisSeasonArtist: a.thisSeasonArtist,
+      realEstate: a.realEstate,
+      investedProjects: a.investedProjects,
+      investYearIncome: a.investYearIncome,
+      currentStock: a.currentStock,
+    },
+  };
+}
