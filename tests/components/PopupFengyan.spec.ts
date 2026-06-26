@@ -65,4 +65,21 @@ describe("PopupFengyan.vue", () => {
     expect(store.state.progress.inventory["冰箱"].quantity).toBe(1);
     expectNoUnknownVuexType(errorSpy);
   });
+
+  // 回归 bug2：原先用 thisSeasonArtist.move.artist（应为 .name）使「本季已锻炼则禁止派遣」
+  // 判定恒为 false。修复后，锻炼某艺人当季，其「派遣」按钮应被禁用。
+  it("本季锻炼某艺人后，其「派遣」按钮被禁用（move.name 修复）", async () => {
+    artist("丙丙").level = 1;
+    store.commit("business/resetThisSeasonArtist");
+    store.commit("updateAttribute", { attribute: "money", value: 1000000 });
+    wrapper = mount(PopupFengyan);
+
+    await clickButton("锻炼"); // 丙丙：本季 move = { name: 丙丙, action: 锻炼 }
+    await flushPromises();
+    expect(store.state.business.thisSeasonArtist.move).toEqual({ name: "丙丙", action: "锻炼" });
+
+    const dispatchBtn = wrapper.findAll("button").filter((b) => b.text() === "派遣")[0];
+    expect(dispatchBtn.attributes("disabled")).toBeDefined();
+    expectNoUnknownVuexType(errorSpy);
+  });
 });
