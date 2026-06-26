@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '../store'
 
 import { showStartGameDialog } from '../components/composables/gameRefs'
 

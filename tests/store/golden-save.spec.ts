@@ -13,14 +13,14 @@ describe("golden mid-game save", () => {
   it("加载黄金存档并保留关键字段", () => {
     store.commit("loadGameState", golden);
 
-    expect(store.state.term).toBe(golden.term);
-    expect(store.state.round).toBe(golden.round);
-    expect(store.state.year).toBe(golden.year);
-    expect(store.state.attributes.money).toBe(golden.attributes.money);
-    expect(store.state.attributes.skill.freestyleLevel).toBe(golden.attributes.skill.freestyleLevel);
-    expect(store.state.inventory["皮卡丘玩偶"].quantity).toBe(golden.inventory["皮卡丘玩偶"].quantity);
-    expect(store.state.songStages["浪漫主义"].completedStage).toBe("release");
-    expect(store.state.signedAgency).toBe(true);
+    expect(store.state.gameLoop.term).toBe(golden.term);
+    expect(store.state.gameLoop.round).toBe(golden.round);
+    expect(store.state.gameLoop.year).toBe(golden.year);
+    expect(store.state.character.attributes.money).toBe(golden.attributes.money);
+    expect(store.state.character.attributes.skill.freestyleLevel).toBe(golden.attributes.skill.freestyleLevel);
+    expect(store.state.progress.inventory["皮卡丘玩偶"].quantity).toBe(golden.inventory["皮卡丘玩偶"].quantity);
+    expect(store.state.progress.songStages["浪漫主义"].completedStage).toBe("release");
+    expect(store.state.business.signedAgency).toBe(true);
   });
 
   it("经过一次 保存->重置->读取 往返后关键字段不变", () => {
@@ -32,8 +32,8 @@ describe("golden mid-game save", () => {
     store.commit("resetGame");
     store.commit("loadGameState", snapshot);
 
-    expect(store.state.attributes.money).toBe(golden.attributes.money);
-    expect(store.state.inventory["皮卡丘玩偶"].quantity).toBe(golden.inventory["皮卡丘玩偶"].quantity);
-    expect(store.state.breakupTimes).toBe(golden.breakupTimes);
+    expect(store.state.character.attributes.money).toBe(golden.attributes.money);
+    expect(store.state.progress.inventory["皮卡丘玩偶"].quantity).toBe(golden.inventory["皮卡丘玩偶"].quantity);
+    expect(store.state.relationship.breakupTimes).toBe(golden.breakupTimes);
   });
 });

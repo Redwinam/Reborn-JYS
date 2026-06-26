@@ -7,14 +7,14 @@ describe("resetGame mutation（全新游戏）", () => {
   beforeEach(() => store.commit("resetGame"));
 
   it("回到第 1 周目、第 1 回合、2012 年，属性清零", () => {
-    expect(store.state.term).toBe(1);
-    expect(store.state.round).toBe(1);
-    expect(store.state.year).toBe(2012);
-    expect(store.state.attributes.money).toBe(0);
-    expect(store.state.attributes.energy).toBe(100);
-    expect(store.state.girlfriend).toBeNull();
-    expect(store.state.inventory).toEqual({});
-    expect(store.state.songs).toEqual([]);
+    expect(store.state.gameLoop.term).toBe(1);
+    expect(store.state.gameLoop.round).toBe(1);
+    expect(store.state.gameLoop.year).toBe(2012);
+    expect(store.state.character.attributes.money).toBe(0);
+    expect(store.state.character.attributes.energy).toBe(100);
+    expect(store.state.relationship.girlfriend).toBeNull();
+    expect(store.state.progress.inventory).toEqual({});
+    expect(store.state.progress.songs).toEqual([]);
   });
 });
 
@@ -23,22 +23,22 @@ describe("resetGameState mutation（新周目）", () => {
 
   it("resetData=true 时清空属性与收藏并 term+1", () => {
     store.commit("updateAttribute", { attribute: "talent", value: 100 });
-    store.commit("updateItem", { itemName: "皮卡丘玩偶", quantity: 3 });
-    const term = store.state.term;
+    store.commit("progress/updateItem", { itemName: "皮卡丘玩偶", quantity: 3 });
+    const term = store.state.gameLoop.term;
 
     store.commit("resetGameState", true);
-    expect(store.state.term).toBe(term + 1);
-    expect(store.state.round).toBe(1);
-    expect(store.state.attributes.talent).toBe(0);
-    expect(store.state.inventory).toEqual({});
+    expect(store.state.gameLoop.term).toBe(term + 1);
+    expect(store.state.gameLoop.round).toBe(1);
+    expect(store.state.character.attributes.talent).toBe(0);
+    expect(store.state.progress.inventory).toEqual({});
   });
 
   it("resetData=false 时把 20% 属性带入新周目，心情归零、体力满", () => {
     store.commit("updateAttribute", { attribute: "talent", value: 100 });
 
     store.commit("resetGameState", false);
-    expect(store.state.attributes.talent).toBe(20); // floor(100 * 0.2)
-    expect(store.state.attributes.mood).toBe(0);
-    expect(store.state.attributes.energy).toBe(store.state.attributes.maxEnergy);
+    expect(store.state.character.attributes.talent).toBe(20); // floor(100 * 0.2)
+    expect(store.state.character.attributes.mood).toBe(0);
+    expect(store.state.character.attributes.energy).toBe(store.state.character.attributes.maxEnergy);
   });
 });

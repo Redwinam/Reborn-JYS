@@ -34,13 +34,13 @@ describe("performAction 主路径", () => {
   it("回家：进入在家状态、不推进回合", async () => {
     await store.dispatch("performAction", "回家");
     expect(isAtHome.value).toBe(true);
-    expect(store.state.round).toBe(1);
+    expect(store.state.gameLoop.round).toBe(1);
   });
 
   it("外出：进入外出状态、不推进回合", async () => {
     await store.dispatch("performAction", "外出");
     expect(isGoingOut.value).toBe(true);
-    expect(store.state.round).toBe(1);
+    expect(store.state.gameLoop.round).toBe(1);
   });
 
   it("写歌：打开写歌弹窗", async () => {
@@ -50,37 +50,37 @@ describe("performAction 主路径", () => {
 
   it("赚钱：体力-10、金钱+100，并推进回合", async () => {
     await store.dispatch("performAction", "赚钱");
-    expect(store.state.attributes.money).toBe(100);
-    expect(store.state.attributes.energy).toBe(90);
-    expect(store.state.round).toBe(2);
+    expect(store.state.character.attributes.money).toBe(100);
+    expect(store.state.character.attributes.energy).toBe(90);
+    expect(store.state.gameLoop.round).toBe(2);
   });
 
   it("打游戏：游戏技能+1、心情+20，并推进回合", async () => {
     await store.dispatch("performAction", "打游戏");
-    expect(store.state.attributes.skill.gaming).toBe(1);
-    expect(store.state.attributes.mood).toBe(20);
-    expect(store.state.round).toBe(2);
+    expect(store.state.character.attributes.skill.gaming).toBe(1);
+    expect(store.state.character.attributes.mood).toBe(20);
+    expect(store.state.gameLoop.round).toBe(2);
   });
 
   it("睡觉休息：累计睡眠+17、体力封顶到上限，并推进回合", async () => {
     await store.dispatch("performAction", "睡觉休息");
-    expect(store.state.sleepHours).toBe(17);
-    expect(store.state.attributes.energy).toBe(store.state.attributes.maxEnergy);
-    expect(store.state.round).toBe(2);
+    expect(store.state.character.sleepHours).toBe(17);
+    expect(store.state.character.attributes.energy).toBe(store.state.character.attributes.maxEnergy);
+    expect(store.state.gameLoop.round).toBe(2);
   });
 
   it("出去鬼混（无女友、分手次数不足）：搭讪一次 flirtCount+1、魅力+10，并推进回合", async () => {
     await store.dispatch("performAction", "出去鬼混");
-    expect(store.state.flirtCount).toBe(1);
-    expect(store.state.attributes.charm).toBe(10);
-    expect(store.state.round).toBe(2);
+    expect(store.state.relationship.flirtCount).toBe(1);
+    expect(store.state.character.attributes.charm).toBe(10);
+    expect(store.state.gameLoop.round).toBe(2);
   });
 });
 
 describe("incrementRound action", () => {
   it("从第 1 回合推进到第 2 回合，年份不变（2012）", async () => {
     await store.dispatch("incrementRound");
-    expect(store.state.round).toBe(2);
-    expect(store.state.year).toBe(2012);
+    expect(store.state.gameLoop.round).toBe(2);
+    expect(store.state.gameLoop.year).toBe(2012);
   });
 });

@@ -37,9 +37,9 @@ export async function eatFood(
   },
   food: string
 ) {
-  const selectedFood = context.state.unlockedFoods.find((unlockedFood: Food) => unlockedFood.name === food);
+  const selectedFood = context.state.progress.unlockedFoods.find((unlockedFood: Food) => unlockedFood.name === food);
   if (selectedFood) {
-    if (context.state.attributes.money >= selectedFood.cost) {
+    if (context.state.character.attributes.money >= selectedFood.cost) {
       context.commit("updateAttribute", { attribute: "money", value: -selectedFood.cost });
       context.commit("updateAttribute", { attribute: "energy", value: selectedFood.energy });
       await context.dispatch("typeWriterPopup", "姜云升吃了一顿" + selectedFood.name + "，摸了摸腹肌。");
@@ -58,11 +58,11 @@ export async function packFood(
   payload: { food: string; quantity: number }
 ) {
   const { food, quantity } = payload;
-  const selectedFood = context.state.unlockedFoods.find((unlockedFood: Food) => unlockedFood.name === food);
+  const selectedFood = context.state.progress.unlockedFoods.find((unlockedFood: Food) => unlockedFood.name === food);
   if (selectedFood) {
-    if (context.state.attributes.money >= selectedFood.cost * quantity) {
+    if (context.state.character.attributes.money >= selectedFood.cost * quantity) {
       context.commit("updateAttribute", { attribute: "money", value: -selectedFood.cost * quantity });
-      context.commit("packFood", { food, quantity });
+      context.commit("progress/packFood", { food, quantity });
       await context.dispatch("typeWriterPopup", "姜云升打包了" + quantity + "份" + selectedFood.name + "，真能吃啊。");
     } else {
       await context.dispatch("typeWriterPopup", "抱歉，姜云升的钱不够，买不起" + quantity + "份" + selectedFood.name + "。");
@@ -81,16 +81,16 @@ export async function eatPackedFood(
   payload: { food: string; quantity: number }
 ) {
   const { food, quantity } = payload;
-  const selectedFood = context.state.unlockedFoods.find((unlockedFood: Food) => unlockedFood.name === food);
+  const selectedFood = context.state.progress.unlockedFoods.find((unlockedFood: Food) => unlockedFood.name === food);
   if (selectedFood) {
     context.commit("updateAttribute", { attribute: "energy", value: selectedFood.energy * quantity });
-    context.commit("decreaseInventory", { itemName: food, quantity });
+    context.commit("progress/decreaseInventory", { itemName: food, quantity });
     await context.dispatch("typeWriterPopup", `姜云升吃掉了${quantity}份打包的${food}，摸了摸腹肌。`);
   } else {
     if (food == "小笼包") {
       context.commit("updateAttribute", { attribute: "energy", value: 10 * quantity });
       context.commit("updateAttribute", { attribute: "mood", value: 10 * quantity });
-      context.commit("decreaseInventory", { itemName: food, quantity });
+      context.commit("progress/decreaseInventory", { itemName: food, quantity });
       await context.dispatch("typeWriterPopup", `姜云升吃掉了${quantity}笼小笼包，提了提裤子。<small>体力+${10 * quantity}，心情+${10 * quantity}。</small>`);
     } else {
       await context.dispatch("typeWriterPopup", "无法在物品栏中找到这份食物。");
@@ -130,7 +130,7 @@ export async function drinkDrink(
       totalCost -= selectedDrink.cost / 2; // 第二杯半价
     }
 
-    if (context.state.attributes.money >= totalCost) {
+    if (context.state.character.attributes.money >= totalCost) {
       context.commit("updateAttribute", { attribute: "money", value: -totalCost });
       context.commit("updateAttribute", { attribute: "energy", value: selectedDrink.energy * amount });
       context.commit("updateAttribute", { attribute: "mood", value: selectedDrink.mood * amount });
@@ -145,7 +145,7 @@ export async function drinkDrink(
       } else if (selectedDrink.type === "sweet") {
         message += "，心情好好。";
       } else if (selectedDrink.type === "wine") {
-        context.commit("updateDrunk", amount);
+        context.commit("character/updateDrunk", amount);
         if (amount == 1) {
           message += "，当场喝醉。";
         } else {

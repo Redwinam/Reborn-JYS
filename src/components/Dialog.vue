@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { useStore } from "vuex";
+import { useStore } from '../store';
 import { showStartGameDialog } from "./composables/gameRefs";
 
 const store = useStore();

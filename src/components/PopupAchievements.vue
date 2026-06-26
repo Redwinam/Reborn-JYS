@@ -17,7 +17,7 @@
       </template>
     </div>
 
-    <div v-if="store.state.shards && store.state.shards.length > 0">
+    <div v-if="store.state.progress.shards && store.state.progress.shards.length > 0">
       <h3>「日出·晚霞」</h3>
       <ul class="shards">
         <li class="shard" v-for="shard in allShards" @click="collectShard(shard) && ((shardName = shard), (showShardPopup = true))">
@@ -32,7 +32,7 @@
   </div>
 
   <PopupSub :visible="showAchievementNotePopup" @close="showAchievementNotePopup = false" class="achievement-note">
-    <p class="desc">点击成就可以查看成就提示。一周目后每周目游戏结束后可以点击查看+1条未解锁的成就🏆的具体达成条件提示，当前剩余可解锁成就提示数量：{{ term - store.state.unlockedAchievementConditions.length - 1 }}。</p>
+    <p class="desc">点击成就可以查看成就提示。一周目后每周目游戏结束后可以点击查看+1条未解锁的成就🏆的具体达成条件提示，当前剩余可解锁成就提示数量：{{ term - store.state.progress.unlockedAchievementConditions.length - 1 }}。</p>
     <div class="achievement-note-buttons">
       <button class="confirm-button" @click="showAchievementNotePopup = false">了解！</button>
     </div>
@@ -40,13 +40,13 @@
 
   <PopupSub :visible="showUnlockAchievementConditionConfirmPopup" @close="showUnlockAchievementConditionConfirmPopup = false" class="achievement-note">
     <p class="desc" v-if="term > 1">
-      每周目游戏结束后可以查看+1条未解锁的成就🏆的具体达成条件提示，当前剩余可解锁成就提示数量：{{ term - store.state.unlockedAchievementConditions.length - 1 }}。<template
-        v-if="term - store.state.unlockedAchievementConditions.length - 1"
+      每周目游戏结束后可以查看+1条未解锁的成就🏆的具体达成条件提示，当前剩余可解锁成就提示数量：{{ term - store.state.progress.unlockedAchievementConditions.length - 1 }}。<template
+        v-if="term - store.state.progress.unlockedAchievementConditions.length - 1"
         >请问要查看【{{ currentUnlockConditionAchievement.name }}】的成就提示吗？</template
       >
     </p>
     <p class="desc" v-else>一周目后每周目游戏结束后可以点击查看+1条未解锁的成就🏆的具体达成条件提示，当前可以先继续游玩随机体验噢！</p>
-    <div class="achievement-note-buttons" v-if="term - store.state.unlockedAchievementConditions.length > 1">
+    <div class="achievement-note-buttons" v-if="term - store.state.progress.unlockedAchievementConditions.length > 1">
       <button class="confirm-button" @click="unlockAchievementCondition(currentUnlockConditionAchievement)">确认</button>
       <button class="cancel-button" @click="showUnlockAchievementConditionConfirmPopup = false">取消</button>
     </div>
@@ -65,15 +65,15 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useStore } from "vuex";
+import { useStore } from '../store';
 
 import PopupSub from "../components/PopupSub.vue";
 import { achievements, Achievement, AchievementState } from "../store/achievements";
 import { showAchievementNotePopup, showShardPopup, shardName } from "../components/composables/gameRefs";
 
 const store = useStore();
-const achievementStates = computed(() => store.state.achievementStates);
-const term = computed(() => store.state.term);
+const achievementStates = computed(() => store.state.progress.achievementStates);
+const term = computed(() => store.state.gameLoop.term);
 
 const UnlockedAchievementCount = store.getters.UnlockedAchievementCount;
 
@@ -101,7 +101,7 @@ const classifiedAchievements = computed(() => {
     const isAchUnlocked = store.getters.unlockedAchievement(achievement.name);
     if (isAchUnlocked) {
       achievement.unlocked = true;
-      achievement.unlockTerm = store.state.achievementStates.find((ach: AchievementState) => ach.name === achievement.name)?.unlockTerm;
+      achievement.unlockTerm = store.state.progress.achievementStates.find((ach: AchievementState) => ach.name === achievement.name)?.unlockTerm;
     }
     if (achievement.ending) {
       groups["结局成就"].push(achievement);
@@ -122,7 +122,7 @@ const currentUnlockConditionAchievement = ref({} as Achievement);
 const showAchievementCondition = (achievement: Achievement) => {
   currentUnlockConditionAchievement.value = achievement;
   const isAchUnlocked = store.getters.unlockedAchievement(achievement.name);
-  if (isAchUnlocked || store.state.unlockedAchievementConditions.includes(achievement.name)) {
+  if (isAchUnlocked || store.state.progress.unlockedAchievementConditions.includes(achievement.name)) {
     showAchievementConditionPopup.value = true;
   } else {
     showUnlockAchievementConditionConfirmPopup.value = true;
@@ -137,7 +137,7 @@ const unlockAchievementCondition = (achievement: Achievement) => {
 
 const allShards = ["日出", "晚霞和云", "秋天的第一片晚霞", "晚霞分享艺术家"];
 const collectShard = (shardName: string) => {
-  return store.state.shards.includes(shardName);
+  return store.state.progress.shards.includes(shardName);
 };
 </script>
 

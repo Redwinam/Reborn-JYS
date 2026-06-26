@@ -32,7 +32,7 @@ afterEach(() => {
 describe("goToLocation 主要地点", () => {
   it("去吃点东西：解锁一种新食物并打开食物弹窗", async () => {
     await store.dispatch("goToLocation", "去吃点东西");
-    expect(store.state.unlockedFoods.length).toBe(1);
+    expect(store.state.progress.unlockedFoods.length).toBe(1);
     expect(showFoodPopup.value).toBe(true);
   });
 
@@ -48,25 +48,25 @@ describe("goToLocation 主要地点", () => {
 
   it("去剪头发（没钱）：给出提示、不扣钱不推进回合", async () => {
     await store.dispatch("goToLocation", "去剪头发");
-    expect(store.state.attributes.money).toBe(0);
-    expect(store.state.attributes.charm).toBe(0);
-    expect(store.state.round).toBe(1);
+    expect(store.state.character.attributes.money).toBe(0);
+    expect(store.state.character.attributes.charm).toBe(0);
+    expect(store.state.gameLoop.round).toBe(1);
   });
 
   it("去剪头发（有钱、无墨镜）：花费100、魅力-10、推进回合", async () => {
     store.commit("updateAttribute", { attribute: "money", value: 200 });
     await store.dispatch("goToLocation", "去剪头发");
-    expect(store.state.attributes.money).toBe(100);
-    expect(store.state.attributes.charm).toBe(-10);
-    expect(store.state.round).toBe(2);
+    expect(store.state.character.attributes.money).toBe(100);
+    expect(store.state.character.attributes.charm).toBe(-10);
+    expect(store.state.gameLoop.round).toBe(2);
   });
 
   it("Underground（首次）：体力-25、红黑人气+1、地下次数+1、推进回合", async () => {
     await store.dispatch("goToLocation", "Underground");
-    expect(store.state.attributes.energy).toBe(75);
-    expect(store.state.attributes.popularity.red).toBe(1);
-    expect(store.state.attributes.popularity.black).toBe(1);
-    expect(store.state.undergroundCount).toBe(1);
-    expect(store.state.round).toBe(2);
+    expect(store.state.character.attributes.energy).toBe(75);
+    expect(store.state.character.attributes.popularity.red).toBe(1);
+    expect(store.state.character.attributes.popularity.black).toBe(1);
+    expect(store.state.progress.undergroundCount).toBe(1);
+    expect(store.state.gameLoop.round).toBe(2);
   });
 });

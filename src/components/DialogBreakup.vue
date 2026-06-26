@@ -10,14 +10,14 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '../store'
 
 import { showBreakupDialog } from '../components/composables/gameRefs'
 
 const store = useStore()
 
 const randomBreakupReason = computed(() => {
-  const currentGirlfriend = store.state.girlfriend
+  const currentGirlfriend = store.state.relationship.girlfriend
   if (!currentGirlfriend) {
     return ''
   }
@@ -30,14 +30,14 @@ async function handleBreakup(choice: string) {
   switch (choice) {
     case '挽回':
       if (Math.random() < 0.520) {
-        store.commit('resetAccompanyCount');
-        store.commit('resetRelationRound');
+        store.commit('relationship/resetAccompanyCount');
+        store.commit('relationship/resetRelationRound');
         store.commit('updateAttribute', { attribute: 'charm', value: 20 })
         await store.dispatch('typeWriter', '经过努力，你成功挽回了你们的感情。姜云升魅力+20！')
       } else {
         store.commit('setGirlfriend', null);
-        store.commit('resetAccompanyCount');
-        store.commit('resetRelationRound');
+        store.commit('relationship/resetAccompanyCount');
+        store.commit('relationship/resetRelationRound');
         store.commit('updateAttribute', { attribute: 'charm', value: -20 })
         await store.dispatch('typeWriter', '尽管你努力挽回，但姜云升最终还是被甩了。姜云升魅力-20。')
         await breakupTimesAchievement()
@@ -47,13 +47,13 @@ async function handleBreakup(choice: string) {
     case '沉默':
       // 添加随机选择是否挽回感情的逻辑
       if (Math.random() < 0.5) {
-        store.commit('resetAccompanyCount')
-        store.commit('resetRelationRound');
+        store.commit('relationship/resetAccompanyCount')
+        store.commit('relationship/resetRelationRound');
         await store.dispatch('typeWriter', '你的沉默让你们的感情得以修复。在命运的指引下，你没被甩。')
       } else {
         store.commit('setGirlfriend', null)
-        store.commit('resetAccompanyCount')
-        store.commit('resetRelationRound');
+        store.commit('relationship/resetAccompanyCount')
+        store.commit('relationship/resetRelationRound');
         await store.dispatch('typeWriter', '你的沉默让你们之间的感情破裂。在命运的指引下，姜云升被甩了。')
         await breakupTimesAchievement()
       }
@@ -61,8 +61,8 @@ async function handleBreakup(choice: string) {
 
     case '拜拜就拜拜':
       store.commit('setGirlfriend', null)
-      store.commit('resetAccompanyCount')
-      store.commit('resetRelationRound');
+      store.commit('relationship/resetAccompanyCount')
+      store.commit('relationship/resetRelationRound');
       await store.dispatch('typeWriter', '你放手了，选择了拜拜就拜拜。你现在没有女朋友了。')
       await breakupTimesAchievement()
       break
@@ -70,7 +70,7 @@ async function handleBreakup(choice: string) {
 }
 
 async function breakupTimesAchievement() {
-  if (store.state.breakupTimes >= 10) {
+  if (store.state.relationship.breakupTimes >= 10) {
     const isAchUnlocked = store.getters.unlockedAchievement('拜拜就拜拜');
     if (!isAchUnlocked) {
       store.commit('unlockAchievement', '拜拜就拜拜');

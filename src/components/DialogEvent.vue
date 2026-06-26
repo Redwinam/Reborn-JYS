@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { useStore } from "vuex";
+import { useStore } from '../store';
 
 import { specialEventDetail } from "../store/actions/specialEvent";
 import { showEventDialog } from "./composables/gameRefs";

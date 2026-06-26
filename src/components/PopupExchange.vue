@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { useStore } from "vuex";
+import { useStore } from '../store';
 import { showBankPopup, showRealEstatePopup, showStockMarketPopup, showInvestmentPopup, showExchangePopup, isTyping } from './composables/gameRefs';
 
 const store = useStore();

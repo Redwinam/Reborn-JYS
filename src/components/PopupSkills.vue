@@ -13,10 +13,10 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useStore } from "vuex";
+import { useStore } from '../store';
 
 const store = useStore();
-const attributes = computed(() => store.state.attributes);
+const attributes = computed(() => store.state.character.attributes);
 </script>
 
 <style scoped>

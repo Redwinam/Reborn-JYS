@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useStore } from "vuex";
+import { useStore } from '../store';
 
 import PopupSub from "../components/PopupSub.vue";
 import Popup from "../components/Popup.vue";
@@ -49,7 +49,7 @@ const FightLevelMapping = [
 ];
 
 const store = useStore();
-const fight = computed(() => store.state.attributes.fight);
+const fight = computed(() => store.state.character.attributes.fight);
 
 // 根据fight.level
 const currentFightLevelIndex = computed(() => {
@@ -120,11 +120,11 @@ const specialItems = [
   },
 ] as SpecialItem[];
 
-// 通过(store.state.inventory[itemName] 判断上面的装备有几项
+// 通过(store.state.progress.inventory[itemName] 判断上面的装备有几项
 const specialItemCount = () => {
   let count = 0;
   for (let i = 0; i < specialItems.length; i++) {
-    if (store.state.inventory[specialItems[i].name]) {
+    if (store.state.progress.inventory[specialItems[i].name]) {
       count++;
     }
   }
@@ -134,17 +134,17 @@ const specialItemCount = () => {
 const allSpecialItemEffects = computed(() => {
   const effects: string[] = [];
   for (let i = 0; i < specialItems.length; i++) {
-    if (store.state.inventory[specialItems[i].name]) {
+    if (store.state.progress.inventory[specialItems[i].name]) {
       effects.push(...specialItems[i].effect);
     }
   }
   return effects;
 });
-// 从store.state.lastSpecialItem 即为 ItemName
-const lastSpecialItem = computed(() => store.state.lastSpecialItem);
+// 从store.state.progress.lastSpecialItem 即为 ItemName
+const lastSpecialItem = computed(() => store.state.progress.lastSpecialItem);
 
 // store.state.daoCount[index] 是否等于13
-const lastFight = () => computed(() => store.state.attributes.fight.level === 81);
+const lastFight = () => computed(() => store.state.character.attributes.fight.level === 81);
 async function dao(action: string) {
   showDaoPopup.value = false;
 
@@ -188,7 +188,7 @@ async function dao(action: string) {
         store.commit("updateAttribute", { attribute: "fightLevel", value: 1 });
         store.commit("updateAttribute", { attribute: "energy", value: -60 });
         store.commit("updateAttribute", { attribute: "divine", value: 1 });
-        await store.dispatch("typeWriter", `这是姜云升第一次来到这座山里，一项神秘的属性值增加了。<small>姜云升的等级+1，当前等级为${store.state.attributes.fight.level}级</small>`);
+        await store.dispatch("typeWriter", `这是姜云升第一次来到这座山里，一项神秘的属性值增加了。<small>姜云升的等级+1，当前等级为${store.state.character.attributes.fight.level}级</small>`);
         await store.dispatch("incrementRound");
 
         return;
@@ -200,7 +200,7 @@ async function dao(action: string) {
           store.commit("updateAttribute", { attribute: "fightLevel", value: 1 });
           store.commit("updateAttribute", { attribute: "energy", value: -60 });
           store.commit("updateAttribute", { attribute: "divine", value: 5 * specialItemCount() });
-          await store.dispatch("typeWriter", `${randomEffect}。<small>姜云升的神秘属性+${5 * specialItemCount()}，等级+1，当前等级为${store.state.attributes.fight.level}级</small>`);
+          await store.dispatch("typeWriter", `${randomEffect}。<small>姜云升的神秘属性+${5 * specialItemCount()}，等级+1，当前等级为${store.state.character.attributes.fight.level}级</small>`);
         } else {
           await store.dispatch("typeWriter", `好奇心驱使姜云升想再进山里看看，可是前方敌人过于强大，生命值为6的姜云升只有收集更多的装备才能前行啦！`);
           return;
@@ -217,7 +217,7 @@ async function dao(action: string) {
             await store.dispatch(
               "typeWriter",
               `姜云升获得了新的道具${lastSpecialItem.value}——${randomEffect}。姜云升探索到了山的第${FightLevelMapping[currentFightLevelIndex.value].level}层。<small>姜云升的神秘属性+90，等级+5，当前等级为${
-                store.state.attributes.fight.level
+                store.state.character.attributes.fight.level
               }级</small>`
             );
           }

@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '../store'
 
 import { showUnsignAgencyDialog } from '../components/composables/gameRefs'
 
@@ -41,9 +41,9 @@ const handleUnsignAgency = async (unsignAgencyOption: string) => {
     await store.dispatch('waitAndType', 1000)
 
     // 如果当前money<0
-    if (store.state.money > 0) {
-      store.commit('updateAttribute', { attribute: 'money', value: -store.state.money })
-      await store.dispatch('typeWriter', `姜云升支付了所有的金钱${store.state.money}元演艺事业成本作为合同解约金。`)
+    if ((store.state as any).money > 0) {
+      store.commit('updateAttribute', { attribute: 'money', value: -(store.state as any).money })
+      await store.dispatch('typeWriter', `姜云升支付了所有的金钱${(store.state as any).money}元演艺事业成本作为合同解约金。`)
       await store.dispatch('waitAndType', 1000)
     } else {
       await store.dispatch('typeWriter', `姜云升没能支付所有的解约金，公司没有同意解约。`)

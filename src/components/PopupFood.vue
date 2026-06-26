@@ -1,6 +1,6 @@
 <template>
   <div class="food-list">
-    <div class="food-item" v-for="food in unlockedFoods" :key="food.id">
+    <div class="food-item" v-for="food in unlockedFoods" :key="(food as any).id">
       <div class="item-info">
         <div class="food-meta">
           <p>{{ food.name }}</p>
@@ -39,13 +39,13 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useStore } from "vuex";
+import { useStore } from '../store';
 
 import PopupSub from "../components/PopupSub.vue";
 
 const store = useStore();
 
-const unlockedFoods = computed(() => store.state.unlockedFoods);
+const unlockedFoods = computed(() => store.state.progress.unlockedFoods);
 
 const eatFood = async (food: string) => {
   await store.dispatch("eatFood", food);

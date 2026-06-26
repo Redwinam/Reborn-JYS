@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useStore } from "vuex";
+import { useStore } from '../store';
 
 import PopupSub from "../components/PopupSub.vue";
 import { showUndergroundPopup, showShardPopup, shardName } from "./composables/gameRefs";
@@ -35,13 +35,13 @@ const tourStation = [
   { name: "命運ONLINE", station: ["广州", "成都", "杭州", "长沙", "沈阳", "福州", "厦门", "武汉", "宁波", "郑州", "北京", "上海", "深圳"], intro: "槐序之己，透丙露癸。一生狂放，何必钱塘潮信。我必是我。" },
 ];
 
-// store.state.tourCount[index] 是否等于13
-const finishTour = (index: number) => computed(() => store.state.tourCount[index] === 13);
+// store.state.progress.tourCount[index] 是否等于13
+const finishTour = (index: number) => computed(() => store.state.progress.tourCount[index] === 13);
 async function tour(index: number) {
   showUndergroundPopup.value = false;
 
-  store.commit("incrementTourCount", index);
-  const currentTourCount = computed(() => store.state.tourCount[index]);
+  store.commit("progress/incrementTourCount", index);
+  const currentTourCount = computed(() => store.state.progress.tourCount[index]);
 
   store.commit("updateAttribute", { attribute: "money", value: +(index === 0 ? 10000 : 100000) });
   store.commit("updateAttribute", { attribute: "red", value: +(index === 0 ? 1000 : 3000) });
@@ -49,31 +49,31 @@ async function tour(index: number) {
   let gift = [];
   // 获得随机数量的粉丝的信
   const fansLetter = Math.floor(Math.random() * 10) + 1;
-  store.commit("updateItem", { itemName: "粉丝的信", quantity: fansLetter });
+  store.commit("progress/updateItem", { itemName: "粉丝的信", quantity: fansLetter });
   if (fansLetter > 0) gift.push(`粉丝的信×${fansLetter}`);
 
   // 玫瑰花
   const rose = Math.floor(Math.random() * 10) + 1;
-  store.commit("updateItem", { itemName: "玫瑰花", quantity: rose });
+  store.commit("progress/updateItem", { itemName: "玫瑰花", quantity: rose });
   if (rose > 0) gift.push(`玫瑰花×${rose}`);
 
   // 皮卡丘玩偶
   const pikachuDoll = Math.floor(Math.random() * 5) + 1;
-  store.commit("updateItem", { itemName: "皮卡丘玩偶", quantity: pikachuDoll });
+  store.commit("progress/updateItem", { itemName: "皮卡丘玩偶", quantity: pikachuDoll });
   if (pikachuDoll > 0) gift.push(`皮卡丘玩偶×${pikachuDoll}`);
 
   // 再index=0最后一次巡演获得 皮卡丘化石×1、大戒指×1、
   if (index === 0 && currentTourCount.value === 13) {
-    store.commit("updateItem", { itemName: "皮卡丘化石", quantity: 1 });
-    store.commit("updateItem", { itemName: "大戒指", quantity: 1 });
+    store.commit("progress/updateItem", { itemName: "皮卡丘化石", quantity: 1 });
+    store.commit("progress/updateItem", { itemName: "大戒指", quantity: 1 });
     gift.push("皮卡丘化石×1", "大戒指×1");
   }
 
   // index=1粉丝的画、粉丝打磨的锤子
   if (index === 1 && currentTourCount.value === 13) {
-    store.commit("updateItem", { itemName: "粉丝的画", quantity: 1 });
-    store.commit("updateItem", { itemName: "粉丝打磨的锤子", quantity: 1 });
-    store.commit("updateItem", { itemName: "黄色卡车", quantity: 1 });
+    store.commit("progress/updateItem", { itemName: "粉丝的画", quantity: 1 });
+    store.commit("progress/updateItem", { itemName: "粉丝打磨的锤子", quantity: 1 });
+    store.commit("progress/updateItem", { itemName: "黄色卡车", quantity: 1 });
     gift.push("粉丝的画×1", "粉丝打磨的锤子×1", "黄色卡车×1");
   }
 
@@ -107,11 +107,11 @@ const activity = async (activityName: string) => {
       store.commit("updateAttribute", { attribute: "charm", value: +30 });
       store.commit("updateAttribute", { attribute: "money", value: +20000 });
       store.commit("updateAttribute", { attribute: "red", value: +1000 });
-      if (store.state.attributes.skill.freestyleLevel !== "SSS") {
+      if (store.state.character.attributes.skill.freestyleLevel !== "SSS") {
         store.commit("updateAttribute", { attribute: "freestyle", value: 1 });
         await store.dispatch("typeWriter", [
           "姜云升用1个月的时间参加了一档说唱类综艺节目，又是一个不一样的他。<small>姜云升才华+30，魅力+30，金钱+20000，人气+1000freestyle技能值+1，当前freestyle技能等级为【" +
-            store.state.attributes.skill.freestyleLevel +
+            store.state.character.attributes.skill.freestyleLevel +
             "】</small>",
         ]);
       } else {
@@ -193,34 +193,34 @@ const activity = async (activityName: string) => {
         if (musicFestival == "氧气BAOBAO音乐节") {
           await store.dispatch("typeWriter", festivalWord);
           await store.dispatch("waitAndType", 600);
-          store.commit("packFood", { food: "小笼包", quantity: 6 });
+          store.commit("progress/packFood", { food: "小笼包", quantity: 6 });
           await store.dispatch("typeWriter", `姜云升收到了主办方的小笼包！很喜欢吃！`);
           await store.dispatch("waitAndType", 600);
-          store.commit("updateItem", { itemName: "大旗", quantity: bigFlag });
+          store.commit("progress/updateItem", { itemName: "大旗", quantity: bigFlag });
           await store.dispatch("typeWriter", `姜云升收到了粉丝签满名字的${bigFlag}面大旗，祝大家「暴富」！<small>姜云升才华+20，魅力+20，金钱+200000，红人气+600，黑人气-200。</small>`);
-        } else if (musicFestival == "乐向潮见音乐嘉年华" && !store.state.inventory["水枪"]) {
+        } else if (musicFestival == "乐向潮见音乐嘉年华" && !store.state.progress.inventory["水枪"]) {
           await store.dispatch("typeWriter", festivalWord);
           await store.dispatch("waitAndType", 600);
-          store.commit("updateItem", { itemName: "水枪", quantity: 1 });
+          store.commit("progress/updateItem", { itemName: "水枪", quantity: 1 });
           await store.dispatch("typeWriter", `姜云升收到了朋友送的一把水枪🔫！BiuBiuBiu！超开心！`);
           await store.dispatch("waitAndType", 600);
-          store.commit("updateItem", { itemName: "大旗", quantity: bigFlag });
+          store.commit("progress/updateItem", { itemName: "大旗", quantity: bigFlag });
           await store.dispatch("typeWriter", `姜云升收到了粉丝签满名字的${bigFlag}面大旗，祝大家「暴富」！<small>姜云升才华+20，魅力+20，金钱+200000，红人气+600，黑人气-200。</small>`);
         } else {
-          store.commit("updateItem", { itemName: "大旗", quantity: bigFlag });
+          store.commit("progress/updateItem", { itemName: "大旗", quantity: bigFlag });
           festivalWord.push(`姜云升收到了粉丝签满名字的${bigFlag}面大旗，祝大家「暴富」！<small>姜云升才华+20，魅力+20，金钱+200000，红人气+600，黑人气-200。</small>`);
           await store.dispatch("typeWriter", festivalWord);
         }
       }
 
       const allAfterglows = ["晚霞和云", "秋天的第一片晚霞", "晚霞分享艺术家"];
-      const unCollectedShards = allAfterglows.filter((shard) => !store.state.shards.includes(shard));
+      const unCollectedShards = allAfterglows.filter((shard) => !store.state.progress.shards.includes(shard));
 
       if (unCollectedShards.length > 0 && Math.random() < 0.2) {
         await store.dispatch("waitAndType", 600);
         const randomIndex = Math.floor(Math.random() * unCollectedShards.length);
         // store.commit  collectShard(state: State, shard: string) {
-        store.commit("collectShard", unCollectedShards[randomIndex]);
+        store.commit("progress/collectShard", unCollectedShards[randomIndex]);
         shardName.value = unCollectedShards[randomIndex];
         await store.dispatch("typeWriter", `你在音乐节演出的旅途中发现了一片晚霞碎片……`);
         await store.dispatch("waitAndType", 600);

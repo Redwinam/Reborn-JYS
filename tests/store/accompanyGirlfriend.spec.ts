@@ -28,16 +28,16 @@ afterEach(() => {
 describe("accompanyGirlfriend", () => {
   it("没有女朋友时不改变陪伴计数", async () => {
     await store.dispatch("accompanyGirlfriend");
-    expect(store.state.accompanyCount).toBe(0);
+    expect(store.state.relationship.accompanyCount).toBe(0);
   });
 
   it("首次陪伴：体力-50、进入虚弱、陪伴计数+1、好感属性提升", async () => {
     store.commit("setGirlfriend", { type: "学姐", effect: "charm", breakupReasons: [] });
     await store.dispatch("accompanyGirlfriend");
-    expect(store.state.accompanyCount).toBe(1);
-    expect(store.state.attributes.energy).toBe(50);
-    expect(store.state.weak).toBe(true);
+    expect(store.state.relationship.accompanyCount).toBe(1);
+    expect(store.state.character.attributes.energy).toBe(50);
+    expect(store.state.character.weak).toBe(true);
     // girlfriendEffect=charm，charm += floor(0.5 * 11) = 5
-    expect(store.state.attributes.charm).toBe(5);
+    expect(store.state.character.attributes.charm).toBe(5);
   });
 });

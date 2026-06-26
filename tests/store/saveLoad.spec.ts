@@ -12,7 +12,7 @@ describe("save/load round-trip via loadGameState", () => {
   it("还原序列化快照（不含 textHistory）", () => {
     store.commit("updateAttribute", { attribute: "money", value: 12345 });
     store.commit("updateAttribute", { attribute: "talent", value: 88 });
-    store.commit("updateItem", { itemName: "皮卡丘玩偶", quantity: 7 });
+    store.commit("progress/updateItem", { itemName: "皮卡丘玩偶", quantity: 7 });
     store.commit("setGirlfriend", { type: "学姐", effect: "charm", breakupReasons: [] });
     store.commit("addTextToHistory", "transient-line");
 
@@ -20,13 +20,13 @@ describe("save/load round-trip via loadGameState", () => {
     delete snapshot.textHistory;
 
     store.commit("resetGame");
-    expect(store.state.attributes.money).toBe(0);
+    expect(store.state.character.attributes.money).toBe(0);
 
     store.commit("loadGameState", snapshot);
-    expect(store.state.attributes.money).toBe(12345);
-    expect(store.state.attributes.talent).toBe(88);
-    expect(store.state.inventory["皮卡丘玩偶"].quantity).toBe(7);
-    expect(store.state.girlfriend?.type).toBe("学姐");
+    expect(store.state.character.attributes.money).toBe(12345);
+    expect(store.state.character.attributes.talent).toBe(88);
+    expect(store.state.progress.inventory["皮卡丘玩偶"].quantity).toBe(7);
+    expect(store.state.relationship.girlfriend?.type).toBe("学姐");
   });
 
   it("加载存档不会覆盖当前的 textHistory", () => {
@@ -48,10 +48,10 @@ describe("save/load round-trip via loadGameState", () => {
 });
 
 describe("migrateSave", () => {
-  it("无 version 的存档视为 v0 并打上当前版本，数据不变", () => {
+  it("无 version 的扁平 v1 存档迁移为 v2 嵌套并打上当前版本", () => {
     const migrated = migrateSave({ round: 5 });
     expect(migrated.version).toBe(SAVE_VERSION);
-    expect(migrated.round).toBe(5);
+    expect(migrated.gameLoop.round).toBe(5);
   });
 
   it("对当前版本存档幂等", () => {

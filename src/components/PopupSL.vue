@@ -93,7 +93,7 @@
 
 <script setup lang="ts">
 import { computed, watch, ref } from "vue";
-import { useStore } from "vuex";
+import { useStore } from '../store';
 import { playerApi, playApi, extractApiError } from "../services/api";
 
 import Popup from "../components/Popup.vue";
@@ -180,7 +180,7 @@ const update_player = ref({
 
 const openUpdatePlayerPopup = () => {
   if (player.value) {
-    const anonymousValue = player.value.anonymous === true || player.value.anonymous === "true" || player.value.anonymous === 1;
+    const anonymousValue = player.value.anonymous === true || (player.value.anonymous as any) === "true" || (player.value.anonymous as any) === 1;
 
     update_player.value.name = player.value.name;
     update_player.value.anonymous = anonymousValue;

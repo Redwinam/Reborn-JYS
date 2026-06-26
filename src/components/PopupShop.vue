@@ -11,7 +11,7 @@
           <div class="purchase-options">
             <span>¥ {{ item.price }}</span>
             <div class="buttons-container">
-              <button class="only-button" @click="purchaseItem(item.name, 1)" :disabled="inventory[item.name]">{{ inventory[item.name] ? '已拥有' : '购买' }}</button>
+              <button class="only-button" @click="purchaseItem(item.name, 1)" :disabled="!!inventory[item.name]">{{ inventory[item.name] ? '已拥有' : '购买' }}</button>
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '../store'
 import { itemsList, getQuantifier } from '../store/actions/purchaseItem'
 import PopupSub from './PopupSub.vue'
 
@@ -79,7 +79,7 @@ const splitArrayInAlternatingOrder = (arr: Array<any>) => {
 const [specialItemsLeft, specialItemsRight] = splitArrayInAlternatingOrder(specialItems.value);
 const [normalItemsLeft, normalItemsRight] = splitArrayInHalf(normalItems.value);
 
-const inventory = computed(() => store.state.inventory);
+const inventory = computed(() => store.state.progress.inventory);
 
 const purchaseItem = async (itemName: string, quantity: number) => {
   await store.dispatch('purchaseItem', { itemName, quantity });

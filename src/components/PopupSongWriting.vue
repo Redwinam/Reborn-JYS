@@ -83,7 +83,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { useStore } from "vuex";
+import { useStore } from '../store';
 import { Edit3, Eraser, Mic2, SquareArrowOutUpRight, Play, Radio, BatteryWarning } from "lucide-vue-next";
 
 import { attributeNames } from "../store/attributes";
@@ -93,37 +93,37 @@ import { isTyping } from "./composables/gameRefs";
 import Popup from "../components/Popup.vue";
 
 const store = useStore();
-const songStages = computed(() => store.state.songStages);
+const songStages = computed(() => store.state.progress.songStages);
 
 const showReleaseSongModal = ref(false);
 const currentSong = ref<null | Song>(null);
 
 function isSongAvailable(song: Song) {
-  if (store.state.songStages[song.title] && store.state.songStages[song.title].unlocked) {
+  if (store.state.progress.songStages[song.title] && store.state.progress.songStages[song.title].unlocked) {
     return true;
   }
 
   for (const [key, value] of Object.entries(song.conditions)) {
     if (key === "popularity") {
-      if (store.state.attributes.popularity.red + store.state.attributes.popularity.black < value) {
+      if (store.state.character.attributes.popularity.red + store.state.character.attributes.popularity.black < value) {
         return false;
       }
     } else if (key === "gaming") {
-      if (store.state.attributes.skill.gaming < value) {
+      if (store.state.character.attributes.skill.gaming < value) {
         return false;
       }
     } else if (key === "freestyle") {
-      if (store.state.attributes.skill.freestyle < value) {
+      if (store.state.character.attributes.skill.freestyle < value) {
         return false;
       }
-    } else if (store.state.attributes[key] < value) {
+    } else if ((store.state.character.attributes as any)[key] < value) {
       return false;
     }
   }
 
   if (song.conditions_ne) {
     for (const [key, value] of Object.entries(song.conditions_ne)) {
-      if (store.state.attributes[key] > value) {
+      if ((store.state.character.attributes as any)[key] > value) {
         return false;
       }
     }
@@ -137,56 +137,56 @@ function isSongAvailable(song: Song) {
       break;
 
     case "黑白灰":
-      if (!store.state.inventory["水枪"]) {
+      if (!store.state.progress.inventory["水枪"]) {
         return false;
       }
       break;
 
     case "孤独面店":
-      if (store.state.breakupTimes < 2 || store.state.flirtCount > 0 || store.state.round - store.state.lastBreakupRound < 9) {
+      if (store.state.relationship.breakupTimes < 2 || store.state.relationship.flirtCount > 0 || store.state.gameLoop.round - store.state.relationship.lastBreakupRound! < 9) {
         return false;
       }
       break;
 
     case "真没睡":
-      if (!store.state.inventory["衣服"] || store.state.inventory["衣服"].quantity < 5 || !store.state.inventory["包包"] || store.state.inventory["包包"].quantity < 5) {
+      if (!store.state.progress.inventory["衣服"] || store.state.progress.inventory["衣服"].quantity < 5 || !store.state.progress.inventory["包包"] || store.state.progress.inventory["包包"].quantity < 5) {
         return false;
       }
       break;
 
     case "SAD":
-      if (store.state.attributes["心情"] > -20 || !store.state.seamlessRelation || store.state.girlfriend) {
+      if ((store.state.character.attributes as any)["心情"] > -20 || !store.state.relationship.seamlessRelation || store.state.relationship.girlfriend) {
         return false;
       }
       break;
 
     case "想你":
-      if (!store.state.artists.find((artist: Artist) => artist.name === "丙丙") || store.state.artists.find((artist: Artist) => artist.name === "丙丙").level < 3 || store.state.round - store.state.lastBreakupRound > 3) {
+      if (!store.state.business.artists.find((artist: Artist) => artist.name === "丙丙") || store.state.business.artists.find((artist: Artist) => artist.name === "丙丙")!.level < 3 || store.state.gameLoop.round - store.state.relationship.lastBreakupRound! > 3) {
         return false;
       }
       break;
 
     case "爱の小曲":
-      const afterglows = store.state.shards.filter((shard: string) => shard === "晚霞和云" || shard === "秋天的第一片晚霞" || shard === "晚霞分享艺术家");
-      if (!store.state.artists.find((artist: Artist) => artist.name === "空空") || store.state.artists.find((artist: Artist) => artist.name === "空空").level < 2 || afterglows.length < 2) {
+      const afterglows = store.state.progress.shards.filter((shard: string) => shard === "晚霞和云" || shard === "秋天的第一片晚霞" || shard === "晚霞分享艺术家");
+      if (!store.state.business.artists.find((artist: Artist) => artist.name === "空空") || store.state.business.artists.find((artist: Artist) => artist.name === "空空")!.level < 2 || afterglows.length < 2) {
         return false;
       }
       break;
 
     case "皮卡丘":
-      if (!store.state.inventory["皮卡丘玩偶"] || store.state.inventory["皮卡丘玩偶"].quantity < 520) {
+      if (!store.state.progress.inventory["皮卡丘玩偶"] || store.state.progress.inventory["皮卡丘玩偶"].quantity < 520) {
         return false;
       }
       break;
 
     case "自白书":
-      if (Math.floor((store.state.round - 16) / 36) + 16 < 20) {
+      if (Math.floor((store.state.gameLoop.round - 16) / 36) + 16 < 20) {
         return false;
       }
       break;
 
     case "致素未谋面却如此相似的我们":
-      const currentMonth = Math.ceil((store.state.round % 36) / 3) || 12;
+      const currentMonth = Math.ceil((store.state.gameLoop.round % 36) / 3) || 12;
       if (currentMonth !== 12) {
         return false;
       }
@@ -207,8 +207,8 @@ const availableSongs = computed(() => {
 
 async function unlockSongs() {
   for (const song of songLibrary) {
-    if (isSongAvailable(song) && (!store.state.songStages[song.title] || !store.state.songStages[song.title].unlocked)) {
-      store.commit("unlockSong", song.title);
+    if (isSongAvailable(song) && (!store.state.progress.songStages[song.title] || !store.state.progress.songStages[song.title].unlocked)) {
+      store.commit("progress/unlockSong", song.title);
       const textboxPopup = document.getElementById("textboxPopup");
       if (textboxPopup) {
         await store.dispatch("typeWriterPopup", [`解锁了新歌曲《${song.title}》！`]);
@@ -253,7 +253,7 @@ async function writeSong(stage: string, song: Song) {
     return;
   }
 
-  const currentStage = store.state.songStages[song.title] || {
+  const currentStage = store.state.progress.songStages[song.title] || {
     completedStage: null,
   };
 
@@ -267,7 +267,7 @@ async function writeSong(stage: string, song: Song) {
       }
       store.commit("updateAttribute", { attribute: key, value: effect * 0.2 });
     }
-    store.commit("setSongStages", { songTitle: song.title, stage: "demo" });
+    store.commit("progress/setSongStages", { songTitle: song.title, stage: "demo" });
     let attributesChangeStr = Object.entries(song.effects)
       .filter(([key]) => key !== "money")
       .map(([key, value]) => {
@@ -280,9 +280,9 @@ async function writeSong(stage: string, song: Song) {
       .join("、");
     await store.dispatch("typeWriterPopup", `歌曲《${song.title}》已经完成DEMO啦，姜云升属性 ${attributesChangeStr} 。`);
   } else if (stage === "record" && currentStage.completedStage === "demo") {
-    if (store.state.attributes.money >= song.cost) {
+    if (store.state.character.attributes.money >= song.cost) {
       store.commit("updateAttribute", { attribute: "money", value: -song.cost });
-      store.commit("setSongStages", { songTitle: song.title, stage: "record" });
+      store.commit("progress/setSongStages", { songTitle: song.title, stage: "record" });
       await store.dispatch("typeWriterPopup", `歌曲《${song.title}》已经录好啦，花费了姜云升 ${song.cost} 元编曲制作费。`);
     } else {
       await store.dispatch("typeWriterPopup", `姜云升没有足够的钱录歌，录这首歌需要 ${song.cost} 元编曲制作费。`);
@@ -290,7 +290,7 @@ async function writeSong(stage: string, song: Song) {
   } else if (stage === "release" && currentStage.completedStage === "record") {
     for (const [key, effect] of Object.entries(song.effects)) {
       if (key === "money") {
-        if (store.state.signedAgency) {
+        if (store.state.business.signedAgency) {
           store.commit("updateAttribute", { attribute: key, value: 0 });
         } else {
           store.commit("updateAttribute", { attribute: key, value: effect });
@@ -301,12 +301,12 @@ async function writeSong(stage: string, song: Song) {
       }
       store.commit("updateAttribute", { attribute: key, value: effect * 0.8 });
     }
-    store.commit("setSongStages", { songTitle: song.title, stage: "release" });
+    store.commit("progress/setSongStages", { songTitle: song.title, stage: "release" });
     let attributesChangeStr = Object.entries(song.effects)
       .filter(([key]) => key !== "energy")
       .map(([key, value]) => {
         if (key === "money") {
-          if (store.state.signedAgency) {
+          if (store.state.business.signedAgency) {
             value = 0;
           }
         } else {
@@ -316,7 +316,7 @@ async function writeSong(stage: string, song: Song) {
         return `${attributeNames[key]}${sign}${value}`;
       })
       .join("、");
-    await store.dispatch("typeWriterPopup", `歌曲《${song.title}》已经上线啦，姜云升属性 ${attributesChangeStr} 。${store.state.signedAgency ? "由于姜云升签约了经纪公司，这首歌的版权归属公司，姜云升没有收入。" : ""}`);
+    await store.dispatch("typeWriterPopup", `歌曲《${song.title}》已经上线啦，姜云升属性 ${attributesChangeStr} 。${store.state.business.signedAgency ? "由于姜云升签约了经纪公司，这首歌的版权归属公司，姜云升没有收入。" : ""}`);
 
     await store.dispatch("waitAndType", 1000);
 
@@ -328,12 +328,12 @@ async function writeSong(stage: string, song: Song) {
 }
 
 async function writeFeiSong() {
-  if (store.state.attributes.energy <= 0) {
+  if (store.state.character.attributes.energy <= 0) {
     await store.dispatch("typeWriterPopup", "姜云升体力不足，需要休息才能写歌啦。");
     return;
   }
 
-  const unlockedFeiSongs = store.state.unlockedFeiSongs;
+  const unlockedFeiSongs = store.state.progress.unlockedFeiSongs;
   const lockedFeiSongs = songFeiLibrary.filter((songFei: { name: any }) => !unlockedFeiSongs.find((uf: { name: any }) => uf.name === songFei.name));
   let toMessage = [];
   if (lockedFeiSongs && lockedFeiSongs.length > 1) {
@@ -341,7 +341,7 @@ async function writeFeiSong() {
     if (unlockedFeiSongs.length === 0) {
       songFei = lockedFeiSongs[2];
     }
-    store.commit("unlockFeiSong", songFei);
+    store.commit("progress/unlockFeiSong", songFei);
     toMessage.push(`姜云升写了半首《${songFei.name}》，「${songFei.lyrics}」然后说这歌废啦。`);
   } else {
     const isAchUnlocked = store.getters.unlockedAchievement("这歌废啦");
@@ -357,8 +357,8 @@ async function writeFeiSong() {
   }
 
   store.commit("updateAttribute", { attribute: "energy", value: -100 });
-  const redValue = 60 + Math.floor(Math.random() * 0.12 * store.state.attributes.popularity.red);
-  const blackValue = 20 + Math.floor(Math.random() * 0.08 * store.state.attributes.popularity.black);
+  const redValue = 60 + Math.floor(Math.random() * 0.12 * store.state.character.attributes.popularity.red);
+  const blackValue = 20 + Math.floor(Math.random() * 0.08 * store.state.character.attributes.popularity.black);
   store.commit("updateAttribute", { attribute: "red", value: redValue });
   store.commit("updateAttribute", { attribute: "black", value: blackValue });
   store.commit("updateAttribute", { attribute: "talent", value: 20 });

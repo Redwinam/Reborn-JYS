@@ -74,8 +74,8 @@
       <div class="project" v-for="project in InvestmentProjects">
         <div class="project-name">{{ project.name }}</div>
         <div class="project-price">
-          {{ store.state.investedProjects.includes(project.name) ? "成功投资" : "起投金额" }}
-          <button class="button_invest" :class="store.state.investedProjects.includes(project.name) ? 'button_invested' : ''" @click="!isTyping && invest(project.name)">￥{{ project.cost / 10000 }}万元</button>
+          {{ store.state.business.investedProjects.includes(project.name) ? "成功投资" : "起投金额" }}
+          <button class="button_invest" :class="store.state.business.investedProjects.includes(project.name) ? 'button_invested' : ''" @click="!isTyping && invest(project.name)">￥{{ project.cost / 10000 }}万元</button>
         </div>
       </div>
       <p id="textboxPopup">欢迎姜云升先生来到交易所·投资中心！</p>
@@ -86,7 +86,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useStore } from "vuex";
+import { useStore } from '../store';
 
 import Popup from "../components/Popup.vue";
 import PopupSub from "../components/PopupSub.vue";
@@ -94,13 +94,13 @@ import { showBankPopup, showBuyGoldPopup, showSellGoldPopup, showRealEstatePopup
 import { GOLD_PRICE } from "../store/constants";
 
 const store = useStore();
-const attributes = computed(() => store.state.attributes);
+const attributes = computed(() => store.state.character.attributes);
 
 const goldPrice = GOLD_PRICE;
 const goldAmount = ref(1);
 async function buyGold() {
   if (goldAmount.value * goldPrice <= attributes.value.money) {
-    store.commit("buyGold", goldAmount.value);
+    store.commit("character/buyGold", goldAmount.value);
     showBuyGoldPopup.value = false;
     if (showBankPopup.value) {
       await store.dispatch("typeWriterPopup", "姜云升花了" + goldAmount.value * goldPrice + "金钱，购买了" + goldAmount.value + "克金条。");
@@ -110,7 +110,7 @@ async function buyGold() {
 
 async function sellGold() {
   if (goldAmount.value <= attributes.value.gold) {
-    store.commit("buyGold", -goldAmount.value);
+    store.commit("character/buyGold", -goldAmount.value);
     showSellGoldPopup.value = false;
     if (showBankPopup.value) {
       await store.dispatch("typeWriterPopup", "姜云升卖出了" + goldAmount.value + "克金条，获得了" + goldAmount.value * goldPrice + "金钱。");
@@ -134,7 +134,7 @@ const StockIndex = [
   { year: 2023, index: 3204.63 },
 ];
 
-const year = computed(() => store.state.year);
+const year = computed(() => store.state.gameLoop.year);
 
 const InvestmentProjects = [
   { name: "给长城贴瓷砖", cost: 25000000, income: 250 },
@@ -150,7 +150,7 @@ const InvestmentProjects = [
 ];
 
 async function invest(projectName: string) {
-  if (store.state.investedProjects.includes(projectName)) {
+  if (store.state.business.investedProjects.includes(projectName)) {
     await store.dispatch("typeWriterPopup", "【系统】姜云升已经投资过【" + projectName + "】项目啦，本项目不支持复投！");
   } else {
     const project = InvestmentProjects.find((project) => project.name === projectName);
@@ -171,7 +171,7 @@ async function invest(projectName: string) {
             );
           }
 
-          if (store.state.investedProjects.length === InvestmentProjects.length) {
+          if (store.state.business.investedProjects.length === InvestmentProjects.length) {
             const isAchUnlocked = store.getters.unlockedAchievement("重生之投资奇才");
             if (!isAchUnlocked) {
               store.commit("unlockAchievement", "重生之投资奇才");

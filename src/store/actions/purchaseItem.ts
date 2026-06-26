@@ -54,18 +54,18 @@ export async function purchaseItem(context: { commit: Commit; dispatch: Function
     return;
   }
 
-  if (store.state.attributes.money < item.price * quantity) {
+  if (store.state.character.attributes.money < item.price * quantity) {
     await context.dispatch("typeWriterPopup", `姜云升没有足够的钱购买${quantity}${item.quantifier ? item.quantifier : "件"}"${itemName}"`);
     return;
   }
 
-  if (item.isSpecial && (store.state.inventory[itemName] || quantity > 1)) {
+  if (item.isSpecial && (store.state.progress.inventory[itemName] || quantity > 1)) {
     await context.dispatch("typeWriterPopup", `特殊装备"${itemName}"只能购买1次.`);
     return;
   }
 
   context.commit("updateAttribute", { attribute: "money", value: -item.price * quantity });
-  context.commit("updateItem", { itemName, quantity });
+  context.commit("progress/updateItem", { itemName, quantity });
 
   const toMessage = ref("");
 

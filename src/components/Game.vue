@@ -100,7 +100,7 @@
           class="action-button action-back going-out-back"
           :disabled="isTyping"
         ></button>
-        <button v-if="store.state.girlfriend && !isGoingOut" @click="accompanyGirlfriend" class="action-button action-accompany-girlfriend" :disabled="isTyping"></button>
+        <button v-if="store.state.relationship.girlfriend && !isGoingOut" @click="accompanyGirlfriend" class="action-button action-accompany-girlfriend" :disabled="isTyping"></button>
       </div>
 
       <Dialog :visible="showEventDialog" @close="showEventDialog = false"><dialog-event /></Dialog>
@@ -214,7 +214,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useStore } from "vuex";
+import { useStore } from '../store';
 import { computed, ref, nextTick, watch, onMounted } from "vue";
 import { HelpCircle } from "lucide-vue-next";
 import { skyTreeLyrics } from "../store";
@@ -281,20 +281,20 @@ window.addEventListener("DOMContentLoaded", convertStyle);
 
 const store = useStore();
 
-const currentTerm = computed(() => store.state.term);
-const currentYear = computed(() => store.state.year);
-const currentRound = computed(() => store.state.round);
-const totalRounds = computed(() => store.state.totalRounds);
-const gameEnded = computed(() => store.state.gameEnded);
+const currentTerm = computed(() => store.state.gameLoop.term);
+const currentYear = computed(() => store.state.gameLoop.year);
+const currentRound = computed(() => store.state.gameLoop.round);
+const totalRounds = computed(() => store.state.gameLoop.totalRounds);
+const gameEnded = computed(() => store.state.gameLoop.gameEnded);
 
-const attributes = computed(() => store.state.attributes);
-const weak = computed(() => store.state.weak);
-const drunk = computed(() => store.state.drunk);
-const signedAgency = computed(() => store.state.signedAgency);
-const openFengyan = computed(() => store.state.openFengyan);
+const attributes = computed(() => store.state.character.attributes);
+const weak = computed(() => store.state.character.weak);
+const drunk = computed(() => store.state.character.drunk);
+const signedAgency = computed(() => store.state.business.signedAgency);
+const openFengyan = computed(() => store.state.business.openFengyan);
 
 const haveGuaHua = computed(() => {
-  return store.state.inventory["挂画"] && store.state.inventory["挂画"].quantity > 0;
+  return store.state.progress.inventory["挂画"] && store.state.progress.inventory["挂画"].quantity > 0;
 });
 
 const textHistory = computed(() => {
@@ -315,8 +315,8 @@ watch(showTextHistoryPopup, async (newValue) => {
   }
 });
 
-const specialEndingAchievement = computed(() => store.state.specialEndingAchievement);
-const currentEndings = computed(() => store.state.currentEndings);
+const specialEndingAchievement = computed(() => store.state.gameLoop.specialEndingAchievement);
+const currentEndings = computed(() => store.state.gameLoop.currentEndings);
 
 const accompanyGirlfriend = () => {
   store.dispatch("accompanyGirlfriend");
@@ -339,7 +339,7 @@ const showAchievementsPopup = ref(false);
 const showGameEndNotePopup = ref(false);
 const showGameEndConfirmPopup = ref(false);
 
-const leftUnsignAgencyMonth = computed(() => Math.max(Math.ceil((36 - (store.state.round - store.state.signedAgencyRound)) / 3), 0));
+const leftUnsignAgencyMonth = computed(() => Math.max(Math.ceil((36 - (store.state.gameLoop.round - store.state.business.signedAgencyRound!)) / 3), 0));
 const checkUnsignAgency = async () => {
   if (leftUnsignAgencyMonth.value > 0) {
     typewriter("签约公司后需要1年后才可以解约，当前剩余" + leftUnsignAgencyMonth.value + "个月。");
@@ -361,7 +361,7 @@ const currentPeriod = computed(() => {
 
 const isBattleOpen = () => {
   // 当前year的battle的状态 不为 end 且 当前月份为 9-12月
-  const isEnd = Array.isArray(store.state.battleResults) && store.state.battleResults.find((battleResult: BattleResult) => battleResult.year === currentYear.value)?.end;
+  const isEnd = Array.isArray(store.state.progress.battleResults) && store.state.progress.battleResults.find((battleResult: BattleResult) => battleResult.year === currentYear.value)?.end;
   return currentMonth.value >= 9 && currentMonth.value <= 12 && !isEnd;
 };
 
@@ -404,10 +404,10 @@ const handleHistoryClick = () => {
 };
 
 const handleBackgroundClick = async () => {
-  if (isGoingOut.value && store.state.songStages["致素未谋面却如此相似的我们"]?.completedStage === "release") {
-    if (store.state.currentLyricIndex !== -1) {
-      await store.dispatch("typeWriter", skyTreeLyrics[store.state.currentLyricIndex]);
-      store.commit("incrementLyricIndex");
+  if (isGoingOut.value && store.state.progress.songStages["致素未谋面却如此相似的我们"]?.completedStage === "release") {
+    if (store.state.gameLoop.currentLyricIndex !== -1) {
+      await store.dispatch("typeWriter", skyTreeLyrics[store.state.gameLoop.currentLyricIndex]);
+      store.commit("gameLoop/incrementLyricIndex");
 
     }
   }
@@ -419,9 +419,9 @@ onMounted(async () => {
   if (savedGameData) {
     try {
       store.commit("loadGameState", savedGameData);
-      if (store.state.term == 1 && store.state.round == 1) {
+      if (store.state.gameLoop.term == 1 && store.state.gameLoop.round == 1) {
         showStartGameDialog.value = true;
-      } else if (store.state.gameEnded) {
+      } else if (store.state.gameLoop.gameEnded) {
         showGameEndDialog.value = true;
       } else if (document.getElementById("textboxText")) {
         await store.dispatch("typeWriter", "【系统】你回来啦！");

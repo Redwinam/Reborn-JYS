@@ -5,11 +5,11 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useStore } from "vuex";
+import { useStore } from '../store';
 import { showBuyGoldPopup, showSellGoldPopup } from "./composables/gameRefs";
 
 const store = useStore();
-const attributes = computed(() => store.state.attributes);
+const attributes = computed(() => store.state.character.attributes);
 </script>
 
 <style scoped>

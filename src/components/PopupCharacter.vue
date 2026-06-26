@@ -4,7 +4,7 @@
     <div><span class="attribute-name">国籍</span>中国</div>
     <div><span class="attribute-name">生日</span>1996年6月1日 / 四月十六</div>
     <div>
-      <span class="attribute-name">年龄 / 星座</span><span>{{ Math.floor((store.state.round - 16) / 36) + 16 }}岁 / <span @click="gemini()">双子座</span></span>
+      <span class="attribute-name">年龄 / 星座</span><span>{{ Math.floor((store.state.gameLoop.round - 16) / 36) + 16 }}岁 / <span @click="gemini()">双子座</span></span>
     </div>
     <div><span class="attribute-name">身高 / 体重</span> 182cm / 60kg</div>
 
@@ -53,42 +53,42 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useStore } from "vuex";
+import { useStore } from '../store';
 
 import { attributeNames } from "../store/attributes";
 import { showBuyGoldPopup, showSellGoldPopup } from "./composables/gameRefs";
 const store = useStore();
 
-const attributes = computed(() => store.state.attributes);
-const weak = computed(() => store.state.weak);
-const drunk = computed(() => store.state.drunk);
+const attributes = computed(() => store.state.character.attributes);
+const weak = computed(() => store.state.character.weak);
+const drunk = computed(() => store.state.character.drunk);
 
 const gemini = () => {
   console.log("gemini");
   // setagency
   // store.commit('setSignedAgency', true)
   // 才华 + 100
-  // store.commit("openFengyan", true);
-  // store.commit("upgradeSkillLevel", "freestyle");
+  // store.commit("business/openFengyan", true);
+  // store.commit("character/upgradeSkillLevel", "freestyle");
   // store.commit("updateAttribute", { attribute: "freestyle", value: 100 });
   store.commit("updateAttribute", { attribute: "talent", value: +100 });
   store.commit("updateAttribute", { attribute: "charm", value: +100 });
   store.commit("updateAttribute", { attribute: "divine", value: +300 });
 
-  store.state.currentLyricIndex = -1
+  store.state.gameLoop.currentLyricIndex = -1
   // store.commit('updateAttribute', { attribute: "red", value: + 500000000000 })
   // store.commit("updateAttribute", { attribute: "money", value: +1000000 });
 
-  // store.commit('incrementUndergroundCount');
-  // store.commit('incrementUndergroundCount');
-  // store.commit('incrementUndergroundCount');
-  // store.commit('incrementUndergroundCount');
+  // store.commit('progress/incrementUndergroundCount');
+  // store.commit('progress/incrementUndergroundCount');
+  // store.commit('progress/incrementUndergroundCount');
+  // store.commit('progress/incrementUndergroundCount');
 
   // store.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
   // store.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
   // store.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
 
-  // store.commit('upgradeSkillLevel', 'freestyle');
+  // store.commit('character/upgradeSkillLevel', 'freestyle');
   // store.commit('updateAttribute', { attribute: 'freestyle', value: 1 });
 
   for (let i = 0; i < 10; i++) {

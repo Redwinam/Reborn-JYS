@@ -28,7 +28,7 @@ export async function goToLocation(
   await context.dispatch("typeWriter", "正在前往：" + location);
   switch (location) {
     case "去吃点东西":
-      const unlockedFoods = context.state.unlockedFoods;
+      const unlockedFoods = context.state.progress.unlockedFoods;
       const lockedFoods = allFoods.filter((food: { name: any }) => !unlockedFoods.find((uf: { name: any }) => uf.name === food.name));
       if (lockedFoods.length > 0) {
         let newFood = lockedFoods[Math.floor(Math.random() * lockedFoods.length)];
@@ -73,15 +73,15 @@ export async function goToLocation(
     case "Underground":
       const skill = "freestyle";
       for (const level of SkillLevelMapping) {
-        if (context.state.attributes.skill.freestyle === level.max && level.max !== 24) {
+        if (context.state.character.attributes.skill.freestyle === level.max && level.max !== 24) {
           await context.dispatch("waitAndType", 200);
           await context.dispatch("typeWriter", ["姜云升的freestyle技能进入了瓶颈期，考验你会不会freestyle的时候到了，需要答对所有歌词才能升级！"]);
           await context.dispatch("waitAndType", 600);
           await context.dispatch("upgradeSkill", { skill, level: level.level });
           return;
-        } else if ((context.state.attributes.skill.freestyle >= level.min && context.state.attributes.skill.freestyle < level.max) || (context.state.attributes.skill.freestyle === level.max && level.max === 24)) {
+        } else if ((context.state.character.attributes.skill.freestyle >= level.min && context.state.character.attributes.skill.freestyle < level.max) || (context.state.character.attributes.skill.freestyle === level.max && level.max === 24)) {
           context.commit("updateAttribute", { attribute: "energy", value: -25 });
-          switch (context.state.undergroundCount) {
+          switch (context.state.progress.undergroundCount) {
             case 0:
               await context.dispatch("typeWriter", "这是姜云升第一次来到这个世界，他在这里感受到了不一样的力量，彼时的他是否已经在这里看到了自己的未来了呢？");
               context.commit("updateAttribute", { attribute: "red", value: 1 });
@@ -100,7 +100,7 @@ export async function goToLocation(
               await context.dispatch(
                 "typeWriter",
                 "第三次来到这里，姜云升开始学着和一些MC们一起Freestyle Battle，真是，学好不容易，学坏一出溜。出于公序良俗和青少年优良学风引导的考虑，Battle内容过于低俗，这里不便展开。<small>姜云升心情+10，freestyle技能值+1，当前freestyle技能等级为【" +
-                  context.state.attributes.skill.freestyleLevel +
+                  context.state.character.attributes.skill.freestyleLevel +
                   "】</small>"
               );
               break;
@@ -110,7 +110,7 @@ export async function goToLocation(
               context.commit("updateAttribute", { attribute: "freestyle", value: 1 });
               await context.dispatch(
                 "typeWriter",
-                "第四次来到这里，姜云升决心把所有的心血都投入到音乐和说唱里。<small>姜云升心情+10，freestyle技能值+1，当前freestyle技能等级为【" + context.state.attributes.skill.freestyleLevel + "】</small>"
+                "第四次来到这里，姜云升决心把所有的心血都投入到音乐和说唱里。<small>姜云升心情+10，freestyle技能值+1，当前freestyle技能等级为【" + context.state.character.attributes.skill.freestyleLevel + "】</small>"
               );
               break;
 
@@ -127,7 +127,7 @@ export async function goToLocation(
               context.commit("updateAttribute", { attribute: "freestyle", value: 1 });
               await context.dispatch(
                 "typeWriter",
-                "第六次来到这里，姜云升决定用心参加各类比赛和选秀，想要出头。<small>才华+10，魅力+10，人气+200，freestyle技能值+1，当前freestyle技能等级为【" + context.state.attributes.skill.freestyleLevel + "】</small>"
+                "第六次来到这里，姜云升决定用心参加各类比赛和选秀，想要出头。<small>才华+10，魅力+10，人气+200，freestyle技能值+1，当前freestyle技能等级为【" + context.state.character.attributes.skill.freestyleLevel + "】</small>"
               );
               break;
 
@@ -136,7 +136,7 @@ export async function goToLocation(
               context.commit("updateAttribute", { attribute: "freestyle", value: 1 });
               await context.dispatch(
                 "typeWriter",
-                "第七次来到这里，姜云升参加了一档综艺节目，可晋级后主办方却没了消息。<small>姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【" + context.state.attributes.skill.freestyleLevel + "】</small>"
+                "第七次来到这里，姜云升参加了一档综艺节目，可晋级后主办方却没了消息。<small>姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【" + context.state.character.attributes.skill.freestyleLevel + "】</small>"
               );
               break;
 
@@ -145,7 +145,7 @@ export async function goToLocation(
               context.commit("updateAttribute", { attribute: "freestyle", value: 1 });
               await context.dispatch(
                 "typeWriter",
-                "第八次来到这里，姜云升参加了一场说唱比赛，结果告负。<small>姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【" + context.state.attributes.skill.freestyleLevel + "】</small>"
+                "第八次来到这里，姜云升参加了一场说唱比赛，结果告负。<small>姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【" + context.state.character.attributes.skill.freestyleLevel + "】</small>"
               );
               break;
 
@@ -154,7 +154,7 @@ export async function goToLocation(
               context.commit("updateAttribute", { attribute: "freestyle", value: 1 });
               await context.dispatch(
                 "typeWriter",
-                "第九次来到这里，姜云升又参加了一场说唱比赛，结果依然告负。<small>姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【" + context.state.attributes.skill.freestyleLevel + "】</small>"
+                "第九次来到这里，姜云升又参加了一场说唱比赛，结果依然告负。<small>姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【" + context.state.character.attributes.skill.freestyleLevel + "】</small>"
               );
               break;
 
@@ -163,7 +163,7 @@ export async function goToLocation(
               context.commit("updateAttribute", { attribute: "freestyle", value: 1 });
               await context.dispatch(
                 "typeWriter",
-                "第十次来到这里，姜云升坚持参加了很多很多比赛，全部告负。<small>姜云升心情-30，freestyle技能值+1，当前freestyle技能等级为【" + context.state.attributes.skill.freestyleLevel + "】</small>"
+                "第十次来到这里，姜云升坚持参加了很多很多比赛，全部告负。<small>姜云升心情-30，freestyle技能值+1，当前freestyle技能等级为【" + context.state.character.attributes.skill.freestyleLevel + "】</small>"
               );
               break;
 
@@ -174,7 +174,7 @@ export async function goToLocation(
               await context.dispatch(
                 "typeWriter",
                 "第十一次来到这里，姜云升参加了第五届K.O.B，终于拿到了冠军。他开始有了朋友，以为生活开始变好。<small>姜云升心情+60，人气+200，freestyle技能值+1，当前freestyle技能等级为【" +
-                  context.state.attributes.skill.freestyleLevel +
+                  context.state.character.attributes.skill.freestyleLevel +
                   "】</small>"
               );
               break;
@@ -186,7 +186,7 @@ export async function goToLocation(
               await context.dispatch(
                 "typeWriter",
                 "第十二次来到这里，两年时间，姜云升拿了Iron Mic、地下8英里、干一票、三寸不烂之舌昆明站的冠军。<small>姜云升心情+10，人气+600，freestyle技能值+1，当前freestyle技能等级为【" +
-                  context.state.attributes.skill.freestyleLevel +
+                  context.state.character.attributes.skill.freestyleLevel +
                   "】</small>"
               );
               break;
@@ -197,7 +197,7 @@ export async function goToLocation(
               await context.dispatch(
                 "typeWriter",
                 "第十三次来到这里，姜云升依旧害怕输和失败，“其实就算是那些获胜的比赛，你看不见的地方，我的手臂也在颤抖着，我畏惧失败”。<small>姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【" +
-                  context.state.attributes.skill.freestyleLevel +
+                  context.state.character.attributes.skill.freestyleLevel +
                   "】</small>"
               );
               break;
@@ -209,7 +209,7 @@ export async function goToLocation(
               await context.dispatch(
                 "typeWriter",
                 "第十四次来到这里，姜云升代表家乡云南昆明来西安参加「干一票」总决赛，在这里他找到了自信和前进下去的动力。<small>姜云升心情+9，人气+1000，freestyle技能值+1，当前freestyle技能等级为【" +
-                  context.state.attributes.skill.freestyleLevel +
+                  context.state.character.attributes.skill.freestyleLevel +
                   "】</small>"
               );
               break;
@@ -221,7 +221,7 @@ export async function goToLocation(
               await context.dispatch(
                 "typeWriter",
                 "第十五次来到这里，姜云升和朋友组建了自己的说唱团队，拿下了一个又一个冠军。<small>姜云升心情+10，人气+600，freestyle技能值+1，当前freestyle技能等级为【" +
-                  context.state.attributes.skill.freestyleLevel +
+                  context.state.character.attributes.skill.freestyleLevel +
                   "】</small>"
               );
               break;
@@ -234,7 +234,7 @@ export async function goToLocation(
               await context.dispatch(
                 "typeWriter",
                 "第十六次来到这里，姜云升的说唱团队举办了演出专场，破了昆明的票房纪录。<small>姜云升心情+10，人气+1000，金钱+5000，freestyle技能值+1，当前freestyle技能等级为【" +
-                  context.state.attributes.skill.freestyleLevel +
+                  context.state.character.attributes.skill.freestyleLevel +
                   "】</small>"
               );
               break;
@@ -244,7 +244,7 @@ export async function goToLocation(
               context.commit("updateAttribute", { attribute: "freestyle", value: 1 });
               await context.dispatch(
                 "typeWriter",
-                "第十七次来到这里，姜云升的厂牌宣告分裂。<small>姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【" + context.state.attributes.skill.freestyleLevel + "】</small>"
+                "第十七次来到这里，姜云升的厂牌宣告分裂。<small>姜云升心情-10，freestyle技能值+1，当前freestyle技能等级为【" + context.state.character.attributes.skill.freestyleLevel + "】</small>"
               );
               break;
 
@@ -262,7 +262,7 @@ export async function goToLocation(
               context.commit("updateAttribute", { attribute: "freestyle", value: 1 });
               await context.dispatch(
                 "typeWriter",
-                "第二十次来到这里，姜云升重新点开了电脑上的伴奏，唱了一夜。<small>姜云升心情+10，freestyle技能值+1，当前freestyle技能等级为【" + context.state.attributes.skill.freestyleLevel + "】</small>"
+                "第二十次来到这里，姜云升重新点开了电脑上的伴奏，唱了一夜。<small>姜云升心情+10，freestyle技能值+1，当前freestyle技能等级为【" + context.state.character.attributes.skill.freestyleLevel + "】</small>"
               );
               break;
 
@@ -273,7 +273,7 @@ export async function goToLocation(
               await context.dispatch(
                 "typeWriter",
                 "第二十一次来到这里，姜云升一个人收拾好行李，前往重庆参加「地下8英里」，在那他收获了第一批因为他的音乐而支持他的人，他有了自己的粉丝。<small>姜云升心情+10，人气+2000，freestyle技能值+1，当前freestyle技能等级为【" +
-                  context.state.attributes.skill.freestyleLevel +
+                  context.state.character.attributes.skill.freestyleLevel +
                   "】</small>"
               );
               break;
@@ -292,8 +292,8 @@ export async function goToLocation(
               break;
 
             default:
-              context.commit("incrementUndergroundCount");
-              if (context.state.attributes.skill.freestyle >= 15 && (!context.state.happenedEvents.includes("二八分") || !context.getters.unlockedAchievement("二八分"))) {
+              context.commit("progress/incrementUndergroundCount");
+              if (context.state.character.attributes.skill.freestyle >= 15 && (!context.state.progress.happenedEvents.includes("二八分") || !context.getters.unlockedAchievement("二八分"))) {
                 context.dispatch("specialEvent", "二八分");
               } else {
                 showUndergroundPopup.value = true;
@@ -303,8 +303,8 @@ export async function goToLocation(
         }
       }
 
-      context.commit("incrementUndergroundCount");
-      if (context.state.term > 1 && context.state.attributes.skill.freestyle >= 15 && !context.state.happenedEvents.includes("二八分")) {
+      context.commit("progress/incrementUndergroundCount");
+      if (context.state.gameLoop.term > 1 && context.state.character.attributes.skill.freestyle >= 15 && !context.state.progress.happenedEvents.includes("二八分")) {
         context.dispatch("specialEvent", "二八分");
       } else {
         context.dispatch("incrementRound");
@@ -316,7 +316,7 @@ export async function goToLocation(
       const haircutCost = 100; // 剪头发的花费
 
       // 检查用户是否有足够的金钱进行剪头发
-      if (context.state.attributes.money < haircutCost) {
+      if (context.state.character.attributes.money < haircutCost) {
         await context.dispatch("typeWriter", "剪发费用需要100元。幸好，姜云升没有足够的钱来剪头发。");
         break; // 如果没有足够的金钱，就结束这个 case
       }
@@ -324,7 +324,7 @@ export async function goToLocation(
       // 扣除剪头发的花费
       context.commit("updateAttribute", { attribute: "money", value: -haircutCost });
 
-      const hasSunglasses = context.state.inventory["墨镜"];
+      const hasSunglasses = context.state.progress.inventory["墨镜"];
       const isAchUnlocked = context.getters.unlockedAchievement("小学升戴墨镜");
       if (hasSunglasses && !isAchUnlocked) {
         context.commit("updateAttribute", { attribute: "charm", value: -100 });
@@ -357,11 +357,11 @@ export async function goToLocation(
       break;
 
     case "公司":
-      if (store.state.attributes.energy < 0) {
+      if (store.state.character.attributes.energy < 0) {
         await context.dispatch("typeWriter", "姜云升体力<0，就别去公司上班啦！");
         return;
       }
-      const leftUnsignAgencyMonth = Math.max(Math.ceil((36 - (context.state.round - context.state.signedAgencyRound)) / 3), 0);
+      const leftUnsignAgencyMonth = Math.max(Math.ceil((36 - (context.state.gameLoop.round - context.state.business.signedAgencyRound)) / 3), 0);
       if (leftUnsignAgencyMonth <= 0) {
         showUnsignAgencyDialog.value = true;
       } else {
@@ -376,7 +376,7 @@ export async function goToLocation(
           "今天公司安排你接一条商业广告，收入金钱+20",
         ];
         let randomAgency = Math.floor(Math.random() * agencyIntros.length);
-        if (context.state.goToAgencyTimes === 0) {
+        if (context.state.business.goToAgencyTimes === 0) {
           randomAgency = 0;
         }
 
@@ -412,7 +412,7 @@ export async function goToLocation(
 
         await context.dispatch("typeWriter", agencyIntros[randomAgency] + "，体力-80。");
 
-        context.commit("incrementGoToAgencyTimes");
+        context.commit("business/incrementGoToAgencyTimes");
         context.dispatch("incrementRound");
       }
       break;
@@ -420,7 +420,7 @@ export async function goToLocation(
     case "风炎文化":
       if (Math.random() < 0.25) {
         await store.dispatch("typeWriter", ["姜云升路遇粉丝，收到了一本《不会带团队，你就只能干到死》。", "姜云升收到后认真习读，收获了很多。才华+1。"]);
-        store.commit("updateItem", { itemName: "《不会带团队，你就只能干到死》", quantity: 1 });
+        store.commit("progress/updateItem", { itemName: "《不会带团队，你就只能干到死》", quantity: 1 });
         store.commit("updateAttribute", { attribute: "talent", value: 1 });
         await store.dispatch("waitAndType", 1500);
       } else {
@@ -431,7 +431,7 @@ export async function goToLocation(
 
     case "上山修行":
       // 体力<0
-      if (store.state.attributes.energy < 0) {
+      if (store.state.character.attributes.energy < 0) {
         await context.dispatch("typeWriter", "姜云升体力<0，上不动山啦！");
         return;
       }
