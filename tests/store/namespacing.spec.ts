@@ -38,6 +38,7 @@ const NAMESPACED_MUTATIONS = [
   "business/openFengyan",
   "business/initArtist",
   "business/resetThisSeasonArtist",
+  "ui/set", // Phase 3c：gameRefs 门面经此通用 setter 写 ui 状态
 ];
 
 // 跨域 mutation：读写多个 module，保留在 root（调用不加前缀）。

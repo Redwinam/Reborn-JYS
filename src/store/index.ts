@@ -27,7 +27,10 @@ import { progress, type ProgressState } from "./modules/progress";
 import { business, type BusinessState } from "./modules/business";
 import { ui, type UiState } from "./modules/ui";
 
-import { isTyping, showBreakupDialog, showGameEndDialog, showStartGameDialog } from "../components/composables/gameRefs";
+// isTyping / showBreakupDialog 在 action 内经 gameRefs 门面写（合法的 commit）。
+// showGameEndDialog / showStartGameDialog 由 setGameEnded / resetGame 这两个 mutation
+// 直接写 state.ui（mutation 内不能再 commit，故不走门面）。
+import { isTyping, showBreakupDialog } from "../components/composables/gameRefs";
 
 // 兼容旧引用：歌词数组已迁到 gameLoop module，这里 re-export 以保留 `import { skyTreeLyrics } from "../store"`。
 export { skyTreeLyrics } from "./modules/gameLoop";
@@ -241,7 +244,7 @@ const mutations = {
     }
 
     state.gameLoop.gameEnded = payload.gameEnded;
-    showGameEndDialog.value = true;
+    state.ui.showGameEndDialog = true;
   },
 
   resetGameState(state: RootState, resetData: boolean) {
@@ -412,7 +415,7 @@ const mutations = {
 
     state.gameLoop.currentLyricIndex = -1;
 
-    showStartGameDialog.value = true;
+    state.ui.showStartGameDialog = true;
   },
 };
 
