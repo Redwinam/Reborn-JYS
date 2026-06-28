@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { Commit } from 'vuex';
 import { store } from '../index';
 import { attributeNames } from '../attributes'
+import { EVENTS } from '../keys'
 
 import { isAtHome, showBreakupDialog } from '../../components/composables/gameRefs';
 
@@ -86,7 +87,7 @@ export async function accompanyGirlfriend(context: { commit: Commit, dispatch: F
         const isAchUnlocked_playgood = context.getters.unlockedAchievement('姜哥，玩挺好')
         if (!isAchUnlocked_playgood && !store.state.progress.happenedEvents.includes('姜哥，玩挺好')) {
           if (Math.random() < 0.15 * store.state.relationship.relationRound) {
-            context.dispatch('specialEvent', '姜哥，玩挺好');
+            context.dispatch('specialEvent', EVENTS.JIANG_GE);
           }
         }
       }

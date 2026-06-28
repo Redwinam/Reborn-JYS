@@ -19,6 +19,7 @@ import { PlayerResponse } from "./player";
 import { migrateSave } from "./migrations";
 import { GOLD_PRICE, GOLD_INTEREST_RATE, AGENCY_INCOME_RATE, START_YEAR, ROUNDS_PER_YEAR } from "./constants";
 import { createRootState } from "./state";
+import { EVENTS } from "./keys";
 
 import { gameLoop, type GameLoopState } from "./modules/gameLoop";
 import { character, type CharacterState } from "./modules/character";
@@ -534,7 +535,7 @@ const actions = {
 
     if (!Math.floor((state.gameLoop.round - 16) % 36)) {
       await store.dispatch("waitAndType", 600);
-      await context.dispatch("specialEvent", "生日快乐");
+      await context.dispatch("specialEvent", EVENTS.BIRTHDAY);
     }
 
     // 第三年2月的时候，触发继承家业任务
@@ -563,7 +564,7 @@ const actions = {
 
     if (state.gameLoop.round === 10 * 36) {
       await store.dispatch("waitAndType", 600);
-      await context.dispatch("specialEvent", "十年");
+      await context.dispatch("specialEvent", EVENTS.TEN_YEARS);
     }
 
     if (state.character.attributes.popularity.red + state.character.attributes.popularity.black > 1200 && state.character.attributes.popularity.black > 1000) {

@@ -6,6 +6,7 @@ import { isAtHome, isGoingOut, showSongWritingDialog, showShardPopup, shardName 
 import { girlfriendTypes } from "../girlfriend";
 import { SkillLevelMapping } from "./upgradeSkill";
 import { vitaminLibrary } from "../vitamins";
+import { ACTIONS, EVENTS } from "../keys";
 
 // Phase 3d：原本是一个 291 行的巨型 if-else。现按动作拆成 per-action handler + 分发 map。
 // 行为完全保持：外出/回家/写歌 不推进回合；其余 6 个动作末尾各自 incrementRound
@@ -32,7 +33,7 @@ async function onGoOut(context: PerformActionContext) {
 
         if (isSpring) {
           if (Math.random() < 0.3) {
-            context.dispatch("specialEvent", "放松，呼吸");
+            context.dispatch("specialEvent", EVENTS.RELAX_BREATHE);
           }
         }
       }
@@ -41,7 +42,7 @@ async function onGoOut(context: PerformActionContext) {
     if (Math.ceil((store.state.gameLoop.round % 36) / 3) == 1 && store.state.character.attributes["gold"] > 0) {
       const isAchUnlocked = context.getters.unlockedAchievement("记姜云升账上");
       if (!isAchUnlocked && !store.state.progress.happenedEvents.includes("记姜云升账上")) {
-        context.dispatch("specialEvent", "记姜云升账上");
+        context.dispatch("specialEvent", EVENTS.WEDDING);
       }
     }
   } else {
@@ -132,7 +133,7 @@ async function onHangOut(context: PerformActionContext) {
     const enoughBreakups = store.state.relationship.breakupTimes > 1;
     const justBrokeUp = !!store.state.relationship.lastBreakupRound && store.state.gameLoop.round - store.state.relationship.lastBreakupRound < 2;
     if (enoughBreakups && !justBrokeUp && (Math.random() < 0.7 || (context.getters.unlockedAchievement("包剪锤之王") && Math.random() < 0.4))) {
-      context.dispatch("specialEvent", "包剪锤之王");
+      context.dispatch("specialEvent", EVENTS.RPS_KING);
       return;
     }
 
@@ -320,15 +321,15 @@ async function onLiveStream(context: PerformActionContext) {
 
 // 动作 → handler 分发表。外出/回家/写歌 不推进回合；其余 handler 自带末尾 incrementRound。
 const actionHandlers: Record<string, (context: PerformActionContext) => Promise<void>> = {
-  外出: onGoOut,
-  回家: onGoHome,
-  写歌: onWriteSong,
-  去上课: onStudy,
-  赚钱: onMakeMoney,
-  出去鬼混: onHangOut,
-  睡觉休息: onSleep,
-  打游戏: onPlayGame,
-  开直播: onLiveStream,
+  [ACTIONS.GO_OUT]: onGoOut,
+  [ACTIONS.GO_HOME]: onGoHome,
+  [ACTIONS.WRITE_SONG]: onWriteSong,
+  [ACTIONS.STUDY]: onStudy,
+  [ACTIONS.MAKE_MONEY]: onMakeMoney,
+  [ACTIONS.HANG_OUT]: onHangOut,
+  [ACTIONS.SLEEP]: onSleep,
+  [ACTIONS.PLAY_GAME]: onPlayGame,
+  [ACTIONS.LIVE_STREAM]: onLiveStream,
 };
 
 export async function performAction(context: PerformActionContext, action: string) {

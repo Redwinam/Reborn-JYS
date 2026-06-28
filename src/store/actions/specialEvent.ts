@@ -3,6 +3,7 @@ import { Commit } from "vuex";
 import { showEventDialog } from "../../components/composables/gameRefs";
 import { Achievement } from "../achievements";
 import type { RootState } from "../index";
+import { EVENTS } from "../keys";
 
 interface SpecialEventDetail {
   title: string;
@@ -22,44 +23,44 @@ type SpecialEventContext = {
 export async function specialEvent(context: SpecialEventContext, event: string) {
   context.commit("progress/addHappenedEvent", event);
 
-  if (event === "姜哥，玩挺好") {
+  if (event === EVENTS.JIANG_GE) {
     specialEventDetail.value = {
       title: "姜哥，玩挺好",
       intro: "这天，姜云升在家陪女朋友，心情很好，忽然想玩点不一样的。决定外卖买个黑丝，外卖订单留哪一个名字呢？",
       options: ["【就叫姜云升！】", "【叫姜云升要谦虚】", "【叫姜云升很行】", "【叫不如姜云升】", "【除了姜云升，叫什么都行】"],
     };
-  } else if (event === "生日快乐") {
+  } else if (event === EVENTS.BIRTHDAY) {
     const age = Math.floor((context.rootState.gameLoop.round - 16) / 36) + 16;
     specialEventDetail.value = {
       title: "生日快乐",
       intro: "今天是姜云升的" + age + "岁生日……",
       options: ["【祝他生日快乐！！】"],
     };
-  } else if (event === "去看热闹") {
+  } else if (event === EVENTS.WATCH_FUN) {
     specialEventDetail.value = {
       title: "去看热闹",
       intro: "忽然姜云升听见远处一阵热闹，姜云升决定……”",
       options: ["【去看热闹】", "【不感兴趣】"],
     };
-  } else if (event === "十年") {
+  } else if (event === EVENTS.TEN_YEARS) {
     specialEventDetail.value = {
       title: "十年",
       intro: "游戏进程达到十年。你想起了曾经鼓舞到你的那首歌。「如果没人跟着起舞，我们怎么革命。」——《十年》",
       options: ["【继续游戏】"],
     };
-  } else if (event === "放松，呼吸") {
+  } else if (event === EVENTS.RELAX_BREATHE) {
     specialEventDetail.value = {
       title: "放松，呼吸",
       intro: "春暖花开，万物复苏，你的好朋友约你出门旅游，要去散散心吗？",
       options: ["【去丽江旅游】", "【打死不去】"],
     };
-  } else if (event === "记姜云升账上") {
+  } else if (event === EVENTS.WEDDING) {
     specialEventDetail.value = {
       title: "记姜云升账上",
       intro: "你的好朋友邀请你参加他的婚礼，你要去参加吗？",
       options: ["【去参加！】", "【谨慎参加】"],
     };
-  } else if (event === "二八分") {
+  } else if (event === EVENTS.SIGN_AGENCY) {
     const isAchUnlocked = context.getters.unlockedAchievement("二八分");
     if (!isAchUnlocked) {
       specialEventDetail.value = {
@@ -74,7 +75,7 @@ export async function specialEvent(context: SpecialEventContext, event: string) 
         options: ["【签约】", "【再考虑下】", "【自己开公司】"],
       };
     }
-  } else if (event === "包剪锤之王") {
+  } else if (event === EVENTS.RPS_KING) {
     specialEventDetail.value = {
       title: "包剪锤之王",
       intro: "姜云升今天没有搭讪妹子，姜云升今天想玩包剪锤，要玩吗？",
@@ -405,14 +406,14 @@ async function onSignAgency(context: SpecialEventContext, payload: OptionPayload
 
 // 事件 → option handler 分发表。
 const optionHandlers: Record<string, (context: SpecialEventContext, payload: OptionPayload) => Promise<void>> = {
-  "姜哥，玩挺好": onJiangGeWanWanHao,
-  生日快乐: onBirthday,
-  去看热闹: onWatchFun,
-  十年: onTenYears,
-  "放松，呼吸": onRelaxBreathe,
-  记姜云升账上: onWedding,
-  包剪锤之王: onRPSKing,
-  二八分: onSignAgency,
+  [EVENTS.JIANG_GE]: onJiangGeWanWanHao,
+  [EVENTS.BIRTHDAY]: onBirthday,
+  [EVENTS.WATCH_FUN]: onWatchFun,
+  [EVENTS.TEN_YEARS]: onTenYears,
+  [EVENTS.RELAX_BREATHE]: onRelaxBreathe,
+  [EVENTS.WEDDING]: onWedding,
+  [EVENTS.RPS_KING]: onRPSKing,
+  [EVENTS.SIGN_AGENCY]: onSignAgency,
 };
 
 export async function specialEventOptionChosen(context: SpecialEventContext, payload: OptionPayload) {

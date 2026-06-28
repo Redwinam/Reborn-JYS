@@ -57,17 +57,17 @@
       </div>
 
       <div class="actions" v-if="!showStartGameDialog && !gameEnded">
-        <button @click="performAction('回家')" class="action-button action-back-home" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
-        <button @click="performAction('出去鬼混')" class="action-button action-hang-out" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
-        <button @click="performAction('外出')" class="action-button action-go-out" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
-        <button @click="performAction('去上课')" class="action-button action-study" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
-        <button @click="performAction('赚钱')" class="action-button action-make-money" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
+        <button @click="performAction(ACTIONS.GO_HOME)" class="action-button action-back-home" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
+        <button @click="performAction(ACTIONS.HANG_OUT)" class="action-button action-hang-out" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
+        <button @click="performAction(ACTIONS.GO_OUT)" class="action-button action-go-out" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
+        <button @click="performAction(ACTIONS.STUDY)" class="action-button action-study" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
+        <button @click="performAction(ACTIONS.MAKE_MONEY)" class="action-button action-make-money" v-if="!isAtHome && !isGoingOut" :disabled="isTyping"></button>
 
-        <button @click="performAction('睡觉休息')" class="action-button action-sleep-rest" v-if="isAtHome" :disabled="isTyping"></button>
+        <button @click="performAction(ACTIONS.SLEEP)" class="action-button action-sleep-rest" v-if="isAtHome" :disabled="isTyping"></button>
         <button @click="typewriter('的确不如。')" class="action-button action-guahua" v-if="isAtHome && haveGuaHua" :disabled="isTyping"></button>
-        <button @click="performAction('开直播')" class="action-button action-onlive" v-if="isAtHome" :disabled="isTyping"></button>
-        <button @click="performAction('打游戏')" class="action-button action-gaming" v-if="isAtHome" :disabled="isTyping"></button>
-        <button @click="performAction('写歌')" class="action-button action-write-song" v-if="isAtHome" :disabled="isTyping"></button>
+        <button @click="performAction(ACTIONS.LIVE_STREAM)" class="action-button action-onlive" v-if="isAtHome" :disabled="isTyping"></button>
+        <button @click="performAction(ACTIONS.PLAY_GAME)" class="action-button action-gaming" v-if="isAtHome" :disabled="isTyping"></button>
+        <button @click="performAction(ACTIONS.WRITE_SONG)" class="action-button action-write-song" v-if="isAtHome" :disabled="isTyping"></button>
         <button @click="showSLPopup = true" class="action-button action-sl" v-if="isAtHome" :disabled="isTyping"></button>
         <button
           v-if="isAtHome"
@@ -79,18 +79,18 @@
           :disabled="isTyping"
         ></button>
 
-        <button @click="goToLocation('去吃点东西')" class="action-button action-eat" v-if="isGoingOut" :disabled="isTyping"></button>
-        <button @click="goToLocation('去喝点东西')" class="action-button action-drink" v-if="isGoingOut" :disabled="isTyping"></button>
-        <button @click="goToLocation('买东西')" class="action-button action-shopping" v-if="isGoingOut" :disabled="isTyping"></button>
-        <button @click="goToLocation('地下钱庄之暴富金铺')" class="action-button action-buy-gold" v-if="isGoingOut && !store.getters.unlockedAchievement('汤臣亿品')" :disabled="isTyping"></button>
-        <button @click="goToLocation('交易所')" class="action-button action-exchange" v-if="isGoingOut && store.getters.unlockedAchievement('汤臣亿品')" :disabled="isTyping"></button>
-        <button @click="goToLocation('公司')" class="action-button action-agency" v-if="isGoingOut && signedAgency" :disabled="isTyping"></button>
-        <button @click="goToLocation('风炎文化')" class="action-button action-fengyan" v-if="isGoingOut && openFengyan" :disabled="isTyping"></button>
+        <button @click="goToLocation(LOCATIONS.EAT)" class="action-button action-eat" v-if="isGoingOut" :disabled="isTyping"></button>
+        <button @click="goToLocation(LOCATIONS.DRINK)" class="action-button action-drink" v-if="isGoingOut" :disabled="isTyping"></button>
+        <button @click="goToLocation(LOCATIONS.SHOP)" class="action-button action-shopping" v-if="isGoingOut" :disabled="isTyping"></button>
+        <button @click="goToLocation(LOCATIONS.BANK)" class="action-button action-buy-gold" v-if="isGoingOut && !store.getters.unlockedAchievement('汤臣亿品')" :disabled="isTyping"></button>
+        <button @click="goToLocation(LOCATIONS.EXCHANGE)" class="action-button action-exchange" v-if="isGoingOut && store.getters.unlockedAchievement('汤臣亿品')" :disabled="isTyping"></button>
+        <button @click="goToLocation(LOCATIONS.AGENCY)" class="action-button action-agency" v-if="isGoingOut && signedAgency" :disabled="isTyping"></button>
+        <button @click="goToLocation(LOCATIONS.FENGYAN)" class="action-button action-fengyan" v-if="isGoingOut && openFengyan" :disabled="isTyping"></button>
 
-        <button @click="goToLocation('去剪头发')" class="action-button action-cut-hair" v-if="isGoingOut" :disabled="isTyping"></button>
-        <button @click="goToLocation('上山修行')" class="action-button action-dao" v-if="isGoingOut" :disabled="isTyping"></button>
-        <button @click="goToLocation('Underground')" class="action-button action-underground" v-if="isGoingOut" :disabled="isTyping"></button>
-        <button @click="goToLocation('Battle大赛')" class="action-button action-battle" v-if="isGoingOut && isBattleOpen()" :disabled="isTyping"></button>
+        <button @click="goToLocation(LOCATIONS.HAIRCUT)" class="action-button action-cut-hair" v-if="isGoingOut" :disabled="isTyping"></button>
+        <button @click="goToLocation(LOCATIONS.DAO)" class="action-button action-dao" v-if="isGoingOut" :disabled="isTyping"></button>
+        <button @click="goToLocation(LOCATIONS.UNDERGROUND)" class="action-button action-underground" v-if="isGoingOut" :disabled="isTyping"></button>
+        <button @click="goToLocation(LOCATIONS.BATTLE)" class="action-button action-battle" v-if="isGoingOut && isBattleOpen()" :disabled="isTyping"></button>
         <button
           v-if="isGoingOut"
           @click="
@@ -215,6 +215,7 @@
 </template>
 <script setup lang="ts">
 import { useStore } from '../store';
+import { LOCATIONS, ACTIONS } from "../store/keys";
 import { computed, ref, nextTick, watch, onMounted } from "vue";
 import { HelpCircle } from "lucide-vue-next";
 import { skyTreeLyrics } from "../store";
@@ -348,7 +349,7 @@ const checkUnsignAgency = async () => {
     await store.dispatch("waitAndType", 1000);
     isAtHome.value = false;
     isGoingOut.value = true;
-    goToLocation("公司");
+    goToLocation(LOCATIONS.AGENCY);
   }
 };
 

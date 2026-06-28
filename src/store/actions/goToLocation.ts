@@ -15,6 +15,7 @@ import {
   showDaoPopup,
 } from "../../components/composables/gameRefs";
 import store from "..";
+import { LOCATIONS, EVENTS } from "../keys";
 
 // Phase 3d：原本是一个 447 行的巨型 switch。现按地点拆成 per-location handler + 分发 map，
 // 主函数只负责「前往提示 + 分发」。各 handler 行为与原 case 完全一致（纯机械抽取）。
@@ -89,7 +90,7 @@ async function goToUnderground(context: GoToLocationContext) {
         case 1:
           await context.dispatch("typeWriter", "咦？又走到了这里。姜云升再次被这里的力量吸引，忽然……");
           await context.dispatch("waitAndType", 1000);
-          context.dispatch("specialEvent", "去看热闹");
+          context.dispatch("specialEvent", EVENTS.WATCH_FUN);
           break;
 
         case 2:
@@ -247,7 +248,7 @@ async function goToUnderground(context: GoToLocationContext) {
           break;
 
         case 17:
-          context.dispatch("specialEvent", "二八分");
+          context.dispatch("specialEvent", EVENTS.SIGN_AGENCY);
           break;
 
         case 18:
@@ -292,7 +293,7 @@ async function goToUnderground(context: GoToLocationContext) {
         default:
           context.commit("progress/incrementUndergroundCount");
           if (context.state.character.attributes.skill.freestyle >= 15 && (!context.state.progress.happenedEvents.includes("二八分") || !context.getters.unlockedAchievement("二八分"))) {
-            context.dispatch("specialEvent", "二八分");
+            context.dispatch("specialEvent", EVENTS.SIGN_AGENCY);
           } else {
             showUndergroundPopup.value = true;
           }
@@ -303,7 +304,7 @@ async function goToUnderground(context: GoToLocationContext) {
 
   context.commit("progress/incrementUndergroundCount");
   if (context.state.gameLoop.term > 1 && context.state.character.attributes.skill.freestyle >= 15 && !context.state.progress.happenedEvents.includes("二八分")) {
-    context.dispatch("specialEvent", "二八分");
+    context.dispatch("specialEvent", EVENTS.SIGN_AGENCY);
   } else {
     context.dispatch("incrementRound");
   }
@@ -443,17 +444,17 @@ async function goToBattle(context: GoToLocationContext) {
 
 // 地点 → handler 分发表。新增地点在此登记。
 const locationHandlers: Record<string, (context: GoToLocationContext) => Promise<void>> = {
-  去吃点东西: goToEat,
-  去喝点东西: goToDrink,
-  Underground: goToUnderground,
-  去剪头发: goToHaircut,
-  买东西: goToShop,
-  地下钱庄之暴富金铺: goToBank,
-  交易所: goToExchange,
-  公司: goToAgency,
-  风炎文化: goToFengyan,
-  上山修行: goToDao,
-  Battle大赛: goToBattle,
+  [LOCATIONS.EAT]: goToEat,
+  [LOCATIONS.DRINK]: goToDrink,
+  [LOCATIONS.UNDERGROUND]: goToUnderground,
+  [LOCATIONS.HAIRCUT]: goToHaircut,
+  [LOCATIONS.SHOP]: goToShop,
+  [LOCATIONS.BANK]: goToBank,
+  [LOCATIONS.EXCHANGE]: goToExchange,
+  [LOCATIONS.AGENCY]: goToAgency,
+  [LOCATIONS.FENGYAN]: goToFengyan,
+  [LOCATIONS.DAO]: goToDao,
+  [LOCATIONS.BATTLE]: goToBattle,
 };
 
 export async function goToLocation(context: GoToLocationContext, location: string) {
