@@ -12,7 +12,7 @@
 
 ## 技术架构
 
-项目已**完全迁移至 [Vercel](https://vercel.com) 部署**。前端静态站点与后端接口同源托管，后端接口由 **Vercel Serverless Functions** 提供，并**直接读写 [Upstash KV（Redis）](https://upstash.com)**。
+当前 `master` 的前端与 API 已迁移至 [Vercel](https://vercel.com) 部署。前端静态站点与后端接口同源托管，后端接口由 **Vercel Serverless Functions** 提供，并**直接读写 [Upstash KV（Redis）](https://upstash.com)**。浏览器只访问应用 API，不直接持有 Upstash 凭据。
 
 > 迁移前为「前端 + 独立后端 API 服务（`api.jys.wtf`）+ Docker/Nginx/Jenkins」架构；现已不再需要独立后端服务与跨域 API，Serverless 函数直连 KV 数据库。仓库中残留的 `Dockerfile`、`Jenkinsfile`、`.htaccess` 仅为历史遗留，不再用于部署。
 
@@ -28,7 +28,13 @@ Vercel Serverless Functions  (api/*.ts，Web 标准 Request/Response)
 Upstash KV (Redis)           ← 玩家与存档数据
 ```
 
-本地开发时，Vite 会把 `/api` 反向代理到 `VITE_API_PROXY_TARGET`（默认 `https://api.jys.wtf`）；生产环境中 `/api/*` 由同域的 Vercel 函数直接处理。
+本地全栈开发使用 `vercel dev` 同时提供前端与 `/api/*` 函数；单独运行 Vite 不会执行 `api/*.ts`，也不再默认代理旧 Rails 服务。生产环境中 `/api/*` 由同域的 Vercel 函数直接处理。
+
+### 旧 Rails API 退役
+
+当前维护与生产发布以 [Redwinam/Reborn-JYS 的 `master`](https://github.com/Redwinam/Reborn-JYS/tree/master) 为准，不再依赖或更新 [旧 Rails API](https://github.com/jys-wtf/Reborn-JYS-API-RUBY)。旧仓库保留源码和提交历史，供追溯使用；现有重构分支也保留历史，不作为本次上线来源。
+
+这表示应用代码已切换到 Vercel Functions，并不等于已经核实旧 SQL 数据全部迁入 Redis，或旧服务器、监控任务、域名和数据库已经下线。实际停机、备份核验与凭据撤销须另行确认；不要执行旧仓库的部署或自动重启脚本来启动新服务。
 
 ### 技术栈
 
@@ -92,36 +98,46 @@ Upstash KV (Redis)           ← 玩家与存档数据
 | `GET` | `/api/plays/:id?playerId=&email=` | 读取存档完整 state |
 | `DELETE` | `/api/plays/:id` | 删除存档（需玩家 ID + 邮箱校验） |
 
-账号体系无密码，以「昵称 + 邮箱」作为弱身份凭证：所有写操作都会校验请求邮箱与库中玩家邮箱（大小写不敏感）是否一致。
+账号体系无密码，以「昵称 + 邮箱」作为弱身份凭证：所有写操作都会校验请求邮箱与库中玩家邮箱（大小写不敏感）是否一致。这不是邮箱所有权验证；知道相应邮箱和玩家 ID 的人可能冒充玩家读写存档。真正的登录认证属于独立安全改造，本次退役收尾不改变玩家 ID、存档结构或旧账号的访问方式。
 
 ## 本地开发
 
 ### 环境变量
 
-接口运行需要 Upstash 凭据（任选一组，优先读取 `KV_REST_API_*`）：
+接口运行需要 Upstash 凭据（任选一组，优先读取 `KV_REST_API_*`）。本地使用独立的开发数据库，通过服务端进程环境或 Vercel 的 Development 环境变量提供；不要复用生产数据库做调试，也不要提交本地凭据文件：
 
 ```bash
 KV_REST_API_URL=...            # 或 UPSTASH_REDIS_REST_URL
 KV_REST_API_TOKEN=...          # 或 UPSTASH_REDIS_REST_TOKEN
 ```
 
+这些变量仅由服务端 `server/lib/redis.ts` 读取，不得加上 `VITE_` 前缀、写入前端代码或返回给浏览器。Redis 令牌不是玩家身份凭证；数据库访问权限仍需在 Upstash 控制台核实。
+
 前端可选环境变量：
 
 ```bash
 VITE_API_BASE_URL=...          # 覆盖前端请求的 API base，默认 /api
-VITE_API_PROXY_TARGET=...      # 本地 dev 时 /api 的代理目标，默认 https://api.jys.wtf
+VITE_API_PROXY_TARGET=...      # 仅单独运行 Vite 时可选；无默认目标，保留 /api 路径
 ```
 
 ### 安装与启动
 
 ```bash
 npm install
-npm run dev        # 启动 Vite 开发服务器
+npx vercel dev --listen 3000  # 全栈调试：Vite 前端 + api/ 下的 Vercel Functions
 npm run typecheck  # 前端（vue-tsc）+ 接口（tsconfig.api.json）类型检查
 npm run build      # 类型检查并产出生产构建到 dist/
 ```
 
-> 若希望本地同时调试 Serverless Functions（连真实 Upstash KV），可使用 `vercel dev`（需安装 Vercel CLI 并配置上述环境变量）。
+首次运行 Vercel CLI 时确认关联的是正确项目，并检查 Development 环境指向开发数据库。访问 CLI 输出的本地地址（上述命令为 `http://localhost:3000`）。项目的 Development Command 保持 Vite / `npm run dev`，不要设为 `vercel dev`，以免递归启动。详见 [Vercel 本地函数调试文档](https://vercel.com/docs/cli/dev)。
+
+只调试前端、不使用云存档时，可直接运行 `npm run dev`；它不提供云存档 API。需要把另一个 Vite 进程接到已运行的本地 Vercel 服务时，在独立终端显式指定：
+
+```bash
+VITE_API_PROXY_TARGET=http://127.0.0.1:3000 npm run dev -- --port 5173
+```
+
+代理会把 `/api/players` 原样转发到目标的 `/api/players`。此变量只用于额外的 Vite 进程，不要在运行 `vercel dev` 的环境中设置成它自己的地址；也不要默认指向生产或旧 Rails API。
 
 ## 部署（Vercel）
 
